@@ -1,0 +1,111 @@
+import { NextRequest } from "next/server";
+import { requireAuth } from "@/lib/auth";
+import { success, fail } from "@/lib/response";
+import { withPaywallCheck } from "@/lib/paywall";
+import { getScheduledPosts } from "@/lib/services/db/posts";
+import { scheduleMultiplePosts } from "@/lib/services/late/scheduleService";
+import { DEFAULT_TIMEZONE } from "@/lib/utils/date";
+
+/**
+ * GET /api/schedule
+ * Get user's scheduled posts
+ * 
+ * Refactored: Route handler only handles request/response, logic moved to service layer
+ */
+export async function GET(req: NextRequest) {
+  try {
+    const user = await requireAuth(req);
+    if (!user) return fail("Unauthorized", 401);
+
+    // Get scheduled posts via service layer
+    const posts = await getScheduledPosts(user.id);
+
+    return success(posts);
+
+  } catch (err: any) {
+    console.error("GET /api/schedule error:", err);
+    return fail(err.message || "Server error", 500);
+  }
+}
+
+/**
+ * POST /api/schedule
+ * Schedule multiple posts for multiple platforms (without draft)
+ * Flow: FE sends array of posts → BE sends to Late.dev → BE saves to DB → waits for Late.dev webhook
+ * 
+ * Request body format:
+ * {
+ *   "scheduledAt": "2024-01-15T09:00:00Z",
+ *   "posts": [
+ *     {
+ *       "platform": "Facebook",
+ *       "profileIds": ["profile_id_1", "profile_id_2"],
+ *       "text": "Content for Facebook",
+ *       "mediaUrls": ["url1", "url2"]
+ *     },
+ *     {
+ *       "platform": "Twitter",
+ *       "profileIds": ["profile_id_3"],
+ *       "text": "Content for Twitter",
+ *       "mediaUrls": []
+ *     }
+ *   ]
+ * }
+ */
+export async function POST(req: NextRequest) {
+  try {
+    // Check paywall for post limit
+    const paywallCheck = await withPaywallCheck(req, 'posts');
+    if ('error' in paywallCheck) {
+      return fail(paywallCheck.error.message, paywallCheck.error.status);
+    }
+    
+    const { user, paywallResult } = paywallCheck;
+    
+    if (!paywallResult.allowed) {
+      return fail(JSON.stringify({
+        message: paywallResult.reason,
+        upgradeRequired: paywallResult.upgradeRequired,
+        currentLimit: paywallResult.currentLimit,
+        limitReached: paywallResult.limitReached
+      }), 403);
+    }
+
+    const body = await req.json();
+    const { 
+      scheduledAt, 
+      timezone,
+      posts // Array of { platform, profileIds, text, mediaUrls }
+    } = body;
+    
+    // Validate required fields
+    if (!scheduledAt || !posts || !Array.isArray(posts) || posts.length === 0) {
+      return fail("Missing required fields: scheduledAt (ISO string), posts (non-empty array)", 400);
+    }
+    
+    // Validate each post in the array
+    for (let i = 0; i < posts.length; i++) {
+      const post = posts[i];
+      if (!post.platform || !post.profileIds || !Array.isArray(post.profileIds) || !post.text) {
+        return fail(`Invalid post at index ${i}: Missing required fields (platform, profileIds array, text)`, 400);
+      }
+    }
+    
+    // Schedule multiple posts via service layer
+    const result = await scheduleMultiplePosts(user, posts, scheduledAt, timezone || DEFAULT_TIMEZONE);
+    
+    if (!result.success || result.scheduledPosts.length === 0) {
+      return fail(`Failed to schedule any posts. Errors: ${JSON.stringify(result.errors)}`, 500);
+    }
+    
+    return success({
+      scheduledPosts: result.scheduledPosts,
+      errors: result.errors.length > 0 ? result.errors : undefined,
+      message: `Successfully scheduled ${result.scheduledPosts.length} post(s) across ${new Set(result.scheduledPosts.map(p => p.platform)).size} platform(s)${result.errors.length > 0 ? `, ${result.errors.length} failed` : ''}`
+    }, 201);
+
+  } catch (err: any) {
+    console.error("POST /api/schedule error:", err);
+    return fail(err.message || "Server error", 500);
+  }
+}

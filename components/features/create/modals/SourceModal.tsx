@@ -1,0 +1,250 @@
+// components/create/modals/SourceModal.tsx
+"use client";
+
+import { useState, useRef } from 'react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { UploadCloud as UploadCloudIcon, X as CloseIcon} from 'lucide-react';
+import { toast } from 'sonner';
+import { supabaseClient } from '@/lib/supabaseClient';
+
+import { useCreateSourcesStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
+import { SOURCE_ERRORS } from '@/lib/messages/errors';
+
+export default function SourceModal() {
+    const { 
+        isSourceModalOpen, 
+        setIsSourceModalOpen,
+        addSavedSource,
+    } = useCreateSourcesStore(useShallow(state => ({
+        isSourceModalOpen: state.isSourceModalOpen,
+        setIsSourceModalOpen: state.setIsSourceModalOpen,
+        addSavedSource: state.addSavedSource,
+    })));
+
+    // State cục bộ cho form bên trong modal
+    const [selectedSourceType, setSelectedSourceType] = useState('text');
+    const [sourceTextInput, setSourceTextInput] = useState('');
+    const [sourceUrlInput, setSourceUrlInput] = useState('');
+    const [selectedFile, setSelectedFile] = useState<File | null>(null); // <-- State mới để lưu file
+    const [isUploading, setIsUploading] = useState(false); // <-- State mới cho trạng thái upload
+    const [shouldSaveSource, setShouldSaveSource] = useState(true);
+    const [advancedInstructions, setAdvancedInstructions] = useState('');
+
+    const [statusMessage, setStatusMessage] = useState('');
+
+    const fileInputRef = useRef<HTMLInputElement>(null); // Ref cho input file ẩn
+
+    if (!isSourceModalOpen) return null;
+
+    // Hàm xử lý khi người dùng chọn file
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+        }
+    };
+
+   // Hàm xử lý chính khi nhấn nút "Thêm"
+    const handleAdd = async () => {
+        setIsUploading(true); // Bật loading
+        setStatusMessage(''); // Reset thông báo
+
+    try {
+        let sourceType = selectedSourceType;
+        let sourceValue: string;
+        let sourceLabel: string;
+        
+        // --- Logic xác định giá trị nguồn (đã tốt, giữ nguyên) ---
+        if (['article', 'youtube', 'tiktok'].includes(sourceType)) {
+            sourceValue = sourceUrlInput.trim();
+            if (!sourceValue) throw new Error(SOURCE_ERRORS.URL_REQUIRED);
+            sourceLabel = sourceValue;
+        } 
+        else if (sourceType === 'text') {
+            sourceValue = sourceTextInput.trim();
+            if (!sourceValue) throw new Error(SOURCE_ERRORS.TEXT_REQUIRED);
+            sourceLabel = `Văn bản: ${sourceValue.substring(0, 50)}...`;
+        }
+        else if (sourceType === 'pdf' && selectedFile) {
+            setStatusMessage(`Đang tải lên file ${selectedFile.name}...`);
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            const response = await fetch('/api/data/pdf/upload', { 
+                method: 'POST', 
+                headers: session?.access_token ? { 'authorization': `Bearer ${session.access_token}` } as any : undefined,
+                body: formData 
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.details || result.error || 'Upload file PDF thất bại.');
+            
+            sourceValue = result.fileUri;
+            sourceLabel = result.fileName;
+        } 
+        else {
+            throw new Error(SOURCE_ERRORS.SOURCE_DATA_REQUIRED);
+        }
+
+        // Tạo đối tượng source
+        const source = { type: sourceType, value: sourceValue, label: sourceLabel };
+
+        // --- THAY ĐỔI LOGIC CHÍNH Ở ĐÂY ---
+        
+        // 1. Chỉ lưu nguồn nếu người dùng chọn
+        if (shouldSaveSource) {
+            addSavedSource(source);
+        }
+        
+        // 2. Đóng modal hiện tại
+        setIsSourceModalOpen(false);
+        
+        // 3. Hiển thị thông báo thành công
+        // Note: SourcePanel.tsx cũng show toast khi add source, nhưng đây là 2 flow khác nhau
+        // (SourceModal là modal riêng, SourcePanel là wizard flow), nên không duplicate
+        toast.success(`Đã thêm nguồn "${sourceType}" thành công!`);
+        
+        // 4. XÓA BỎ LỆNH GỌI openCreateFromSourceModal(...)
+
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Đã xảy ra lỗi.";
+        console.error("Lỗi khi thêm nguồn:", error);
+        // Thay vì setStatusMessage, chúng ta dùng toast.error
+        toast.error(SOURCE_ERRORS.ADD_SOURCE_FAILED(errorMessage));
+        // Không tắt loading ở đây để người dùng có thể thử lại
+        setIsUploading(false);
+    } 
+    // Không cần finally nữa vì toast đã xử lý việc thông báo
+};
+
+    const isFileUpload = selectedSourceType === 'pdf' || selectedSourceType === 'audio';
+
+    const sourceTypeOptions = [
+    { key: "text", label: "Văn bản" },
+    { key: "article", label: "Bài viết" },
+    { key: "youtube", label: "YouTube" },
+    { key: "tiktok", label: "TikTok" },
+    { key: "pdf", label: "PDF" },
+    { key: "audio", label: "Âm thanh" },
+  ]
+
+    return (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-[#2A2A30] border border-[#3A3A42] rounded-2xl w-[1000px] max-w-[95vw]">
+                {/* Header */}
+                <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+                    <h2 className="text-lg font-semibold text-white">Chỉnh sửa nguồn</h2>
+                    <button onClick={() => setIsSourceModalOpen(false)}>
+                        <CloseIcon className="w-5 h-5" />
+                    </button>
+                </div>
+                {/* Tabs */}
+            <div className="px-6 pt-4">
+              <div className="grid grid-cols-6 gap-3">
+                {sourceTypeOptions.map((option) => (
+                  <button
+                    key={option.key}
+                    className={`px-4 py-3 rounded-md text-sm ${
+                      selectedSourceType === (option.key as any) 
+                        ? 'bg-white/10 text-white' 
+                        : 'bg-transparent text-gray-300 hover:text-white hover:bg-white/5'
+                    }`}
+                    onClick={() => setSelectedSourceType(option.key as any)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {/* Body */}
+                        <div className="px-6 py-4 space-y-3 overflow-auto" style={{ maxHeight: "60vh" }}>
+                          {/* *** THAY ĐỔI GIAO DIỆN Ở ĐÂY *** */}
+                    {!isFileUpload ? (
+                        <>
+                            <div className="text-white">
+                                {selectedSourceType === 'text' ? 'Văn bản' : 'URL'}
+                            </div>
+                            {selectedSourceType === 'text' ? (
+                                <Textarea 
+                                placeholder="Dán văn bản vào đây" 
+                                className="bg-gray-900/50 border-white/10 h-40" 
+                                value={sourceTextInput} onChange={(e) => setSourceTextInput(e.target.value)} />
+                            ) : (
+                                <Input 
+                                placeholder={
+                                selectedSourceType === 'article' ? 'Dán URL bài viết...' :
+                                selectedSourceType === 'youtube' ? 'Dán URL YouTube...' :
+                                selectedSourceType === 'tiktok' ? 'Dán URL TikTok...'
+                                : 'Dán URL nguồn...'
+                              }
+                              className="bg-gray-900/50 border-white/10"
+                                value={sourceUrlInput} 
+                                onChange={(e) => setSourceUrlInput(e.target.value)} />
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <div className="text-white">Tải lên tệp tin</div>
+                            <div 
+                                className="border-2 border-dashed border-gray-500 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400"
+                                onClick={() => fileInputRef.current?.click()}
+                            >
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    className="hidden"
+                                    onChange={handleFileChange}
+                                    accept={selectedSourceType === 'pdf' ? '.pdf' : 'audio/*'}
+                                />
+                                <UploadCloudIcon className="mx-auto h-12 w-12 text-gray-400" />
+                                {selectedFile ? (
+                                    <p className="mt-2 text-sm text-green-400">{selectedFile.name}</p>
+                                ) : (
+                                    <p className="mt-2 text-sm text-gray-400">Nhấn để chọn file {selectedSourceType.toUpperCase()}</p>
+                                )}
+                            </div>
+                        </>
+                    )}  
+                          <label className="flex items-center gap-3 text-white pt-2">
+                            <input 
+                              type="checkbox" 
+                              className="accent-[#E33265]"
+                              checked={shouldSaveSource}
+                              onChange={(e) => setShouldSaveSource(e.target.checked)}
+                            />
+                            <span>Lưu nguồn?</span>
+                          </label>
+                          <details className="text-white/90">
+                            <summary className="cursor-pointer select-none">Cài đặt nâng cao</summary>
+                            <div className="mt-2 text-sm text-gray-300">Chưa có cài đặt bổ sung.</div>
+            
+                          </details>
+                          <label htmlFor="advanced-instructions" className="block text-white mb-2">
+                        Chi tiết yêu cầu cho AI:
+                      </label>
+                      <Textarea
+                        id="advanced-instructions"
+                        placeholder="Ví dụ: 'Tạo bài đăng với giọng văn vui vẻ, tập trung vào lợi ích X, và kêu gọi hành động 'Tìm hiểu thêm'...' hoặc 'Phân tích điểm mạnh, điểm yếu của nguồn.'..."
+                        className="bg-gray-900/50 border-white/10 h-32 mb-4 placeholder:text-gray-500"
+                        value={advancedInstructions}
+                        onChange={(e) => setAdvancedInstructions(e.target.value)}
+                      />
+                        </div>
+                <div className="px-6 pb-6">
+                    {statusMessage && (
+  <p className={`text-center text-sm mb-2 ${statusMessage.startsWith('Lỗi') ? 'text-red-400' : 'text-gray-300'}`}>
+    {statusMessage}
+  </p>
+)}
+                    <button 
+                    onClick={handleAdd} 
+                    className="w-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white py-3 rounded-md disabled:opacity-50"
+                    disabled={isUploading || (!sourceTextInput.trim() && !sourceUrlInput.trim() && !selectedFile)}>
+                        Thêm
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
