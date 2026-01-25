@@ -200,7 +200,7 @@ export const useImageGenModalStore = create<ImageGenModalState>((set, get) => ({
           }
           const byteArray = new Uint8Array(byteNumbers);
           const blob = new Blob([byteArray], { type: image.mimeType });
-          const file = new File([blob], `maiovo-ai-${Date.now()}-${index}.png`, { type: image.mimeType });
+          const file = new File([blob], `creatorhub-ai-${Date.now()}-${index}.png`, { type: image.mimeType });
           const preview = URL.createObjectURL(blob);
           acc.push({
             id: `ai-img-${Date.now()}-${index}`,

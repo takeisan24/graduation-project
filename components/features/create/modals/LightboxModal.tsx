@@ -25,7 +25,7 @@ export default function LightboxModal() {
       const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = blobUrl;
-      link.download = `maiovo-ai-${Date.now()}.${type === 'video' ? 'mp4' : 'png'}`;
+      link.download = `creatorhub-ai-${Date.now()}.${type === 'video' ? 'mp4' : 'png'}`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

@@ -156,7 +156,7 @@
     }
   },
   "Footer": {
-    "copyright": "© 2025 Maiovo, Inc. Mọi quyền được bảo lưu.",
+    "copyright": "© 2025 CreatorHub, Inc. Mọi quyền được bảo lưu.",
     "description": "Tự động hóa nội dung bằng AI cho mạng xã hội",
     "title": {
       "product": "Sản phẩm",
@@ -186,14 +186,14 @@
     "socialProof": "Được tin cậy bởi các nhà sáng tạo và agency trên toàn thế giới",
     "howItWorks": {
       "title": "Hoạt động chỉ trong 3 bước đơn giản",
-      "subtitle": "Quy trình tự động hóa của Maiovo giúp bạn tiết kiệm thời gian và công sức tối đa.",
+      "subtitle": "Quy trình tự động hóa của CreatorHub giúp bạn tiết kiệm thời gian và công sức tối đa.",
       "step1": {
         "title": "Kết nối nguồn",
         "description": "Cung cấp bất kỳ thứ gì – một URL bài viết, video YouTube, tệp âm thanh, hoặc chỉ một ý tưởng."
       },
       "step2": {
         "title": "AI tự động tạo",
-        "description": "Maiovo phân tích nguồn và tự động tạo ra một bộ nội dung đa phương tiện hoàn chỉnh cho nhiều nền tảng."
+        "description": "CreatorHub phân tích nguồn và tự động tạo ra một bộ nội dung đa phương tiện hoàn chỉnh cho nhiều nền tảng."
       },
       "step3": {
         "title": "Lên lịch & Xuất bản",
@@ -201,7 +201,7 @@
       }
     },
     "testimonial": {
-      "quote": "Maiovo đã thay đổi hoàn toàn cách chúng tôi làm marketing. Chúng tôi tiết kiệm được hơn 20 giờ mỗi tuần và sự hiện diện trên mạng xã hội chưa bao giờ tốt hơn thế.",
+      "quote": "CreatorHub đã thay đổi hoàn toàn cách chúng tôi làm marketing. Chúng tôi tiết kiệm được hơn 20 giờ mỗi tuần và sự hiện diện trên mạng xã hội chưa bao giờ tốt hơn thế.",
       "author": {
         "name": "Alex Trần",
         "title": "Trưởng phòng Tăng trưởng, Momentum Labs"
@@ -312,7 +312,7 @@
   },
   "SignUpPage": {
     "title": "Tạo tài khoản mới",
-    "subtitle": "Bắt đầu hành trình của bạn với Maiovo ngay hôm nay!",
+    "subtitle": "Bắt đầu hành trình của bạn với CreatorHub ngay hôm nay!",
     "form": {
       "firstNameLabel": "Tên",
       "firstNamePlaceholder": "Văn",
@@ -341,7 +341,7 @@
   },
   "PricingPage": {
     "headerTitle": "Chọn Gói Phù hợp với Sức sáng tạo của bạn",
-    "headerSubtitle": "Dù bạn mới bắt đầu hay đã là một agency chuyên nghiệp, Maiovo luôn có một gói được thiết kế riêng cho bạn. Bắt đầu miễn phí ngay hôm nay!",
+    "headerSubtitle": "Dù bạn mới bắt đầu hay đã là một agency chuyên nghiệp, CreatorHub luôn có một gói được thiết kế riêng cho bạn. Bắt đầu miễn phí ngay hôm nay!",
     "perMonth": "/ tháng",
     "featureOrder": [
       "credits",
@@ -474,7 +474,7 @@
       },
       {
         "question": "Sự khác biệt giữa \"Tạo Video AI\" và \"Xử lý Video\" là gì?",
-        "answer": "Tạo Video AI (20 Credits/lần): Bạn chỉ cần đưa ra ý tưởng (text), Maiovo sẽ tự viết kịch bản và tạo ra một video hoàn toàn mới cho bạn.\nXử lý Video (5 Credits/phút): Bạn đã có sẵn một video (tự quay, phỏng vấn...), Maiovo sẽ tự động thêm phụ đề, chèn cảnh minh họa, và biến nó thành một clip chuyên nghiệp."
+        "answer": "Tạo Video AI (20 Credits/lần): Bạn chỉ cần đưa ra ý tưởng (text), CreatorHub sẽ tự viết kịch bản và tạo ra một video hoàn toàn mới cho bạn.\nXử lý Video (5 Credits/phút): Bạn đã có sẵn một video (tự quay, phỏng vấn...), CreatorHub sẽ tự động thêm phụ đề, chèn cảnh minh họa, và biến nó thành một clip chuyên nghiệp."
       }
     ],
     "topUpTable": {
@@ -1404,7 +1404,7 @@
   "FAQPage": {
     "header": {
       "title": "Câu hỏi thường gặp",
-      "subtitle": "Mọi thứ bạn cần biết về Maiovo"
+      "subtitle": "Mọi thứ bạn cần biết về CreatorHub"
     },
     "faqs": [
       {

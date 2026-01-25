@@ -89,7 +89,7 @@ export default function HeroContent() {
           <div className="rounded-2xl border border-white/10 p-2 bg-black/20 backdrop-blur-sm shadow-2xl shadow-primary/20">
             <Image
               src="/hero-abstract-art.png"
-              alt="Maiovo AI content generation abstract art"
+              alt="CreatorHub AI content generation abstract art"
               width={1200}
               height={700}
               className="w-full h-auto rounded-xl"

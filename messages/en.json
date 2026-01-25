@@ -156,7 +156,7 @@
     }
   },
   "Footer": {
-    "copyright": "© 2025 Maiovo, Inc. All rights reserved.",
+    "copyright": "© 2025 CreatorHub, Inc. All rights reserved.",
     "description": "AI-powered social media content automation",
     "title": {
       "product": "Product",
@@ -186,14 +186,14 @@
     "socialProof": "Trusted by creators and agencies worldwide",
     "howItWorks": {
       "title": "How It Works in 3 Simple Steps",
-      "subtitle": "Maiovo's automation process saves you maximum time and effort.",
+      "subtitle": "CreatorHub's automation process saves you maximum time and effort.",
       "step1": {
         "title": "Connect Source",
         "description": "Provide anything – an article URL, YouTube video, audio file, or just an idea."
       },
       "step2": {
         "title": "AI Generates Automatically",
-        "description": "Maiovo analyzes the source and automatically creates a complete multimedia content suite for multiple platforms."
+        "description": "CreatorHub analyzes the source and automatically creates a complete multimedia content suite for multiple platforms."
       },
       "step3": {
         "title": "Schedule & Publish",
@@ -201,7 +201,7 @@
       }
     },
     "testimonial": {
-      "quote": "Maiovo has completely transformed how we do marketing. We save over 20 hours per week and our social media presence has never been better.",
+      "quote": "CreatorHub has completely transformed how we do marketing. We save over 20 hours per week and our social media presence has never been better.",
       "author": {
         "name": "Alex Tran",
         "title": "Head of Growth, Momentum Labs"
@@ -312,7 +312,7 @@
   },
   "SignUpPage": {
     "title": "Create New Account",
-    "subtitle": "Start your journey with Maiovo today!",
+    "subtitle": "Start your journey with CreatorHub today!",
     "form": {
       "firstNameLabel": "First Name",
       "firstNamePlaceholder": "John",
@@ -341,7 +341,7 @@
   },
   "PricingPage": {
     "headerTitle": "Choose the Plan That Fits Your Creativity",
-    "headerSubtitle": "Whether you're just starting or a professional agency, Maiovo has a plan designed just for you. Start free today!",
+    "headerSubtitle": "Whether you're just starting or a professional agency, CreatorHub has a plan designed just for you. Start free today!",
     "perMonth": "/ month",
     "featureOrder": [
       "credits",
@@ -474,7 +474,7 @@
       },
       {
         "question": "What's the difference between \"Generate AI Video\" and \"Process Video\"?",
-        "answer": "Generate AI Video (20 Credits/time): You only need to provide an idea (text), Maiovo will write the script and create a completely new video for you.\nProcess Video (5 Credits/minute): You already have a video (self-recorded, interview...), Maiovo will automatically add subtitles, insert illustrative scenes, and turn it into a professional clip."
+        "answer": "Generate AI Video (20 Credits/time): You only need to provide an idea (text), CreatorHub will write the script and create a completely new video for you.\nProcess Video (5 Credits/minute): You already have a video (self-recorded, interview...), CreatorHub will automatically add subtitles, insert illustrative scenes, and turn it into a professional clip."
       }
     ],
     "topUpTable": {
@@ -1421,7 +1421,7 @@
   "FAQPage": {
     "header": {
       "title": "Frequently Asked Questions",
-      "subtitle": "Everything you need to know about Maiovo"
+      "subtitle": "Everything you need to know about CreatorHub"
     },
     "faqs": [
       {

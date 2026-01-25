@@ -24,7 +24,7 @@ export const getAppUrl = (): string => {
     }
 
     // CLEANUP: 
-    // 1. Trim all spaces (fixes the "https://app.maiovo.com " production issue)
+    // 1. Trim all spaces (fixes the "https://app.creatorhub.com " production issue)
     // 2. Clear any invisible characters (carriage returns, etc)
     // 3. Remove all trailing slashes to ensure standardized concatenation
     return appUrl.trim().replace(/[\r\n]/g, '').replace(/\/+$/, '');

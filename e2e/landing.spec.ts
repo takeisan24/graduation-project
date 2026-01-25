@@ -6,14 +6,14 @@ test.describe("Landing Page", () => {
   });
 
   test("should load the landing page successfully", async ({ page }) => {
-    await expect(page).toHaveTitle(/Maiovo/i);
+    await expect(page).toHaveTitle(/CreatorHub/i);
   });
 
   test("should display the header with logo and navigation", async ({
     page,
   }) => {
     // Logo
-    const logo = page.locator("header").getByText("Maiovo");
+    const logo = page.locator("header").getByText("CreatorHub");
     await expect(logo).toBeVisible();
 
     // Sign In and Get Started buttons visible on desktop

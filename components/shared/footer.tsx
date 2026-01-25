@@ -11,8 +11,8 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <img src="/maiovo_icon.png" alt="Maiovo Logo" className="h-5 w-5" />
-              <span className="font-bold">Maiovo</span>
+              <Sparkles className="h-5 w-5 text-primary" />
+              <span className="font-bold">CreatorHub</span>
             </div>
             <p className="text-sm text-muted-foreground">{t('description')}</p>
           </div>

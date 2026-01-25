@@ -119,7 +119,7 @@ export function useAuth() {
         const { resetAllStores } = await import('@/lib/utils/storeReset');
         resetAllStores();
         // Redirect về trang chủ mới
-        window.location.href = 'https://maiovo.com/homepage/';
+        window.location.href = '/';
       } else {
         // Các event khác (TOKEN_REFRESHED, etc.) - chỉ cập nhật session
         setSession(currentSession);

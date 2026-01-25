@@ -25,7 +25,7 @@ export default function MediaPreview() {
   const handleMediaDownload = (media: MediaFile) => {
     const link = document.createElement('a');
     link.href = media.preview; // URL.createObjectURL() hoạt động tốt cho việc này
-    link.download = media.file?.name || `maiovo-ai-${Date.now()}`;
+    link.download = media.file?.name || `creatorhub-ai-${Date.now()}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

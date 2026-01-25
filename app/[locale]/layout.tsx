@@ -14,14 +14,13 @@ import "./globals.css"
 
 const fontSans = Inter({ subsets: ['latin', 'vietnamese'], variable: '--font-sans', display: 'swap' })
 export const metadata: Metadata = {
-  title: "Maiovo: Tự động Sáng tạo & Phân phối Nội dung Mạng xã hội bằng AI",
+  title: "CreatorHub: Hỗ trợ Lập kế hoạch & Sáng tạo Nội dung đa nền tảng bằng AI",
   description:
     "Biến một nguồn duy nhất thành hàng loạt nội dung đa phương tiện và lên lịch đăng bài chỉ trong vài phút.",
-  generator: "v0.app",
   icons: {
-    icon: '/maiovo_icon.png',
-    shortcut: '/maiovo_icon.png',
-    apple: '/maiovo_icon.png',
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
   }
 }
 

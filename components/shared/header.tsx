@@ -17,9 +17,9 @@ export default function Header() {
     // THAY ĐỔI: Thêm `relative` để menu mobile có thể định vị theo header
     <header className="relative flex items-center justify-between px-4 py-4 border-b border-gray-800 top-0 bg-black z-20">
       <div className="container mx-auto px-4 flex items-center justify-between">
-        <Link href="https://maiovo.com/homepage/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
-          <img src="/maiovo_icon.png" alt="Maiovo Logo" className="h-8 w-8" />
-          <span className="text-xl font-bold">Maiovo</span>
+        <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
+          <Sparkles className="h-6 w-6 text-primary" />
+          <span className="text-xl font-bold">CreatorHub</span>
         </Link>
 
         {/* --- Menu cho Desktop --- */}
@@ -131,11 +131,11 @@ export default function Header() {
                 ) : (
                   <>
                     {/* Disable prefetch on auth routes to prevent repeated background GETs */}
-                    <Link prefetch={false} href="https://maiovo.com/homepage/" className="text-base text-muted-foreground hover:text-foreground" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link prefetch={false} href="/signin" className="text-base text-muted-foreground hover:text-foreground" onClick={() => setIsMobileMenuOpen(false)}>
                       {t('buttons.signIn')}
                     </Link>
                     <Button size="lg" className="w-full" asChild>
-                      <Link prefetch={false} href="https://maiovo.com/homepage/" onClick={() => setIsMobileMenuOpen(false)}>{t('buttons.getStarted')}</Link>
+                      <Link prefetch={false} href="/signup" onClick={() => setIsMobileMenuOpen(false)}>{t('buttons.getStarted')}</Link>
                     </Button>
                   </>
                 )}
