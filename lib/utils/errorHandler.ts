@@ -5,8 +5,6 @@
  */
 
 import { toast } from 'sonner';
-import { useLimitExceededModalStore } from '@/store/shared/limitExceededModal';
-import { useCreditsStore } from '@/store/shared/credits';
 
 export interface ParsedError {
   message: string;
@@ -142,32 +140,18 @@ export async function handleErrorWithModal(error: any, defaultMessage: string = 
 
   // Determine final error message (use parsed message, fallback to default)
   const finalErrorMessage = parsed.message || defaultMessage;
-  
+
   // Always show toast with error message
   toast.error(finalErrorMessage);
 
-  // If it's a limit/credits error, also show modal with the SAME message
+  // Log limit/credits errors for debugging
   if (parsed.isLimitError) {
-    // Refresh credits to get latest data
-    await useCreditsStore.getState().refreshCredits(true);
-    
-    const creditsStore = useCreditsStore.getState();
-    const reason = parsed.reason || 'insufficient_credits';
-    
-    // Use the SAME error message for modal (to match toast)
-    // This ensures consistency between toast and modal
-    const modalErrorMessage = finalErrorMessage;
-
-    useLimitExceededModalStore.getState().openModal(
-      reason as 'profile_limit_reached' | 'post_limit_reached' | 'insufficient_credits' | 'plan_limit',
-      modalErrorMessage,
-      {
-        profileUsage: creditsStore.profileLimits,
-        postUsage: creditsStore.postLimits,
-        creditsRemaining: parsed.creditsRemaining ?? creditsStore.creditsRemaining,
-        currentPlan: parsed.currentPlan ?? creditsStore.currentPlan,
-      }
-    );
+    console.error('[handleErrorWithModal] Limit/credits error:', {
+      reason: parsed.reason,
+      creditsRequired: parsed.creditsRequired,
+      creditsRemaining: parsed.creditsRemaining,
+      message: finalErrorMessage,
+    });
   }
 }
 

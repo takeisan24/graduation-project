@@ -1,7 +1,7 @@
 /**
  * POST /api/projects/[id]/generate
- * Generate content for a project with paywall checks
- * 
+ * Generate content for a project
+ *
  * Refactored: Route handler only handles request/response, logic moved to service layer
  */
 
@@ -9,7 +9,6 @@ import { NextRequest } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { success, fail } from "@/lib/response";
 import { generateAllPlatformContent } from "@/lib/ai/contentService";
-import { withPaywallCheck } from "@/lib/paywall";
 import { deductCredits, trackUsage } from "@/lib/usage";
 import { CREDIT_COSTS } from "@/lib/usage";
 import { getProjectById, createDraft } from "@/lib/services/db/projects";
@@ -24,24 +23,23 @@ export async function POST(
     if (!user) return fail("Unauthorized", 401);
 
     // 2. Get input from frontend
-    const { 
-      sourceType = 'prompt', 
-      sourceContent, 
-      filePublicUrl, 
-      platforms = ['instagram', 'tiktok', 'x'], 
+    const {
+      sourceType = 'prompt',
+      sourceContent,
+      filePublicUrl,
+      platforms = ['instagram', 'tiktok', 'x'],
       mediaTypes = ['text', 'image'],
-      autoPublish = false 
+      autoPublish = false
     } = await req.json();
-    
+
     if (!sourceContent) return fail("Missing sourceContent", 400);
 
     // 3. Check project exists via service layer
     const project = await getProjectById(params.id, user.id);
-    
+
     if (!project) return fail("Project not found", 404);
 
-    // 4. Check paywall for credits (don't deduct yet)
-    // Calculate total credits needed
+    // 4. Calculate total credits needed
     let totalCreditsNeeded = 0;
     const creditActions: Array<keyof typeof CREDIT_COSTS> = [];
     for (const mediaType of mediaTypes) {
@@ -56,26 +54,7 @@ export async function POST(
       creditActions.push(action);
     }
 
-    // Check if user has enough credits (use highest cost action for check)
-    // We'll deduct for each media type separately after success
-    const highestAction = creditActions.length > 0 ? creditActions[creditActions.length - 1] : 'TEXT_ONLY';
-    const paywallCheck = await withPaywallCheck(req, 'credits', highestAction);
-    if ('error' in paywallCheck) {
-      return fail(paywallCheck.error.message, paywallCheck.error.status);
-    }
-    
-    const { paywallResult } = paywallCheck;
-    if (!paywallResult.allowed || (paywallResult.creditsRemaining !== undefined && paywallResult.creditsRemaining < totalCreditsNeeded)) {
-      return fail(JSON.stringify({
-        message: paywallResult.reason || "Insufficient credits",
-        upgradeRequired: paywallResult.upgradeRequired ?? true,
-        creditsRequired: totalCreditsNeeded,
-        creditsRemaining: paywallResult.creditsRemaining ?? 0,
-        totalCredits: paywallResult.totalCredits ?? 0
-      }), 403);
-    }
-
-    // 7. Generate content with AI
+    // 5. Generate content with AI
     let generatedContent;
     try {
       generatedContent = await generateAllPlatformContent({
@@ -86,11 +65,10 @@ export async function POST(
       });
     } catch (aiError: any) {
       console.error("AI generation error:", aiError);
-      // Don't deduct credits if generation failed
       return fail("Content generation failed", 500);
     }
 
-    // 8. Save drafts for each generated content via service layer
+    // 6. Save drafts for each generated content via service layer
     const drafts = [];
     for (const content of generatedContent) {
       const draft = await createDraft({
@@ -106,7 +84,7 @@ export async function POST(
         console.error(`Error saving draft for ${content.platform}`);
         continue;
       }
-      
+
       drafts.push(draft);
     }
 
@@ -114,9 +92,8 @@ export async function POST(
       return fail("Failed to save any drafts", 500);
     }
 
-    // 9. Deduct credits ONLY after successful generation and saving
-    // Deduct for each media type × platforms
-    let latestCreditsRemaining = paywallResult.creditsRemaining ?? 0;
+    // 7. Deduct credits after successful generation and saving
+    let latestCreditsRemaining = 0;
     for (const mediaType of mediaTypes) {
       let action: keyof typeof CREDIT_COSTS;
       switch (mediaType) {
@@ -125,15 +102,14 @@ export async function POST(
         case "video": action = 'WITH_VIDEO'; break;
         default: continue;
       }
-      
-      // Deduct for each platform
+
       for (let i = 0; i < platforms.length; i++) {
         const creditResult = await deductCredits(user.id, action, {
           projectId: project.id,
           platforms: platforms.join(','),
           mediaTypes: mediaTypes.join(',')
         });
-        
+
         if (!creditResult.success) {
           console.error("Failed to deduct credits after content generation:", creditResult);
         } else {
@@ -142,7 +118,7 @@ export async function POST(
       }
     }
 
-    // 10. Track usage
+    // 8. Track usage
     await trackUsage(user.id, 'project_created');
     for (const content of generatedContent) {
       if (content.media_type === 'image') {
@@ -158,7 +134,7 @@ export async function POST(
       creditsRemaining: latestCreditsRemaining,
       message: `Generated ${drafts.length} content pieces across ${platforms.length} platforms`
     }, 201);
-    
+
   } catch (e: any) {
     console.error("Generate content error:", e);
     return fail(e.message, 500);

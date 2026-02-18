@@ -7,11 +7,8 @@
 import { create } from 'zustand';
 import { supabaseClient } from '@/lib/supabaseClient';
 import { toast } from 'sonner';
-import { useCreditsStore } from '../../shared/credits';
-import { useLimitExceededModalStore } from '../../shared/limitExceededModal';
-import { CREDIT_COSTS } from '@/lib/usage';
 import { handleErrorWithModal } from '@/lib/utils/errorHandler';
-import { PLAN_ERRORS, CREDIT_ERRORS, GENERIC_ERRORS, MEDIA_ERRORS, VIDEO_ERRORS } from '@/lib/messages/errors';
+import { GENERIC_ERRORS, MEDIA_ERRORS, VIDEO_ERRORS } from '@/lib/messages/errors';
 import type { MediaFile } from '../../shared/types';
 
 interface VideoGenModalState {
@@ -41,45 +38,8 @@ export const useVideoGenModalStore = create<VideoGenModalState>((set, get) => ({
   generateVideo: async (prompt, negativePrompt, aspectRatio, resolution, selectedPostId, onAddMedia) => {
     if (!prompt.trim() || !selectedPostId) return;
 
-    // FE Validation: Check plan first (Free plan doesn't have video generation feature)
-    const creditsStore = useCreditsStore.getState();
-    await creditsStore.refreshCredits(true); // Force refresh to get latest plan and credits
-    const currentPlan = useCreditsStore.getState().currentPlan;
-    
-    // Check if user is on Free plan - video generation is not available for Free plan
-    if (currentPlan === 'free' || !currentPlan) {
-      const errorMessage = PLAN_ERRORS.FREE_PLAN_NO_VIDEO_GENERATION;
-      useLimitExceededModalStore.getState().openModal('plan_limit', errorMessage, {
-        profileUsage: useCreditsStore.getState().profileLimits,
-        postUsage: useCreditsStore.getState().postLimits,
-        creditsRemaining: useCreditsStore.getState().creditsRemaining,
-        currentPlan: currentPlan,
-      });
-      // Show error toast (only here, not duplicate in handleErrorWithModal)
-      toast.error(errorMessage);
-      return;
-    }
-
     // Show loading toast immediately
     const loadingToastId = toast.loading("Đang gửi yêu cầu tạo video đến AI...");
-
-    // FE Validation: Check credits before generating (only if plan is not Free)
-    const creditsRemaining = useCreditsStore.getState().creditsRemaining;
-    const creditsRequired = CREDIT_COSTS.WITH_VIDEO; // 20 credits per video
-    
-    if (creditsRemaining < creditsRequired) {
-      // Show limit exceeded modal
-      const errorMessage = CREDIT_ERRORS.INSUFFICIENT_CREDITS_VIDEO(creditsRequired, creditsRemaining);
-      useLimitExceededModalStore.getState().openModal('insufficient_credits', errorMessage, {
-        profileUsage: useCreditsStore.getState().profileLimits,
-        postUsage: useCreditsStore.getState().postLimits,
-        creditsRemaining: creditsRemaining,
-        currentPlan: currentPlan,
-      });
-      // Show error toast (only here, not duplicate in handleErrorWithModal)
-      toast.error(errorMessage, { id: loadingToastId });
-      return;
-    }
 
     // Modal đã được đóng trong component trước khi gọi function này
     set({ isGeneratingMedia: true });
@@ -186,11 +146,6 @@ export const useVideoGenModalStore = create<VideoGenModalState>((set, get) => ({
 
       // Add media to post via callback
       onAddMedia(selectedPostId, [newMediaFile]);
-      
-      // Update credits from API response
-      if (apiData?.creditsRemaining !== undefined) {
-        useCreditsStore.getState().updateCredits(apiData.creditsRemaining);
-      }
       
       toast.success(`Video đã được tạo và thêm vào bài viết!`, { id: loadingToastId, duration: 5000 });
 

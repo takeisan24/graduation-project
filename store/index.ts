@@ -6,12 +6,10 @@
 
 import { initializePendingPostsWatcher, checkPendingPostsWithStores } from './shared/statusCheck';
 
-import { useCreditsStore } from './shared/credits';
 import { useConnectionsStore } from './shared/connections';
 import { useCalendarStore } from './shared/calendar';
 import { usePublishedPostsStore } from './published/publishedPageStore';
 import { useFailedPostsStore } from './failed/failedPageStore';
-import { useVideoProjectsStore } from './videos/videosPageStore';
 import { useDraftsStore } from './drafts/draftsPageStore';
 import { useSettingsPageStore } from './settings/settingsPageStore';
 import { useApiDashboardPageStore } from './api-dashboard/apiDashboardPageStore';
@@ -25,15 +23,11 @@ import { useCreateSourcesStore } from './create/sources';
 import { useCreateLightboxStore } from './create/lightbox';
 import { useImageGenModalStore } from './create/modals/imageGen';
 import { useVideoGenModalStore } from './create/modals/videoGen';
-import { useTextToVideoModalStore } from './create/modals/textToVideo';
 import { useMediaLibraryModalStore } from './create/modals/mediaLibrary';
-import { useVideoFactoryStore } from './videos/videoFactory';
 import { usePublishModalStore } from './create/modals/publish';
-import { useLimitExceededModalStore } from './shared/limitExceededModal';
 
 export type {
   FailedPost,
-  VideoProject,
   DraftPost,
   PublishedPost,
   Post,
@@ -57,12 +51,10 @@ if (typeof window !== 'undefined') {
 }
 
 export {
-  useCreditsStore,
   useConnectionsStore,
   useCalendarStore,
   usePublishedPostsStore,
   useFailedPostsStore,
-  useVideoProjectsStore,
   useDraftsStore,
   useSettingsPageStore,
   useApiDashboardPageStore,
@@ -76,10 +68,7 @@ export {
   useCreateLightboxStore,
   useImageGenModalStore,
   useVideoGenModalStore,
-  useTextToVideoModalStore,
   useMediaLibraryModalStore,
-  useVideoFactoryStore,
   usePublishModalStore,
-  useLimitExceededModalStore,
 };
 

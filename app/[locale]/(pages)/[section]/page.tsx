@@ -7,7 +7,7 @@ import PageLoader from "@/components/shared/page-loader"
 
 // import { useCreatePage } from "@/hooks/useCreatePage"
 import { useEffect, useMemo, useRef, useState } from "react"
-import { useNavigationStore, useCreditsStore } from "@/store"
+import { useNavigationStore } from "@/store"
 import { useShallow } from 'zustand/react/shallow'
 import { useRequireAuth } from "@/hooks/useRequireAuth"
 import { useCheckPendingPosts } from "@/lib/hooks/useCheckPendingPosts"
@@ -36,8 +36,6 @@ export default function SectionPage({ params }: { params: { section: string } })
       setIsSidebarOpen: state.setIsSidebarOpen,
     }))
   );
-  const refreshCredits = useCreditsStore(state => state.refreshCredits);
-
   /**
    * Memoize sectionFromUrl to prevent unnecessary re-renders
    * params.section should be stable, but memoizing ensures consistency
@@ -48,9 +46,6 @@ export default function SectionPage({ params }: { params: { section: string } })
   const hasSetActiveSectionRef = useRef(false);
   const lastSectionRef = useRef<string | null>(null);
   
-  // Track if we've already refreshed credits to prevent duplicate calls
-  const hasRefreshedCreditsRef = useRef(false);
-  const lastCreditsRefreshSectionRef = useRef<string | null>(null);
 
   // Mount effect - check sessionStorage sau khi mounted
   useEffect(() => {
@@ -97,21 +92,7 @@ export default function SectionPage({ params }: { params: { section: string } })
    * Hydrate limits/credits for "create" and "api-dashboard" sections
    * Only refreshes once per section change to prevent duplicate API calls
    */
-  useEffect(() => {
-    // Skip if already refreshed for this section
-    if (lastCreditsRefreshSectionRef.current === sectionFromUrl && hasRefreshedCreditsRef.current) {
-      return;
-    }
-    
-    if (!authLoading && (sectionFromUrl === 'create' || sectionFromUrl === 'api-dashboard')) {
-      refreshCredits();
-      hasRefreshedCreditsRef.current = true;
-      lastCreditsRefreshSectionRef.current = sectionFromUrl;
-    } else {
-      // Reset flag when switching to a section that doesn't need credits refresh
-      hasRefreshedCreditsRef.current = false;
-    }
-  }, [authLoading, sectionFromUrl, refreshCredits]);
+  // Credits refresh removed (credits store deleted)
 
   // Show full page loader only on first session load
   if (!isMounted || isInitialLoad) {

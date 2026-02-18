@@ -6,17 +6,14 @@
 
 import { create } from 'zustand';
 import { useConnectionsStore } from '../shared/connections';
-import { useCreditsStore } from '../shared/credits';
 import type { ConnectionsState } from '../shared/connections';
-import type { CreditsState } from '../shared/credits';
 
 interface SettingsPageState {
   // State (from connections store)
   connectedAccounts: ConnectionsState['connectedAccounts'];
   connectedAccountsLoading: ConnectionsState['connectedAccountsLoading'];
   connectedAccountsError: ConnectionsState['connectedAccountsError'];
-  profileLimits: CreditsState['profileLimits'];
-  
+
   // Actions
   loadConnectedAccounts: (force?: boolean) => Promise<void>;
   refreshConnectedAccounts: () => Promise<void>;
@@ -24,10 +21,6 @@ interface SettingsPageState {
 }
 
 export const useSettingsPageStore = create<SettingsPageState>((set, get) => {
-  // Get connections and credits stores
-  const connectionsStore = useConnectionsStore.getState();
-  const creditsStore = useCreditsStore.getState();
-  
   return {
     // State (delegated to connections store)
     get connectedAccounts() {
@@ -39,10 +32,7 @@ export const useSettingsPageStore = create<SettingsPageState>((set, get) => {
     get connectedAccountsError() {
       return useConnectionsStore.getState().connectedAccountsError;
     },
-    get profileLimits() {
-      return useCreditsStore.getState().profileLimits;
-    },
-    
+
     // Actions (delegated to connections store)
     loadConnectedAccounts: async (force) => {
       await useConnectionsStore.getState().loadConnectedAccounts(force);

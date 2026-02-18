@@ -8,7 +8,6 @@ import { MEDIA_ERRORS } from '@/lib/messages/errors';
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold, Part } from "@google/generative-ai";
 import { GoogleGenAI } from "@google/genai";
 import { GoogleAIFileManager } from "@google/generative-ai/server";
-import { geminiKeyRotator } from './gemini-key-rotator';
 
 export class GeminiProvider {
   private config: AIProviderConfig;
@@ -28,7 +27,7 @@ export class GeminiProvider {
    * Create a temporary GoogleGenAI (Advanced) client with a rotated media key
    */
   private getMediaGenAIAdvanced(): { client: GoogleGenAI; apiKey: string } {
-    const apiKey = geminiKeyRotator.getNextKey();
+    const apiKey = process.env.GEMINI_API_KEY || '';
     return { client: new GoogleGenAI({ apiKey }), apiKey };
   }
 
@@ -184,7 +183,7 @@ export class GeminiProvider {
     // Each image request: 1 attempt, fail fast, let Manager decide to retry with a different key.
     const promises = Array(n).fill(null).map(async (_, index) => {
       // Get a rotated API key for this request
-      const mediaApiKey = geminiKeyRotator.getNextKey();
+      const mediaApiKey = (process.env.GEMINI_API_KEY || '');
 
       try {
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${mediaApiKey}`;
@@ -218,7 +217,7 @@ export class GeminiProvider {
           console.error(`[Gemini] Request ${index + 1}/${n} API error (${response.status}):`, errorText);
 
           if (response.status === 429) {
-            geminiKeyRotator.markRateLimited(mediaApiKey);
+            // Key rate-limited (single key mode, no rotation available)
             throw new Error(MEDIA_ERRORS.MODEL_RATE_LIMITED);
           }
           if (response.status === 500 || response.status === 503) {
@@ -292,7 +291,7 @@ export class GeminiProvider {
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:predict`;
 
     // Use rotated key for media generation
-    const mediaApiKey = geminiKeyRotator.getNextKey();
+    const mediaApiKey = (process.env.GEMINI_API_KEY || '');
 
     // Map Aspect Ratio cho Imagen
     let googleAspectRatio = aspectRatio;
@@ -318,32 +317,7 @@ export class GeminiProvider {
       const errorText = await response.text();
       console.error(`[Gemini REST] API error (${response.status}):`, errorText);
       if (response.status === 429) {
-        geminiKeyRotator.markRateLimited(mediaApiKey);
-        // Retry with a different key if available
-        if (geminiKeyRotator.getAvailableKeyCount() > 0) {
-          console.warn(`[Gemini REST] Rate limited (429), retrying with next key...`);
-          const retryKey = geminiKeyRotator.getNextKey();
-          const retryResponse = await fetch(`${apiUrl}?key=${retryKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            signal: AbortSignal.timeout(120000)
-          });
-          if (!retryResponse.ok) {
-            if (retryResponse.status === 429) geminiKeyRotator.markRateLimited(retryKey);
-            throw new Error(`Imagen API Error (${retryResponse.status})`);
-          }
-          const retryData = await retryResponse.json();
-          const retryPredictions = retryData.predictions || [];
-          if (!retryPredictions.length) throw new Error("API retry succeeded but no image data.");
-          return {
-            url: '',
-            images: retryPredictions.map((p: any) => ({
-              base64: p.bytesBase64Encoded || p.output,
-              mimeType: 'image/png'
-            }))
-          };
-        }
+        console.warn(`[Gemini REST] Rate limited (429). Single key mode, no rotation available.`);
       }
       throw new Error(`Imagen API Error (${response.status})`);
     }
@@ -651,7 +625,7 @@ export class GeminiProvider {
         if ((isOverloaded || isRateLimited) && attempt < maxAttempts) {
           const delay = isRateLimited ? 3000 * attempt : 8000 * attempt;
           console.warn(`[Gemini] Video: Server error (${status || errorMessage.substring(0, 50)}), retrying (${attempt}/${maxAttempts}) after ${delay / 1000}s...`);
-          if (isRateLimited) geminiKeyRotator.markRateLimited(mediaApiKey);
+          if (isRateLimited) // Key rate-limited (single key mode, no rotation available)
           await new Promise((resolve) => setTimeout(resolve, delay));
           continue;
         }

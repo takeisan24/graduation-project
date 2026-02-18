@@ -7,8 +7,6 @@
 import { create } from 'zustand';
 import { saveToLocalStorage, loadFromLocalStorage } from '@/lib/utils/storage';
 import { toast } from 'sonner';
-import { useCreditsStore } from '../shared/credits';
-import type { CreditsState } from '../shared/credits';
 
 interface ApiStats {
   apiCalls: number;
@@ -32,15 +30,9 @@ interface ApiDashboardPageState {
   // State
   apiStats: ApiStats;
   apiKeys: ApiKey[];
-  postLimits: CreditsState['postLimits'];
-  profileLimits: CreditsState['profileLimits'];
-  usageHistoryTrigger: CreditsState['usageHistoryTrigger'];
-  usageHistoryNeedsRefresh: CreditsState['usageHistoryNeedsRefresh'];
-  
   // Actions
   handleRegenerateKey: (keyId: string) => void;
   handleCreateKey: () => void;
-  markUsageHistoryRefreshed: () => void;
 }
 
 export const useApiDashboardPageStore = create<ApiDashboardPageState>((set, get) => ({
@@ -54,20 +46,6 @@ export const useApiDashboardPageStore = create<ApiDashboardPageState>((set, get)
     { id: '1', name: 'Production Key', type: 'production', lastUsed: '2 hours ago', isActive: true },
     { id: '2', name: 'Development Key', type: 'development', lastUsed: '1 day ago', isActive: true }
   ]),
-  
-  // State from credits store
-  get postLimits() {
-    return useCreditsStore.getState().postLimits;
-  },
-  get profileLimits() {
-    return useCreditsStore.getState().profileLimits;
-  },
-  get usageHistoryTrigger() {
-    return useCreditsStore.getState().usageHistoryTrigger;
-  },
-  get usageHistoryNeedsRefresh() {
-    return useCreditsStore.getState().usageHistoryNeedsRefresh;
-  },
   
   // Actions
   handleRegenerateKey: (keyId) => {
@@ -92,15 +70,11 @@ export const useApiDashboardPageStore = create<ApiDashboardPageState>((set, get)
       lastUsed: 'Never',
       isActive: true
     };
-    
+
     const updatedKeys = [...apiKeys, newKey];
     set({ apiKeys: updatedKeys });
     saveToLocalStorage('apiKeys', updatedKeys);
     toast.success('API key mới đã được tạo!');
-  },
-  
-  markUsageHistoryRefreshed: () => {
-    useCreditsStore.getState().markUsageHistoryRefreshed();
   },
 }));
 

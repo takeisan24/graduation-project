@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import { supabaseClient } from "@/lib/supabaseClient"
 import type { User, Session } from "@supabase/supabase-js"
 import { clearLocalStorage } from "@/lib/utils/storage"
-import { useCreditsStore } from "@/store"
 
 // Biến global chỉ để chặn việc gọi API dữ liệu nặng nhiều lần
 // KHÔNG dùng để chặn việc kiểm tra session đăng nhập
@@ -26,10 +25,7 @@ export function useAuth() {
     hasHydratedData = true;      // Đánh dấu đã load
 
     try {
-      // 1. Refresh credits
-      useCreditsStore.getState().refreshCredits(true);
-
-      // 2. Load các store khác
+      // Load các store khác
       const { useConnectionsStore, usePublishedPostsStore, useFailedPostsStore } = await import('@/store');
 
       // Chạy nền, không cần await blocking UI

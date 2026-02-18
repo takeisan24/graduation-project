@@ -10,7 +10,7 @@ import { PlatformFilter } from "@/components/shared/filters/PlatformFilter"
 import { usePostFilters } from "@/hooks/usePostFilters"
 import { clearConnectionsCache } from "@/lib/cache/connectionsCache";
 import { getAppUrl } from "@/lib/utils/urlConfig";
-import { useConnectionsStore, useCreditsStore, useLimitExceededModalStore } from "@/store"
+import { useConnectionsStore } from "@/store"
 import { Button } from "@/components/ui/button"
 import { Info, RotateCcw } from "lucide-react"
 import { toast } from "sonner"
@@ -70,14 +70,7 @@ export default function SettingsSection() {
     loadConnectedAccounts: state.loadConnectedAccounts,
     refreshConnectedAccounts: state.refreshConnectedAccounts,
   })))
-  const { profileLimits, postLimits, creditsRemaining, currentPlan, refreshCredits } = useCreditsStore(useShallow((state) => ({
-    profileLimits: state.profileLimits,
-    postLimits: state.postLimits,
-    creditsRemaining: state.creditsRemaining,
-    currentPlan: state.currentPlan,
-    refreshCredits: state.refreshCredits,
-  })))
-  const { openModal: openLimitExceededModal } = useLimitExceededModalStore()
+  // Credits and limit stores removed - validation handled server-side
 
   const [actionId, setActionId] = useState<string | null>(null)
   const [showBlueskyCredentials, setShowBlueskyCredentials] = useState(false)
@@ -281,32 +274,6 @@ export default function SettingsSection() {
       return;
     }
     // -----------------------------
-
-    // FE Validation: Check profile limit before connecting
-    await refreshCredits(true) // Force refresh to get latest limits
-    const currentProfileLimits = useCreditsStore.getState().profileLimits
-
-    console.log('[Settings] Checking profile limits before connect:', {
-      current: currentProfileLimits?.current,
-      limit: currentProfileLimits?.limit,
-      isLimitReached: currentProfileLimits && currentProfileLimits.limit !== -1 && currentProfileLimits.current >= currentProfileLimits.limit
-    });
-
-    if (currentProfileLimits && typeof currentProfileLimits.current === 'number' && typeof currentProfileLimits.limit === 'number' && currentProfileLimits.limit !== -1 && currentProfileLimits.current >= currentProfileLimits.limit) {
-      // Show limit exceeded modal
-      const errorMessage = LIMIT_ERRORS.PROFILE_LIMIT_REACHED(currentProfileLimits.current, currentProfileLimits.limit)
-      console.warn('[Settings] Profile limit reached (FE check):', errorMessage);
-
-      openLimitExceededModal('profile_limit_reached', errorMessage, {
-        profileUsage: currentProfileLimits,
-        postUsage: useCreditsStore.getState().postLimits,
-        creditsRemaining: useCreditsStore.getState().creditsRemaining,
-        currentPlan: useCreditsStore.getState().currentPlan,
-      })
-      // Still show error toast
-      toast.error(errorMessage)
-      return
-    }
 
     try {
       setActionId(provider)

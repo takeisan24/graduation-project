@@ -10,7 +10,6 @@ import DraftsSection from "./drafts/DraftsSection"
 import FailedSection from "./failed/FailedSection"
 import PublishedSection from "./published/PublishedSection"
 import SettingsSection from "./settings/SettingsSection"
-import VideosSection from "./videos/VideosSection"
 
 /**
  * Main sections manager component that renders the appropriate section based on activeSection
@@ -43,11 +42,6 @@ function SectionsManager() {
     case "failed":
       return (
         <FailedSection />
-      )
-
-    case "videos":
-      return (
-        <VideosSection />
       )
 
     case "api-dashboard":

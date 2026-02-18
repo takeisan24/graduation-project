@@ -10,8 +10,6 @@ import ImageGenModal from './ImageGenModal';
 import VideoGenModal from './VideoGenModal';
 import MediaLibrarySelectorModal from './MediaLibrarySelectorModal';
 import LightboxModal from './LightboxModal';
-import LimitExceededModal from './LimitExceededModal';
-
 export default function ModalManager() {
   // Chỉ lấy các state boolean để quyết định modal nào sẽ hiển thị
   const { isSourceModalOpen, isCreateFromSourceModalOpen } = useCreateSourcesStore(
@@ -36,7 +34,6 @@ export default function ModalManager() {
       {isImageGenModalOpen && <ImageGenModal />}
       {isVideoGenModalOpen && <VideoGenModal />}
       {isMediaLibraryModalOpen && <MediaLibrarySelectorModal />}
-      <LimitExceededModal />
     </>
   );
 }

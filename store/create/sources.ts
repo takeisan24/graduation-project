@@ -8,11 +8,8 @@ import { create } from 'zustand';
 import { saveToLocalStorage, loadFromLocalStorage } from '@/lib/utils/storage';
 import { supabaseClient } from '@/lib/supabaseClient';
 import { toast } from 'sonner';
-import { useCreditsStore } from '../shared/credits';
-import { useLimitExceededModalStore } from '../shared/limitExceededModal';
-import { CREDIT_COSTS } from '@/lib/usage';
 import { handleErrorWithModal } from '@/lib/utils/errorHandler';
-import { CREDIT_ERRORS, SOURCE_ERRORS, GENERIC_ERRORS } from '@/lib/messages/errors';
+import { SOURCE_ERRORS, GENERIC_ERRORS } from '@/lib/messages/errors';
 import type { SavedSource, SourceToGenerate, ChatMessage } from '../shared/types';
 import { HOOK_FORMULA, FORMATTING_CONSTRAINTS, ALL_HYPNOTIC_KEYWORDS } from "@/lib/constants/hypnotic-keywords";
 import { VIDEO_SCRIPT_TEMPLATES } from "@/lib/prompts";
@@ -94,26 +91,6 @@ export const useCreateSourcesStore = create<CreateSourcesState>((set, get) => ({
 
     const { idea, resourceUrl } = parseSourceValue(sourceToGenerate.value);
     const sourceType = sourceToGenerate.type;
-    // FE Validation: Check credits before generating posts from source
-    const creditsStore = useCreditsStore.getState();
-    await creditsStore.refreshCredits(true); // Force refresh to get latest credits
-    const creditsRemaining = useCreditsStore.getState().creditsRemaining;
-    const totalPosts = selectedPlatforms.reduce((acc, p) => acc + p.count, 0);
-    const creditsRequired = CREDIT_COSTS.TEXT_ONLY * totalPosts; // 1 credit per post/platform
-
-    if (creditsRemaining < creditsRequired) {
-      // Show limit exceeded modal
-      const errorMessage = CREDIT_ERRORS.INSUFFICIENT_CREDITS_CONTENT(totalPosts, creditsRequired, creditsRemaining);
-      useLimitExceededModalStore.getState().openModal('insufficient_credits', errorMessage, {
-        profileUsage: useCreditsStore.getState().profileLimits,
-        postUsage: useCreditsStore.getState().postLimits,
-        creditsRemaining: creditsRemaining,
-        currentPlan: useCreditsStore.getState().currentPlan,
-      });
-      // Show error toast (only here, not duplicate in handleErrorWithModal)
-      toast.error(errorMessage);
-      return false;
-    }
 
     // Cập nhật UI để báo cho người dùng biết quá trình bắt đầu
     if (options.onSetTyping) options.onSetTyping(true);
@@ -298,11 +275,6 @@ YÊU CẦU NGHIÊM NGẶT:
       const raw = await response.json();
       const data = (raw && typeof raw === 'object' && 'data' in raw) ? (raw as any).data : raw;
       const geminiResponseText: string = typeof data?.response === 'string' ? data.response : '';
-
-      // Update credits from API response if available
-      if (data?.creditsRemaining !== undefined) {
-        useCreditsStore.getState().updateCredits(data.creditsRemaining);
-      }
 
       // Lưu extractedContent từ API response (nếu có) để dùng cho chat AI
       // Chỉ lưu nếu sourceType là YouTube (extractedContent chỉ có khi gen từ YouTube)

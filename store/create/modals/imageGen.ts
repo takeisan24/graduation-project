@@ -8,11 +8,8 @@
 import { create } from 'zustand';
 import { supabaseClient } from '@/lib/supabaseClient';
 import { toast } from 'sonner';
-import { useCreditsStore } from '../../shared/credits';
-import { useLimitExceededModalStore } from '../../shared/limitExceededModal';
-import { CREDIT_COSTS } from '@/lib/usage';
 import { handleErrorWithModal } from '@/lib/utils/errorHandler';
-import { CREDIT_ERRORS, GENERIC_ERRORS, MEDIA_ERRORS } from '@/lib/messages/errors';
+import { GENERIC_ERRORS, MEDIA_ERRORS } from '@/lib/messages/errors';
 import { MODEL_IDS } from '@/lib/ai/providers/index';
 import type { MediaFile } from '../../shared/types';
 
@@ -123,28 +120,8 @@ export const useImageGenModalStore = create<ImageGenModalState>((set, get) => ({
   generateImage: async (prompt, count, size, aspectRatio, selectedPostId, onAddMedia, source, useSearch = false, imageSize = "1K") => {
     if (!prompt.trim()) return;
 
-    const costPerImage = CREDIT_COSTS.WITH_IMAGE;
-    const creditsRequired = costPerImage * count;
-
-    // Show loading toast with credit cost info
-    const loadingToastId = toast.loading(`Đang tạo ${count} ảnh (${creditsRequired} credits)...`);
-
-    // FE Validation: Check credits before generating
-    const creditsStore = useCreditsStore.getState();
-    await creditsStore.refreshCredits(true);
-    const creditsRemaining = useCreditsStore.getState().creditsRemaining;
-
-    if (creditsRemaining < creditsRequired) {
-      const errorMessage = CREDIT_ERRORS.INSUFFICIENT_CREDITS_IMAGE(count, creditsRequired, creditsRemaining);
-      useLimitExceededModalStore.getState().openModal('insufficient_credits', errorMessage, {
-        profileUsage: useCreditsStore.getState().profileLimits,
-        postUsage: useCreditsStore.getState().postLimits,
-        creditsRemaining: creditsRemaining,
-        currentPlan: useCreditsStore.getState().currentPlan,
-      });
-      toast.error(errorMessage, { id: loadingToastId });
-      return;
-    }
+    // Show loading toast
+    const loadingToastId = toast.loading(`Đang tạo ${count} ảnh...`);
 
     // Modal đã được đóng trong component trước khi gọi function này
     set({ isGeneratingMedia: true });
@@ -226,11 +203,6 @@ export const useImageGenModalStore = create<ImageGenModalState>((set, get) => ({
           onAddMedia(0, newMediaFiles);
         }
 
-        // Update credits from API response
-        if (data?.creditsRemaining !== undefined) {
-          useCreditsStore.getState().updateCredits(data.creditsRemaining);
-        }
-
         toast.success(`Đã tạo thành công ${newMediaFiles.length} ảnh!`, { id: loadingToastId });
       } else {
         throw new Error(MEDIA_ERRORS.IMAGE_DATA_PROCESS_FAILED);
@@ -268,10 +240,6 @@ export const useImageGenModalStore = create<ImageGenModalState>((set, get) => ({
         toast.error(`Tạo ảnh thất bại. Bạn không bị trừ credit. Vui lòng thử lại.`, { id: loadingToastId, duration: 8000 });
       }
 
-      // Refresh credits after error to ensure UI shows correct balance
-      try {
-        await useCreditsStore.getState().refreshCredits(true);
-      } catch { /* ignore refresh error */ }
     } finally {
       set({ isGeneratingMedia: false });
     }

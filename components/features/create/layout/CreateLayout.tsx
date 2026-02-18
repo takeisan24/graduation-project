@@ -5,11 +5,6 @@ import Sidebar from "./Sidebar"
 import { useNavigationStore } from '@/store'
 import { useShallow } from 'zustand/react/shallow'
 import ModalManager from "../modals/ModalManager"
-import { usePlanModal } from "@/hooks/usePlanModal"
-import DebugPlanModal from "./DebugPlanModal"
-import { useTopUpModal } from "@/hooks/useTopUpModal"
-import TopUpModal from "./TopUpModal"
-import PaymentConfirmationModal from "../modals/PaymentConfirmationModal"
 
 interface CreateLayoutProps {
   children: ReactNode
@@ -31,12 +26,6 @@ function CreateLayout({
   isSidebarOpen, 
   onSidebarToggle,
 }: CreateLayoutProps) {
-  // Plan modal state
-  const planModal = usePlanModal();
-  
-  // Top-up modal state
-  const topUpModal = useTopUpModal();
-  
   // Get wizard state to adjust z-index
   return (
     <div className="h-full bg-[#0C0717] text-white">
@@ -46,8 +35,6 @@ function CreateLayout({
         onSectionChange={onSectionChange}
         isSidebarOpen={isSidebarOpen}
         onSidebarToggle={onSidebarToggle}
-        onPlanModalClick={planModal.handlePlanAreaClick}
-        onTopUpClick={topUpModal.handleTopUpClick}
       />
       
       <div className="relative flex h-screen overflow-hidden">
@@ -63,34 +50,6 @@ function CreateLayout({
       {/* ModalManager - Render at layout level so modals work across all sections */}
       <ModalManager />
       
-      {/* Debug Plan Modal - Rendered at top level for proper overlay */}
-      {/* <DebugPlanModal
-        isOpen={planModal.isPlanModalOpen}
-        onClose={planModal.handlePlanModalClose}
-        selectedPlan={planModal.selectedPlan}
-        onPlanChange={planModal.setSelectedPlan}
-        creditsToAdd={planModal.creditsToAdd}
-        onCreditsChange={planModal.setCreditsToAdd}
-        onSubmit={planModal.handlePlanSubmit}
-        isSubmitting={planModal.isSubmittingPlan}
-        planOptions={planModal.planOptions}
-      /> */}
-      
-      {/* Top-Up Modal - Rendered at top level for proper overlay */}
-      {/* Top-Up Modal - Rendered at top level for proper overlay */}
-      <TopUpModal
-        isOpen={topUpModal.isTopUpModalOpen}
-        onClose={topUpModal.handleCloseModal}
-        creditPackages={topUpModal.creditPackages}
-        onBuyCredits={topUpModal.handleBuyCredits}
-      />
-
-       {/* Payment Modal */}
-       <PaymentConfirmationModal
-        isOpen={topUpModal.isPaymentModalOpen}
-        onClose={topUpModal.handleClosePaymentModal}
-        order={topUpModal.currentOrder}
-       />
     </div>
   )
 }

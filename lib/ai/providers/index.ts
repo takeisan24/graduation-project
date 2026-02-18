@@ -3,7 +3,7 @@
  * Centralized configuration for different AI providers and models
  */
 
-export type AIProvider = 'openai' | 'gemini' | 'fal' | 'anthropic';
+export type AIProvider = 'openai' | 'gemini' | 'anthropic';
 
 export type ModelType = 'text' | 'image' | 'video' | 'extraction';
 
@@ -143,28 +143,6 @@ export const AI_MODELS: Record<string, AIModel> = {
     capabilities: ['video-generation', 'high-quality', 'realistic']
   },
 
-  // Fal.ai Models
-  'fal-runway-gen3': {
-    id: 'fal-runway-gen3',
-    name: 'Runway Gen-3',
-    provider: 'fal',
-    type: 'video',
-    capabilities: ['video-generation', 'high-quality', 'realistic']
-  },
-  'fal-stable-video': {
-    id: 'fal-stable-video',
-    name: 'Stable Video Diffusion',
-    provider: 'fal',
-    type: 'video',
-    capabilities: ['video-generation', 'fast', 'cost-effective']
-  },
-  'fal-sdxl': {
-    id: 'fal-sdxl',
-    name: 'Stable Diffusion XL',
-    provider: 'fal',
-    type: 'image',
-    capabilities: ['image-generation', 'fast', 'customizable']
-  }
 };
 
 /**
@@ -185,12 +163,6 @@ export const PROVIDER_CONFIGS: Record<AIProvider, AIProviderConfig> = {
     baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
     timeout: 30000,
     retries: 3
-  },
-  fal: {
-    apiKey: process.env.FAL_AI_API_KEY || '',
-    baseUrl: 'https://fal.run',
-    timeout: 60000,
-    retries: 2
   },
   anthropic: {
     apiKey: process.env.ANTHROPIC_API_KEY || '',

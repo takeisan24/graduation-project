@@ -3,14 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher"
 import { Button } from "@/components/ui/button"
-import { useCreditsStore, useNavigationStore } from "@/store"
+import { useNavigationStore } from "@/store"
 import { Zap, AlertTriangle, RefreshCw, Plus, HardDrive, ChevronUp, LogOut, Users, Settings } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth"
-// import DebugPlanModal from "./DebugPlanModal"
-
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
-import { useShallow } from 'zustand/react/shallow';
+
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { supabaseClient } from "@/lib/supabaseClient";
 import { toast } from "sonner";
@@ -44,37 +42,15 @@ export default function Sidebar({
   const t = useTranslations('CreatePage.sidebar');
   const { user, signOut, loading: authLoading } = useAuth();
 
-  const { creditsRemaining, creditsUsed, totalCredits, currentPlan, profileLimits, isLoadingCredits, refreshCredits: refreshCreditsFromStore, storageUsage, refreshTrigger } = useCreditsStore(useShallow((state) => ({
-    creditsRemaining: state.creditsRemaining,
-    creditsUsed: state.creditsUsed,
-    totalCredits: state.totalCredits,
-    currentPlan: state.currentPlan,
-    profileLimits: state.profileLimits,
-    isLoadingCredits: state.isLoadingCredits,
-    refreshCredits: state.refreshCredits,
-    storageUsage: state.storageUsage,
-    refreshTrigger: state.refreshTrigger, // ✅ NEW: Watch trigger for updates
-  })));
-  const refreshCredits = useCallback((force?: boolean) => refreshCreditsFromStore(force), [refreshCreditsFromStore]);
-
-  // --- REFRESH CREDITS ON MOUNT ---
-  useEffect(() => {
-    // False = use cache if available (within 5 minutes)
-    refreshCredits(false);
-  }, [refreshCredits]);
-
-  // ✅ FIXED: Watch refreshTrigger instead of creditsRemaining
-  // This ensures we always update the UI when the store calls refreshCredits()
-  // No delays, no comparisons, just a simple trigger counter
-  useEffect(() => {
-    // Skip the initial trigger (0)
-    if (refreshTrigger > 0) {
-      console.log('[Sidebar] Credits refreshed by store (trigger:', refreshTrigger, ')');
-      // No need to call refreshCredits here - the store already did it
-      // This useEffect only serves to force re-render when credits change
-    }
-  }, [refreshTrigger]);
-  // ----------------------------------------------------------------
+  // Credits store removed - using default values
+  const creditsRemaining = 0;
+  const creditsUsed = 0;
+  const totalCredits = 0;
+  const currentPlan = 'free';
+  const profileLimits = { current: 0, limit: 0 };
+  const isLoadingCredits = false;
+  const storageUsage = null;
+  const refreshCredits = useCallback((_force?: boolean) => {}, []);
 
   // --- STORAGE DATA ---
   // Default fallback if loading or null
@@ -156,12 +132,6 @@ export default function Sidebar({
           label: t('createPost'),
           icon: "/Create.svg",
           url: "/create"
-        },
-        {
-          id: "videos",
-          label: t('videos'),
-          icon: "/Video.svg",
-          url: "/videos"
         },
         {
           id: "calendar",

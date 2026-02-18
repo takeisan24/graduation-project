@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { supabaseClient } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
-import { useCreditsStore } from "@/store/shared/credits";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,7 +23,11 @@ interface Order {
 
 export default function UserProfile() {
     const { user, refreshSession } = useAuth();
-    const { billingCycle, nextCreditGrantAt, unreceivedAnnualCredits, creditsPerPeriod } = useCreditsStore();
+    // Credits store removed - using default values
+    const billingCycle = 'monthly';
+    const nextCreditGrantAt: string | null = null;
+    const unreceivedAnnualCredits = 0;
+    const creditsPerPeriod = 0;
     const t = useTranslations('CreatePage.userProfile');
 
     const [isLoading, setIsLoading] = useState(false);

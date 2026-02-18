@@ -12,8 +12,6 @@ import { useConnectionsStore } from '../shared/connections';
 import { useCalendarStore } from '../shared/calendar';
 import { usePublishedPostsStore } from '../published/publishedPageStore';
 import { useFailedPostsStore } from '../failed/failedPageStore';
-import { useCreditsStore } from '../shared/credits';
-import { useLimitExceededModalStore } from '../shared/limitExceededModal';
 import { checkPostStatusAtScheduledTime } from '../shared/statusCheck';
 import { handleErrorWithModal } from '@/lib/utils/errorHandler';
 import { LIMIT_ERRORS, AUTH_ERRORS, CONNECTION_ERRORS, POST_ERRORS, MEDIA_ERRORS, GENERIC_ERRORS } from '@/lib/messages/errors';
@@ -57,25 +55,6 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
   handlePublish: async (postId, post, content, postMedia, options, overrides) => {
     if (!content.trim()) {
       toast.warning(POST_ERRORS.CANNOT_PUBLISH_EMPTY);
-      return;
-    }
-
-    // FE Validation: Check post limit before publishing
-    const creditsStore = useCreditsStore.getState();
-    await creditsStore.refreshCredits(true); // Force refresh to get latest limits
-    const postLimits = useCreditsStore.getState().postLimits;
-
-    if (postLimits && postLimits.limit !== -1 && postLimits.current >= postLimits.limit) {
-      // Show limit exceeded modal
-      const errorMessage = `Bạn đã đăng tối đa số bài post trong tháng (${postLimits.current}/${postLimits.limit} bài). Nâng cấp gói plan của bạn để tiếp tục đăng bài.`;
-      useLimitExceededModalStore.getState().openModal('post_limit_reached', errorMessage, {
-        profileUsage: useCreditsStore.getState().profileLimits,
-        postUsage: postLimits,
-        creditsRemaining: useCreditsStore.getState().creditsRemaining,
-        currentPlan: useCreditsStore.getState().currentPlan,
-      });
-      // Still show error toast
-      toast.error(errorMessage);
       return;
     }
 
@@ -335,25 +314,6 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
   schedulePost: async (postId, post, content, postMedia, date, time, options) => {
     if (!content.trim()) {
       toast.warning(POST_ERRORS.CANNOT_SCHEDULE_EMPTY);
-      return;
-    }
-
-    // FE Validation: Check post limit before scheduling
-    const creditsStore = useCreditsStore.getState();
-    await creditsStore.refreshCredits(true); // Force refresh to get latest limits
-    const postLimits = useCreditsStore.getState().postLimits;
-
-    if (postLimits && postLimits.limit !== -1 && postLimits.current >= postLimits.limit) {
-      // Show limit exceeded modal
-      const errorMessage = `Bạn đã đăng tối đa số bài post trong tháng (${postLimits.current}/${postLimits.limit} bài). Nâng cấp gói plan của bạn để tiếp tục đăng bài.`;
-      useLimitExceededModalStore.getState().openModal('post_limit_reached', errorMessage, {
-        profileUsage: useCreditsStore.getState().profileLimits,
-        postUsage: postLimits,
-        creditsRemaining: useCreditsStore.getState().creditsRemaining,
-        currentPlan: useCreditsStore.getState().currentPlan,
-      });
-      // Still show error toast
-      toast.error(errorMessage);
       return;
     }
 

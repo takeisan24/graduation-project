@@ -7,7 +7,6 @@ import Header from "@/components/shared/header"
 import Footer from "@/components/shared/footer"
 import { Sparkles, CheckCircle2 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
-import { useCreditsStore } from "@/store"
 
 /**
  * Page to handle OAuth callback success
@@ -45,24 +44,11 @@ export default function AuthSuccessPage() {
           // Case 1: Session is passed via query (server-exchanged flow)
           const session = JSON.parse(decodeURIComponent(sessionParam))
 
-          // Update credits from session data if available
-          if (session?.creditsRemaining !== undefined) {
-            const { updateCredits } = useCreditsStore.getState();
-            updateCredits(session.creditsRemaining);
-          }
-
           const { error: sessionError } = await supabaseClient.auth.setSession({
             access_token: session.access_token,
             refresh_token: session.refresh_token,
           })
           if (sessionError) throw sessionError
-          // Hydrate credits from backend to ensure accuracy after OAuth session set
-          try {
-            const { refreshCredits } = useCreditsStore.getState();
-            await refreshCredits();
-          } catch (e) {
-            console.warn('[AuthSuccess] refreshCredits failed:', e)
-          }
         } else {
           // Case 2: No session param - rely on detectSessionInUrl and persisted session
           // Wait for SIGNED_IN event or an existing session for up to ~3s

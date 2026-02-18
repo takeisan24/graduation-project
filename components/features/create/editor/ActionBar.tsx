@@ -6,14 +6,13 @@ import { ChevronDownIcon, ImageIcon, SparklesIcon, Wand2, Languages, Coins } fro
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 
 import { useCreatePostsStore, useCreateMediaStore, usePublishModalStore, useImageGenModalStore, useVideoGenModalStore, useMediaLibraryModalStore, useDraftsStore } from '@/store';
-import { useCreditsStore } from '@/store/shared/credits';
 import { useShallow } from 'zustand/react/shallow';
 import { useLocale, useTranslations } from 'next-intl';
 
 export default function ActionBar() {
   const t = useTranslations('CreatePage.createSection.actionBar');
   const locale = useLocale();
-  const creditsRemaining = useCreditsStore(state => state.creditsRemaining);
+  const creditsRemaining = 0; // Credits store removed
 
   const {
     selectedPostId,

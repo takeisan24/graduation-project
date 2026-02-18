@@ -6,7 +6,6 @@
 import { AIProvider, AIProviderConfig, getProviderConfig, getModelConfig, isModelAvailable } from './index';
 import { OpenAIProvider } from './openai';
 import { GeminiProvider } from './gemini';
-import { FalProvider } from './fal';
 
 export class AIProviderManager {
   private providers: Map<AIProvider, any> = new Map();
@@ -41,15 +40,6 @@ export class AIProviderManager {
       console.warn('[AIProviderManager] Gemini provider not available (missing API key)');
     }
 
-    // Initialize Fal.ai
-    const falConfig = getProviderConfig('fal');
-    if (falConfig && falConfig.apiKey) {
-      const maskedKey = this.maskApiKey(falConfig.apiKey);
-      console.log(`[AIProviderManager] Initializing Fal.ai provider with key: ${maskedKey}`);
-      this.providers.set('fal', new FalProvider(falConfig));
-    } else {
-      console.warn('[AIProviderManager] Fal.ai provider not available (missing API key)');
-    }
   }
 
   /**
@@ -161,8 +151,6 @@ export class AIProviderManager {
     if (model.provider === 'openai') {
       const result = await provider.generateImage({ model: modelId, prompt, ...options });
       return { url: result.url, revisedPrompt: result.revisedPrompt };
-    } else if (model.provider === 'fal') {
-      return await provider.generateImage({ model: modelId, prompt, ...options });
     } else if (model.provider === 'gemini') {
       // Gemini returns { url, images } format
       const result = await provider.generateImage({
@@ -187,7 +175,7 @@ export class AIProviderManager {
    * Generate image with automatic retry using the SAME model + key rotation.
    *
    * Only gemini-3-pro-image-preview renders text in images well.
-   * Other models (dall-e, fal-sdxl, gemini-2.5-flash-image) produce broken text.
+   * Other models (dall-e, gemini-2.5-flash-image) produce broken text.
    * So instead of switching models, we retry the same model with a different API key
    * (Gemini key rotator will pick a fresh key each attempt).
    *
@@ -270,9 +258,7 @@ export class AIProviderManager {
 
     const provider = this.getProvider(model.provider);
 
-    if (model.provider === 'fal') {
-      return await provider.generateVideo({ model: modelId, prompt, ...options });
-    } else if (model.provider === 'gemini') {
+    if (model.provider === 'gemini') {
       // Gemini returns { url, blob } format (blob is the video file)
       const result = await provider.generateVideo({
         model: modelId,
@@ -377,12 +363,6 @@ export class AIProviderManager {
           return { url: result.images[0].base64, images: result.images };
         }
         return { url: result.url };
-      } else if (model.provider === 'fal') {
-        return await provider.generatePlatformImage({
-          platform,
-          extracted,
-          model: modelId
-        });
       } else if (model.provider === 'openai') {
         const prompt = this.generateImagePrompt(platform, extracted);
         return await provider.generateImage({
@@ -406,12 +386,6 @@ export class AIProviderManager {
           return { url: '', blob: result.blob };
         }
         return { url: result.url, jobId: result.jobId };
-      } else if (model.provider === 'fal') {
-        return await provider.generatePlatformVideo({
-          platform,
-          extracted,
-          model: modelId
-        });
       }
     }
 
@@ -468,11 +442,7 @@ export class AIProviderManager {
   }> {
     const providerInstance = this.getProvider(provider);
 
-    if (provider === 'fal') {
-      return await providerInstance.getJobStatus(jobId);
-    } else {
-      throw new Error(`Job status checking not supported for provider ${provider}`);
-    }
+    throw new Error(`Job status checking not supported for provider ${provider}`);
   }
 
   /**

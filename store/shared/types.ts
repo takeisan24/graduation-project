@@ -4,16 +4,6 @@
  * All TypeScript interfaces and types used across multiple stores
  */
 
-import type {
-  TextToVideoConfig,
-  VideoFactoryState,
-  VideoFactoryStep,
-  VideoSourceConfig,
-  VideoCutConfig,
-  PostProductionConfig,
-  VideoFactoryClipDTO,
-  PostProcessHistoryGroupDTO
-} from '@/lib/types/video';
 import { CalendarEventType } from '@/lib/types/calendar';
 import { Framework } from '@/lib/constants/content-strategy';
 
@@ -101,35 +91,6 @@ export interface FailedPost {
   media?: string[];
 }
 
-/**
- * Video project interface
- */
-export interface VideoProject {
-  id: string;
-  title: string;
-  thumbnail: string;
-  duration: string;
-  createdAt: string;
-  status: 'processing' | 'completed' | 'failed';
-  type?: 'factory' | 'text-to-video' | 'manual';
-  textToVideoConfig?: TextToVideoConfig;
-  originalFile?: File;
-  options?: {
-    language: string;
-    multiSpeaker: boolean;
-    translate: boolean;
-  };
-  jobId?: string; // ✅ LEGACY: Cut job ID (for backward compatibility)
-  projectId?: string; // ✅ PROJECT-CENTRIC: Backend project ID (preferred)
-  progress?: number; // 0-100
-  progressMessage?: string;
-  videoUrl?: string;
-
-  // ✅ NEW: Post-production outputs (Unified with AI Video)
-  final_video_url?: string;
-  final_video_s3_key?: string;
-  final_thumbnail_url?: string;
-}
 
 /**
  * Media file interface
@@ -238,17 +199,4 @@ export interface ApiKey {
   isActive: boolean;
 }
 
-/**
- * Re-export video types for convenience
- */
-export type {
-  TextToVideoConfig,
-  VideoFactoryState,
-  VideoFactoryStep,
-  VideoSourceConfig,
-  VideoCutConfig,
-  PostProductionConfig,
-  VideoFactoryClipDTO,
-  PostProcessHistoryGroupDTO
-};
 

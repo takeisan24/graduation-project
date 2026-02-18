@@ -32,12 +32,6 @@ export default function Header() {
           <Link href="/#use-cases" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             {t('nav.useCases')}
           </Link>
-          <Link href="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            {t('nav.pricing')}
-          </Link>
-          <Link href="/faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            {t('nav.faq')}
-          </Link>
         </nav>
 
         {/* --- Các nút bấm cho Desktop --- */}
@@ -98,12 +92,6 @@ export default function Header() {
             </Link>
             <Link href="/#use-cases" className="text-base text-muted-foreground hover:text-foreground" onClick={() => setIsMobileMenuOpen(false)}>
               {t('nav.useCases')}
-            </Link>
-            <Link href="/pricing" className="text-base text-muted-foreground hover:text-foreground" onClick={() => setIsMobileMenuOpen(false)}>
-              {t('nav.pricing')}
-            </Link>
-            <Link href="/faq" className="text-base text-muted-foreground hover:text-foreground" onClick={() => setIsMobileMenuOpen(false)}>
-              {t('nav.faq')}
             </Link>
 
             {/* Vạch ngăn cách */}

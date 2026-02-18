@@ -10,10 +10,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Enable instrumentation hook for auto-importing accounts on startup
-  experimental: {
-    instrumentationHook: true,
-  },
 }
 
 const withNextIntl = createNextIntlPlugin();

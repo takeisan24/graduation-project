@@ -7,7 +7,6 @@
 import { create } from 'zustand';
 import { supabaseClient } from '@/lib/supabaseClient';
 import { toast } from 'sonner';
-import { useCreditsStore } from '../shared/credits';
 import { handleErrorWithModal, parseError } from '@/lib/utils/errorHandler';
 import type { ChatMessage } from '../shared/types';
 import { HOOK_FORMULA, FORMATTING_CONSTRAINTS, ALL_HYPNOTIC_KEYWORDS } from "@/lib/constants/hypnotic-keywords";
@@ -537,11 +536,6 @@ ${VIDEO_SCRIPT_TEMPLATES}
       set(state => ({
         chatMessages: [...state.chatMessages, { role: 'assistant', content: aiResponseForChat }]
       }));
-
-      // Update credits from API response
-      if (data?.creditsRemaining !== undefined && !data?.isFreeMessage) {
-        useCreditsStore.getState().updateCredits(data.creditsRemaining);
-      }
 
       // Lưu trữ sessionId mới nhận được từ API vào state để các tin nhắn sau gửi kèm
       if (data?.sessionId) {

@@ -12,7 +12,6 @@ import Footer from "@/components/shared/footer";
 import Link from "next/link";
 import { supabaseClient } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
-import { useCreditsStore } from "@/store";
 import { useTranslations } from "next-intl";
 import { getAppUrl } from "@/lib/utils/urlConfig";
 
@@ -78,12 +77,6 @@ export default function SignInPage() {
           hasRefreshToken: !!data.session.refresh_token,
         });
 
-        // Update credits from auth response if available
-        if (data?.creditsRemaining !== undefined) {
-          const { updateCredits } = useCreditsStore.getState();
-          updateCredits(data.creditsRemaining);
-        }
-
         const { error: sessionError, data: sessionData } =
           await supabaseClient.auth.setSession({
             access_token: data.session.access_token,
@@ -96,14 +89,6 @@ export default function SignInPage() {
         }
 
         console.log("[SignIn] setSession completed, verifying persistence...");
-
-        // Hydrate credits from backend to ensure accuracy after session is set
-        try {
-          const { refreshCredits } = useCreditsStore.getState();
-          await refreshCredits();
-        } catch (e) {
-          console.warn("[SignIn] refreshCredits failed:", e);
-        }
 
         // Verify session was actually saved
         await new Promise<void>((resolve) => {

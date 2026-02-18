@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Zap, Activity, FileText, CheckCircle2, XCircle, Users, Sparkles, ImageIcon, Video, Brain, TrendingUp, Copy, RefreshCw, Plus, Key, Shield, AlertTriangle } from "lucide-react"
 import { cn } from "@/lib/utils/cn";
 import { useApiDashboardPageStore } from "@/store/api-dashboard/apiDashboardPageStore";
-import { useCreditsStore } from "@/store/shared/credits";
 import { usePublishedPostsStore } from "@/store/published/publishedPageStore";
 import { useFailedPostsStore } from "@/store/failed/failedPageStore";
 import { useShallow } from 'zustand/react/shallow';
@@ -55,14 +54,13 @@ export default function ApiDashboardSection() {
     handleCreateKey: state.handleCreateKey,
   })));
 
-  const { creditsRemaining, creditsUsed, totalCredits, currentPlan, postLimits, profileLimits } = useCreditsStore(useShallow((state) => ({
-    creditsRemaining: state.creditsRemaining,
-    creditsUsed: state.creditsUsed,
-    totalCredits: state.totalCredits,
-    currentPlan: state.currentPlan,
-    postLimits: state.postLimits,
-    profileLimits: state.profileLimits
-  })));
+  // Credits store removed - using default values
+  const creditsRemaining = 0;
+  const creditsUsed = 0;
+  const totalCredits = 0;
+  const currentPlan = 'free';
+  const postLimits = { current: 0, limit: 0 };
+  const profileLimits = { current: 0, limit: 0 };
 
   const { publishedPosts, loadPublishedPosts, hasLoadedPublishedPosts } = usePublishedPostsStore(useShallow((state) => ({
     publishedPosts: state.publishedPosts,

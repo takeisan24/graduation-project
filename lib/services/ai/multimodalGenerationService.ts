@@ -16,7 +16,6 @@ import { withApiProtection } from "@/lib/middleware/api-protected";
 import { supabase } from "@/lib/supabase";
 import { getMonthStartDate, DEFAULT_TIMEZONE } from "@/lib/utils/date";
 import { MASTER_SYSTEM_PROMPT } from "@/lib/prompts";
-import { fetchTikTokMetadata } from "@/lib/tiktok/tiktok";
 
 export interface MultimodalGenerationRequest {
   promptParts: (string | Part)[];
@@ -64,10 +63,9 @@ export async function generateFromSourceWithCredits(
   const openaiEnvModel = process.env.OPENAI_MODEL || 'gpt-5-mini';
   const isChatGPT = clientModelKey === 'chatgpt';
 
-  // Check if promptParts contains YouTube/TikTok URL and extract it
+  // Check if promptParts contains YouTube URL and extract it
   // Also check for PDF / audio files
   let youtubeUrl: string | null = null;
-  let tiktokUrl: string | null = null;
   let hasPDF = false;
   let hasAudio = false;
   let hasDoc = false;
@@ -77,10 +75,6 @@ export async function generateFromSourceWithCredits(
       const match = part.match(/(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
       if (match) {
         youtubeUrl = match[0];
-      }
-      const tiktokMatch = part.match(/https?:\/\/(www\.)?tiktok\.com\/.+/i);
-      if (tiktokMatch) {
-        tiktokUrl = tiktokMatch[0];
       }
     }
     // Check fileData with YouTube URL or PDF
@@ -92,11 +86,6 @@ export async function generateFromSourceWithCredits(
       if (/youtube\.com\/watch|youtu\.be/.test(fileUri)) {
         youtubeUrl = fileUri;
       }
-      // Check for TikTok URL
-      if (/tiktok\.com\//i.test(fileUri)) {
-        tiktokUrl = fileUri;
-      }
-
       // Check for PDF file
       if (mimeType.includes('pdf') || fileUri.includes('.pdf') || /application\/pdf/.test(mimeType)) {
         hasPDF = true;
@@ -121,8 +110,6 @@ export async function generateFromSourceWithCredits(
   });
 
   const hasYouTubeUrl = youtubeUrl !== null;
-  const hasTikTokUrl = tiktokUrl !== null;
-
   // Extract PDF file URI if present (for OpenAI upload)
   let documentFilesToUpload: { uri: string; mimeType: string }[] = [];
   if ((hasPDF || hasDoc) && isChatGPT) {
@@ -196,7 +183,7 @@ export async function generateFromSourceWithCredits(
   let aiResponse: string;
   let extractedContent: string | undefined; // Lưu extracted content để trả về cho FE
   try {
-    // Priority: YouTube > TikTok > audio > PDF
+    // Priority: YouTube > audio > PDF
     // If multiple exist, handle higher priority first; PDF can be attached in OpenAI step if present
     if (isChatGPT && hasYouTubeUrl && youtubeUrl) {
       // ChatGPT + YouTube: 2-step process
@@ -350,122 +337,6 @@ Trả về dưới dạng văn bản súc tích (tối đa 500 từ) để làm 
           }
         }
       }
-    } else if (isChatGPT && hasTikTokUrl && tiktokUrl) {
-      // --- TIKTOK DEEP ANALYSIS (GEMINI MULTIMODAL) ---
-      console.log(`[MultimodalGeneration] ChatGPT + TikTok detected. Starting Deep Analysis...`);
-
-      let videoFileUri: string | null = null;
-      let videoFileName: string | null = null;
-      const gemini = aiManager.getProvider('gemini');
-
-      try {
-        // 1. Fetch metadata & video URL
-        const tiktokData = await fetchTikTokMetadata(tiktokUrl);
-
-        if (tiktokData && tiktokData.videoUrl) {
-          console.log(`[MultimodalGeneration] Found TikTok video URL: ${tiktokData.videoUrl}`);
-
-          // 2. Download video to buffer
-          const videoResponse = await fetch(tiktokData.videoUrl);
-          if (!videoResponse.ok) throw new Error("Failed to download TikTok video");
-
-          const arrayBuffer = await videoResponse.arrayBuffer();
-          const buffer = Buffer.from(arrayBuffer);
-
-          // 3. Save to temp file for upload (GoogleAIFileManager requires path)
-          const fs = await import('fs');
-          const path = await import('path');
-          const os = await import('os');
-
-          const tempFilePath = path.join(os.tmpdir(), `tiktok-${Date.now()}.mp4`);
-          await fs.promises.writeFile(tempFilePath, new Uint8Array(buffer));
-
-          // 4. Upload to Gemini
-          console.log(`[MultimodalGeneration] Uploading video to Gemini for analysis...`);
-          const uploadResult = await gemini.uploadFile(tempFilePath, 'video/mp4', tiktokData.title);
-          videoFileUri = uploadResult.fileUri;
-          videoFileName = uploadResult.name;
-
-          // Clean up temp file
-          await fs.promises.unlink(tempFilePath);
-
-          // 5. Extract content using Gemini Flash (Multimodal)
-          console.log(`[MultimodalGeneration] Analyzing video content with Gemini Flash...`);
-          const analysisPrompt = `Hãy xem và nghe kỹ video TikTok này. Nhiệm vụ của bạn là trích xuất thông tin chi tiết để viết bài review chân thật (như KOC).
-          
-Hãy trích xuất:
-1. Nội dung chính & Bối cảnh: Video nói về cái gì? Không gian ở đâu?
-2. Lời thoại/Âm thanh quan trọng: Người trong video nói gì? Có âm thanh gì đáng chú ý?
-3. Trải nghiệm thực tế: Các bước lắp đặt, sử dụng, cảm nhận (ví dụ: "lắp mất 15 phút", "bánh xe trơn", "nhựa hơi mỏng"...).
-4. Ưu/Nhược điểm: Được khen gì, chê gì?
-5. Cảm xúc: Vui vẻ, bất ngờ, hay thất vọng?
-
-TUYỆT ĐỐI KHÔNG trích xuất tên TikToker, tên kênh, hay nhắc đến tác giả gốc. Bạn chỉ được lấy ý tưởng, nội dung và số liệu cốt lõi để biến nó thành trải nghiệm độc lập.
-Trả về kết quả dưới dạng văn bản chi tiết. Đừng bỏ sót các chi tiết nhỏ tạo nên sự chân thật.`;
-
-          extractedContent = await gemini.generateContentFromParts({
-            model: "gemini-2.5-flash",
-            systemInstruction: MASTER_SYSTEM_PROMPT,
-            promptParts: [
-              analysisPrompt,
-              {
-                fileData: {
-                  fileUri: videoFileUri,
-                  mimeType: 'video/mp4'
-                }
-              }
-            ]
-          });
-
-          console.log(`[MultimodalGeneration] Deep Analysis completed. Length: ${extractedContent?.length || 0}`);
-
-        } else {
-          // Fallback to metadata only if no video URL
-          console.warn(`[MultimodalGeneration] No video URL found for TikTok. Falling back to metadata.`);
-          if (tiktokData) {
-            extractedContent = `=== THÔNG TIN VIDEO TIKTOK (METADATA ONLY) ===
-- Tiêu đề: "${tiktokData.title}"
-- Thời lượng: ${tiktokData.duration}s
-- Views: ${tiktokData.stats.views} | Likes: ${tiktokData.stats.likes}
-
-Lưu ý: Không thể tải video để phân tích sâu. Hãy viết bài dựa trên tiêu đề và mô tả này.
-(Cấm mọi tham chiếu tới tác giả, tên kênh hay nguồn TikTok này)`;
-          } else {
-            throw new Error("Empty data from TikTok API");
-          }
-        }
-      } catch (tiktokError) {
-        console.warn(`[MultimodalGeneration] TikTok Deep Analysis failed:`, tiktokError);
-        // Fallback: URL only
-        const instructions = promptParts
-          .filter((part) => typeof part === 'string')
-          .join('\n\n');
-        extractedContent = `${instructions}\n\nNguồn video TikTok: ${tiktokUrl}\n\nLưu ý: Hệ thống không thể phân tích video này (Lỗi: ${tiktokError instanceof Error ? tiktokError.message : String(tiktokError)}). Hãy viết bài sáng tạo dựa trên các từ khóa có trong URL.`;
-      } finally {
-        // 6. Cleanup Gemini file
-        if (videoFileName) {
-          await gemini.deleteFile(videoFileName);
-        }
-      }
-
-      // 7. Generate final content with OpenAI
-      if (!extractedContent) extractedContent = '';
-      let combinedPrompt = extractedContent.includes('Nguồn video TikTok:')
-        ? extractedContent
-        : `${promptParts.filter((part) => typeof part === 'string').join('\n\n')}\n\n=== KẾT QUẢ PHÂN TÍCH VIDEO TIKTOK ===\n\n${extractedContent}`;
-
-      if (!combinedPrompt || combinedPrompt.trim().length === 0) {
-        throw new Error('Generated prompt is empty after processing TikTok content');
-      }
-
-      aiResponse = await aiManager.generateText({
-        modelId: modelToUse,
-        messages: [
-          { role: 'system', content: MASTER_SYSTEM_PROMPT },
-          { role: 'user', content: combinedPrompt }
-        ],
-        maxTokens: 20000,
-      });
     } else if (isChatGPT && hasAudio && audioFileUri) {
       // ChatGPT + Audio: 2-step process (transcribe/extract with Gemini, then OpenAI)
       console.log(`[MultimodalGeneration] ChatGPT + Audio detected. Step 1: Extracting/transcribing audio using Gemini Flash...`);
@@ -637,90 +508,6 @@ Chỉ trả về văn bản.`;
         ];
       }
 
-      // [FIX] TikTok Handling for Gemini: Download -> Upload -> Native Video Understanding
-      let tiktokFileName: string | null = null;
-      if (hasTikTokUrl && tiktokUrl) {
-        console.log(`[MultimodalGeneration] Gemini + TikTok detected. Starting Native Video processing: ${tiktokUrl}`);
-        try {
-          // 1. Fetch metadata
-          console.log('[MultimodalGeneration] Fetching TikTok metadata...');
-          const tiktokData = await fetchTikTokMetadata(tiktokUrl);
-
-          if (tiktokData && tiktokData.videoUrl) {
-            console.log(`[MultimodalGeneration] Metadata found. Video URL: ${tiktokData.videoUrl}`);
-
-            // 2. Download
-            console.log('[MultimodalGeneration] Downloading video...');
-            const videoResponse = await fetch(tiktokData.videoUrl);
-            if (!videoResponse.ok) throw new Error(`Failed to download TikTok video. Status: ${videoResponse.status}`);
-            const buffer = Buffer.from(await videoResponse.arrayBuffer());
-            console.log(`[MultimodalGeneration] Downloaded ${buffer.length} bytes`);
-
-            // 3. Save temp
-            console.log('[MultimodalGeneration] Importing system modules...');
-            const fs = await import('fs');
-            // Check for fs.promises (default export handling)
-            const fsPromises = fs.promises || (fs as any).default?.promises;
-
-            if (!fsPromises) {
-              throw new Error(`fs.promises not found. fs keys: ${Object.keys(fs).join(',')}`);
-            }
-
-            const path = await import('path');
-            const os = await import('os');
-
-            // Ensure we use the correct join function (handle ESM/CJS interop)
-            const joinPath = path.join || (path as any).default?.join;
-            const tmpDir = os.tmpdir || (os as any).default?.tmpdir;
-
-            if (!joinPath || !tmpDir) {
-              throw new Error(`System modules missing functions. path.join: ${!!joinPath}, os.tmpdir: ${!!tmpDir}`);
-            }
-
-            const tempFilePath = joinPath(tmpDir(), `tiktok-gemini-${Date.now()}.mp4`);
-            console.log(`[MultimodalGeneration] Saving to temp file: ${tempFilePath}`);
-
-            await fsPromises.writeFile(tempFilePath, new Uint8Array(buffer));
-
-            try {
-              // 4. Upload to Gemini
-              console.log(`[MultimodalGeneration] Uploading to Gemini...`);
-              const uploadResult = await gemini.uploadFile(tempFilePath, 'video/mp4', tiktokData.title || 'TikTok Video');
-              const tiktokFileUri = uploadResult.fileUri;
-              tiktokFileName = uploadResult.name; // For cleanup
-              console.log(`[MultimodalGeneration] Upload successful. URI: ${tiktokFileUri}`);
-
-              // Wait for file processing
-              await gemini.waitForActiveFile(tiktokFileName);
-
-              // 5. Transform Prompt
-              finalPromptParts = [
-                ...finalPromptParts.map(p => typeof p === 'string' ? p.replace(tiktokUrl!, '') : p),
-                {
-                  fileData: {
-                    fileUri: tiktokFileUri,
-                    mimeType: 'video/mp4'
-                  }
-                }
-              ];
-            } finally {
-              // Cleanup temp file immediately after upload attempt
-              console.log('[MultimodalGeneration] Cleaning up temp file...');
-              await fs.promises.unlink(tempFilePath).catch(e => console.warn('Failed to unlink temp file:', e));
-            }
-
-          } else {
-            console.warn('[MultimodalGeneration] Could not fetch TikTok video URL or metadata.');
-          }
-        } catch (err: any) {
-          console.error('[MultimodalGeneration] PROCESS FAIL - TikTok for Gemini:', err);
-          console.error('[MultimodalGeneration] Stack trace:', err?.stack);
-          // Fallback handled by Gemini seeing the text URL if transformation failed
-        }
-      }
-
-
-
       // [FIX] Audio Handling for Gemini: Download -> Upload -> Native Audio Understanding
       let audioFileName: string | null = null;
       // Note: audioUrl extraction from string (if not provided as fileData) needs to be added to detection loop above
@@ -796,7 +583,7 @@ Chỉ trả về văn bản.`;
         for (const p of promptParts) {
           if (typeof p === 'string') {
             const match = p.match(/(https?:\/\/[^\s]+?\.pdf)(\?.*)?$/i);
-            // Verify it's not a youtube/tiktok/audio link by accident, though regex handles extension
+            // Verify it's not a youtube/audio link by accident, though regex handles extension
             if (match) docFileUri = match[1];
           } else if ((p as any).fileData?.fileUri && (p as any).fileData.mimeType?.includes('pdf')) {
             // If already fileData but points to external URL
@@ -869,7 +656,6 @@ Chỉ trả về văn bản.`;
           });
         } finally {
           // [CLEANUP] Delete uploaded files from Gemini
-          if (tiktokFileName) await gemini.deleteFile(tiktokFileName).catch((e: any) => console.error("Failed to cleanup TikTok file:", e));
           if (audioFileName) await gemini.deleteFile(audioFileName).catch((e: any) => console.error("Failed to cleanup Audio file:", e));
           if (docFileName) await gemini.deleteFile(docFileName).catch((e: any) => console.error("Failed to cleanup Document file:", e));
         }

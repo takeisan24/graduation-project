@@ -6,16 +6,13 @@
  */
 
 import { clearLocalStorage } from './storage';
-import { createInitialVideoFactoryState } from '@/store/shared/utils'; // ✅ CRITICAL FIX: Import để reset về initial state thay vì null
-import { 
-  useCreditsStore, 
-  useConnectionsStore, 
+import {
+  useConnectionsStore,
   useCalendarStore,
   useNavigationStore,
   usePublishedPostsStore,
   useFailedPostsStore,
   useDraftsStore,
-  useVideoProjectsStore,
   useCreatePostsStore,
   useCreateMediaStore,
   useCreateChatStore,
@@ -23,10 +20,7 @@ import {
   useCreateLightboxStore,
   useImageGenModalStore,
   useVideoGenModalStore,
-  useTextToVideoModalStore,
-  useVideoFactoryStore,
   usePublishModalStore,
-  useLimitExceededModalStore,
   useApiDashboardPageStore,
   useSettingsPageStore,
 } from '@/store';
@@ -38,19 +32,6 @@ import {
 export function resetAllStores() {
   try {
     console.log('[storeReset] Resetting all stores...');
-    
-    // Reset Credits Store
-    useCreditsStore.setState({
-      creditsRemaining: 0,
-      isLoadingCredits: false,
-      currentPlan: 'free',
-      profileLimits: { current: 0, limit: 0 },
-      postLimits: { current: 0, limit: 0 },
-      limitsFetched: false,
-      limitsLastFetched: null,
-      usageHistoryTrigger: false,
-      usageHistoryNeedsRefresh: false,
-    });
     
     // Reset Connections Store
     useConnectionsStore.setState({
@@ -100,11 +81,6 @@ export function resetAllStores() {
     useDraftsStore.setState({
       draftPosts: [],
       isSavingDraft: false,
-    });
-    
-    // Reset Video Projects Store
-    useVideoProjectsStore.setState({
-      videoProjects: [],
     });
     
     // Reset Create Posts Store
@@ -164,38 +140,10 @@ export function resetAllStores() {
       isGeneratingMedia: false,
     });
     
-    // Reset Text To Video Modal Store
-    useTextToVideoModalStore.setState({
-      isTextToVideoModalOpen: false,
-    });
-    
-    // Reset Video Factory Store - use resetVideoFactory if available
-    const videoFactoryStore = useVideoFactoryStore.getState();
-    if (videoFactoryStore.resetVideoFactory) {
-      videoFactoryStore.resetVideoFactory();
-    } else {
-      // ✅ CRITICAL FIX: Reset về initial state thay vì null để tránh lỗi "Cannot read properties of null"
-      // Component sẽ thấy object rỗng với clips: [] thay vì null, tránh crash
-      useVideoFactoryStore.setState({
-        isVideoFactoryOpen: false,
-        videoFactoryState: {
-          ...createInitialVideoFactoryState(),
-          jobId: undefined, // ✅ CRITICAL: undefined để SSE disconnect (compatible với type)
-          cutJobId: undefined, // ✅ CRITICAL: Clear cutJobId
-        },
-      });
-    }
-    
     // Reset Publish Modal Store
     usePublishModalStore.setState({
       isPublishModalOpen: false,
     });
-    
-    // Reset Limit Exceeded Modal Store - use closeModal if available
-    const limitModalStore = useLimitExceededModalStore.getState();
-    if (limitModalStore.closeModal) {
-      limitModalStore.closeModal();
-    }
     
     // Reset API Dashboard Store
     useApiDashboardPageStore.setState({

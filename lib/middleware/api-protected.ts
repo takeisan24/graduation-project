@@ -1,21 +1,16 @@
 /**
  * API Protection Middleware
- * Centralized authentication, paywall, and credit checking for all API routes
- * 
-
+ * Centralized authentication and credit checking for all API routes
  */
 
 import { NextRequest } from "next/server";
 import { requireAuth } from "@/lib/auth";
-import { withPaywallCheck, PaywallResult } from "@/lib/paywall";
 import { deductCredits, CREDIT_COSTS, type CreditResult } from "@/lib/usage";
 import { fail } from "@/lib/response";
 import type { User } from "@supabase/supabase-js";
 
 export interface ApiProtectionOptions {
-  /** Skip paywall check (still checks credits) */
-  skipPaywall?: boolean;
-  /** Skip credit deduction (still checks paywall) */
+  /** Skip credit deduction */
   skipDeduct?: boolean;
   /** Return error response instead of throwing */
   returnError?: boolean;
@@ -25,6 +20,17 @@ export interface ApiProtectionOptions {
   metadata?: Record<string, any>;
   /** Specific credit amount to deduct (overrides default action cost) */
   amount?: number;
+}
+
+export interface PaywallResult {
+  allowed: boolean;
+  reason?: string;
+  upgradeRequired?: boolean;
+  currentLimit?: number;
+  limitReached?: boolean;
+  creditsRequired?: number;
+  creditsRemaining?: number;
+  totalCredits?: number;
 }
 
 export interface ApiProtectionResult {
@@ -56,76 +62,7 @@ export async function checkAuth(
 }
 
 /**
- * 2. Paywall check
- */
-export async function checkPaywall(
-  req: NextRequest,
-  creditAction: keyof typeof CREDIT_COSTS,
-  totalCreditsNeeded: number,
-  count: number = 1,
-  returnError: boolean = false
-): Promise<{ paywallResult: PaywallResult } | ApiProtectionError> {
-  const paywallCheck = await withPaywallCheck(req, 'credits', creditAction);
-  if ('error' in paywallCheck) {
-    const error = fail(paywallCheck.error.message, paywallCheck.error.status);
-    if (returnError) return { error };
-    throw new Error(paywallCheck.error.message);
-  }
-
-  const paywallResult = paywallCheck.paywallResult;
-
-  console.log(`[checkPaywall] creditAction: ${creditAction}, totalCreditsNeeded: ${totalCreditsNeeded}, count: ${count}`);
-  console.log(`[checkPaywall] paywallResult:`, paywallResult);
-
-  // Check if user has enough credits for the total count
-  if (paywallResult.creditsRemaining !== undefined && paywallResult.creditsRemaining < totalCreditsNeeded) {
-    console.warn(`[checkPaywall] INSUFFICIENT CREDITS - creditsRemaining: ${paywallResult.creditsRemaining}, totalCreditsNeeded: ${totalCreditsNeeded}`);
-
-    // Lazy import error messages to avoid loading on client-side
-    const { CREDIT_ERRORS } = await import('@/lib/messages/errors');
-    const localizedMessage = CREDIT_ERRORS.INSUFFICIENT_CREDITS_GENERIC(creditAction);
-
-    const error = fail(JSON.stringify({
-      message: localizedMessage,
-      upgradeRequired: paywallResult.upgradeRequired ?? true,
-      creditsRequired: totalCreditsNeeded,
-      creditsRemaining: paywallResult.creditsRemaining,
-      totalCredits: paywallResult.totalCredits,
-      count
-    }), 403);
-    if (returnError) return { error };
-    throw new Error(localizedMessage);
-  }
-
-  // If paywall blocks for single check, return error
-  if (!paywallResult.allowed) {
-    console.warn(`[checkPaywall] PAYWALL BLOCKED - allowed: ${paywallResult.allowed}, reason: ${paywallResult.reason}`);
-
-    // Lazy import error messages to avoid loading on client-side
-    const { CREDIT_ERRORS } = await import('@/lib/messages/errors');
-    const localizedMessage = paywallResult.reason || "Paywall check failed";
-    const message = localizedMessage === "insufficient_credits"
-      ? CREDIT_ERRORS.INSUFFICIENT_CREDITS_GENERIC(creditAction)
-      : localizedMessage;
-
-    const error = fail(JSON.stringify({
-      message,
-      upgradeRequired: paywallResult.upgradeRequired,
-      creditsRequired: totalCreditsNeeded,
-      creditsRemaining: paywallResult.creditsRemaining,
-      totalCredits: paywallResult.totalCredits,
-      count
-    }), 403);
-    if (returnError) return { error };
-    throw new Error(paywallResult.reason || "Paywall check failed");
-  }
-
-  console.log(`[checkPaywall] PAYWALL CHECK PASSED`);
-  return { paywallResult };
-}
-
-/**
- * 3. Credit deduction
+ * 2. Credit deduction
  */
 export async function deductCredit(
   userId: string,
@@ -165,11 +102,7 @@ export async function deductCredit(
 }
 
 /**
- * Middleware to protect API routes with authentication, paywall, and credit checks
- * 
- */
-/**
- * Create default paywall result when skipping paywall check
+ * Create default paywall result (always allowed since paywall is removed)
  */
 function createDefaultPaywallResult(totalCreditsNeeded: number): PaywallResult {
   return {
@@ -180,6 +113,9 @@ function createDefaultPaywallResult(totalCreditsNeeded: number): PaywallResult {
   };
 }
 
+/**
+ * Middleware to protect API routes with authentication and credit checks
+ */
 export async function withApiProtection(
   req: NextRequest,
   creditAction: keyof typeof CREDIT_COSTS,
@@ -196,12 +132,8 @@ export async function withApiProtection(
     if ('error' in authResult) return authResult;
     const { user } = authResult;
 
-    // 2. Paywall check (unless skipped)
-    const paywallCheckResult = options.skipPaywall
-      ? { paywallResult: createDefaultPaywallResult(totalCreditsNeeded) }
-      : await checkPaywall(req, creditAction, totalCreditsNeeded, count, options.returnError);
-    if ('error' in paywallCheckResult) return paywallCheckResult;
-    const { paywallResult } = paywallCheckResult;
+    // 2. Paywall is removed - always allow
+    const paywallResult = createDefaultPaywallResult(totalCreditsNeeded);
 
     // 3. Credit deduction (unless skipped)
     const deductResult = options.skipDeduct
@@ -227,7 +159,7 @@ export async function withApiProtection(
 }
 
 /**
- * Helper: Check only authentication (no paywall/credits)
+ * Helper: Check only authentication (no credits)
  */
 export async function withAuthOnly(
   req: NextRequest
@@ -236,7 +168,7 @@ export async function withAuthOnly(
 }
 
 /**
- * Helper: Check authentication + paywall (no credit deduction)
+ * Helper: Check authentication + credits (no deduction)
  * Useful for read-only operations that need to check limits
  */
 export async function withAuthAndPaywall(

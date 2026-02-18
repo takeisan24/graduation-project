@@ -25,11 +25,6 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="/pricing" className="hover:text-foreground transition-colors">
-                  {t('links.pricing')}
-                </a>
-              </li>
-              <li>
                 <a href="#" className="hover:text-foreground transition-colors">
                   {t('links.templates')}
                 </a>
