@@ -14,7 +14,7 @@ export default function ProfilePage() {
             isSidebarOpen={isSidebarOpen}
             onSidebarToggle={setIsSidebarOpen}
         >
-            <div className="h-full overflow-y-auto bg-[#0C0717]">
+            <div className="h-full overflow-y-auto bg-background">
                 <UserProfile />
             </div>
         </CreateLayout>

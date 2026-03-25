@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { success, fail } from "@/lib/response";
+import { withAuthOnly } from "@/lib/middleware/api-protected";
 import { generateImageWithCredits } from "@/lib/services/ai/imageGenerationService";
 
 // Allow up to 60s for image generation (Vercel Pro plan).
@@ -9,10 +10,13 @@ export const maxDuration = 60;
 /**
  * POST /api/ai/generate-image
  * Generate image content using AI (default: Gemini, can select OpenAI/Fal)
- * Merged logic from /api/generate-image
  */
 export async function POST(req: NextRequest) {
   try {
+    // Auth check at route level (credits handled in service)
+    const auth = await withAuthOnly(req);
+    if ("error" in auth) return auth.error;
+
     // Parse request body
     const body = await req.json();
     const {
@@ -46,9 +50,9 @@ export async function POST(req: NextRequest) {
     // Return success response
     return success(result);
 
-  } catch (err: any) {
-    console.error("POST /api/ai/generate-image error:", err);
+  } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : "Server error";
+    console.error("POST /api/ai/generate-image error:", errorMessage);
     return fail(JSON.stringify({
       error: "Image generation failed",
       message: errorMessage,

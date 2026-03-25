@@ -172,16 +172,6 @@ export const PROVIDER_CONFIGS: Record<AIProvider, AIProviderConfig> = {
   }
 };
 
-// Log API key status on module load (server-side only)
-if (typeof window === 'undefined') {
-  const geminiKey = PROVIDER_CONFIGS.gemini.apiKey;
-  if (geminiKey) {
-    const maskedKey = `${geminiKey.substring(0, 8)}...${geminiKey.substring(geminiKey.length - 4)}`;
-    console.log(`[PROVIDER_CONFIGS] Gemini API key loaded: ${maskedKey} (from process.env.GEMINI_API_KEY)`);
-  } else {
-    console.warn('[PROVIDER_CONFIGS] Gemini API key NOT FOUND in process.env.GEMINI_API_KEY');
-  }
-}
 
 /**
  * Get model configuration by ID

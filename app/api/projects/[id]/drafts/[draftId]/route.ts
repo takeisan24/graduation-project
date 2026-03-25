@@ -25,9 +25,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string; 
 
     return success(draft);
     
-  } catch (err: any) {
-    console.error("GET /api/projects/[id]/drafts/[draftId] error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("GET /api/projects/[id]/drafts/[draftId] error:", message);
+    return fail(message, 500);
   }
 }
 
@@ -70,9 +71,10 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string; 
     
     return success(updatedDraft);
     
-  } catch (err: any) {
-    console.error("PUT /api/projects/[id]/drafts/[draftId] error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("PUT /api/projects/[id]/drafts/[draftId] error:", message);
+    return fail(message, 500);
   }
 }
 
@@ -105,8 +107,9 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
 
     return success({ deleted: true });
     
-  } catch (err: any) {
-    console.error("DELETE /api/projects/[id]/drafts/[draftId] error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("DELETE /api/projects/[id]/drafts/[draftId] error:", message);
+    return fail(message, 500);
   }
 }

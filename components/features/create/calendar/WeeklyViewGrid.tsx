@@ -38,21 +38,21 @@ export function WeeklyViewGrid({
   const isToday = (date: Date) => new Date().toDateString() === date.toDateString();
 
   return (
-    <div className="rounded-lg border border-white/10 overflow-hidden mt-4 h-[calc(100vh-120px)] flex flex-col">
+    <div className="rounded-lg border border-border overflow-hidden mt-4 h-[calc(100vh-120px)] flex flex-col">
       {/* Weekday headers */}
-      <div className="flex bg-white/5 sticky top-0 z-10">
-        <div className="w-16 flex-shrink-0 flex items-center justify-center py-2 border-r border-white/10">
-          <span className="text-xs font-medium text-white/70">{tHour}</span>
+      <div className="flex bg-secondary sticky top-0 z-10">
+        <div className="w-16 flex-shrink-0 flex items-center justify-center py-2 border-r border-border">
+          <span className="text-xs font-medium text-muted-foreground">{tHour}</span>
         </div>
         <div className="grid grid-cols-7 flex-1">
           {weekDays.map((date) =>{
             const isCurrentDay = date.toDateString() === todayDateString;
             return(
-            <div key={date.toISOString()} className="text-center py-2 border-r border-white/10 last:border-r-0">
-              <span className="text-xs font-medium text-white/70 uppercase">
+            <div key={date.toISOString()} className="text-center py-2 border-r border-border last:border-r-0">
+              <span className="text-xs font-medium text-muted-foreground uppercase">
                 {weekdays[date.getDay() === 0 ? 6 : date.getDay() - 1]}
               </span>
-              <div className={`text-lg font-semibold mt-1 ${isToday(date) ? 'text-primary' : 'text-white'}`}>
+              <div className={`text-lg font-semibold mt-1 ${isToday(date) ? 'text-primary' : 'text-foreground'}`}>
                 {date.getDate()}
               </div>
             </div>
@@ -66,8 +66,8 @@ export function WeeklyViewGrid({
           {/* Time column */}
           <div className="w-16 flex-shrink-0">
             {Array.from({ length: 24 }, (_, hour) => (
-              <div key={hour} className="h-20 flex justify-end pr-2 pt-1 border-t border-white/5 first:border-t-0">
-                <span className="text-xs text-white/60 -translate-y-2">
+              <div key={hour} className="h-20 flex justify-end pr-2 pt-1 border-t border-border first:border-t-0">
+                <span className="text-xs text-muted-foreground -translate-y-2">
                   {String(hour).padStart(2, '0')}:00
                 </span>
               </div>
@@ -84,7 +84,7 @@ export function WeeklyViewGrid({
               return (
                 <div
                   key={date.toISOString()}
-                  className="border-r border-white/10 last:border-r-0 relative"
+                  className="border-r border-border last:border-r-0 relative"
                   onClick={() => onDayClick(date)}
                   onDragOver={onDragOver}
                   onDrop={(e) => {
@@ -112,8 +112,8 @@ export function WeeklyViewGrid({
                     return(
                     <div 
                       key={hour} 
-                      className={`h-20 border-t border-white/5 first:border-t-0 group hover:bg-white/5 transition-colors 
-                        ${isPastHour ? 'bg-black/20 cursor-not-allowed' : 'group-hover:bg-white/[.03]'}`} />
+                      className={`h-20 border-t border-border first:border-t-0 group hover:bg-secondary transition-colors 
+                        ${isPastHour ? 'bg-muted/50 cursor-not-allowed' : 'group-hover:bg-secondary/30'}`} />
                   )})}
 
                   {/* Render Events */}
@@ -130,7 +130,7 @@ export function WeeklyViewGrid({
                       : event.noteType === 'yellow' ? 'bg-[#FACD5B]/20 border-[#FACD5B]/40'
                       : event.noteType === 'red' ? 'bg-[#FF4F4F]/20 border-[#FF4F4F]/40'
                       : event.noteType === 'blue' ? 'bg-[#6BC1FF]/20 border-[#6BC1FF]/40'
-                      : 'bg-white/10 border-white/20';
+                      : 'bg-secondary border-border';
 
                     return (
                       <button

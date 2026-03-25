@@ -152,7 +152,11 @@
     },
     "buttons": {
       "signIn": "Sign In",
-      "getStarted": "Get Started"
+      "getStarted": "Get Started",
+      "signOut": "Sign Out",
+      "dashboard": "Dashboard",
+      "loading": "Loading...",
+      "toggleMenu": "Toggle menu"
     }
   },
   "Footer": {
@@ -691,7 +695,11 @@
       "title": "Published Posts",
       "loading": "Loading published posts...",
       "loadMore": "Load More",
-      "loadingMore": "Loading..."
+      "loadingMore": "Loading...",
+      "open": "Open",
+      "deleteFromList": "Delete from list",
+      "confirmDelete": "Are you sure you want to delete this post?",
+      "noPublishedPosts": "No published posts found"
     },
     "failed": {
       "title": "Failed Posts",
@@ -774,6 +782,15 @@
       }
     },
     "createSection": {
+      "mobileTabs": {
+        "sources": "Sources",
+        "posts": "Posts",
+        "aiChat": "AI Chat"
+      },
+      "mediaPreview": {
+        "downloadMedia": "Download",
+        "removeMedia": "Remove media"
+      },
       "sourcePanel": {
         "sourcesTitle": "Saved Sources",
         "addSource": "Add Source",
@@ -799,7 +816,14 @@
           "tiktok": "TikTok",
           "pdf": "PDF",
           "audio": "Audio"
-        }
+        },
+        "clearedImageList": "Cleared generated images list",
+        "generateImageAI": "Generate image with AI",
+        "generatedImages": "Generated images",
+        "confirmClearTitle": "Confirm delete?",
+        "confirmClearDescription": "Are you sure you want to delete all generated images? This action cannot be undone.",
+        "cancelClear": "Cancel",
+        "confirmClearButton": "Delete"
       },
       "sourceModal": {
         "title": "Add New Source",
@@ -1095,6 +1119,7 @@
         "aiChatPlaceholder": "Ask anything or request to create post...",
         "sendButton": "Send",
         "aiTyping": "AI is responding",
+        "copiedToClipboard": "Copied content to clipboard!",
         "emptyState": {
           "title": "AI Assistant Ready",
           "description": "This chat will automatically open when you have posts. I'll help you edit and optimize content!",
@@ -1190,6 +1215,28 @@
         "publishNowButton": "Publish Now",
         "confirmSchedule": "Confirm Schedule",
         "closeModal": "Close"
+      },
+      "mediaLibraryModal": {
+        "selectPostFirst": "Please select a post before adding media.",
+        "searchPlaceholder": "Search media...",
+        "loadingLibrary": "Loading library...",
+        "error": "Error: {error}",
+        "retry": "Retry",
+        "noMediaFound": "No media found",
+        "all": "All",
+        "video": "Video",
+        "image": "Image",
+        "audio": "Audio",
+        "selectedCount": "Selected {count} items",
+        "selectMediaHint": "Select media to add to post",
+        "cancel": "Cancel",
+        "addToPost": "Add to post"
+      },
+      "lightboxModal": {
+        "downloadSuccess": "Downloaded successfully!",
+        "downloadError": "Cannot download file.",
+        "download": "Download",
+        "close": "Close"
       }
     },
     "calendarSection": {
@@ -1198,6 +1245,14 @@
       "week": "Week",
       "clearAll": "Clear all",
       "confirmClearAll": "Are you sure you want to delete all events on the calendar? This action cannot be undone.",
+      "posted": "Posted",
+      "publishing": "Publishing...",
+      "scheduled": "Scheduled",
+      "failed": "Failed",
+      "empty": "Empty",
+      "eventMoved": "Event position updated.",
+      "addedSchedule": "Added schedule for {platform}.",
+      "addedMedia": "Added {count} media to post.",
       "eventStatus": {
         "published": "Published",
         "scheduled": "Scheduled",

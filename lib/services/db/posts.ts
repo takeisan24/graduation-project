@@ -27,7 +27,7 @@ export interface PostPayload {
   /** Array of media URLs */
   mediaUrls?: string[];
   /** Additional metadata fields */
-  [key: string]: any;
+  [key: string]: unknown; // eslint-disable-line @typescript-eslint/no-explicit-any -- JSONB column with dynamic webhook/API response data
 }
 
 /**
@@ -192,7 +192,7 @@ export async function getScheduledPosts(userId: string): Promise<ScheduledPostWi
     return [];
   }
   
-  const normalizedPosts: ScheduledPostWithDraft[] = (data || []).map((post: any) => {
+  const normalizedPosts: ScheduledPostWithDraft[] = ((data || []) as Array<ScheduledPost & { content_drafts?: { id: string; text_content: string | null; media_urls: string[] | null; platform: string | null } | { id: string; text_content: string | null; media_urls: string[] | null; platform: string | null }[] | null }>).map((post) => {
     const draftData = Array.isArray(post.content_drafts)
       ? post.content_drafts[0]
       : post.content_drafts;
@@ -345,7 +345,7 @@ export async function updatePostStatus(
   status: 'scheduled' | 'posted' | 'failed',
   updates?: Partial<ScheduledPost>
 ): Promise<boolean> {
-  const updateData: any = { status };
+  const updateData: Partial<ScheduledPost> & { status: string } = { status };
   
   if (updates) {
     Object.assign(updateData, updates);
@@ -571,7 +571,7 @@ export async function deletePost(id: string, userId: string): Promise<boolean> {
 /**
  * Get posts with late_job_id (posts created via Late.dev) for a user
  */
-export async function getLatePosts(userId: string): Promise<any[]> {
+export async function getLatePosts(userId: string): Promise<Pick<ScheduledPost, 'id' | 'platform' | 'scheduled_at' | 'status' | 'payload' | 'created_at' | 'updated_at' | 'late_job_id' | 'getlate_profile_id' | 'getlate_account_id'>[]> {
   const { data, error } = await supabase
     .from("scheduled_posts")
     .select(`

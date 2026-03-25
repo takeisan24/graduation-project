@@ -17,7 +17,7 @@ import { useTranslations } from 'next-intl';
 import { useCreateChatStore } from '@/store/create/chat';
 
 const SourceIcon = ({ type, isSelected }: { type: string, isSelected: boolean }) => {
-    const iconClass = `w-5 h-5 ${isSelected ? 'text-[#E33265]' : 'text-gray-400'}`;
+    const iconClass = `w-5 h-5 ${isSelected ? 'text-primary' : 'text-muted-foreground'}`;
     switch (type) {
         case 'text': return <FileTextIcon className={iconClass} />;
         case 'article': return <NewspaperIcon className={iconClass} />;
@@ -117,19 +117,19 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
 
     if (mode === 'form') {
         return (
-            <div className="w-full h-full border-r border-white/10 bg-[#2A2A30]">
+            <div className="w-full h-full border-r border-border bg-card">
                 <SourceForm onComplete={handleFormComplete} onCancel={handleFormCancel} isReadOnly={isReadOnly} initialData={editingSource} />
             </div>
         );
     }
 
     return (
-        <div className="w-full h-full md:border-r border-white/10 p-3 md:p-4 md:pt-[30px] flex flex-col overflow-hidden" data-tour="source-list">
+        <div className="w-full h-full md:border-r border-border p-3 md:p-4 md:pt-[30px] flex flex-col overflow-hidden" data-tour="source-list">
 
             <div className="flex flex-col gap-2 mb-2 flex-shrink-0" data-tour="add-source">
                 <Button
                     size="sm"
-                    className="text-base md:text-sm bg-gradient-to-r from-[#E33265] to-[#c52b57] hover:from-[#c52b57] hover:to-[#a82449] text-white px-4 py-3 md:py-2 transition-all duration-300 border-0 relative group shadow-lg shadow-[#E33265]/30 hover:shadow-[#E33265]/50 w-full md:w-auto"
+                    className="text-base md:text-sm bg-gradient-to-r from-primary to-primary/80 hover:from-primary/80 hover:to-primary/70 text-primary-foreground px-4 py-3 md:py-2 transition-all duration-300 border-0 relative group shadow-lg shadow-primary/30 hover:shadow-primary/50 w-full md:w-auto"
                     onClick={() => {
                         setEditingSource(null);
                         setIsReadOnly(false);
@@ -149,49 +149,49 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
 
                 <Button
                     size="sm"
-                    className="text-base md:text-sm bg-gradient-to-r from-[#7C3AED] to-[#6D28D9] hover:from-[#6D28D9] hover:to-[#5B21B6] text-white px-4 py-3 md:py-2 transition-all duration-300 border-0 relative group shadow-lg shadow-[#7C3AED]/30 hover:shadow-[#7C3AED]/50 w-full md:w-auto mt-1"
+                    className="text-base md:text-sm bg-gradient-to-r from-accent to-violet-700 hover:from-violet-700 hover:to-violet-800 text-primary-foreground px-4 py-3 md:py-2 transition-all duration-300 border-0 relative group shadow-lg shadow-accent/30 hover:shadow-accent/50 w-full md:w-auto mt-1"
                     onClick={() => useImageGenModalStore.getState().setIsImageGenModalOpen(true, 'sidebar')}
                 >
                     <SparklesIcon className="w-5 h-5 md:w-4 md:h-4 mr-2 inline-block group-hover:scale-110 transition-transform" />
-                    Tạo ảnh với AI
+                    {t('generateImageAI')}
                 </Button>
             </div>
 
             <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
                 {savedSources.length === 0 ? (
-                    <div className="mt-4 p-4 md:p-5 rounded-xl bg-gradient-to-br from-[#E33265]/10 via-[#1E1E23] to-[#1E1E23] border-2 border-dashed border-[#E33265]/30 hover:border-[#E33265]/50 transition-all duration-300 group flex-shrink-0">
+                    <div className="mt-4 p-4 md:p-5 rounded-xl bg-gradient-to-br from-primary/10 via-card to-card border-2 border-dashed border-primary/30 hover:border-primary/50 transition-all duration-300 group flex-shrink-0">
                         <div className="flex justify-center mb-4">
                             <div className="relative">
-                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#E33265]/20 to-[#E33265]/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                    <FileTextIcon className="w-8 h-8 text-[#E33265] group-hover:scale-110 transition-transform" />
+                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                    <FileTextIcon className="w-8 h-8 text-primary group-hover:scale-110 transition-transform" />
                                 </div>
-                                <div className="absolute -top-1 -right-1 w-5 h-5 bg-[#E33265] rounded-full flex items-center justify-center animate-pulse">
+                                <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center animate-pulse">
                                     <span className="text-white text-xs font-bold">+</span>
                                 </div>
                             </div>
                         </div>
-                        <p className="text-base text-white text-center font-semibold mb-2">
+                        <p className="text-base text-foreground text-center font-semibold mb-2">
                             {tModal('title')}
                         </p>
-                        <p className="text-xs text-gray-300 text-center leading-relaxed">
+                        <p className="text-xs text-muted-foreground text-center leading-relaxed">
                             {tModal('description')}
                         </p>
                     </div>
                 ) : (
                     <div className="mt-2 md:mt-4 flex-1 min-h-0 flex flex-col overflow-hidden" data-tour="source-list">
                         <div className="flex items-center justify-between mb-2 flex-shrink-0">
-                            <h3 className="text-sm font-semibold text-gray-300">
+                            <h3 className="text-sm font-semibold text-muted-foreground">
                                 {t('sourcesTitle')} ({savedSources.length})
                             </h3>
                         </div>
-                        <div className="space-y-2 flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 pr-1 md:pr-2 pb-2">
+                        <div className="space-y-2 flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/30 scrollbar-track-secondary pr-1 md:pr-2 pb-2">
                             {savedSources.map((source) => {
                                 const isNewSource = source.id === newSourceId;
 
                                 return (
                                     <div
                                         key={source.id}
-                                        className={`group relative p-3 rounded-lg border cursor-pointer transition-all duration-200 bg-[#1E1E23] border-white/10 hover:border-[#E33265]/50 hover:bg-[#25252b] ${isNewSource ? 'animate-flash' : ''}`}
+                                        className={`group relative p-3 rounded-lg border cursor-pointer transition-all duration-200 bg-background border-border hover:border-primary/50 hover:bg-secondary ${isNewSource ? 'animate-flash' : ''}`}
                                         onClick={() => handleSourceClick(source)}
                                     >
                                         <div className="flex items-start gap-3">
@@ -199,16 +199,16 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
                                                 <SourceIcon type={source.type} isSelected={false} />
                                             </div>
                                             <div className="flex-1 min-w-0 pr-16 md:pr-0">
-                                                <div className="text-[11px] uppercase font-bold text-gray-500 mb-0.5 tracking-wider">
+                                                <div className="text-[11px] uppercase font-bold text-muted-foreground mb-0.5 tracking-wider">
                                                     {getSourceTypeLabel(source.type)}
                                                 </div>
-                                                <div className="text-base md:text-sm text-gray-200 font-medium line-clamp-2 leading-snug group-hover:text-white transition-colors">
+                                                <div className="text-base md:text-sm text-muted-foreground font-medium line-clamp-2 leading-snug group-hover:text-foreground transition-colors">
                                                     {source.label}
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-200 px-1 py-1 rounded-md bg-[#25252b] shadow-lg border border-white/5">
+                                        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-200 px-1 py-1 rounded-md bg-secondary shadow-lg border border-border/50">
                                             <button
                                                 className="p-1.5 hover:bg-blue-500/10 text-gray-400 hover:text-blue-400 rounded-md transition-all"
                                                 onClick={(e) => handleViewSource(e, source)}
@@ -223,7 +223,7 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
                                             >
                                                 <Pencil className="w-4 h-4" />
                                             </button>
-                                            <div className="w-px h-3 bg-white/10 mx-0.5"></div>
+                                            <div className="w-px h-3 bg-border mx-0.5"></div>
                                             <button
                                                 className="p-1.5 hover:bg-red-500/10 text-gray-400 hover:text-red-400 rounded-md transition-all"
                                                 onClick={(e) => {
@@ -247,28 +247,28 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
 
             {/* Phần hiển thị ảnh đã tạo từ Sidebar */}
             {sidebarImages.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-white/10 flex flex-col min-h-0 flex-shrink-0" style={{ maxHeight: '250px' }}>
+                <div className="mt-4 pt-4 border-t border-border flex flex-col min-h-0 flex-shrink-0" style={{ maxHeight: '250px' }}>
                     <div className="flex items-center justify-between mb-3 px-1">
                         <div className="flex items-center gap-2">
-                            <h3 className="text-xs font-bold text-[#7C3AED] uppercase tracking-widest">Ảnh đã tạo</h3>
-                            <span className="bg-[#7C3AED]/20 text-[#7C3AED] text-[10px] px-1.5 py-0.5 rounded-full font-bold">
+                            <h3 className="text-xs font-bold text-accent uppercase tracking-widest">{t('generatedImages')}</h3>
+                            <span className="bg-accent/20 text-accent text-[10px] px-1.5 py-0.5 rounded-full font-bold">
                                 {sidebarImages.length}
                             </span>
                         </div>
                         <button
                             onClick={() => setIsConfirmClearOpen(true)}
-                            className="text-gray-500 hover:text-red-400 transition-colors"
+                            className="text-muted-foreground hover:text-red-400 transition-colors"
                             title="Xóa danh sách sidebar"
                         >
                             <Trash2 className="w-3.5 h-3.5" />
                         </button>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 pr-1">
+                    <div className="grid grid-cols-3 gap-2 overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/30 pr-1">
                         {sidebarImages.map((img) => (
                             <div
                                 key={img.id}
-                                className="group relative aspect-square rounded-md overflow-hidden bg-[#1E1E23] border border-white/5 cursor-pointer hover:border-[#7C3AED]/50 transition-all hover:scale-[1.02] active:scale-95 shadow-lg"
+                                className="group relative aspect-square rounded-md overflow-hidden bg-background border border-border/50 cursor-pointer hover:border-accent/50 transition-all hover:scale-[1.02] active:scale-95 shadow-lg"
                                 onClick={() => openLightbox(img.preview, 'image')}
                             >
                                 <img
@@ -286,35 +286,35 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
             )}
             {/* Modal xác nhận xóa danh sách sidebar */}
             <Dialog open={isConfirmClearOpen} onOpenChange={setIsConfirmClearOpen}>
-                <DialogContent className="max-w-[400px] bg-[#2A2A30] border-[#3A3A42] p-2 sm:p-4 shadow-2xl rounded-2xl">
+                <DialogContent className="max-w-[400px] bg-card border-border p-2 sm:p-4 shadow-2xl rounded-2xl">
                     <DialogHeader>
                         <div className="flex items-center gap-4 mb-3">
                             <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center shrink-0 border border-red-500/20">
                                 <AlertTriangle className="w-6 h-6 text-red-500" />
                             </div>
-                            <DialogTitle className="text-xl text-white font-semibold">Xác nhận xóa?</DialogTitle>
+                            <DialogTitle className="text-xl text-foreground font-semibold">{t('confirmClearTitle')}</DialogTitle>
                         </div>
-                        <DialogDescription className="text-gray-400 text-sm leading-relaxed">
-                            Bạn có chắc chắn muốn xóa toàn bộ danh sách ảnh đã tạo không? Hành động này không thể hoàn tác.
+                        <DialogDescription className="text-muted-foreground text-sm leading-relaxed">
+                            {t('confirmClearDescription')}
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="mt-8 flex flex-row gap-3 sm:gap-4 sm:space-x-0">
                         <Button
                             variant="outline"
                             onClick={() => setIsConfirmClearOpen(false)}
-                            className="flex-1 bg-transparent border-[#3A3A42] text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+                            className="flex-1 bg-transparent border-border text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
                         >
-                            Hủy bỏ
+                            {t('cancelClear')}
                         </Button>
                         <Button
-                            className="flex-1 bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/20 transition-all border-0"
+                            className="flex-1 bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg shadow-destructive/20 transition-all border-0"
                             onClick={() => {
                                 clearSidebarImages();
                                 setIsConfirmClearOpen(false);
-                                toast.success("Đã xóa danh sách ảnh đã tạo");
+                                toast.success(t('clearedImageList'));
                             }}
                         >
-                            Đồng ý xóa
+                            {t('confirmClearButton')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

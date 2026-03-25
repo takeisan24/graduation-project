@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from 'next-intl';
 import { Button } from "@/components/ui/button";
 import { PlatformIcon } from "@/components/shared/PlatformIcon";
 import type { FailedPost } from "@/store";
@@ -14,22 +15,23 @@ interface FailedPostItemProps {
 }
 
 export function FailedPostItem({ post, account, onRetry, onDelete, maxWidth}: FailedPostItemProps) {
+    const t = useTranslations('CreatePage.failed');
     return (
-    <div className="group rounded-xl transition-colors hover:bg-white/5">
+    <div className="group rounded-xl transition-colors hover:bg-secondary">
       <div className="flex items-center px-4 py-3 w-full">
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <PlatformIcon platform={post.platform} size={27} variant="inline" />
-          <div className="text-white/90 truncate flex-1 min-w-0">
+          <div className="text-foreground/90 truncate flex-1 min-w-0">
             {post.content}
           </div>
         </div>
         
-        <div className="flex flex-col items-start text-white/80 flex-shrink-0 ml-4" style={{ width: `${maxWidth}px` }}>
+        <div className="flex flex-col items-start text-foreground/80 flex-shrink-0 ml-4" style={{ width: `${maxWidth}px` }}>
           <div className="flex items-center gap-2 mb-1 w-full">
             <div className="w-5 h-5 rounded-full overflow-hidden flex-shrink-0">
               <img src={account.profilePic} alt="Profile" className="w-full h-full object-cover" />
             </div>
-            <span className="text-xs font-semibold text-white/90">{account.username}</span>
+            <span className="text-xs font-semibold text-foreground/90">{account.username}</span>
           </div>
           <span className="text-xs whitespace-nowrap w-full">
             {post.date} <span className="opacity-70 ml-1">{formatTime24h(post.time)}</span>
@@ -42,17 +44,17 @@ export function FailedPostItem({ post, account, onRetry, onDelete, maxWidth}: Fa
               e.stopPropagation();
               onRetry(post);
             }}
-            className="w-24 h-9 bg-transparent border border-[#E33265] text-[#E33265] rounded-lg hover:bg-[#E33265] hover:text-white transition-all text-sm font-semibold"
+            className="w-24 h-9 bg-transparent border border-primary text-primary rounded-lg hover:bg-primary hover:text-primary-foreground transition-all text-sm font-semibold"
           >
-            Thử lại
+            {t('retry')}
           </Button>
           <button
-            className="w-8 h-8 flex items-center justify-center rounded hover:bg-white/10 transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded hover:bg-secondary transition-colors"
             onClick={(e) => {
               e.stopPropagation();
               onDelete(post);
             }}
-            aria-label="Xóa bài đăng thất bại"
+            aria-label={t('delete')}
           >
             <img src="/Trash.svg" alt="Delete" className="opacity-80" style={{ width: 19, height: 19 }} />
           </button>

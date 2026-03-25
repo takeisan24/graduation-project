@@ -52,8 +52,9 @@ export async function POST(req: NextRequest) {
 
     return success(result);
 
-  } catch (err: any) {
-    console.error("POST /api/ai/suggestions error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("POST /api/ai/suggestions error:", message);
+    return fail(message, 500);
   }
 }

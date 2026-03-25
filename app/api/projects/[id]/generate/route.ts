@@ -63,8 +63,9 @@ export async function POST(
         filePublicUrl,
         userId: user.id
       });
-    } catch (aiError: any) {
-      console.error("AI generation error:", aiError);
+    } catch (aiError: unknown) {
+      const aiMessage = aiError instanceof Error ? aiError.message : "Content generation failed";
+      console.error("AI generation error:", aiMessage);
       return fail("Content generation failed", 500);
     }
 
@@ -135,8 +136,9 @@ export async function POST(
       message: `Generated ${drafts.length} content pieces across ${platforms.length} platforms`
     }, 201);
 
-  } catch (e: any) {
-    console.error("Generate content error:", e);
-    return fail(e.message, 500);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "Server error";
+    console.error("Generate content error:", message);
+    return fail(message, 500);
   }
 }

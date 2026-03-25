@@ -32,9 +32,10 @@ export async function GET(req: NextRequest) {
       total: sessions?.length || 0
     });
 
-  } catch (err: any) {
-    console.error("GET /api/chat/sessions error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("GET /api/chat/sessions error:", message);
+    return fail(message, 500);
   }
 }
 
@@ -94,8 +95,9 @@ export async function POST(req: NextRequest) {
       message: "Chat session created successfully"
     }, 201);
 
-  } catch (err: any) {
-    console.error("POST /api/chat/sessions error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("POST /api/chat/sessions error:", message);
+    return fail(message, 500);
   }
 }

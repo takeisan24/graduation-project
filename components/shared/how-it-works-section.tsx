@@ -42,8 +42,8 @@ export default function HowItWorksSection() {
   return (
     <section className="py-20 md:py-32">
       {/* Sửa đổi ở đây: Thêm div bao bọc với border */}
-      <div className="container mx-auto px-4 border border-white/30 bg-white/[.03] rounded-2xl p-8 md:p-16">
-        <div className="container mx-auto px-4 ">
+      <div className="container mx-auto px-4">
+        <div className="max-w-3xl mx-auto">
         <motion.div 
           className="text-center mb-16 max-w-3xl mx-auto"
           initial="initial"
@@ -94,10 +94,9 @@ export default function HowItWorksSection() {
               </motion.div>
               <motion.div 
                 className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4"
-                whileHover={{ 
+                whileHover={{
                   rotate: 360,
                   scale: 1.2,
-                  backgroundColor: "rgba(227, 50, 101, 0.2)",
                   transition: { duration: 0.6 }
                 }}
               >

@@ -46,12 +46,12 @@ export default function DraftsSection() {
       />
       
       {/* Draft Posts List */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
         <div className="space-y-[1px]">
           {filteredPosts.map((post) => (
             <div 
               key={post.id} 
-              className="group rounded-xl hover:bg-[#E33265]/70 transition-colors cursor-pointer"
+              className="group rounded-xl hover:bg-primary/70 transition-colors cursor-pointer"
               onClick={() =>
                 onEditDraft(post, (platform, content, mediaUrls) => {
                   // Khi user click 1 bản nháp:
@@ -72,7 +72,7 @@ export default function DraftsSection() {
                     className="lg:w-[27px] lg:h-[27px]"
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="text-white/90 truncate flex-1 min-w-0 text-sm lg:text-base">
+                    <div className="text-foreground/90 truncate flex-1 min-w-0 text-sm lg:text-base">
                       {post.content}
                     </div>
                   </div>
@@ -80,11 +80,11 @@ export default function DraftsSection() {
                 
                 {/* Right: date and trash */}
                 <div className="flex items-center gap-2 lg:gap-3 ml-2 lg:ml-4 flex-shrink-0">
-                  <span className="text-xs lg:text-sm text-white/80 whitespace-nowrap">
+                  <span className="text-xs lg:text-sm text-foreground/80 whitespace-nowrap">
                     {formatDate(post.time, 'vi-VN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
                   </span>
                   <button
-                    className="w-7 h-7 lg:w-8 lg:h-8 flex items-center justify-center rounded hover:bg-white/10"
+                    className="w-7 h-7 lg:w-8 lg:h-8 flex items-center justify-center rounded hover:bg-secondary"
                     onClick={(e) => { e.stopPropagation(); onDeleteDraft(post.id) }}
                     aria-label="Xóa bản nháp"
                   >

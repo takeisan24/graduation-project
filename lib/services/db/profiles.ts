@@ -15,7 +15,7 @@ export interface ProfileMetadata {
   pending_user_id?: string;
   pending_provider?: string;
   pending_timestamp?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface Profile {
@@ -86,7 +86,7 @@ export async function findProfileByIdWithAccount(id: string): Promise<(Profile &
     return null;
   }
   
-  return data as any;
+  return data as unknown as (Profile & { getlate_accounts?: { api_key?: string } }) | null;
 }
 
 /**
@@ -97,7 +97,7 @@ export async function createProfile(data: {
   late_profile_id: string;
   profile_name: string;
   description?: string | null;
-  social_media_ids?: any;
+  social_media_ids?: Record<string, unknown>;
   metadata?: ProfileMetadata;
 }): Promise<Profile | null> {
   const { data: profile, error } = await supabase
@@ -129,7 +129,7 @@ export async function upsertProfile(data: {
   late_profile_id: string;
   profile_name: string;
   description?: string | null;
-  social_media_ids?: any;
+  social_media_ids?: Record<string, unknown>;
   metadata?: ProfileMetadata;
 }): Promise<Profile | null> {
   const { data: profile, error } = await supabase
@@ -202,8 +202,8 @@ export async function updateProfile(
     metadata?: Partial<ProfileMetadata>;
   }
 ): Promise<boolean> {
-  const updateData: any = {};
-  
+  const updateData: { description?: string | null; metadata?: ProfileMetadata } = {};
+
   if (updates.description !== undefined) {
     updateData.description = updates.description;
   }

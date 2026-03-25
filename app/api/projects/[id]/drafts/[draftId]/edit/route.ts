@@ -35,23 +35,24 @@ export async function POST(req: NextRequest, { params }: { params: { id: string;
       modelUsed: result.modelUsed
     });
 
-  } catch (err: any) {
-    console.error("POST /api/projects/[id]/drafts/[draftId]/edit error:", err);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("POST /api/projects/[id]/drafts/[draftId]/edit error:", message);
 
     // Handle specific error cases
-    if (err.message === "Draft not found") {
+    if (message === "Draft not found") {
       return fail("draft not found", 404);
     }
-    if (err.message === "Insufficient credits" || err.message.includes("credits")) {
+    if (message === "Insufficient credits" || message.includes("credits")) {
       return fail(JSON.stringify({
-        message: err.message,
+        message: message,
         upgradeRequired: true,
         creditsRequired: 1,
         creditsRemaining: 0
       }), 403);
     }
 
-    return fail(err.message || "Server error", 500);
+    return fail(message, 500);
   }
 }
 
@@ -88,8 +89,9 @@ export async function DELETE(req: NextRequest, { params }: { params: { draftId: 
     }
 
     return success({ ok: true });
-  } catch (err: any) {
-    console.error("DELETE /api/projects/[id]/drafts/[draftId]/edit error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("DELETE /api/projects/[id]/drafts/[draftId]/edit error:", message);
+    return fail(message, 500);
   }
 }

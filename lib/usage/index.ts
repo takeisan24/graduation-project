@@ -179,36 +179,17 @@ export async function checkCredits(userId: string, action: keyof typeof CREDIT_C
   const purchased = usage?.credits_purchased ?? 0;
   const totalCredits = maxCredits + purchased;
 
-  console.log(`[checkCredits] User ${userId} - usage query result:`, {
-    hasError: !!usageError && usageError.code !== 'PGRST116',
-    error: usageError,
-    data: usage,
-    used,
-    purchased
-  });
-
-  // Debug logging
-  console.log(`[checkCredits] User ${userId} - plan: ${plan}, maxCredits: ${maxCredits}, purchased: ${purchased}, used: ${used}, totalCredits: ${totalCredits}`);
-  console.log(`[checkCredits] User ${userId} - credits_balance query result:`, {
-    hasError: !!balanceError,
-    error: balanceError,
-    data: userWithBalance,
-    credits_balance: userWithBalance?.credits_balance
-  });
-
   // Use credits_balance from users table as source of truth (real-time)
   // Only fallback to calculation if credits_balance is null or query failed
   let creditsLeft: number;
   if (!balanceError && userWithBalance && userWithBalance.credits_balance !== undefined && userWithBalance.credits_balance !== null) {
     // credits_balance is the source of truth
     creditsLeft = userWithBalance.credits_balance;
-    console.log(`[checkCredits] User ${userId} using credits_balance from DB: ${creditsLeft}`);
     if (creditsLeft < 0) {
       console.warn(`[checkCredits] User ${userId} has negative credits_balance: ${creditsLeft}. Syncing...`);
       // Sync if negative
       creditsLeft = totalCredits - used;
       await supabase.from("users").update({ credits_balance: creditsLeft }).eq("id", userId);
-      console.log(`[checkCredits] User ${userId} synced credits_balance to: ${creditsLeft}`);
     }
   } else {
     // Fallback: calculate from usage table if credits_balance is not available
@@ -216,18 +197,13 @@ export async function checkCredits(userId: string, action: keyof typeof CREDIT_C
       console.warn(`[checkCredits] Error querying credits_balance for user ${userId}:`, balanceError);
     }
     creditsLeft = totalCredits - used;
-    console.log(`[checkCredits] User ${userId} calculated creditsLeft from usage: ${creditsLeft} (totalCredits: ${totalCredits}, used: ${used})`);
     // Sync credits_balance to match calculated value
     const { error: updateError } = await supabase.from("users").update({ credits_balance: creditsLeft }).eq("id", userId);
     if (updateError) {
       console.error(`[checkCredits] Error updating credits_balance for user ${userId}:`, updateError);
-    } else {
-      console.log(`[checkCredits] User ${userId} synced credits_balance to: ${creditsLeft}`);
     }
   }
   const requiredCredits = CREDIT_COSTS[action];
-
-  console.log(`[checkCredits] User ${userId} final check - creditsLeft: ${creditsLeft}, required: ${requiredCredits}, action: ${action}`);
 
   if (creditsLeft < requiredCredits) {
     console.warn(`[checkCredits] User ${userId} INSUFFICIENT CREDITS - creditsLeft: ${creditsLeft}, required: ${requiredCredits}`);

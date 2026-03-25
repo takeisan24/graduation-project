@@ -602,7 +602,7 @@ export default function SettingsSection() {
       {isConnectingInProgress && (
         <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm text-center px-4">
           <div className="w-12 h-12 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-          <p className="mt-4 text-white text-sm sm:text-base">
+          <p className="mt-4 text-foreground text-sm sm:text-base">
             {t('connecting')}
           </p>
         </div>
@@ -611,14 +611,14 @@ export default function SettingsSection() {
       {/* Popup blocked dialog - custom instead of native alert, gives user choice */}
       {blockedPopup && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4">
-          <div className="max-w-md w-full bg-[#1C1C21] border border-white/10 rounded-2xl p-5 shadow-xl">
-            <h3 className="text-lg font-semibold text-white mb-2">
+          <div className="max-w-md w-full bg-card border border-border rounded-2xl p-5 shadow-xl">
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               {t('popupBlocked')}
             </h3>
-            <p className="text-sm text-white/80 mb-3">
+            <p className="text-sm text-foreground/80 mb-3">
               {t('popupBlockedMessage', { provider: blockedPopup.provider })}
             </p>
-            <p className="text-xs text-white/60 mb-4">
+            <p className="text-xs text-muted-foreground mb-4">
               {t('popupBlockedDesc')}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 mt-2">
@@ -630,7 +630,7 @@ export default function SettingsSection() {
                   // Chuyển hẳn sang OAuth trong tab hiện tại
                   window.location.href = targetUrl
                 }}
-                className="flex-1 px-4 py-2 text-sm rounded-md border border-white/15 bg-white/5 text-white hover:bg-white/10 transition-colors"
+                className="flex-1 px-4 py-2 text-sm rounded-md border border-border bg-secondary text-foreground hover:bg-secondary/80 transition-colors"
               >
                 {t('continueHere')}
               </button>
@@ -669,7 +669,7 @@ export default function SettingsSection() {
                     window.location.href = targetUrl
                   }
                 }}
-                className="flex-1 px-4 py-2 text-sm rounded-md bg-[#E33265] text-white hover:bg-[#ff4c7c] transition-colors"
+                className="flex-1 px-4 py-2 text-sm rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
               >
                 {t('retryPopup')}
               </button>
@@ -683,7 +683,7 @@ export default function SettingsSection() {
         `space-y-6 ${isConnectingInProgress ? 'pointer-events-none select-none opacity-60' : ''}`
       }>
         <h2 className="text-2xl font-bold mb-6">{t('title')}</h2>
-        <p className="text-white/70 mb-6">
+        <p className="text-muted-foreground mb-6">
           {t('description')}
         </p>
 
@@ -693,15 +693,15 @@ export default function SettingsSection() {
         {/* Bluesky Credentials Form Modal */}
         {showBlueskyCredentials && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-[#1a1a1a] border border-white/10 rounded-lg p-6 max-w-md w-full mx-4">
-              <h3 className="text-xl font-bold mb-4 text-[#F5F5F7]">{t('blueskyTitle')}</h3>
-              <p className="text-sm text-white/70 mb-4">
+            <div className="bg-card border border-border rounded-lg p-6 max-w-md w-full mx-4">
+              <h3 className="text-xl font-bold mb-4 text-foreground">{t('blueskyTitle')}</h3>
+              <p className="text-sm text-muted-foreground mb-4">
                 {t('blueskyDesc')}
               </p>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-white/90 mb-2">
+                  <label className="block text-sm font-medium text-foreground/90 mb-2">
                     {t('identifierLabel')}
                   </label>
                   <input
@@ -709,13 +709,13 @@ export default function SettingsSection() {
                     value={blueskyIdentifier}
                     onChange={(e) => setBlueskyIdentifier(e.target.value)}
                     placeholder="username.bsky.social hoặc email"
-                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 bg-secondary border border-border rounded-md text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500"
                     autoFocus
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-white/90 mb-2">
+                  <label className="block text-sm font-medium text-foreground/90 mb-2">
                     {t('passwordLabel')}
                   </label>
                   <input
@@ -723,7 +723,7 @@ export default function SettingsSection() {
                     value={blueskyPassword}
                     onChange={(e) => setBlueskyPassword(e.target.value)}
                     placeholder="Mật khẩu Bluesky"
-                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 bg-secondary border border-border rounded-md text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
               </div>
@@ -737,7 +737,7 @@ export default function SettingsSection() {
                     setBlueskyProfileId(null)
                     setActionId(null)
                   }}
-                  className="flex-1 px-4 py-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-md transition-colors"
+                  className="flex-1 px-4 py-2 bg-secondary hover:bg-secondary text-foreground border border-border rounded-md transition-colors"
                 >
                   {t('cancel')}
                 </button>
@@ -756,41 +756,41 @@ export default function SettingsSection() {
         <div className="mt-8 mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1">
                 {`${t('connectionsTableTitle')} (${connections.length}/${profileLimits?.limit ?? 0})`}
               </h2>
-              <p className="text-xs sm:text-sm text-gray-400">{t('connectionsTableDesc')}</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">{t('connectionsTableDesc')}</p>
             </div>
             <div className="w-full sm:w-auto">
               <PlatformFilter value={platformFilter} onChange={setPlatformFilter} />
             </div>
           </div>
 
-          <div className="rounded-2xl bg-[#1C1C21] border border-white/5 shadow-lg shadow-black/20">
+          <div className="rounded-2xl bg-card border border-border shadow-lg shadow-black/20">
             {loading ? (
-              <div className="text-center py-12 text-white/60">{t('loading')}</div>
+              <div className="text-center py-12 text-muted-foreground">{t('loading')}</div>
             ) : filteredConnections.length === 0 ? (
-              <div className="text-center py-12 text-white/60">
+              <div className="text-center py-12 text-muted-foreground">
                 {connections.length === 0 ? t('noConnections') : t('noConnectionsFiltered')}
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-white/5">
-                      <th className="text-left py-4 px-5 text-xs sm:text-sm font-medium text-white/60 uppercase tracking-wide">
+                    <tr className="border-b border-border">
+                      <th className="text-left py-4 px-5 text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide">
                         {t('table.platform')}
                       </th>
-                      <th className="text-left py-4 px-5 text-xs sm:text-sm font-medium text-white/60 uppercase tracking-wide">
+                      <th className="text-left py-4 px-5 text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide">
                         {t('table.account')}
                       </th>
-                      <th className="text-left py-4 px-5 text-xs sm:text-sm font-medium text-white/60 uppercase tracking-wide hidden lg:table-cell">
+                      <th className="text-left py-4 px-5 text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide hidden lg:table-cell">
                         {t('table.connectedAt')}
                       </th>
-                      <th className="text-center py-4 px-5 text-xs sm:text-sm font-medium text-white/60 uppercase tracking-wide hidden lg:table-cell">
+                      <th className="text-center py-4 px-5 text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide hidden lg:table-cell">
                         {t('table.avatar')}
                       </th>
-                      <th className="text-right py-4 px-5 text-xs sm:text-sm font-medium text-white/60 uppercase tracking-wide">
+                      <th className="text-right py-4 px-5 text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide">
                         {t('table.actions')}
                       </th>
                     </tr>
@@ -803,25 +803,25 @@ export default function SettingsSection() {
                       const connectionTime = connection?.created_at ? formatTime(connection.created_at, locale, { hour: "2-digit", minute: "2-digit" }) : ''
                       const platformName = connection.platform || 'unknown'
                       return (
-                        <tr key={connection.id} className="border-b border-white/5 last:border-0 group hover:bg-white/[0.03] transition-colors">
+                        <tr key={connection.id} className="border-b border-border last:border-0 group hover:bg-secondary/30 transition-colors">
                           <td className="py-4 px-5">
                             <div className="flex items-center gap-3">
                               <PlatformIcon platform={platformName} size={32} variant="inline" />
-                              <span className="text-sm text-white font-medium capitalize">
+                              <span className="text-sm text-foreground font-medium capitalize">
                                 {platformName}
                               </span>
                             </div>
                           </td>
                           <td className="py-4 px-5">
-                            <span className="text-sm text-white/90">
+                            <span className="text-sm text-foreground/90">
                               {username.startsWith('@') ? username : `@${username}`}
                             </span>
                           </td>
                           <td className="py-4 px-5 hidden lg:table-cell">
-                            <span className="text-sm text-white/80">
+                            <span className="text-sm text-foreground/80">
                               {connectionDate}
                               {connectionTime && (
-                                <span className="text-white/50">{` · ${connectionTime}`}</span>
+                                <span className="text-muted-foreground">{` · ${connectionTime}`}</span>
                               )}
                             </span>
                           </td>
@@ -831,11 +831,11 @@ export default function SettingsSection() {
                                 <img
                                   src={avatarUrl}
                                   alt={username}
-                                  className="w-10 h-10 rounded-full object-cover border border-white/10"
+                                  className="w-10 h-10 rounded-full object-cover border border-border"
                                 />
                               </div>
                             ) : (
-                              <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto">
+                              <div className="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center mx-auto">
                                 <PlatformIcon platform={platformName} size={20} />
                               </div>
                             )}
@@ -861,8 +861,8 @@ export default function SettingsSection() {
         <div className="mt-6 sm:mt-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-white mb-1">{t('socialConnections')}</h2>
-              <p className="text-xs sm:text-sm text-gray-400">{t('socialConnectionsDesc')}</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1">{t('socialConnections')}</h2>
+              <p className="text-xs sm:text-sm text-muted-foreground">{t('socialConnectionsDesc')}</p>
               {/* Inline red error message for social connections section */}
               {error && (
                 <div className="mt-3 text-sm text-red-400 bg-red-500/10 border border-red-500/40 rounded-md px-3 py-2">
@@ -870,7 +870,7 @@ export default function SettingsSection() {
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-3 sm:gap-2 text-xs sm:text-sm text-gray-400">
+            <div className="flex items-center gap-3 sm:gap-2 text-xs sm:text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500 flex-shrink-0"></div>
                 <span>{t('connected')}</span>
@@ -942,11 +942,11 @@ export default function SettingsSection() {
                   key={idx}
                   onClick={() => provider && handleConnect(platform.name)}
                   disabled={isDisabled}
-                  className="group flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 rounded-xl bg-[#2A2A30] border border-[#3A3A42] hover:border-[#E33265]/50 hover:bg-[#2A2A30]/80 transition-all duration-200 disabled:opacity-50"
+                  className="group flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 rounded-xl bg-muted border border-border hover:border-primary/50 hover:bg-muted/80 transition-all duration-200 disabled:opacity-50"
                 >
                   <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                     <PlatformIcon platform={platform.name} size={36} variant="wrapper" />
-                    <span className="text-sm sm:text-base text-[#F5F5F7] font-medium group-hover:text-white transition-colors truncate leading-none">
+                    <span className="text-sm sm:text-base text-foreground font-medium group-hover:text-foreground transition-colors truncate leading-none">
                       {platform.name}
                     </span>
                   </div>

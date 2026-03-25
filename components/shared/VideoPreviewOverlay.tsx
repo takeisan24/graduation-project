@@ -15,11 +15,11 @@ export function VideoPreviewOverlay({ src, poster, onClose }: VideoPreviewOverla
             onClick={onClose}
         >
             <div
-                className="relative w-full max-w-5xl mx-4 bg-black rounded-xl overflow-hidden shadow-2xl border border-white/10"
+                className="relative w-full max-w-5xl mx-4 bg-black rounded-xl overflow-hidden shadow-2xl border border-border"
                 onClick={(e) => e.stopPropagation()}
             >
                 <button
-                    className="absolute top-4 right-4 z-20 rounded-full bg-black/50 text-white p-2 hover:bg-black/80 transition-colors backdrop-blur-md border border-white/10"
+                    className="absolute top-4 right-4 z-20 rounded-full bg-black/50 text-white p-2 hover:bg-black/80 transition-colors backdrop-blur-md border border-border"
                     onClick={onClose}
                     aria-label="Đóng"
                 >

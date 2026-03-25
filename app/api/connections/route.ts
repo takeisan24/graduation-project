@@ -26,9 +26,10 @@ export async function GET(req: NextRequest) {
 
     return success(sortedConnections);
 
-  } catch (err: any) {
-    console.error("GET /api/connections error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("GET /api/connections error:", message);
+    return fail(message, 500);
   }
 }
 
@@ -79,8 +80,9 @@ export async function POST(req: NextRequest) {
 
     return success(connection, 201);
 
-  } catch (err: any) {
-    console.error("POST /api/connections error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("POST /api/connections error:", message);
+    return fail(message, 500);
   }
 }

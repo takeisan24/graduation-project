@@ -26,7 +26,7 @@ function Badge({ className, variant = "default", ...props }: React.HTMLAttribute
 
 // Helper Function
 const PlatformIcon = ({ platform, size = 20, className}: { platform: string, size?: number, className?: string }) => {
-    return <div className={cn("rounded bg-white/10 p-1 flex items-center justify-center font-bold text-xs w-6 h-6", className)}>{platform?.[0] || '?'}</div>
+    return <div className={cn("rounded bg-secondary p-1 flex items-center justify-center font-bold text-xs w-6 h-6", className)}>{platform?.[0] || '?'}</div>
 };
 
 // Fallback Mock Data for Charts (only used if absolutely no real data)
@@ -228,20 +228,20 @@ export default function ApiDashboardSection() {
   };
   
   return (
-    <div className="w-full max-w-none px-2 lg:px-4 py-2 lg:py-3 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+    <div className="w-full max-w-none px-2 lg:px-4 py-2 lg:py-3 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 lg:gap-0 mb-4 lg:mb-6">
         <div>
-          <h2 className="text-xl lg:text-2xl font-bold text-white">{t('title')}</h2>
-          <p className="text-xs lg:text-sm text-gray-400 mt-1">{t('subtitle')}</p>
+          <h2 className="text-xl lg:text-2xl font-bold text-foreground">{t('title')}</h2>
+          <p className="text-xs lg:text-sm text-muted-foreground mt-1">{t('subtitle')}</p>
         </div>
-        <Badge className={cn("text-white px-3 lg:px-4 py-1.5 lg:py-2 text-xs lg:text-sm font-semibold self-start lg:self-auto uppercase tracking-wide border-none", getPlanColor())}>
+        <Badge className={cn("text-primary-foreground px-3 lg:px-4 py-1.5 lg:py-2 text-xs lg:text-sm font-semibold self-start lg:self-auto uppercase tracking-wide border-none", getPlanColor())}>
           {formatPlanName(currentPlan)}
         </Badge>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-4 lg:mb-6 bg-gray-900/50 text-xs lg:text-sm h-auto sm:h-10 p-1 gap-1">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-4 lg:mb-6 bg-card text-xs lg:text-sm h-auto sm:h-10 p-1 gap-1">
           <TabsTrigger value="overview">{t('overview')}</TabsTrigger>
           <TabsTrigger value="analytics">{t('analytics')}</TabsTrigger>
           <TabsTrigger value="credits">{t('credits')}</TabsTrigger>
@@ -260,7 +260,7 @@ export default function ApiDashboardSection() {
                 <Zap className="w-5 h-5 text-purple-300" />
                 <span className="text-sm text-purple-200 font-medium">{t('credits')}</span>
               </div>
-              <div className="text-white text-3xl font-bold mb-2">
+              <div className="text-foreground text-3xl font-bold mb-2">
                 {creditsRemaining.toLocaleString()}
                 <span className="text-lg text-purple-300 font-normal ml-1">/ {creditLimit.toLocaleString()}</span>
               </div>
@@ -276,14 +276,14 @@ export default function ApiDashboardSection() {
             </Card>
 
             {/* Post Limits Card */}
-            <Card className="bg-[#1C1C21] border-white/5 p-5">
+            <Card className="bg-card border-border p-5">
               <div className="flex items-center gap-2 mb-3">
                 <FileText className="w-5 h-5 text-blue-400" />
-                <span className="text-sm text-gray-400 font-medium">{t('monthlyPosts')}</span>
+                <span className="text-sm text-muted-foreground font-medium">{t('monthlyPosts')}</span>
               </div>
-              <div className="text-white text-3xl font-bold mb-2">
+              <div className="text-foreground text-3xl font-bold mb-2">
                 {postLimitsFromCredits.current}
-                <span className="text-lg text-gray-500 font-normal ml-1">/ {postLimitsFromCredits.limit < 0 ? '∞' : postLimitsFromCredits.limit}</span>
+                <span className="text-lg text-muted-foreground font-normal ml-1">/ {postLimitsFromCredits.limit < 0 ? '∞' : postLimitsFromCredits.limit}</span>
               </div>
               <div className="flex items-center gap-2 text-xs text-green-400">
                 <TrendingUp className="w-3 h-3" />
@@ -292,30 +292,30 @@ export default function ApiDashboardSection() {
             </Card>
 
             {/* Success Rate Card */}
-            <Card className="bg-[#1C1C21] border-white/5 p-5">
+            <Card className="bg-card border-border p-5">
               <div className="flex items-center gap-2 mb-3">
                 <Activity className="w-5 h-5 text-green-400" />
-                <span className="text-sm text-gray-400 font-medium">{t('successRate')}</span>
+                <span className="text-sm text-muted-foreground font-medium">{t('successRate')}</span>
               </div>
-              <div className="text-white text-3xl font-bold mb-2">
+              <div className="text-foreground text-3xl font-bold mb-2">
                 {successRate}%
               </div>
-               <div className="flex items-center gap-2 text-xs text-gray-500">
+               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <span>{t('recentActivityBasis')}</span>
               </div>
             </Card>
             
             {/* Profiles Card */}
-             <Card className="bg-[#1C1C21] border-white/5 p-5">
+             <Card className="bg-card border-border p-5">
               <div className="flex items-center gap-2 mb-3">
                 <Users className="w-5 h-5 text-orange-400" />
-                <span className="text-sm text-gray-400 font-medium">{t('activeProfiles')}</span>
+                <span className="text-sm text-muted-foreground font-medium">{t('activeProfiles')}</span>
               </div>
-              <div className="text-white text-3xl font-bold mb-2">
+              <div className="text-foreground text-3xl font-bold mb-2">
                 {profileLimitsFromCredits.current}
-                <span className="text-lg text-gray-500 font-normal ml-1">/ {profileLimitsFromCredits.limit}</span>
+                <span className="text-lg text-muted-foreground font-normal ml-1">/ {profileLimitsFromCredits.limit}</span>
               </div>
-               <div className="flex items-center gap-2 text-xs text-gray-500">
+               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <span>{t('manageInAccounts')}</span>
               </div>
             </Card>
@@ -323,22 +323,22 @@ export default function ApiDashboardSection() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
              {/* Main Chart Area */}
-             <Card className="lg:col-span-2 bg-[#1C1C21] border-white/5 p-6">
+             <Card className="lg:col-span-2 bg-card border-border p-6">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                   <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-[#E33265]" />
+                   <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-primary" />
                       {t('generationsOverview')}
                    </h3>
                    <div className="flex flex-wrap gap-4 text-sm">
                       <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-[#E33265]"></div>
-                        <span className="text-gray-400">{t('posts')}</span>
-                        <span className="text-white font-medium">{genTotals.text}</span>
+                        <div className="w-3 h-3 rounded-full bg-primary"></div>
+                        <span className="text-muted-foreground">{t('posts')}</span>
+                        <span className="text-foreground font-medium">{genTotals.text}</span>
                       </div>
                        <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                        <span className="text-gray-400">{t('images')}</span>
-                         <span className="text-white font-medium">{genTotals.image}</span>
+                        <span className="text-muted-foreground">{t('images')}</span>
+                         <span className="text-foreground font-medium">{genTotals.image}</span>
                       </div>
                    </div>
                 </div>
@@ -347,8 +347,8 @@ export default function ApiDashboardSection() {
                     <AreaChart data={timeSeries}>
                       <defs>
                         <linearGradient id="colorCalls" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#E33265" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#E33265" stopOpacity={0}/>
+                          <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
                         </linearGradient>
                          <linearGradient id="colorCredits" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3}/>
@@ -371,11 +371,11 @@ export default function ApiDashboardSection() {
                          tickFormatter={(number) => `${number}`}
                       />
                       <Tooltip 
-                        contentStyle={{ backgroundColor: '#1E1E23', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff' }}
+                        contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff' }}
                         itemStyle={{ color: '#fff' }}
                         labelStyle={{ color: '#ccc', marginBottom: '4px' }}
                       />
-                      <Area type="monotone" dataKey="apiCalls" stroke="#E33265" strokeWidth={2} fillOpacity={1} fill="url(#colorCalls)" />
+                      <Area type="monotone" dataKey="apiCalls" stroke="var(--primary)" strokeWidth={2} fillOpacity={1} fill="url(#colorCalls)" />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -383,32 +383,32 @@ export default function ApiDashboardSection() {
 
              {/* Distribution / Stats */}
              <div className="space-y-6">
-                <Card className="bg-[#1C1C21] border-white/5 p-6 h-full">
-                   <h3 className="text-lg font-semibold text-white mb-4">{t('contentTypeDistribution')}</h3>
+                <Card className="bg-card border-border p-6 h-full">
+                   <h3 className="text-lg font-semibold text-foreground mb-4">{t('contentTypeDistribution')}</h3>
                    {platformStats.length > 0 ? (
                       <div className="space-y-4">
                         {platformStats.slice(0, 4).map((stat) => (
-                          <div key={stat.name} className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                          <div key={stat.name} className="flex items-center justify-between p-3 rounded-lg bg-secondary">
                               <div className="flex items-center gap-3">
-                                  <div className="p-2 rounded bg-white/10" style={{ color: stat.color }}>
+                                  <div className="p-2 rounded bg-secondary" style={{ color: stat.color }}>
                                     {/* Simplistic Icon Mapping */}
                                     {stat.name.toLowerCase().includes('video') ? <Video className="w-5 h-5"/> : 
                                      stat.name.toLowerCase().includes('image') || stat.name.toLowerCase() === 'instagram' ? <ImageIcon className="w-5 h-5"/> :
                                      <FileText className="w-5 h-5"/>}
                                   </div>
                                   <div>
-                                    <div className="text-white font-medium">{stat.name}</div>
+                                    <div className="text-foreground font-medium">{stat.name}</div>
                                   </div>
                               </div>
                               <div className="text-right">
-                                  <div className="text-white font-bold">{stat.value}</div>
+                                  <div className="text-foreground font-bold">{stat.value}</div>
                                   <div className="text-xs text-green-400">{stat.percent}%</div>
                               </div>
                           </div>
                         ))}
                       </div>
                    ) : (
-                      <div className="flex items-center justify-center h-[200px] text-gray-500">
+                      <div className="flex items-center justify-center h-[200px] text-muted-foreground">
                         No data available
                       </div>
                    )}
@@ -427,8 +427,8 @@ export default function ApiDashboardSection() {
                   Better: Just hide it to avoid confusion if it's fake.
               */}
               
-              <Card className="bg-[#1C1C21] border-white/5 p-6 lg:col-span-2">
-                <h3 className="text-lg font-semibold text-white mb-6">{t('platformDist')}</h3>
+              <Card className="bg-card border-border p-6 lg:col-span-2">
+                <h3 className="text-lg font-semibold text-foreground mb-6">{t('platformDist')}</h3>
                 <div className="h-[350px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -446,7 +446,7 @@ export default function ApiDashboardSection() {
                         ))}
                       </Pie>
                       <Tooltip 
-                        contentStyle={{ backgroundColor: '#1E1E23', borderColor: 'rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }} 
+                        contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }} 
                         itemStyle={{ color: '#fff' }}
                       />
                       <Legend 
@@ -459,7 +459,7 @@ export default function ApiDashboardSection() {
                               {payload?.map((entry: any, index: number) => (
                                 <div key={`item-${index}`} className="flex items-center gap-2">
                                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
-                                  <span className="text-sm font-medium text-gray-300">{entry.value}</span>
+                                  <span className="text-sm font-medium text-muted-foreground">{entry.value}</span>
                                 </div>
                               ))}
                             </div>
@@ -472,14 +472,14 @@ export default function ApiDashboardSection() {
               </Card>
            </div>
            
-           <Card className="bg-[#1C1C21] border-white/5 p-6">
+           <Card className="bg-card border-border p-6">
               <div className="flex items-center justify-between mb-6">
-                   <h3 className="text-lg font-semibold text-white">{t('dailyApiVolume')}</h3>
+                   <h3 className="text-lg font-semibold text-foreground">{t('dailyApiVolume')}</h3>
                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" className="h-8 text-xs border-white/10 hover:bg-white/5">{t('exportCsv')}</Button>
+                      <Button variant="outline" size="sm" className="h-8 text-xs border-border hover:bg-secondary">{t('exportCsv')}</Button>
                    </div>
               </div>
-              <div className="h-[300px] w-full text-center flex items-center justify-center text-gray-500 bg-white/5 rounded-lg border border-dashed border-white/10">
+              <div className="h-[300px] w-full text-center flex items-center justify-center text-muted-foreground bg-secondary rounded-lg border border-dashed border-border">
                   {t('dataVizRequiresHistory')}
               </div>
            </Card>
@@ -493,12 +493,12 @@ export default function ApiDashboardSection() {
 
         {/* CREDITS TAB (Usage View) */}
         <TabsContent value="credits" className="space-y-6">
-             <Card className="bg-[#1C1C21] border-white/5 p-6">
+             <Card className="bg-card border-border p-6">
                 <CardHeader>
-                    <CardTitle className="text-white">{t('credits')}</CardTitle>
+                    <CardTitle className="text-foreground">{t('credits')}</CardTitle>
                     <CardDescription>{t('viewDetailedHistory')}</CardDescription>
                 </CardHeader>
-                <div className="h-[300px] w-full text-center flex items-center justify-center text-gray-500 bg-white/5 rounded-lg border border-dashed border-white/10">
+                <div className="h-[300px] w-full text-center flex items-center justify-center text-muted-foreground bg-secondary rounded-lg border border-dashed border-border">
                     {t('detailedHistoryComingSoon')}
                 </div>
             </Card>
@@ -508,29 +508,29 @@ export default function ApiDashboardSection() {
          <TabsContent value="activity" className="min-h-[400px]">
              <div className="w-full max-w-4xl mx-auto space-y-4">
                {recentActivity.length > 0 ? recentActivity.map((activity) => (
-                 <div key={activity.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-[#1C1C21] rounded-lg border border-white/5 hover:border-white/10 transition-colors gap-3">
+                 <div key={activity.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-card rounded-lg border border-border hover:border-border transition-colors gap-3">
                     <div className="flex items-start gap-4">
                        <div className={`mt-1 p-2 rounded-full ${activity.statusKey === 'success' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
                           {activity.statusKey === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <XCircle className="w-5 h-5" />}
                        </div>
                        <div>
-                          <div className="text-white font-medium flex items-center gap-2">
+                          <div className="text-foreground font-medium flex items-center gap-2">
                             {/* Simple fallback translation or direct string if key missing */}
                             {activity.typeKey === 'postGeneration' ? t('activityType.postGeneration') : activity.typeKey}
                           </div>
-                          <div className="text-sm text-gray-500">{activity.details}</div>
+                          <div className="text-sm text-muted-foreground">{activity.details}</div>
                        </div>
                     </div>
                     <div className="text-left sm:text-right pl-[52px] sm:pl-0">
-                       <div className="text-sm text-gray-400">{formatDistanceToNow(activity.time, { addSuffix: true, locale: locale === 'vi' ? vi : enUS })}</div>
-                       <div className="text-xs text-gray-600">
+                       <div className="text-sm text-muted-foreground">{formatDistanceToNow(activity.time, { addSuffix: true, locale: locale === 'vi' ? vi : enUS })}</div>
+                       <div className="text-xs text-muted-foreground">
                            {/* Real data doesn't track specific credits per post yet easily, hiding or just showing status */}
                            {activity.statusKey === 'success' ? t('status.success') : t('status.failed')}
                        </div>
                     </div>
                  </div>
                )) : (
-                 <div className="text-center py-10 text-gray-400">
+                 <div className="text-center py-10 text-muted-foreground">
                     {t('noRecentActivity')}
                  </div>
                )}

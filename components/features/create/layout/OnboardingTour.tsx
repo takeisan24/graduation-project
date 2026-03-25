@@ -194,13 +194,13 @@ export default function OnboardingTour() {
               left: targetRect.left - 8,
               width: targetRect.width + 16,
               height: targetRect.height + 16,
-              boxShadow: '0 0 0 4px rgba(227, 50, 101, 0.3), 0 0 30px rgba(227, 50, 101, 0.4)',
+              boxShadow: '0 0 0 4px hsl(var(--primary) / 0.3), 0 0 30px hsl(var(--primary) / 0.4)',
               transition: 'all 500ms ease-out'
             }}
           />
           {/* Solid border */}
           <div
-            className="fixed z-[45] border-2 border-[#E33265] rounded-lg pointer-events-none"
+            className="fixed z-[45] border-2 border-primary rounded-lg pointer-events-none"
             style={{
               top: targetRect.top - 4,
               left: targetRect.left - 4,
@@ -215,31 +215,31 @@ export default function OnboardingTour() {
       {/* Tooltip */}
       <div 
         ref={tooltipRef}
-        className="fixed z-50 bg-gradient-to-br from-[#2A2A30] to-[#1E1E23] rounded-xl shadow-2xl border border-white/10 p-6 max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-300"
+        className="fixed z-50 bg-gradient-to-br from-card to-background rounded-xl shadow-2xl border border-border p-6 max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-300"
         style={{
           top: `${tooltipPosition.top}px`,
           left: `${tooltipPosition.left}px`,
         }}
       >
         <div className="flex items-start justify-between mb-3">
-          <h3 className="text-lg font-semibold text-white pr-2">
+          <h3 className="text-lg font-semibold text-foreground pr-2">
             {currentStepData.title}
           </h3>
           <button 
             onClick={handleSkip} 
-            className="text-gray-400 hover:text-white transition-colors flex-shrink-0"
+            className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
             aria-label={t('buttons.skip')}
           >
             <X className="w-5 h-5" />
           </button>
         </div>
         
-        <p className="text-sm text-gray-300 mb-5 leading-relaxed">
+        <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
           {currentStepData.description}
         </p>
 
         <div className="flex items-center justify-between">
-          <div className="text-xs text-gray-400 font-medium">
+          <div className="text-xs text-muted-foreground font-medium">
             {currentStep + 1} {t('of')} {steps.length}
           </div>
           
@@ -249,7 +249,7 @@ export default function OnboardingTour() {
                 variant="outline"
                 size="sm"
                 onClick={handlePrevious}
-                className="text-sm bg-white/5 border-white/10 text-gray-300 hover:bg-white/10 hover:text-white"
+                className="text-sm bg-secondary border-border text-muted-foreground hover:bg-secondary hover:text-foreground"
               >
                 <ChevronLeft className="w-4 h-4 mr-1" />
                 {t('buttons.previous')}
@@ -259,7 +259,7 @@ export default function OnboardingTour() {
             <Button
               size="sm"
               onClick={handleNext}
-              className="bg-[#E33265] hover:bg-[#c52b57] text-white shadow-lg shadow-[#E33265]/20"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
             >
               {currentStep === steps.length - 1 ? t('buttons.finish') : t('buttons.next')}
               {currentStep < steps.length - 1 && <ChevronRight className="w-4 h-4 ml-1" />}
@@ -268,16 +268,16 @@ export default function OnboardingTour() {
         </div>
 
         {/* Progress dots */}
-        <div className="flex justify-center gap-2 mt-5 pt-4 border-t border-white/10">
+        <div className="flex justify-center gap-2 mt-5 pt-4 border-t border-border">
           {steps.map((_, index) => (
             <div
               key={index}
               className={`h-2 rounded-full transition-all duration-300 ${
-                index === currentStep 
-                  ? 'bg-[#E33265] w-6' 
-                  : index < currentStep 
-                    ? 'bg-[#E33265]/40 w-2' 
-                    : 'bg-white/20 w-2'
+                index === currentStep
+                  ? 'bg-primary w-6'
+                  : index < currentStep
+                    ? 'bg-primary/40 w-2'
+                    : 'bg-muted w-2'
               }`}
             />
           ))}

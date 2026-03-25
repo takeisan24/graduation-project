@@ -26,7 +26,7 @@ export default function FeaturesGrid() {
 
   return (
     <section id="features" className="py-20 md:py-32">
-      <div className="container mx-auto px-4 border border-white/30 bg-white/[.03] rounded-2xl p-8 md:p-16">
+      <div className="container mx-auto px-4">
         <motion.div 
           className="text-center mb-16"
           initial="initial"

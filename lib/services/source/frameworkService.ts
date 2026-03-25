@@ -58,20 +58,30 @@ export async function getFrameworks(
     // Kết quả: { "goal_viral": "Hãy viết giọng hài hước...", "goal_sales": "..." }
     const goalTextMap: Record<string, string> = {};
     if (goalsRes.data) {
-        goalsRes.data.forEach((g: any) => {
+        goalsRes.data.forEach((g: { id: string; prompt_modifier_text?: string }) => {
             goalTextMap[g.id] = g.prompt_modifier_text || "";
         });
     }
 
     // 5. Map dữ liệu trả về Frontend
-    return (fwRes.data || []).map((item: any) => {
+    return (fwRes.data || []).map((item: {
+        id: string;
+        title: string;
+        slug: string;
+        description: string;
+        icon_name: string;
+        base_prompt_text?: string;
+        placeholders?: string[];
+        goal_ids?: string[];
+        framework_niches?: { niche_id: string; override_prompt_text?: string }[];
+    }) => {
         
         // A. Xử lý Niche Overrides
         const nicheOverrides: Record<string, string> = {};
         const supportedNiches: string[] = [];
 
         if (item.framework_niches && Array.isArray(item.framework_niches)) {
-            item.framework_niches.forEach((fn: any) => {
+            item.framework_niches.forEach((fn: { niche_id: string; override_prompt_text?: string }) => {
                 supportedNiches.push(fn.niche_id);
                 // Chỉ thêm vào map nếu có override text
                 if (fn.override_prompt_text) {

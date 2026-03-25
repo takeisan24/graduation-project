@@ -31,8 +31,6 @@ import {
  */
 export function resetAllStores() {
   try {
-    console.log('[storeReset] Resetting all stores...');
-    
     // Reset Connections Store
     useConnectionsStore.setState({
       connectedAccounts: [],
@@ -160,7 +158,6 @@ export function resetAllStores() {
       connectedAccounts: [],
     });
     
-    console.log('[storeReset] All stores reset successfully');
   } catch (error) {
     console.error('[storeReset] Error resetting stores:', error);
   }
@@ -172,8 +169,6 @@ export function resetAllStores() {
  */
 export function clearAllUserData() {
   try {
-    console.log('[storeReset] Clearing all user data...');
-    
     // Reset all Zustand stores first
     resetAllStores();
     
@@ -193,7 +188,6 @@ export function clearAllUserData() {
       // Note: We can't clear all intervals, but we clear the ones we know about
     }
     
-    console.log('[storeReset] All user data cleared successfully');
   } catch (error) {
     console.error('[storeReset] Error clearing user data:', error);
   }

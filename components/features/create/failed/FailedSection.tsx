@@ -103,8 +103,8 @@ export default function FailedSection() {
   if (isLoadingFailedPosts && failedPosts.length === 0) {
     return (
       <div className="w-full max-w-none mx-4 mt-4 overflow-hidden h-full flex flex-col items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E33265]"></div>
-        <p className="mt-4 text-white/80">{t('loading')}</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <p className="mt-4 text-foreground/80">{t('loading')}</p>
       </div>
     )
   }
@@ -123,7 +123,7 @@ export default function FailedSection() {
           onSearchChange={setSearchTerm}
         />
         
-        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
           <div className="space-y-[1px] pb-4">
             {filteredPosts && filteredPosts.length > 0 ? (
               filteredPosts.map((post) => {
@@ -144,7 +144,7 @@ export default function FailedSection() {
               })
             ) : (
              !isLoadingFailedPosts && (
-                <div className="flex flex-col items-center justify-center py-12 text-white/50">
+                <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
                   <p>No failed posts found</p>
                 </div>
              )
@@ -157,7 +157,7 @@ export default function FailedSection() {
               <button
                 onClick={() => loadMoreFailedPosts()}
                 disabled={isLoadingMoreFailedPosts}
-                className="px-6 py-2 bg-[#E33265] hover:bg-[#c52b57] text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoadingMoreFailedPosts ? t('loadingMore') : t('loadMore')}
               </button>

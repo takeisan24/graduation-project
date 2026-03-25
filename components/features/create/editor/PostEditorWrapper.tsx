@@ -66,12 +66,12 @@ export default function PostEditorWrapper({ mode = 'normal' }: PostEditorWrapper
     if (isGenerating) {
       return (
         <div className="flex-1 min-w-0 p-[15px] h-full flex flex-col">
-          <div className="flex-1 bg-[#2A2A30] border border-[#3A3A42] rounded-[5px] flex items-center justify-center">
+          <div className="flex-1 bg-card border border-border rounded-[5px] flex items-center justify-center">
             <div className="text-center space-y-4 animate-in fade-in duration-500">
-              <Loader2 className="w-12 h-12 text-[#E33265] animate-spin mx-auto" />
+              <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto" />
               <div className="space-y-2">
-                <p className="text-lg font-semibold text-white">{t('creatingContent')}</p>
-                <p className="text-sm text-gray-400">{t('analyzingSource')}</p>
+                <p className="text-lg font-semibold text-foreground">{t('creatingContent')}</p>
+                <p className="text-sm text-muted-foreground">{t('analyzingSource')}</p>
               </div>
             </div>
           </div>
@@ -81,7 +81,7 @@ export default function PostEditorWrapper({ mode = 'normal' }: PostEditorWrapper
 
     return (
       <div className="flex-1 min-w-0 p-[15px] h-full flex flex-col animate-in fade-in duration-300">
-        <div className="flex-1 bg-[#2A2A30] border border-[#3A3A42] rounded-[5px] overflow-hidden">
+        <div className="flex-1 bg-card border border-border rounded-[5px] overflow-hidden">
           <PostConfigurationForm
             source={sourceToGenerate}
             onComplete={handleConfigComplete}

@@ -1,21 +1,21 @@
-import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { withAuthOnly } from '@/lib/middleware/api-protected';
+import { success, fail } from '@/lib/response';
 import { getAllContentGoal } from '@/lib/services/source/contentGoalsService';
 
-// --- Force No cache ---
-export const dynamic = 'force-dynamic'; 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
-// --------------------
 
-export async function GET() {
+export async function GET(req: NextRequest) {
     try {
+        const auth = await withAuthOnly(req);
+        if ("error" in auth) return auth.error;
+
         const data = await getAllContentGoal();
-        // Thêm log để debug xem server thực sự lấy được gì
-        console.log(`[API Content-Goals] Real-time fetched: ${data.length} items`); 
-        return NextResponse.json({ success: true, data });
-    } catch (error: any) {
-        return NextResponse.json(
-            { success: false, error: error.message },
-            { status: 500 }
-        );
+        return success(data);
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Server error";
+        console.error("[API/v1/content-goals] Error:", message);
+        return fail(message, 500);
     }
 }

@@ -37,8 +37,9 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       platform: connection.platform
     });
 
-  } catch (err: any) {
-    console.error("DELETE /api/connections/[id] error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("DELETE /api/connections/[id] error:", message);
+    return fail(message, 500);
   }
 }

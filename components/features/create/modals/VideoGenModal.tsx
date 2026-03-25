@@ -86,17 +86,17 @@ export default function VideoGenModal() {
       onClick={closeModal}
     >
       <div
-        className="bg-[#2A2A30] border border-[#3A3A42] rounded-xl w-full lg:w-[600px] max-w-full max-h-[90vh] overflow-hidden shadow-2xl"
+        className="bg-card border border-border rounded-xl w-full lg:w-[600px] max-w-full max-h-[90vh] overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-4 lg:px-6 py-3 lg:py-4 border-b border-white/10 bg-gradient-to-r from-[#7C3AED]/5 to-transparent">
+        <div className="flex items-center justify-between px-4 lg:px-6 py-3 lg:py-4 border-b border-border bg-gradient-to-r from-accent/5 to-transparent">
           <div className="flex items-center gap-2 lg:gap-3">
-            <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-lg bg-[#7C3AED]/10 flex items-center justify-center">
-              <SparklesIcon className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#7C3AED]" />
+            <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-lg bg-accent/10 flex items-center justify-center">
+              <SparklesIcon className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-accent" />
             </div>
-            <h2 className="text-base lg:text-lg font-semibold text-white">
+            <h2 className="text-base lg:text-lg font-semibold text-foreground">
               {t("title")}{" "}
-              <span className="text-sm text-[#7C3AED]">(Veo3)</span>
+              <span className="text-sm text-accent">(Veo3)</span>
             </h2>
           </div>
         </div>
@@ -106,33 +106,33 @@ export default function VideoGenModal() {
         >
           <div className="space-y-5">
             <div>
-              <label className="block text-white/90 mb-2 text-sm font-medium">
+              <label className="block text-foreground/90 mb-2 text-sm font-medium">
                 {t("promptLabel")}
               </label>
               <Textarea
                 placeholder={t("promptPlaceholder")}
-                className="bg-[#1E1E23] border-[#3A3A42] text-white h-32 resize-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-colors"
+                className="bg-background border-border text-foreground h-32 resize-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
                 value={videoPrompt}
                 onChange={(e) => setVideoPrompt(e.target.value)}
               />
-              <p className="text-xs text-gray-400 mt-1.5">{t("promptHint")}</p>
+              <p className="text-xs text-muted-foreground mt-1.5">{t("promptHint")}</p>
             </div>
             <div>
-              <label className="block text-white/90 mb-2 text-sm font-medium">
+              <label className="block text-foreground/90 mb-2 text-sm font-medium">
                 {t("negativePromptLabel")}
               </label>
               <Input
                 placeholder={t("negativePromptPlaceholder")}
-                className="bg-[#1E1E23] border-[#3A3A42] text-white focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-colors"
+                className="bg-background border-border text-foreground focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
                 value={videoNegativePrompt}
                 onChange={(e) => setVideoNegativePrompt(e.target.value)}
               />
-              <p className="text-xs text-gray-400 mt-1.5">
+              <p className="text-xs text-muted-foreground mt-1.5">
                 {t("negativePromptHint")}
               </p>
             </div>
             <div>
-              <label className="block text-white/90 mb-2 text-sm font-medium">
+              <label className="block text-foreground/90 mb-2 text-sm font-medium">
                 {t("aspectRatioLabel")}
               </label>
               <select
@@ -140,14 +140,14 @@ export default function VideoGenModal() {
                 onChange={(e) =>
                   setVideoAspectRatio(e.target.value as typeof videoAspectRatio)
                 }
-                className="w-full bg-[#1E1E23] border border-[#3A3A42] text-white rounded-lg p-3 focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-colors cursor-pointer"
+                className="w-full bg-background border border-border text-foreground rounded-lg p-3 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors cursor-pointer"
               >
                 <option value="16:9">{t("ratio16_9")}</option>
                 <option value="9:16">{t("ratio9_16")}</option>
               </select>
             </div>
             <div>
-              <label className="block text-white/90 mb-2 text-sm font-medium">
+              <label className="block text-foreground/90 mb-2 text-sm font-medium">
                 {t("resolutionLabel")}
               </label>
               <select
@@ -155,7 +155,7 @@ export default function VideoGenModal() {
                 onChange={(e) =>
                   setVideoResolution(e.target.value as typeof videoResolution)
                 }
-                className="w-full bg-[#1E1E23] border border-[#3A3A42] text-white rounded-lg p-3 focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-colors cursor-pointer"
+                className="w-full bg-background border border-border text-foreground rounded-lg p-3 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors cursor-pointer"
               >
                 <option value="720p">{t("resolution720p")}</option>
                 <option value="1080p">{t("resolution1080p")}</option>
@@ -168,17 +168,17 @@ export default function VideoGenModal() {
                   <select
                     value={videoPersonGeneration}
                     onChange={(e) => setVideoPersonGeneration(e.target.value as typeof videoPersonGeneration)}
-                    className="w-full bg-[#1E1E23] border border-[#3A3A42] text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#7C3AED]"
+                    className="w-full bg-background border border-border text-foreground rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent"
                   >
                     <option value="allow_adult">{t('safetyAllowAdult')}</option>
                     <option value="allow_all">{t('safetyAllowAll')}</option>
                     <option value="dont_allow">{t('safetyDontAllow')}</option>
                   </select>
-                  <p className="text-xs text-gray-400 mt-1">{t('safetyHint')}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{t('safetyHint')}</p>
                 </div> */}
-            <div className="bg-[#7C3AED]/10 border border-[#7C3AED]/30 rounded-lg p-3.5">
-              <p className="text-xs text-gray-300 leading-relaxed">
-                <strong className="text-[#7C3AED] font-semibold">
+            <div className="bg-accent/10 border border-accent/30 rounded-lg p-3.5">
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                <strong className="text-accent font-semibold">
                   {t("note")}
                 </strong>{" "}
                 {t("noteText")}
@@ -186,26 +186,26 @@ export default function VideoGenModal() {
             </div>
           </div>
         </div>
-        <div className="px-6 py-4 border-t border-white/10 flex items-center justify-between bg-[#1E1E23]/30">
+        <div className="px-6 py-4 border-t border-border flex items-center justify-between bg-background/30">
           <div className="flex flex-col">
-            <span className="text-gray-400 text-xs font-medium uppercase tracking-wider">
+            <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">
               Chi phí dự tính
             </span>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="text-[#7C3AED] font-bold text-lg">20</span>
-              <span className="text-gray-300 text-sm">Credits</span>
+              <span className="text-accent font-bold text-lg">20</span>
+              <span className="text-muted-foreground text-sm">Credits</span>
             </div>
           </div>
           <div className="flex gap-3">
             <Button
               variant="outline"
-              className="border-[#3A3A42] text-white hover:bg-white/10 hover:border-white/20 transition-colors"
+              className="border-border text-foreground hover:bg-secondary hover:border-border transition-colors"
               onClick={closeModal}
             >
               {t("cancel")}
             </Button>
             <Button
-              className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-lg shadow-[#7C3AED]/20 transition-all"
+              className="bg-accent hover:bg-accent/90 text-white shadow-lg shadow-accent/20 transition-all"
               onClick={handleGenerateClick}
               disabled={!videoPrompt.trim() || isGenerating || isSubmitting}
             >

@@ -9,6 +9,18 @@
 import { supabase } from "@/lib/supabase";
 
 /**
+ * Joined getlate_profiles data shape (from Supabase relation joins)
+ */
+export interface GetlateProfileJoin {
+  id: string;
+  getlate_account_id: string;
+  late_profile_id: string;
+  social_media_ids: Record<string, unknown> | null;
+  metadata: Record<string, unknown> | null;
+  profile_name?: string | null;
+}
+
+/**
  * Connection metadata stored in profile_metadata JSONB column
  * Contains social media account information
  */
@@ -28,7 +40,7 @@ export interface ConnectionMetadata {
   /** Number of followers */
   followers_count?: number;
   /** Additional metadata fields */
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -343,7 +355,7 @@ export async function findConnectionsByIds(ids: string[], userId: string): Promi
 export async function findConnectionByLateProfileId(
   lateProfileId: string,
   userId: string
-): Promise<(Connection & { getlate_profiles?: any }) | null> {
+): Promise<(Connection & { getlate_profiles?: GetlateProfileJoin }) | null> {
   const { data, error } = await supabase
     .from("connected_accounts")
     .select(`
@@ -363,13 +375,13 @@ export async function findConnectionByLateProfileId(
     .eq("late_profile_id", lateProfileId)
     .eq("user_id", userId)
     .maybeSingle();
-  
+
   if (error) {
     console.error("[db/connections] Error finding connection by late_profile_id:", error);
     return null;
   }
-  
-  return data as any;
+
+  return data as unknown as (Connection & { getlate_profiles?: GetlateProfileJoin }) | null;
 }
 
 /**
@@ -564,7 +576,7 @@ export async function createConnectionLegacy(data: {
 export async function findConnectionByIdWithProfile(
   id: string,
   userId: string
-): Promise<(Connection & { getlate_profiles?: any }) | null> {
+): Promise<(Connection & { getlate_profiles?: GetlateProfileJoin }) | null> {
   const { data, error } = await supabase
     .from("connected_accounts")
     .select(`
@@ -584,13 +596,13 @@ export async function findConnectionByIdWithProfile(
     .eq("user_id", userId)
     .not("late_profile_id", "is", null)
     .maybeSingle();
-  
+
   if (error) {
     console.error("[db/connections] Error finding connection with profile:", error);
     return null;
   }
-  
-  return data as any;
+
+  return data as unknown as (Connection & { getlate_profiles?: GetlateProfileJoin }) | null;
 }
 
 /**
@@ -600,7 +612,7 @@ export async function findConnectionsByIdsWithProfiles(
   ids: string[],
   userId: string,
   platform?: string
-): Promise<(Connection & { getlate_profiles?: any })[]> {
+): Promise<(Connection & { getlate_profiles?: GetlateProfileJoin })[]> {
   if (ids.length === 0) return [];
   
   let query = supabase
@@ -640,5 +652,5 @@ export async function findConnectionsByIdsWithProfiles(
     return [];
   }
   
-  return (data || []) as any[];
+  return (data || []) as unknown as (Connection & { getlate_profiles?: GetlateProfileJoin })[];
 }

@@ -49,21 +49,11 @@ export const useFailedPostsStore = create<FailedPostsState>((set, get) => ({
   loadFailedPosts: async () => {
     const needsRefresh = loadFromLocalStorage<boolean>('needsRefreshFailedPosts', false);
 
-    /* console.log("[loadFailedPosts] Called", {
-      hasLoaded: get().hasLoadedFailedPosts,
-      needsRefresh,
-      isLoadingGlobal: isLoadingFailedPostsGlobal,
-      isLoadingStore: get().isLoadingFailedPosts,
-      timestamp: new Date().toISOString()
-    }); */
-
     if (get().hasLoadedFailedPosts && !needsRefresh) {
-      // console.log("[loadFailedPosts] Already loaded and no refresh needed, skipping");
       return;
     }
 
     if (needsRefresh) {
-      // console.log("[loadFailedPosts] Refresh flag detected, forcing reload from API");
       saveToLocalStorage('needsRefreshFailedPosts', false);
       set({
         hasLoadedFailedPosts: false,
@@ -73,16 +63,13 @@ export const useFailedPostsStore = create<FailedPostsState>((set, get) => ({
     }
 
     if (isLoadingFailedPostsGlobal) {
-      // console.log("[loadFailedPosts] Already loading (global lock), skipping");
       return;
     }
 
     if (get().isLoadingFailedPosts) {
-      // console.log("[loadFailedPosts] Already loading (store lock), skipping");
       return;
     }
 
-    // console.log("[loadFailedPosts] Setting locks and starting API call");
     isLoadingFailedPostsGlobal = true;
     set({ isLoadingFailedPosts: true });
 
@@ -93,7 +80,6 @@ export const useFailedPostsStore = create<FailedPostsState>((set, get) => ({
         const limit = 100;
         const offset = 0;
 
-        // console.log("[loadFailedPosts] Calling API /api/posts/failed", { limit, offset });
         const response = await fetch(`/api/posts/failed?limit=${limit}&offset=${offset}`, {
           method: 'GET',
           headers: {
@@ -106,7 +92,6 @@ export const useFailedPostsStore = create<FailedPostsState>((set, get) => ({
           const result = await response.json();
           const apiPosts = result?.data?.posts || [];
           const totalCount = result?.data?.count || apiPosts.length;
-          // console.log("[loadFailedPosts] API success, received", apiPosts.length, "posts (total:", totalCount, ")");
 
           const convertedPosts: FailedPost[] = apiPosts.map((apiPost: any) => ({
             id: String(apiPost.id || apiPost.postId || Date.now()),
@@ -216,12 +201,10 @@ export const useFailedPostsStore = create<FailedPostsState>((set, get) => ({
     const state = get();
 
     if (!state.failedPostsHasMore) {
-      // console.log("[loadMoreFailedPosts] No more posts to load");
       return;
     }
 
     if (state.isLoadingMoreFailedPosts) {
-      // console.log("[loadMoreFailedPosts] Already loading more posts, skipping");
       return;
     }
 
@@ -239,7 +222,6 @@ export const useFailedPostsStore = create<FailedPostsState>((set, get) => ({
       const limit = 100;
       const offset = state.failedPostsOffset;
 
-      // console.log("[loadMoreFailedPosts] Loading more posts", { limit, offset });
       const response = await fetch(`/api/posts/failed?limit=${limit}&offset=${offset}`, {
         method: 'GET',
         headers: {
@@ -252,8 +234,6 @@ export const useFailedPostsStore = create<FailedPostsState>((set, get) => ({
         const result = await response.json();
         const apiPosts = result?.data?.posts || [];
         const totalCount = result?.data?.count || 0;
-
-        // console.log("[loadMoreFailedPosts] API success, received", apiPosts.length, "more posts");
 
         const newPosts: FailedPost[] = apiPosts.map((apiPost: any) => ({
           id: String(apiPost.id || apiPost.postId || Date.now()),

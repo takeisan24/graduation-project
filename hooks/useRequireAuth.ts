@@ -21,31 +21,17 @@ export function useRequireAuth(options: { redirectTo?: string; requireAuth?: boo
   useEffect(() => {
     // Don't redirect while loading - wait for auth check to complete
     if (loading) {
-      // console.log('[useRequireAuth] Still loading auth state...')
       return
     }
-
-    // Debug logging
-    /* console.log('[useRequireAuth] Auth check:', {
-      loading,
-      isAuthenticated,
-      hasUser: !!user,
-      hasSession: !!session,
-      userEmail: user?.email
-    }); */
-
 
     // Redirect if auth is required but user is not authenticated
     // Add a delay to give time for session to load from localStorage
     if (requireAuth && !isAuthenticated) {
-      // console.log('[useRequireAuth] Not authenticated, redirecting to:', redirectTo)
       const timeoutId = setTimeout(() => {
         router.push(redirectTo)
       }, 300) // Increased delay to ensure session has time to load
 
       return () => clearTimeout(timeoutId)
-    } else if (requireAuth && isAuthenticated) {
-      // console.log('[useRequireAuth] Authenticated, allowing access')
     }
   }, [loading, isAuthenticated, requireAuth, redirectTo, router, user, session])
 

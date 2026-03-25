@@ -29,9 +29,10 @@ export async function GET(req: NextRequest, { params }: { params: { sessionId: s
       messages: messages || []
     });
 
-  } catch (err: any) {
-    console.error("GET /api/chat/sessions/[sessionId] error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("GET /api/chat/sessions/[sessionId] error:", message);
+    return fail(message, 500);
   }
 }
 
@@ -62,9 +63,10 @@ export async function PUT(req: NextRequest, { params }: { params: { sessionId: s
       message: "Session updated successfully"
     });
 
-  } catch (err: any) {
-    console.error("PUT /api/chat/sessions/[sessionId] error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("PUT /api/chat/sessions/[sessionId] error:", message);
+    return fail(message, 500);
   }
 }
 
@@ -90,8 +92,9 @@ export async function DELETE(req: NextRequest, { params }: { params: { sessionId
       message: "Session deleted successfully"
     });
 
-  } catch (err: any) {
-    console.error("DELETE /api/chat/sessions/[sessionId] error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("DELETE /api/chat/sessions/[sessionId] error:", message);
+    return fail(message, 500);
   }
 }

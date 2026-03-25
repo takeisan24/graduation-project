@@ -12,12 +12,12 @@ export interface AccountMetadata {
     max_profiles?: number;
     current_connections?: number;
     max_connections?: number;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   usage?: {
-    [key: string]: any;
+    [key: string]: unknown;
   };
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface LateAccount {

@@ -53,7 +53,7 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
       <div
         ref={ref}
         className={cn(
-          "relative bg-[#0A0118] border border-[#E33265]/50 rounded-lg shadow-2xl w-full overflow-hidden",
+          "relative bg-card border border-primary/50 rounded-lg shadow-2xl w-full overflow-hidden",
           className
         )}
         {...props}
@@ -101,7 +101,7 @@ export const DialogTitle = React.forwardRef<
   <h2
     ref={ref}
     className={cn(
-      "text-lg font-semibold leading-none tracking-tight text-white",
+      "text-lg font-semibold leading-none tracking-tight text-foreground",
       className
     )}
     {...props}

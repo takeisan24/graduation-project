@@ -89,52 +89,52 @@ export default function ImageGenModal() {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={closeModal}>
-      <div className="bg-[#2A2A30] border border-[#3A3A42] rounded-xl w-full lg:w-[600px] max-w-full max-h-[90vh] overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between px-4 lg:px-6 py-3 lg:py-4 border-b border-white/10 bg-gradient-to-r from-[#7C3AED]/5 to-transparent">
+      <div className="bg-card border border-border rounded-xl w-full lg:w-[600px] max-w-full max-h-[90vh] overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between px-4 lg:px-6 py-3 lg:py-4 border-b border-border bg-gradient-to-r from-accent/5 to-transparent">
           <div className="flex items-center gap-2 lg:gap-3">
-            <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-lg bg-[#7C3AED]/10 flex items-center justify-center">
-              <SparklesIcon className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#7C3AED]" />
+            <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-lg bg-accent/10 flex items-center justify-center">
+              <SparklesIcon className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-accent" />
             </div>
-            <h2 className="text-base lg:text-lg font-semibold text-white">{t('title')}</h2>
+            <h2 className="text-base lg:text-lg font-semibold text-foreground">{t('title')}</h2>
           </div>
         </div>
         <div className="px-4 lg:px-6 py-4 lg:py-5 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent" style={{ maxHeight: "60vh" }}>
           <div className="space-y-5">
             <div>
-              <label className="block text-white/90 mb-2 text-sm font-medium">{t('promptLabel')}</label>
+              <label className="block text-foreground/90 mb-2 text-sm font-medium">{t('promptLabel')}</label>
               <Textarea
                 placeholder={t('promptPlaceholder')}
-                className="bg-[#1E1E23] border-[#3A3A42] text-white h-32 resize-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-colors"
+                className="bg-background border-border text-foreground h-32 resize-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
                 value={imagePrompt}
                 onChange={(e) => setImagePrompt(e.target.value)}
               />
-              <p className="text-xs text-gray-400 mt-1.5">{t('promptHint')}</p>
+              <p className="text-xs text-muted-foreground mt-1.5">{t('promptHint')}</p>
             </div>
             <div>
-              <label className="block text-white/90 mb-2 text-sm font-medium">{t('countLabel')}</label>
-              <div className="flex items-center gap-3 bg-[#1E1E23] border border-[#3A3A42] rounded-lg p-2 w-fit">
-                <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-white hover:bg-white/10 disabled:opacity-40" onClick={() => setImageCount(Math.max(1, imageCount - 1))} disabled={imageCount <= 1}>-</Button>
-                <span className="text-white text-base font-semibold w-8 text-center">{imageCount}</span>
-                <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-white hover:bg-white/10 disabled:opacity-40" onClick={() => setImageCount(Math.min(3, imageCount + 1))} disabled={imageCount >= 3}>+</Button>
+              <label className="block text-foreground/90 mb-2 text-sm font-medium">{t('countLabel')}</label>
+              <div className="flex items-center gap-3 bg-background border border-border rounded-lg p-2 w-fit">
+                <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-foreground hover:bg-secondary disabled:opacity-40" onClick={() => setImageCount(Math.max(1, imageCount - 1))} disabled={imageCount <= 1}>-</Button>
+                <span className="text-foreground text-base font-semibold w-8 text-center">{imageCount}</span>
+                <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-foreground hover:bg-secondary disabled:opacity-40" onClick={() => setImageCount(Math.min(3, imageCount + 1))} disabled={imageCount >= 3}>+</Button>
               </div>
-              <p className="text-xs text-gray-400 mt-1.5">{t('countLabel')} (1-3)</p>
+              <p className="text-xs text-muted-foreground mt-1.5">{t('countLabel')} (1-3)</p>
             </div>
             <div>
-              <label className="block text-white/90 mb-2 text-sm font-medium">{t('sizeLabel')}</label>
+              <label className="block text-foreground/90 mb-2 text-sm font-medium">{t('sizeLabel')}</label>
               <select
                 value={imageSize}
                 onChange={(e) => setImageSize(e.target.value as "1K" | "2K" | "4K")}
-                className="w-full bg-[#1E1E23] border border-[#3A3A42] text-white rounded-lg p-3 focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-colors cursor-pointer"
+                className="w-full bg-background border border-border text-foreground rounded-lg p-3 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors cursor-pointer"
               >
                 <option value="1K">{t('size1K')}</option>
                 <option value="2K">{t('size2K')}</option>
                 <option value="4K">4K (Ultra HD)</option>
               </select>
-              <p className="text-xs text-gray-400 mt-1.5">{t('sizeHint')}</p>
+              <p className="text-xs text-muted-foreground mt-1.5">{t('sizeHint')}</p>
             </div>
             <div>
-              <label className="block text-white/90 mb-2 text-sm font-medium">{t('aspectRatioLabel')}</label>
-              <select value={imageAspectRatio} onChange={(e) => setImageAspectRatio(e.target.value as typeof imageAspectRatio)} className="w-full bg-[#1E1E23] border border-[#3A3A42] text-white rounded-lg p-3 focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-colors cursor-pointer">
+              <label className="block text-foreground/90 mb-2 text-sm font-medium">{t('aspectRatioLabel')}</label>
+              <select value={imageAspectRatio} onChange={(e) => setImageAspectRatio(e.target.value as typeof imageAspectRatio)} className="w-full bg-background border border-border text-foreground rounded-lg p-3 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors cursor-pointer">
                 <option value="1:1">{t('ratio1_1')}</option>
                 <option value="16:9">{t('ratio16_9')}</option>
                 <option value="9:16">{t('ratio9_16')}</option>
@@ -142,16 +142,16 @@ export default function ImageGenModal() {
             </div>
 
             {/* Google Search Grounding Option */}
-            <div className="pt-2 border-t border-white/10 space-y-3">
+            <div className="pt-2 border-t border-border space-y-3">
               <label
-                className="flex items-start gap-3 p-2.5 rounded-lg border border-white/10 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors"
+                className="flex items-start gap-3 p-2.5 rounded-lg border border-border bg-secondary cursor-pointer hover:bg-secondary/80 transition-colors"
               >
                 <div className="flex items-center h-5 mt-0.5">
                   <input
                     type="checkbox"
                     checked={useSearch}
                     onChange={(e) => setUseSearch(e.target.checked)}
-                    className="w-3.5 h-3.5 rounded border-gray-500 text-blue-500 focus:ring-blue-500 bg-transparent"
+                    className="w-3.5 h-3.5 rounded border-border text-blue-500 focus:ring-blue-500 bg-transparent"
                   />
                 </div>
                 <div className="flex-1">
@@ -163,7 +163,7 @@ export default function ImageGenModal() {
                       Real-time
                     </span>
                   </div>
-                  <p className="text-[11px] text-gray-400 leading-relaxed">
+                  <p className="text-[11px] text-muted-foreground leading-relaxed">
                     Tìm kiếm dữ liệu thực tế (thời tiết, sự kiện...) trước khi vẽ.
                   </p>
                 </div>
@@ -171,19 +171,19 @@ export default function ImageGenModal() {
             </div>
           </div>
         </div>
-        <div className="px-6 py-4 border-t border-white/10 flex items-center justify-between bg-[#1E1E23]/30">
+        <div className="px-6 py-4 border-t border-border flex items-center justify-between bg-background/30">
           <div className="flex flex-col">
-            <span className="text-gray-400 text-xs font-medium uppercase tracking-wider">{t('estimatedCost')}</span>
+            <span className="text-muted-foreground text-xs font-medium uppercase tracking-wider">{t('estimatedCost')}</span>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="text-[#7C3AED] font-bold text-lg">
+              <span className="text-accent font-bold text-lg">
                 {CREDIT_COSTS.WITH_IMAGE * imageCount}
               </span>
-              <span className="text-gray-300 text-sm">Credits</span>
+              <span className="text-muted-foreground text-sm">Credits</span>
             </div>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" className="border-[#3A3A42] text-white hover:bg-white/10 hover:border-white/20 transition-colors" onClick={closeModal}>{t('cancel')}</Button>
-            <Button className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-lg shadow-[#7C3AED]/20 transition-all" onClick={handleGenerateClick} disabled={!imagePrompt.trim() || isGenerating || isSubmitting}>
+            <Button variant="outline" className="border-border text-foreground hover:bg-secondary hover:border-border transition-colors" onClick={closeModal}>{t('cancel')}</Button>
+            <Button className="bg-accent hover:bg-accent/90 text-white shadow-lg shadow-accent/20 transition-all" onClick={handleGenerateClick} disabled={!imagePrompt.trim() || isGenerating || isSubmitting}>
               {isGenerating ? (
                 <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />{t('generating')}</>
               ) : (
@@ -196,15 +196,15 @@ export default function ImageGenModal() {
 
       {/* Modal xac nhan xoa danh sach anh tam */}
       <Dialog open={isConfirmClearOpen} onOpenChange={setIsConfirmClearOpen}>
-        <DialogContent className="max-w-[400px] bg-[#2A2A30] border-[#3A3A42] p-2 sm:p-4 shadow-2xl rounded-2xl">
+        <DialogContent className="max-w-[400px] bg-card border-border p-2 sm:p-4 shadow-2xl rounded-2xl">
           <DialogHeader>
             <div className="flex items-center gap-4 mb-3">
               <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center shrink-0 border border-red-500/20">
                 <AlertTriangle className="w-6 h-6 text-red-500" />
               </div>
-              <DialogTitle className="text-xl text-white font-semibold">Xác nhận xóa?</DialogTitle>
+              <DialogTitle className="text-xl text-foreground font-semibold">Xác nhận xóa?</DialogTitle>
             </div>
-            <DialogDescription className="text-gray-400 text-sm leading-relaxed">
+            <DialogDescription className="text-muted-foreground text-sm leading-relaxed">
               Bạn có chắc chắn muốn xóa toàn bộ danh sách ảnh vừa tạo không? Hành động này không thể hoàn tác.
             </DialogDescription>
           </DialogHeader>
@@ -212,7 +212,7 @@ export default function ImageGenModal() {
             <Button
               variant="outline"
               onClick={() => setIsConfirmClearOpen(false)}
-              className="flex-1 bg-transparent border-[#3A3A42] text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+              className="flex-1 bg-transparent border-border text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
             >
               Hủy bỏ
             </Button>

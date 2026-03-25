@@ -8,6 +8,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { Toaster } from 'sonner'
 import { ToastTranslationProvider } from '@/components/providers/ToastTranslationProvider'
+import { ThemeProvider } from '@/components/providers/ThemeProvider'
 
 import "./globals.css"
 
@@ -34,18 +35,19 @@ export default async function RootLayout({
 
   const messages = await getMessages();
   return (
-    <html lang={locale}>
-      <body className={`font-sans ${fontSans.variable}`}>
-        <NextIntlClientProvider messages={messages}>
-          <ToastTranslationProvider>
-            <Suspense fallback={null}>
-              {children}
-            </Suspense>
-            <Toaster theme="dark" richColors position="bottom-left" />
-            {/* SILENCED: Disable debug mode to clean up console */}
-            <Analytics debug={false} />
-          </ToastTranslationProvider>
-        </NextIntlClientProvider>
+    <html lang={locale} suppressHydrationWarning>
+      <body className={`font-sans ${fontSans.variable} antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+          <NextIntlClientProvider messages={messages}>
+            <ToastTranslationProvider>
+              <Suspense fallback={null}>
+                {children}
+              </Suspense>
+              <Toaster richColors position="bottom-left" />
+              <Analytics debug={false} />
+            </ToastTranslationProvider>
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

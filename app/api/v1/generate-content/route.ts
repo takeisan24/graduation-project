@@ -1,11 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { generateContent } from "@/lib/services/source/generateContentV1Service";
 import { success, fail } from '@/lib/response';
+import { withAuthOnly } from '@/lib/middleware/api-protected';
 
 export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {
     try {
+        // Auth check at route level (credits handled in service)
+        const auth = await withAuthOnly(request);
+        if ("error" in auth) return auth.error;
+
         // 1. Parse & Destructure Body
         const body = await request.json();
         const {
@@ -57,8 +62,9 @@ export async function POST(request: NextRequest) {
             message: result.message
         });
 
-    } catch (error: any) {
-        console.error("[API_GENERATE_CONTENT_ERROR]", error);
-        return fail(error.message || 'Internal Server Error', 500);
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Internal Server Error";
+        console.error("[API_GENERATE_CONTENT_ERROR]", message);
+        return fail(message, 500);
     }
 }

@@ -20,9 +20,10 @@ export async function GET(req: NextRequest) {
 
     return success(posts);
 
-  } catch (err: any) {
-    console.error("GET /api/schedule error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("GET /api/schedule error:", message);
+    return fail(message, 500);
   }
 }
 
@@ -90,8 +91,9 @@ export async function POST(req: NextRequest) {
           if (savedPost) {
             scheduledPosts.push(savedPost);
           }
-        } catch (e: any) {
-          errors.push(`Failed to schedule for ${post.platform}/${profileId}: ${e.message}`);
+        } catch (e: unknown) {
+          const eMsg = e instanceof Error ? e.message : String(e);
+          errors.push(`Failed to schedule for ${post.platform}/${profileId}: ${eMsg}`);
         }
       }
     }
@@ -106,8 +108,9 @@ export async function POST(req: NextRequest) {
       message: `Successfully scheduled ${scheduledPosts.length} post(s) across ${new Set(scheduledPosts.map(p => p.platform)).size} platform(s)${errors.length > 0 ? `, ${errors.length} failed` : ''}`
     }, 201);
 
-  } catch (err: any) {
-    console.error("POST /api/schedule error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("POST /api/schedule error:", message);
+    return fail(message, 500);
   }
 }

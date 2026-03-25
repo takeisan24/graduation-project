@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { requireAuth } from "@/lib/auth";
+import { fail } from "@/lib/response";
 
 const SERVER_B_URL = process.env.SERVER_B_URL;
 const SERVER_B_API_KEY = process.env.SERVER_B_API_KEY;
@@ -53,17 +54,17 @@ export async function GET(
         });
       } else {
         // No token at all - return 401
-        return new Response("Unauthorized", { status: 401 });
+        return fail("Unauthorized", 401);
       }
     }
 
     let assetId = params.assetId;
     if (!assetId) {
-      return new Response("Asset ID is required", { status: 400 });
+      return fail("Asset ID is required", 400);
     }
 
     if (!SERVER_B_URL || !SERVER_B_API_KEY) {
-      return new Response("Server B is not configured", { status: 500 });
+      return fail("Server B is not configured", 500);
     }
 
     // ✅ CRITICAL FIX: Auto-add prefix if missing (backward compatibility)
@@ -101,7 +102,7 @@ export async function GET(
     // Parse asset ID to determine type and extract metadata
     const assetIdParts = assetId.split(':');
     if (assetIdParts.length !== 2) {
-      return new Response("Invalid asset ID format", { status: 400 });
+      return fail("Invalid asset ID format", 400);
     }
 
     const [assetType, assetRef] = assetIdParts;
@@ -123,7 +124,7 @@ export async function GET(
     if (!resolveRes.ok) {
       // ✅ CRITICAL FIX: Log error details for debugging
       const errorText = await resolveRes.text().catch(() => '');
-      let errorJson: any = {};
+      let errorJson: Record<string, unknown> = {};
       try {
         errorJson = JSON.parse(errorText);
       } catch {
@@ -140,22 +141,9 @@ export async function GET(
       }
 
       if (resolveRes.status === 404) {
-        // ✅ PRODUCTION FIX: Don't cache 404 responses
-        return new Response("Asset not found", {
-          status: 404,
-          headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0',
-          },
-        });
+        return fail("Asset not found", 404);
       }
-      return new Response(`Failed to resolve asset: ${errorJson.error || errorJson.message || 'Unknown error'}`, {
-        status: resolveRes.status,
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
-      });
+      return fail(`Failed to resolve asset: ${errorJson.error || errorJson.message || 'Unknown error'}`, resolveRes.status);
     }
 
     const resolveData = await resolveRes.json();
@@ -179,12 +167,7 @@ export async function GET(
     }
 
     if (!s3Key) {
-      return new Response("Asset S3 key not found", {
-        status: 404,
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
-      });
+      return fail("Asset S3 key not found", 404);
     }
 
     // ✅ PRODUCTION FIX: Get presigned URL from Server B (15-30 min expiry)
@@ -207,7 +190,7 @@ export async function GET(
     if (!presignedRes.ok) {
       // ✅ CRITICAL FIX: Log error details for debugging
       const errorText = await presignedRes.text().catch(() => '');
-      let errorJson: any = {};
+      let errorJson: Record<string, unknown> = {};
       try {
         errorJson = JSON.parse(errorText);
       } catch {
@@ -224,26 +207,16 @@ export async function GET(
       }
 
       if (presignedRes.status === 404) {
-        return new Response("Asset file not found on S3", {
-          status: 404,
-          headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-          },
-        });
+        return fail("Asset file not found on S3", 404);
       }
-      return new Response(`Failed to get presigned URL: ${errorJson.error || errorJson.message || 'Unknown error'}`, {
-        status: presignedRes.status,
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
-      });
+      return fail(`Failed to get presigned URL: ${errorJson.error || errorJson.message || 'Unknown error'}`, presignedRes.status);
     }
 
     const presignedData = await presignedRes.json();
     const presignedUrl = presignedData.data?.url || presignedData.url;
 
     if (!presignedUrl) {
-      return new Response("Failed to generate presigned URL", { status: 500 });
+      return fail("Failed to generate presigned URL", 500);
     }
 
     // ✅ PRODUCTION FIX: Return 302 redirect to presigned S3 URL
@@ -257,9 +230,9 @@ export async function GET(
         'Content-Type': contentType,
       },
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("[assets] error", err);
-    return new Response("Server error", { status: 500 });
+    return fail("Server error", 500);
   }
 }
 

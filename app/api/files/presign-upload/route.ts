@@ -81,9 +81,10 @@ export async function POST(req: NextRequest) {
 
     // json.data should contain { signed_url, upload_url, key, bucket }
     return success(json?.data ?? json);
-  } catch (err: any) {
-    console.error("POST /api/files/presign-upload error:", err);
-    return fail("Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("POST /api/files/presign-upload error:", message);
+    return fail(message, 500);
   }
 }
 

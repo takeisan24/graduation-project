@@ -172,8 +172,6 @@ export class GeminiProvider {
     useSearch: boolean = false,
     imageSize: "1K" | "2K" | "4K" = "1K"
   ) {
-    console.log(`[Gemini] Generating via REST API with model: ${model}, count: ${n}, search: ${useSearch}, size: ${imageSize}`);
-
     // Import prompt helper
     const { getImagePrompt } = await import("@/lib/prompts");
     const imagePrompt = getImagePrompt(prompt, undefined, 1, aspectRatio);
@@ -279,7 +277,6 @@ export class GeminiProvider {
       throw new Error(`Model ${model} returned response but no image data found.`);
     }
 
-    console.log(`[Gemini] Successfully generated ${allImages.length} images.`);
     return { url: '', images: allImages };
   }
 
@@ -287,7 +284,6 @@ export class GeminiProvider {
    * Helper: Gọi qua REST API (Dành cho Imagen Models)
    */
   private async generateWithRestAPI(model: string, prompt: string, n: number, aspectRatio: string) {
-    console.log(`[Gemini] Generating via REST API (:predict) with model: ${model}, count: ${n}`);
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:predict`;
 
     // Use rotated key for media generation
@@ -361,15 +357,11 @@ export class GeminiProvider {
     imageSize?: "1K" | "2K" | "4K";
   }): Promise<{ url: string; images?: Array<{ base64: string; mimeType: string }> }> {
     try {
-      console.log(`[Gemini generateImage] Received model: "${model}"`);
-
       // Imagen models -> REST API (:predict endpoint)
       if (model.toLowerCase().includes('imagen') || model.toLowerCase().includes('image-generation')) {
-        console.log(`[Gemini generateImage] Routing to REST API for Imagen model`);
         return await this.generateWithRestAPI(model, prompt, n, aspectRatio);
       } else {
         // Gemini models (3.1 Flash, etc.) -> REST API (:generateContent endpoint)
-        console.log(`[Gemini generateImage] Routing to generateContent API for Gemini model`);
         return await this.generateWithSDK(model, prompt, n, aspectRatio, useSearch, imageSize);
       }
     } catch (error: any) {
@@ -438,7 +430,6 @@ export class GeminiProvider {
                 resolution
               }
             });
-            console.log(`[Video Generation] Tracked operation ${operation.name} for user ${userId}`);
           } catch (dbError) {
             console.warn("Failed to track video generation operation:", dbError);
           }
@@ -478,16 +469,6 @@ export class GeminiProvider {
           throw new Error(`Video generation failed: ${errorDetails.message || JSON.stringify(errorDetails)}`);
         }
 
-        // Log operation response structure for debugging
-        console.log(`[Gemini] Operation completed. Response structure:`, {
-          hasResponse: !!operation.response,
-          responseKeys: operation.response ? Object.keys(operation.response) : [],
-          hasGeneratedVideos: !!operation.response?.generatedVideos,
-          generatedVideosLength: operation.response?.generatedVideos?.length || 0,
-          firstVideoKeys: operation.response?.generatedVideos?.[0] ? Object.keys(operation.response.generatedVideos[0]) : [],
-          operationKeys: Object.keys(operation)
-        });
-
         if (!operation.response?.generatedVideos?.[0]?.video) {
           // Log full operation for debugging
           console.error(`[Gemini] Operation completed but no video found. Full operation:`, JSON.stringify(operation, null, 2));
@@ -500,8 +481,6 @@ export class GeminiProvider {
           throw new Error("Could not find video URI in the response.");
         }
 
-        console.log("Downloading video from URI:", videoUri);
-
         // Add API key to video download URL if needed (use same rotated key)
         let fetchUrl = videoUri;
         if (mediaApiKey) {
@@ -512,7 +491,6 @@ export class GeminiProvider {
               urlObj.hostname.includes('storage.googleapis.com')) {
               urlObj.searchParams.set('key', mediaApiKey);
               fetchUrl = urlObj.toString();
-              console.log("Added rotated API key to video download URL");
             }
           } catch (urlError) {
             console.warn("Could not modify URL, using original:", urlError);
@@ -532,7 +510,6 @@ export class GeminiProvider {
             if (retryAttempt > 0) {
               // Exponential backoff: 2s, 4s, 8s
               const delayMs = Math.pow(2, retryAttempt) * 1000;
-              console.log(`[Gemini] Retrying video download (attempt ${retryAttempt + 1}/${maxRetries + 1}) after ${delayMs}ms...`);
               await new Promise((resolve) => setTimeout(resolve, delayMs));
             }
 
@@ -577,7 +554,6 @@ export class GeminiProvider {
               // Still accept it, might be valid video with wrong content-type
             }
 
-            console.log(`[Gemini] Successfully downloaded video (${videoBlob.size} bytes, type: ${videoBlob.type})`);
             break; // Success, exit retry loop
 
           } catch (fetchError: any) {
@@ -946,7 +922,6 @@ export class GeminiProvider {
         displayName: displayName || "Uploaded File",
       });
 
-      console.log(`[Gemini] File uploaded successfully: ${uploadResponse.file.uri}`);
       return {
         fileUri: uploadResponse.file.uri,
         name: uploadResponse.file.name
@@ -961,7 +936,6 @@ export class GeminiProvider {
    * WaitForActiveFile: Polls until the file is in ACTIVE state
    */
   async waitForActiveFile(name: string): Promise<void> {
-    console.log(`[Gemini] Waiting for file to become active: ${name}`);
     let state = "PROCESSING";
     let attempts = 0;
     const maxAttempts = 30; // 30 * 2s = 60s timeout
@@ -970,7 +944,6 @@ export class GeminiProvider {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       const file = await this.fileManager.getFile(name);
       state = file.state;
-      console.log(`[Gemini] File ${name} state: ${state}`);
 
       if (state === "FAILED") {
         throw new Error("File processing failed by Gemini.");
@@ -989,7 +962,6 @@ export class GeminiProvider {
   async deleteFile(name: string): Promise<void> {
     try {
       await this.fileManager.deleteFile(name);
-      console.log(`[Gemini] File deleted successfully: ${name}`);
     } catch (error) {
       console.warn(`[Gemini] Failed to delete file ${name}:`, error);
       // Non-fatal

@@ -25,11 +25,11 @@ export default function LanguageSwitcher() {
   };
 
   return (
-    <div className="relative flex items-center border border-white/10 rounded-lg p-0.5 bg-black/20">
+    <div className="relative flex items-center border border-border rounded-lg p-0.5 bg-secondary/50">
       <Button 
         size="sm"
         variant='ghost'
-        className={`relative z-10 h-7 px-2 text-xs hover:bg-white/10 transition-opacity ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`relative z-10 h-7 px-2 text-xs hover:bg-secondary transition-opacity ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
         // Vô hiệu hóa nút khi đang chuyển đổi
         disabled={isPending} 
         onClick={() => switchLocale('vi')}
@@ -38,7 +38,7 @@ export default function LanguageSwitcher() {
         {locale === 'vi' && (
           <motion.div 
             layoutId='active-language-highlight'
-            className='absolute inset-0 bg-[#E33265] rounded-md -z-10'
+            className='absolute inset-0 bg-primary rounded-md -z-10'
             transition = {{type: 'spring', stiffness: 300, damping: 30}}
           />
         )}
@@ -46,7 +46,7 @@ export default function LanguageSwitcher() {
       <Button 
         size="sm"
         variant='ghost'
-        className={`relative z-10 h-7 px-2 text-xs hover:bg-white/10 transition-opacity ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`relative z-10 h-7 px-2 text-xs hover:bg-secondary transition-opacity ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
         // Vô hiệu hóa nút khi đang chuyển đổi
         disabled={isPending}
         onClick={() => switchLocale('en')}
@@ -55,7 +55,7 @@ export default function LanguageSwitcher() {
         {locale === 'en' && (
           <motion.div 
             layoutId='active-language-highlight'
-            className='absolute inset-0 bg-[#E33265] rounded-md -z-10'
+            className='absolute inset-0 bg-primary rounded-md -z-10'
             transition = {{type: 'spring', stiffness: 300, damping: 30}}
           />
         )}

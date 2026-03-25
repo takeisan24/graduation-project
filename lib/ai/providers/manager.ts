@@ -22,8 +22,6 @@ export class AIProviderManager {
     // Initialize OpenAI
     const openaiConfig = getProviderConfig('openai');
     if (openaiConfig && openaiConfig.apiKey) {
-      const maskedKey = this.maskApiKey(openaiConfig.apiKey);
-      console.log(`[AIProviderManager] Initializing OpenAI provider with key: ${maskedKey}`);
       this.providers.set('openai', new OpenAIProvider(openaiConfig));
     } else {
       console.warn('[AIProviderManager] OpenAI provider not available (missing API key)');
@@ -32,9 +30,6 @@ export class AIProviderManager {
     // Initialize Gemini
     const geminiConfig = getProviderConfig('gemini');
     if (geminiConfig && geminiConfig.apiKey) {
-      const maskedKey = this.maskApiKey(geminiConfig.apiKey);
-      console.log(`[AIProviderManager] Initializing Gemini provider with key: ${maskedKey}`);
-      console.log(`[AIProviderManager] Gemini API key loaded from: process.env.GEMINI_API_KEY`);
       this.providers.set('gemini', new GeminiProvider(geminiConfig));
     } else {
       console.warn('[AIProviderManager] Gemini provider not available (missing API key)');
@@ -55,10 +50,8 @@ export class AIProviderManager {
    * Note: This will recreate all provider instances with new configs
    */
   reloadProviders() {
-    console.log('[AIProviderManager] Reloading providers...');
     this.providers.clear();
     this.initializeProviders();
-    console.log('[AIProviderManager] Providers reloaded successfully');
   }
 
   /**
@@ -197,7 +190,6 @@ export class AIProviderManager {
 
     for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
       try {
-        console.log(`[AIManager] Image generation attempt ${attempt + 1}/${MAX_RETRIES + 1} with model: ${modelId}`);
         const result = await this.generateImage({ modelId, prompt, ...options });
         return { ...result, usedModel: modelId };
       } catch (err: any) {

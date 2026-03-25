@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
 
     if (!res.ok) {
       const errorText = await res.text().catch(() => '');
-      let errorJson: any = {};
+      let errorJson: Record<string, unknown> = {};
       try {
         errorJson = JSON.parse(errorText);
       } catch {
@@ -69,9 +69,10 @@ export async function GET(req: NextRequest) {
     }
 
     return success({ url: presignedUrl });
-  } catch (err: any) {
-    console.error("[media-assets/presigned-url] error", err);
-    return fail("Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("[media-assets/presigned-url] error", message);
+    return fail(message, 500);
   }
 }
 

@@ -25,12 +25,13 @@ export async function GET(req: NextRequest) {
     const extractionModels = getModelsByType('extraction', providerParam);
 
     // Filter by type if specified
-    const models: any[] | {
+    type ModelsByCategory = {
       text: ReturnType<typeof getModelsByType>;
       image: ReturnType<typeof getModelsByType>;
       video: ReturnType<typeof getModelsByType>;
       extraction: ReturnType<typeof getModelsByType>;
-    } = type
+    };
+    const models: ReturnType<typeof getModelsByType> | ModelsByCategory = type
         ? getModelsByType(type, providerParam)
         : {
           text: textModels,
@@ -59,9 +60,10 @@ export async function GET(req: NextRequest) {
       available: validation.available
     });
 
-  } catch (err: any) {
-    console.error("GET /api/ai/models error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("GET /api/ai/models error:", message);
+    return fail(message, 500);
   }
 }
 
@@ -118,9 +120,10 @@ export async function POST(req: NextRequest) {
       available: true
     });
 
-  } catch (err: any) {
-    console.error("POST /api/ai/models/test error:", err);
-    return fail(err.message || "Model test failed", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Model test failed";
+    console.error("POST /api/ai/models/test error:", message);
+    return fail(message, 500);
   }
   */
 }

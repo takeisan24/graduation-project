@@ -11,9 +11,11 @@ import { supabaseClient } from '@/lib/supabaseClient';
 import { useCreateSourcesStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 import { SOURCE_ERRORS } from '@/lib/messages/errors';
+import { useTranslations } from 'next-intl';
 
 export default function SourceModal() {
-    const { 
+    const t = useTranslations('CreatePage.createSection.sourceModal');
+    const {
         isSourceModalOpen, 
         setIsSourceModalOpen,
         addSavedSource,
@@ -108,7 +110,7 @@ export default function SourceModal() {
         // 4. XÓA BỎ LỆNH GỌI openCreateFromSourceModal(...)
 
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : "Đã xảy ra lỗi.";
+        const errorMessage = error instanceof Error ? error.message : t('errors.errorOccurred');
         console.error("Lỗi khi thêm nguồn:", error);
         // Thay vì setStatusMessage, chúng ta dùng toast.error
         toast.error(SOURCE_ERRORS.ADD_SOURCE_FAILED(errorMessage));
@@ -121,20 +123,20 @@ export default function SourceModal() {
     const isFileUpload = selectedSourceType === 'pdf' || selectedSourceType === 'audio';
 
     const sourceTypeOptions = [
-    { key: "text", label: "Văn bản" },
-    { key: "article", label: "Bài viết" },
-    { key: "youtube", label: "YouTube" },
-    { key: "tiktok", label: "TikTok" },
-    { key: "pdf", label: "PDF" },
-    { key: "audio", label: "Âm thanh" },
+    { key: "text", label: t('sourceTypeLabel.fromText') },
+    { key: "article", label: t('sourceTypeLabel.fromArticle') },
+    { key: "youtube", label: t('sourceTypeLabel.fromYoutube') },
+    { key: "tiktok", label: t('sourceTypeLabel.fromTiktok') },
+    { key: "pdf", label: t('sourceTypeLabel.fromPDF') },
+    { key: "audio", label: t('sourceTypeLabel.fromAudio') },
   ]
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-[#2A2A30] border border-[#3A3A42] rounded-2xl w-[1000px] max-w-[95vw]">
+            <div className="bg-card border border-border rounded-2xl w-[1000px] max-w-[95vw]">
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-                    <h2 className="text-lg font-semibold text-white">Chỉnh sửa nguồn</h2>
+                <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+                    <h2 className="text-lg font-semibold text-foreground">Chỉnh sửa nguồn</h2>
                     <button onClick={() => setIsSourceModalOpen(false)}>
                         <CloseIcon className="w-5 h-5" />
                     </button>
@@ -147,8 +149,8 @@ export default function SourceModal() {
                     key={option.key}
                     className={`px-4 py-3 rounded-md text-sm ${
                       selectedSourceType === (option.key as any) 
-                        ? 'bg-white/10 text-white' 
-                        : 'bg-transparent text-gray-300 hover:text-white hover:bg-white/5'
+                        ? 'bg-secondary text-foreground' 
+                        : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-secondary'
                     }`}
                     onClick={() => setSelectedSourceType(option.key as any)}
                   >
@@ -162,13 +164,13 @@ export default function SourceModal() {
                           {/* *** THAY ĐỔI GIAO DIỆN Ở ĐÂY *** */}
                     {!isFileUpload ? (
                         <>
-                            <div className="text-white">
+                            <div className="text-foreground">
                                 {selectedSourceType === 'text' ? 'Văn bản' : 'URL'}
                             </div>
                             {selectedSourceType === 'text' ? (
                                 <Textarea 
-                                placeholder="Dán văn bản vào đây" 
-                                className="bg-gray-900/50 border-white/10 h-40" 
+                                placeholder={t('sourceInputPlaceholder.fromText')} 
+                                className="bg-card border-border h-40" 
                                 value={sourceTextInput} onChange={(e) => setSourceTextInput(e.target.value)} />
                             ) : (
                                 <Input 
@@ -178,16 +180,16 @@ export default function SourceModal() {
                                 selectedSourceType === 'tiktok' ? 'Dán URL TikTok...'
                                 : 'Dán URL nguồn...'
                               }
-                              className="bg-gray-900/50 border-white/10"
+                              className="bg-card border-border"
                                 value={sourceUrlInput} 
                                 onChange={(e) => setSourceUrlInput(e.target.value)} />
                             )}
                         </>
                     ) : (
                         <>
-                            <div className="text-white">Tải lên tệp tin</div>
+                            <div className="text-foreground">Tải lên tệp tin</div>
                             <div 
-                                className="border-2 border-dashed border-gray-500 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400"
+                                className="border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-border"
                                 onClick={() => fileInputRef.current?.click()}
                             >
                                 <input
@@ -197,49 +199,49 @@ export default function SourceModal() {
                                     onChange={handleFileChange}
                                     accept={selectedSourceType === 'pdf' ? '.pdf' : 'audio/*'}
                                 />
-                                <UploadCloudIcon className="mx-auto h-12 w-12 text-gray-400" />
+                                <UploadCloudIcon className="mx-auto h-12 w-12 text-muted-foreground" />
                                 {selectedFile ? (
                                     <p className="mt-2 text-sm text-green-400">{selectedFile.name}</p>
                                 ) : (
-                                    <p className="mt-2 text-sm text-gray-400">Nhấn để chọn file {selectedSourceType.toUpperCase()}</p>
+                                    <p className="mt-2 text-sm text-muted-foreground">Nhấn để chọn file {selectedSourceType.toUpperCase()}</p>
                                 )}
                             </div>
                         </>
                     )}  
-                          <label className="flex items-center gap-3 text-white pt-2">
+                          <label className="flex items-center gap-3 text-foreground pt-2">
                             <input 
                               type="checkbox" 
-                              className="accent-[#E33265]"
+                              className="accent-primary"
                               checked={shouldSaveSource}
                               onChange={(e) => setShouldSaveSource(e.target.checked)}
                             />
                             <span>Lưu nguồn?</span>
                           </label>
-                          <details className="text-white/90">
+                          <details className="text-foreground/90">
                             <summary className="cursor-pointer select-none">Cài đặt nâng cao</summary>
-                            <div className="mt-2 text-sm text-gray-300">Chưa có cài đặt bổ sung.</div>
+                            <div className="mt-2 text-sm text-muted-foreground">Chưa có cài đặt bổ sung.</div>
             
                           </details>
-                          <label htmlFor="advanced-instructions" className="block text-white mb-2">
+                          <label htmlFor="advanced-instructions" className="block text-foreground mb-2">
                         Chi tiết yêu cầu cho AI:
                       </label>
                       <Textarea
                         id="advanced-instructions"
                         placeholder="Ví dụ: 'Tạo bài đăng với giọng văn vui vẻ, tập trung vào lợi ích X, và kêu gọi hành động 'Tìm hiểu thêm'...' hoặc 'Phân tích điểm mạnh, điểm yếu của nguồn.'..."
-                        className="bg-gray-900/50 border-white/10 h-32 mb-4 placeholder:text-gray-500"
+                        className="bg-card border-border h-32 mb-4 placeholder:text-muted-foreground"
                         value={advancedInstructions}
                         onChange={(e) => setAdvancedInstructions(e.target.value)}
                       />
                         </div>
                 <div className="px-6 pb-6">
                     {statusMessage && (
-  <p className={`text-center text-sm mb-2 ${statusMessage.startsWith('Lỗi') ? 'text-red-400' : 'text-gray-300'}`}>
+  <p className={`text-center text-sm mb-2 ${statusMessage.startsWith('Lỗi') ? 'text-red-400' : 'text-muted-foreground'}`}>
     {statusMessage}
   </p>
 )}
                     <button 
                     onClick={handleAdd} 
-                    className="w-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white py-3 rounded-md disabled:opacity-50"
+                    className="w-full bg-accent hover:bg-accent/90 text-white py-3 rounded-md disabled:opacity-50"
                     disabled={isUploading || (!sourceTextInput.trim() && !sourceUrlInput.trim() && !selectedFile)}>
                         Thêm
                     </button>

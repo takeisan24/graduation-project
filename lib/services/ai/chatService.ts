@@ -37,7 +37,7 @@ export interface ChatRequest {
   sessionId?: string;
   projectId?: string;
   draftId?: string;
-  history?: any[];
+  history?: Array<{ role: string; parts?: Array<{ text: string }>; content?: string }>;
   isEditRequest?: boolean;
   userInstructions?: string[]; // Danh sách tin nhắn user ưu tiên trong session
 }
@@ -59,13 +59,13 @@ export interface ChatResult {
 /**
  * Convert history from Gemini format to backend format
  */
-function convertHistoryFormat(historyFromBody: any[]): Array<{ role: string; content: string }> {
+function convertHistoryFormat(historyFromBody: Array<{ role: string; parts?: Array<{ text: string }>; content?: string }>): Array<{ role: string; content: string }> {
   if (!historyFromBody || !Array.isArray(historyFromBody)) {
     return [];
   }
 
   return historyFromBody
-    .map((msg: any) => {
+    .map((msg: { role: string; parts?: Array<{ text: string }>; content?: string }) => {
       // Convert from Gemini format: { role: 'user'|'model', parts: [{ text: '...' }] }
       // to backend format: { role: 'user'|'assistant', content: '...' }
       if (msg.parts && Array.isArray(msg.parts) && msg.parts[0]?.text) {
@@ -210,22 +210,25 @@ function parsePostsFromResponse(reply: string): { platformsCreated: string[]; po
             }
           }
         }
-      } catch (parseError: any) {
+      } catch (parseError: unknown) {
         // Log detailed error for debugging but don't throw
+        const parseErrorMessage = parseError instanceof Error ? parseError.message : "Unknown parse error";
         console.warn(`[ChatService] Error parsing JSON block at position ${match.index}:`, {
-          error: parseError.message,
+          error: parseErrorMessage,
           jsonPreview: jsonContent.substring(0, 100) + (jsonContent.length > 100 ? '...' : ''),
-          position: parseError.message.match(/position (\d+)/)?.[1] || 'unknown'
+          position: parseErrorMessage.match(/position (\d+)/)?.[1] || 'unknown'
         });
         // Continue processing other JSON blocks
         continue;
       }
     }
-  } catch (outerError: any) {
+  } catch (outerError: unknown) {
     // Catch any unexpected errors in the outer try block
+    const outerErrorMessage = outerError instanceof Error ? outerError.message : "Unknown error";
+    const outerErrorType = outerError instanceof Error ? outerError.constructor.name : 'Unknown';
     console.warn("[ChatService] Error parsing AI response for posts:", {
-      error: outerError.message,
-      errorType: outerError.constructor?.name || 'Unknown'
+      error: outerErrorMessage,
+      errorType: outerErrorType
     });
   }
 
@@ -343,10 +346,6 @@ export async function processChatMessage(
   const { truncateMessages, TOKEN_LIMITS } = await import('@/lib/utils/tokenUtils');
   history = truncateMessages(history, TOKEN_LIMITS.CHAT_HISTORY_MAX_TOKENS);
 
-  // New credit flow: only charge when creating new posts.
-  // Chat conversation and editing existing posts are always free.
-  console.log(`[ChatService] Session ${session}: contentType=${contentType}, isEditRequest=${isEditRequest}`);
-
   // Get context data if available
   const contextData = await getContextData(projectId, draftId, user.id);
 
@@ -386,7 +385,7 @@ export async function processChatMessage(
       modelId: modelIdForAssistant,
       userInstructions: userInstructions || []
     });
-  } catch (aiError: any) {
+  } catch (aiError: unknown) {
     console.error("[ChatService] AI response generation error:", aiError);
     const errorMessage = aiError instanceof Error ? aiError.message : "Failed to generate AI response";
     const isProviderApiError = [
@@ -448,8 +447,6 @@ export async function processChatMessage(
   // Deduct credits ONLY when new posts are created (not for chat or edits)
   let creditsRemaining = 0;
   if (creditsToDeduct > 0) {
-    console.log(`[ChatService] Deducting ${creditsToDeduct} credits for user ${user.id}, session ${session}, postsCreatedCount=${postsCreatedCount}, platforms=${platformsCreated.join(',')}`);
-
     // Deduct credits for each new post created
     for (let i = 0; i < postsCreatedCount; i++) {
       const creditResult = await deductCredits(user.id, 'TEXT_ONLY', {
@@ -472,12 +469,10 @@ export async function processChatMessage(
       }
     }
 
-    console.log(`[ChatService] Successfully deducted ${creditsToDeduct} credits. Remaining: ${creditsRemaining}`);
   } else {
     // Get current credits for response (no deduction needed)
     const creditCheck = await checkCredits(user.id, 'TEXT_ONLY');
     creditsRemaining = creditCheck.creditsLeft ?? 0;
-    console.log(`[ChatService] No credit deduction - chat/edit is free. Credits: ${creditsRemaining}`);
   }
 
   // Update monthly_usage.posts_created if new posts were created via chatbot
@@ -490,7 +485,7 @@ export async function processChatMessage(
         p_field: 'posts_created',
         p_amount: postsCreatedCount
       });
-    } catch (usageErr: any) {
+    } catch (usageErr: unknown) {
       console.warn('[ChatService] increment_usage error (posts_created):', usageErr);
     }
   }

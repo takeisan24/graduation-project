@@ -21,7 +21,7 @@ export interface UserProfile {
   credits_balance: number | null;
   subscription_ends_at?: string | null;
   next_credit_grant_at?: string | null;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -47,7 +47,7 @@ export interface UsageRecord {
   credits_purchased: number;
   period_start: string;
   period_end: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -61,7 +61,7 @@ export interface MonthlyUsage {
   images_generated: number;
   videos_generated: number;
   scheduled_posts: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -206,13 +206,13 @@ export async function ensureUserProfile(
   name?: string | null,
   avatarUrl?: string | null
 ): Promise<number | null> {
-  const params: any = {
+  const params: Record<string, string | null> = {
     p_user_id: userId
   };
 
-  if (email !== undefined) params.p_email = email;
-  if (name !== undefined) params.p_name = name;
-  if (avatarUrl !== undefined) params.p_avatar_url = avatarUrl;
+  if (email !== undefined) params.p_email = email ?? null;
+  if (name !== undefined) params.p_name = name ?? null;
+  if (avatarUrl !== undefined) params.p_avatar_url = avatarUrl ?? null;
 
   const { data, error } = await supabase.rpc('ensure_user_profile', params);
 
@@ -330,9 +330,27 @@ export async function getCreditTransactions(
 }
 
 /**
+ * Subscription record from subscriptions table
+ */
+export interface SubscriptionRecord {
+  id: string;
+  user_id: string;
+  plan: string;
+  status: string;
+  billing_cycle: string | null;
+  credits_per_period: number | null;
+  next_credit_date: string | null;
+  current_period_start: string;
+  current_period_end: string;
+  cancel_at_period_end: boolean;
+  created_at: string;
+  [key: string]: unknown;
+}
+
+/**
  * Get user subscription by user ID
  */
-export async function getUserSubscription(userId: string): Promise<any | null> {
+export async function getUserSubscription(userId: string): Promise<SubscriptionRecord | null> {
   const { data, error } = await supabase
     .from("subscriptions")
     .select("*")
@@ -398,7 +416,7 @@ export async function incrementMonthlyUsage(
     }
 
     return true;
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("[db/users] Error calling increment_usage RPC:", err);
     return false;
   }
@@ -418,7 +436,7 @@ export async function updateSubscriptionStatus(
     current_period_start?: string;
     current_period_end?: string;
   }
-): Promise<any | null> {
+): Promise<SubscriptionRecord | null> {
   const { data, error } = await supabase
     .from("subscriptions")
     .update(updates)

@@ -1,29 +1,25 @@
-import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { withAuthOnly } from '@/lib/middleware/api-protected';
+import { success, fail } from '@/lib/response';
 import { getFrameworks } from '@/lib/services/source/frameworkService';
 
-// --- Force No cache ---
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
-// --------------------
 
-export async function GET(request: Request) {
+export async function GET(req: NextRequest) {
     try {
-        const { searchParams } = new URL(request.url);
+        const auth = await withAuthOnly(req);
+        if ("error" in auth) return auth.error;
+
+        const { searchParams } = new URL(req.url);
         const nicheId = searchParams.get('niche_id');
         const goalId = searchParams.get('goal_id');
 
-        // Debug log để xem Frontend gửi gì lên
-        console.log(`[API Frameworks] Filtering by Niche: ${nicheId}, Goal: ${goalId}`);
-
         const data = await getFrameworks(nicheId, goalId);
-
-        return NextResponse.json(data);
-
-    } catch (error: any) {
-        console.error("[API Frameworks] Error:", error);
-        return NextResponse.json(
-            { error: error.message || "Internal Server Error" },
-            { status: 500 }
-        );
+        return success(data);
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Server error";
+        console.error("[API/v1/frameworks] Error:", message);
+        return fail(message, 500);
     }
 }

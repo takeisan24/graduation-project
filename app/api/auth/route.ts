@@ -72,8 +72,9 @@ export async function POST(req: NextRequest) {
     } else {
       return fail("mode must be 'signup' or 'login'", 400);
     }
-  } catch (err: any) {
-    console.error("auth route error", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("auth route error", message);
+    return fail(message, 500);
   }
 }

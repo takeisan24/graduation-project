@@ -1,15 +1,19 @@
 /**
  * POST /api/ai/generate-from-source
  * Generate content from multimodal inputs (text + images) using AI
- * Merged logic from /api/generate-from-source
  */
 import { NextRequest } from 'next/server';
 import { Part } from '@google/generative-ai';
 import { success, fail } from '@/lib/response';
+import { withAuthOnly } from '@/lib/middleware/api-protected';
 import { generateFromSourceWithCredits } from '@/lib/services/ai/multimodalGenerationService';
 
 export async function POST(request: NextRequest) {
     try {
+        // Auth check at route level (credits handled in service)
+        const auth = await withAuthOnly(request);
+        if ("error" in auth) return auth.error;
+
         // Parse request body
         const body = await request.json();
         const { promptParts, modelPreference, platforms = ['facebook'] } = body as {

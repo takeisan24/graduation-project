@@ -81,12 +81,10 @@ export async function ensureBucketExists(bucketName: string): Promise<BucketExis
     const bucketExists = buckets?.some(bucket => bucket.name === bucketName) || false;
     
     if (bucketExists) {
-      console.log(`[storageService] Bucket '${bucketName}' already exists`);
       return { success: true };
     }
     
     // Create bucket if it doesn't exist
-    console.log(`[storageService] Creating bucket '${bucketName}'...`);
     const { data: newBucket, error: createError } = await supabase.storage.createBucket(bucketName, {
       public: true, // Make bucket public so files can be accessed via public URL
       allowedMimeTypes: null, // Allow all file types
@@ -98,11 +96,11 @@ export async function ensureBucketExists(bucketName: string): Promise<BucketExis
       return { success: false, error: createError.message };
     }
     
-    console.log(`[storageService] Successfully created bucket '${bucketName}'`);
     return { success: true };
-  } catch (error: any) {
-    console.error(`[storageService] Unexpected error ensuring bucket exists:`, error);
-    return { success: false, error: error.message || "Unknown error" };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error(`[storageService] Unexpected error ensuring bucket exists:`, message);
+    return { success: false, error: message };
   }
 }
 
@@ -189,9 +187,10 @@ export async function uploadFile(
     }
     
     return { success: true, data };
-  } catch (error: any) {
-    console.error(`[storageService] Unexpected error uploading file:`, error);
-    return { success: false, error: error.message || "Unknown error" };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error(`[storageService] Unexpected error uploading file:`, message);
+    return { success: false, error: message };
   }
 }
 
@@ -228,9 +227,10 @@ export async function deleteFileFromStorage(
     }
     
     return { success: true };
-  } catch (error: any) {
-    console.error(`[storageService] Unexpected error deleting file:`, error);
-    return { success: false, error: error.message || "Unknown error" };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error(`[storageService] Unexpected error deleting file:`, message);
+    return { success: false, error: message };
   }
 }
 

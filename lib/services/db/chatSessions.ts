@@ -139,7 +139,7 @@ export async function getChatSessionsByUserId(
     return [];
   }
 
-  const normalizedSessions: ChatSessionWithRelations[] = (data || []).map((session: any) => {
+  const normalizedSessions: ChatSessionWithRelations[] = ((data || []) as Array<ChatSession & { projects?: { id: string; source_content: string; source_type: string } | { id: string; source_content: string; source_type: string }[] | null; content_drafts?: { id: string; platform: string; text_content: string } | { id: string; platform: string; text_content: string }[] | null }>).map((session) => {
     const projectData = Array.isArray(session.projects) ? session.projects[0] : session.projects;
     const draftData = Array.isArray(session.content_drafts) ? session.content_drafts[0] : session.content_drafts;
 
@@ -213,7 +213,7 @@ export async function updateChatSession(
     context?: string;
   }
 ): Promise<ChatSession | null> {
-  const updateData: any = {};
+  const updateData: { title?: string; context?: string } = {};
   if (updates.title !== undefined) updateData.title = updates.title;
   if (updates.context !== undefined) updateData.context = updates.context;
 

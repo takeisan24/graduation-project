@@ -40,7 +40,6 @@ let renderCount = 0; // Biến đếm số lần render
 
 export default function PublishModal() {
     renderCount++;
-    // console.log(`%c[DEBUG] PublishModal RENDER #${renderCount}`, 'color: yellow;');
 
     const t = useTranslations('CreatePage.createSection.publishModal');
 
@@ -120,14 +119,10 @@ export default function PublishModal() {
 
     // useEffect chính để khởi tạo state
     useEffect(() => {
-        // console.log('%c[DEBUG] MAIN useEffect RUNNING...', 'color: cyan; font-weight: bold;');
-        
         if (isOpen) {
-            // console.log('[DEBUG] Modal is open, initializing state...');
             const currentPost = openPosts.find(p => p.id === selectedPostId);
 
             if (currentPost) {
-                // console.log('[DEBUG] Found currentPost, setting platform:', currentPost.type);
                 setSelectedPlatform(currentPost.type);
                 
                 const accounts = getAccountsForPlatform(currentPost.type);
@@ -141,12 +136,9 @@ export default function PublishModal() {
                     setSelectedAccountId(null);
                     setSelectedAccountPic('/shego.jpg');
                 }
-            } else {
-                // console.warn('[DEBUG] Could not find currentPost for id:', selectedPostId);
             }
-            
+
             // Reset các state khác
-            // console.log('[DEBUG] Resetting time and calendar states.');
             setPublishTime('now|Bây giờ');
             const now = new Date();
             setSelectedDate(now);
@@ -156,8 +148,6 @@ export default function PublishModal() {
             setTimeAmPm(now.getHours() >= 12 ? 'PM' : 'AM');
             setIsPublishing(false); // Reset publishing state when modal opens
         } else {
-            // console.log('[DEBUG] Modal is closed, resetting render count.');
-            //renderCount = 0;  Reset khi modal đóng
             setIsPublishing(false); // Reset publishing state when modal closes
         }
     }, [isOpen, selectedPostId, getAccountsForPlatform, openPosts]);
@@ -165,7 +155,6 @@ export default function PublishModal() {
 
     // useEffect phụ (giữ nguyên)
     useEffect(() => {
-        // console.log(`[DEBUG] Syncing showCalendar. publishTime is "${publishTime}"`);
         setShowCalendar(publishTime === 'pick a time');
     }, [publishTime]);
 
@@ -179,12 +168,8 @@ export default function PublishModal() {
     }, [showCalendar, showAccountDropdown]);
 
     if (!isOpen) {
-        // Trả về null sẽ không log, nên log trước khi return
-        // if (renderCount > 0) console.log('[DEBUG] Modal is NOT open. Rendering null.');
         return null;
     }
-
-    // console.log('[DEBUG] Rendering modal content.');
     
     const handleConfirm = async () => {
         // Prevent double click
@@ -271,20 +256,20 @@ export default function PublishModal() {
 
     return (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={closeModal}>
-            <div ref={modalRef} className="bg-[#2A2A30] border border-[#3A3A42] rounded-xl p-4 lg:p-6 w-[calc(100%-2rem)] lg:w-[480px] max-w-full shadow-2xl relative mx-4" onClick={e => e.stopPropagation()}>
+            <div ref={modalRef} className="bg-card border border-border rounded-xl p-4 lg:p-6 w-[calc(100%-2rem)] lg:w-[480px] max-w-full shadow-2xl relative mx-4" onClick={e => e.stopPropagation()}>
                 <button
                     onClick={closeModal}
-                    className="absolute top-5 right-5 text-white/60 hover:text-white hover:bg-white/10 rounded-lg p-1.5 transition-all"
+                    className="absolute top-5 right-5 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-lg p-1.5 transition-all"
                     aria-label={t('closeModal')}
                 >
                     <CloseIcon className="w-5 h-5" />
                 </button>
                 <div className="mb-6 pr-8">
-                    <h3 className="text-xl font-semibold text-white">{t('title')}</h3>
-                    <p className="text-sm text-gray-400 mt-1.5">{t('subtitle')}</p>
+                    <h3 className="text-xl font-semibold text-foreground">{t('title')}</h3>
+                    <p className="text-sm text-muted-foreground mt-1.5">{t('subtitle')}</p>
                 </div>
                 <div className="flex items-center gap-3 mb-5">
-                    <div className="w-10 h-10 rounded-lg bg-[#1E1E23] border border-[#3A3A42] flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-background border border-border flex items-center justify-center flex-shrink-0">
                         <img src={platformOptions.find(p => p.name === selectedPlatform)?.icon || '/placeholder.svg'} alt={selectedPlatform} className={`w-6 h-6 ${['Twitter','Threads'].includes(selectedPlatform) ? 'filter brightness-0 invert' : ''}`} />
                     </div>
                     <div className="flex-1 relative">
@@ -297,23 +282,23 @@ export default function PublishModal() {
                             return (
                             <>
                             <div 
-                            className={`flex items-center gap-3 bg-[#1E1E23] rounded-lg p-3 h-12 cursor-pointer transition-all border ${showAccountDropdown ? 'border-[#E33265] ring-2 ring-[#E33265]/20' : 'border-[#3A3A42] hover:border-white/20'}`}
+                            className={`flex items-center gap-3 bg-background rounded-lg p-3 h-12 cursor-pointer transition-all border ${showAccountDropdown ? 'border-primary ring-2 ring-primary/20' : 'border-border hover:border-border'}`}
                             onClick={() => hasAccounts && setShowAccountDropdown(!showAccountDropdown)}
                         >
-                            <div className="w-8 h-8 rounded-full overflow-hidden border border-white/10"><img src={selectedAccountPic} alt="Profile" className="w-full h-full object-cover" /></div>
+                            <div className="w-8 h-8 rounded-full overflow-hidden border border-border"><img src={selectedAccountPic} alt="Profile" className="w-full h-full object-cover" /></div>
                             <div className="flex-1">
-                                <div className="text-white text-sm font-medium">{selectedAccount || t('selectAccount')}</div>
-                                <div className="text-xs text-white/50">{selectedPlatform}</div>
+                                <div className="text-foreground text-sm font-medium">{selectedAccount || t('selectAccount')}</div>
+                                <div className="text-xs text-muted-foreground">{selectedPlatform}</div>
                             </div>
-                            <ChevronDownIcon className={`w-4 h-4 text-white/70 transition-transform ${showAccountDropdown ? 'rotate-180' : ''}`} />
+                            <ChevronDownIcon className={`w-4 h-4 text-muted-foreground transition-transform ${showAccountDropdown ? 'rotate-180' : ''}`} />
                         </div>
                         {showAccountDropdown && hasAccounts && (
-                            <div ref={accountDropdownRef} className="absolute top-full left-0 right-0 mt-2 bg-[#1E1E23] rounded-lg border border-[#3A3A42] shadow-xl z-10 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600">
+                            <div ref={accountDropdownRef} className="absolute top-full left-0 right-0 mt-2 bg-background rounded-lg border border-border shadow-xl z-10 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600">
                                 {platformAccounts.map((account, index) => (
                                     <button
                                         key={index}
                                         type="button"
-                                        className="w-full text-left flex items-center gap-3 p-3 hover:bg-white/5 transition-colors first:rounded-t-lg last:rounded-b-lg"
+                                        className="w-full text-left flex items-center gap-3 p-3 hover:bg-secondary transition-colors first:rounded-t-lg last:rounded-b-lg"
                                         onClick={() => {
                                             setSelectedAccount(account.username);
                                             setSelectedAccountPic(account.profilePic);
@@ -321,8 +306,8 @@ export default function PublishModal() {
                                             setShowAccountDropdown(false);
                                         }}
                                     >
-                                        <div className="w-8 h-8 rounded-full overflow-hidden border border-white/10"><img src={account.profilePic} alt="Profile" className="w-full h-full object-cover" /></div>
-                                        <div className="flex-1"><div className="text-white text-sm font-medium">{account.username}</div></div>
+                                        <div className="w-8 h-8 rounded-full overflow-hidden border border-border"><img src={account.profilePic} alt="Profile" className="w-full h-full object-cover" /></div>
+                                        <div className="flex-1"><div className="text-foreground text-sm font-medium">{account.username}</div></div>
                                     </button>
                                 ))}
                             </div>
@@ -336,9 +321,9 @@ export default function PublishModal() {
                               id="isShorts"
                               checked={isShorts}
                               onChange={(e) => setIsShorts(e.target.checked)}
-                              className="w-4 h-4 rounded border-gray-600 bg-[#151518] text-[#E33265] focus:ring-[#E33265]/50"
+                              className="w-4 h-4 rounded border-border bg-background text-primary focus:ring-primary/50"
                             />
-                            <label htmlFor="isShorts" className="text-sm text-gray-300 cursor-pointer select-none">
+                            <label htmlFor="isShorts" className="text-sm text-muted-foreground cursor-pointer select-none">
                               Đăng dưới hình thức Shorts
                             </label>
                           </div>
@@ -352,29 +337,29 @@ export default function PublishModal() {
                     </div>
                 </div>  
                 <div className="mb-5">
-                    <p className="text-white/90 mb-2 text-sm font-medium">{t('whenPublish')}</p>
-                    <div className="relative rounded-lg bg-[#1E1E23] border border-[#3A3A42] hover:border-white/20 transition-colors">
-                        <select 
-                            value={publishTime} 
+                    <p className="text-foreground/90 mb-2 text-sm font-medium">{t('whenPublish')}</p>
+                    <div className="relative rounded-lg bg-background border border-border hover:border-border transition-colors">
+                        <select
+                            value={publishTime}
                             onChange={(e) => setPublishTime(e.target.value)}
-                            className="w-full bg-[#1E1E23] text-white rounded-lg p-3 appearance-none pr-10 focus:outline-none cursor-pointer [&>option]:bg-[#1E1E23] [&>option]:text-white"
+                            className="w-full bg-background text-foreground rounded-lg p-3 appearance-none pr-10 focus:outline-none cursor-pointer [&>option]:bg-background [&>option]:text-foreground"
                         >
                             <option value="now|Bây giờ">{t('publishNow')}</option>
                             <option value="next free slot">{t('nextFreeSlot')}</option>
                             <option value="pick a time">{t('pickTime')}</option>
                         </select>
-                        <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
+                        <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                     </div>
                 </div>
                 {publishTime === 'pick a time' && (
                   <div className="mb-4">
-                    <div className="text-white mb-2">Chọn thời gian</div>
-                    
+                    <div className="text-foreground mb-2">Chọn thời gian</div>
+
                     {/* Date picker */}
                     <div className="mb-3">
-                      <div className="text-white/70 text-sm mb-1">Ngày</div>
-                      <div 
-                        className={`w-full bg-[#1E1E23] text-white rounded-lg p-3 cursor-pointer border border-[#3A3A42] ${showCalendar ? 'ring-2 ring-[#E33265]' : ''}`}
+                      <div className="text-muted-foreground text-sm mb-1">Ngày</div>
+                      <div
+                        className={`w-full bg-background text-foreground rounded-lg p-3 cursor-pointer border border-border ${showCalendar ? 'ring-2 ring-primary' : ''}`}
                         onClick={() => setShowCalendar(true)}
                       >
                         {selectedDate.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}
@@ -383,8 +368,8 @@ export default function PublishModal() {
                     
                     {/* Time picker - có thể edit trực tiếp */}
                     <div>
-                      <div className="text-white/70 text-sm mb-1">Giờ</div>
-                      <div className="flex items-center gap-2 bg-[#1E1E23] rounded-lg p-3 border border-[#3A3A42]">
+                      <div className="text-muted-foreground text-sm mb-1">Giờ</div>
+                      <div className="flex items-center gap-2 bg-background rounded-lg p-3 border border-border">
                         <select 
                           value={timeHour} 
                           onChange={(e) => {
@@ -398,13 +383,13 @@ export default function PublishModal() {
                               setSelectedTime(newTime);
                             }
                           }}
-                          className="bg-[#1E1E23] text-white border border-[#3A3A42] rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[#E33265]"
+                          className="bg-background text-foreground border border-border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-primary"
                         >
                           {Array.from({ length: 12 }, (_, i) => i + 1).map(h => (
                             <option key={h} value={h}>{String(h).padStart(2, '0')}</option>
                           ))}
                         </select>
-                        <span className="text-white">:</span>
+                        <span className="text-foreground">:</span>
                         <select 
                           value={timeMinute} 
                           onChange={(e) => {
@@ -418,7 +403,7 @@ export default function PublishModal() {
                               setSelectedTime(newTime);
                             }
                           }}
-                          className="bg-[#1E1E23] text-white border border-[#3A3A42] rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[#E33265]"
+                          className="bg-background text-foreground border border-border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-primary"
                         >
                           {Array.from({ length: 60 }, (_, i) => i).map(m => (
                             <option key={m} value={m}>{String(m).padStart(2, '0')}</option>
@@ -435,7 +420,7 @@ export default function PublishModal() {
                             const newTime = `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')} ${val}`;
                             setSelectedTime(newTime);
                           }}
-                          className="bg-[#1E1E23] text-white border border-[#3A3A42] rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[#E33265]"
+                          className="bg-background text-foreground border border-border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-primary"
                         >
                           <option value="AM">AM</option>
                           <option value="PM">PM</option>
@@ -443,13 +428,13 @@ export default function PublishModal() {
                       </div>
                     </div>
                     {showCalendar && (
-                        <div ref={calendarRef} className="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 lg:left-[calc(50%+260px)] lg:translate-x-0 bg-[#2A2A30] rounded-xl p-3 lg:p-4 w-[calc(100%-2rem)] lg:w-[360px] max-w-[400px] border border-[#3A3A42] shadow-2xl z-[60]">
+                        <div ref={calendarRef} className="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 lg:left-[calc(50%+260px)] lg:translate-x-0 bg-card rounded-xl p-3 lg:p-4 w-[calc(100%-2rem)] lg:w-[360px] max-w-[400px] border border-border shadow-2xl z-[60]">
                             <div className="flex items-center justify-between mb-4">
-                                <button onClick={() => setSelectedDate(d => new Date(d.getFullYear(), d.getMonth() - 1, d.getDate()))} className="p-1.5 rounded-lg hover:bg-white/10 text-white transition-colors"><ChevronLeftIcon className="w-5 h-5" /></button>
-                                <h3 className="text-white font-semibold">{selectedDate.toLocaleDateString('vi-VN', { month: 'long', year: 'numeric' })}</h3>
-                                <button onClick={() => setSelectedDate(d => new Date(d.getFullYear(), d.getMonth() + 1, d.getDate()))} className="p-1.5 rounded-lg hover:bg-white/10 text-white transition-colors"><ChevronRightIcon className="w-5 h-5" /></button>
+                                <button onClick={() => setSelectedDate(d => new Date(d.getFullYear(), d.getMonth() - 1, d.getDate()))} className="p-1.5 rounded-lg hover:bg-secondary text-foreground transition-colors"><ChevronLeftIcon className="w-5 h-5" /></button>
+                                <h3 className="text-foreground font-semibold">{selectedDate.toLocaleDateString('vi-VN', { month: 'long', year: 'numeric' })}</h3>
+                                <button onClick={() => setSelectedDate(d => new Date(d.getFullYear(), d.getMonth() + 1, d.getDate()))} className="p-1.5 rounded-lg hover:bg-secondary text-foreground transition-colors"><ChevronRightIcon className="w-5 h-5" /></button>
                             </div>
-                            <div className="grid grid-cols-7 text-center text-xs text-white/60 mb-2 font-medium">
+                            <div className="grid grid-cols-7 text-center text-xs text-muted-foreground mb-2 font-medium">
                                 {vietnameseWeekdays.map((w) => (<div key={w} className="py-1.5">{w}</div>))}
                             </div>
                             <div className="grid grid-cols-7 gap-1">
@@ -458,23 +443,23 @@ export default function PublishModal() {
                                         key={idx}
                                         disabled={!cell.day}
                                         onClick={() => { if (cell.day) setSelectedDate(d => new Date(d.getFullYear(), d.getMonth(), cell.day!)) }}
-                                        className={`h-9 rounded-lg text-sm font-medium transition-all ${!cell.day ? 'cursor-default' : 'hover:bg-white/10'} ${cell.day === selectedDate.getDate() ? 'bg-[#E33265] text-white shadow-lg shadow-[#E33265]/30' : 'text-white/80'}`}
+                                        className={`h-9 rounded-lg text-sm font-medium transition-all ${!cell.day ? 'cursor-default' : 'hover:bg-secondary'} ${cell.day === selectedDate.getDate() ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30' : 'text-foreground/80'}`}
                                     >
                                         {cell.day || ''}
                                     </button>
                                 ))}
                             </div>
                             <div className="mt-4 flex items-center gap-3">
-                                <div className="flex items-center bg-[#1E1E23] text-white rounded-lg px-3 py-2.5 gap-2 border border-[#3A3A42] flex-1">
+                                <div className="flex items-center bg-background text-foreground rounded-lg px-3 py-2.5 gap-2 border border-border flex-1">
                                     <input type="text" value={timeHour} onChange={(e) => setTimeHour(e.target.value.replace(/[^0-9]/g, ''))} className="w-9 bg-transparent text-center font-medium focus:outline-none" placeholder="HH" />
-                                    <span className="text-white/50">:</span>
+                                    <span className="text-muted-foreground">:</span>
                                     <input type="text" value={timeMinute} onChange={(e) => setTimeMinute(e.target.value.replace(/[^0-9]/g, ''))} className="w-9 bg-transparent text-center font-medium focus:outline-none" placeholder="MM" />
                                     <select value={timeAmPm} onChange={(e) => setTimeAmPm(e.target.value as 'AM' | 'PM')} className="bg-transparent border-0 outline-none font-medium cursor-pointer">
                                         <option value="AM">AM</option>
                                         <option value="PM">PM</option>
                                     </select>
                                 </div>
-                                <button className="bg-[#E33265] text-white p-2.5 rounded-lg hover:bg-[#c52b57] transition-colors shadow-lg shadow-[#E33265]/20" onClick={handleConfirmPickTime}>
+                                <button className="bg-primary text-primary-foreground p-2.5 rounded-lg hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20" onClick={handleConfirmPickTime}>
                                     <CheckCircleIcon className="w-5 h-5" />
                                 </button>
                             </div>
@@ -482,10 +467,10 @@ export default function PublishModal() {
                     )}
                   </div>
                 )}
-                <div className="flex gap-3 mt-6 pt-4 border-t border-white/10">
-                    <Button variant="outline" className="flex-1 border-[#3A3A42] text-white hover:bg-white/10 hover:border-white/20 transition-all" onClick={closeModal}>{t('cancel')}</Button>
-                    <Button 
-                        className="flex-1 bg-[#E33265] hover:bg-[#c52b57] text-white shadow-lg shadow-[#E33265]/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed" 
+                <div className="flex gap-3 mt-6 pt-4 border-t border-border">
+                    <Button variant="outline" className="flex-1 border-border text-foreground hover:bg-secondary hover:border-border transition-all" onClick={closeModal}>{t('cancel')}</Button>
+                    <Button
+                        className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed" 
                         onClick={handleConfirm}
                         disabled={isPublishing}
                     >

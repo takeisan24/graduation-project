@@ -51,8 +51,9 @@ export async function POST(req: NextRequest, { params }: { params: { draftId: st
           status: "scheduled"
         });
         results.push({ profileId, success: true, post: savedPost });
-      } catch (e: any) {
-        results.push({ profileId, success: false, error: e.message });
+      } catch (e: unknown) {
+        const eMsg = e instanceof Error ? e.message : String(e);
+        results.push({ profileId, success: false, error: eMsg });
       }
     }
 
@@ -64,8 +65,9 @@ export async function POST(req: NextRequest, { params }: { params: { draftId: st
     }
 
     return success({ ok: anySuccess, results }, 201);
-  } catch (err: any) {
-    console.error("POST /api/schedule/[draftId] error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("POST /api/schedule/[draftId] error:", message);
+    return fail(message, 500);
   }
 }

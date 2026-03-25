@@ -6,6 +6,28 @@ import { supabase } from "@/lib/supabase";
 const SERVER_B_URL = process.env.SERVER_B_URL;
 const SERVER_B_API_KEY = process.env.SERVER_B_API_KEY;
 
+/** Shape of a media_assets row returned by Supabase `select("*")` */
+interface MediaAssetRow {
+  id: string;
+  user_id: string;
+  job_id: string | null;
+  asset_type: string;
+  source_type: string;
+  origin: string;
+  storage_type: string;
+  storage_bucket: string;
+  storage_key: string;
+  public_url: string;
+  thumbnail_url: string | null;
+  file_size: number | null;
+  mime_type: string | null;
+  duration: number | null;
+  metadata: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+  [key: string]: unknown; // allow additional columns without breaking
+}
+
 /**
  * GET /api/media-assets
  *
@@ -50,7 +72,7 @@ export async function GET(req: NextRequest) {
 
     // ✅ OPTIMIZATION: Bulk sign thumbnail URLs for all assets at once (instead of per-asset)
     // This reduces API calls from N to 1 batch call, improving performance and reducing log noise
-    const assets = data || [];
+    const assets = (data || []) as MediaAssetRow[];
 
     if (!SERVER_B_URL || !SERVER_B_API_KEY) {
       // Server B not configured, return assets as-is
@@ -93,7 +115,7 @@ export async function GET(req: NextRequest) {
       }
     };
 
-    const extractThumbnailS3Key = (asset: any): string | null => {
+    const extractThumbnailS3Key = (asset: MediaAssetRow): string | null => {
       if (!asset.thumbnail_url || !asset.thumbnail_url.startsWith('https://')) {
         return null;
       }
@@ -146,9 +168,9 @@ export async function GET(req: NextRequest) {
     };
 
     // ✅ OPTIMIZATION: Collect all unique thumbnail keys that need presigned URLs
-    const thumbnailKeysToSign = new Map<string, { asset: any; index: number }>();
+    const thumbnailKeysToSign = new Map<string, { asset: MediaAssetRow; index: number }>();
 
-    assets.forEach((asset: any, index: number) => {
+    assets.forEach((asset: MediaAssetRow, index: number) => {
       if (!asset.thumbnail_url || !asset.thumbnail_url.startsWith('https://')) {
         return;
       }
@@ -165,17 +187,12 @@ export async function GET(req: NextRequest) {
       }
     });
 
-    // ✅ OPTIMIZATION: Bulk sign all thumbnail URLs at once
+    // Bulk sign all thumbnail URLs at once
     const thumbnailUrlMap = new Map<string, string>();
 
     if (thumbnailKeysToSign.size > 0) {
-      // ✅ DEBUG: Check Server B configuration
       if (!SERVER_B_URL || !SERVER_B_API_KEY) {
-        console.warn('[media-assets] Server B not configured - skipping presigned URL generation', {
-          hasServerBUrl: !!SERVER_B_URL,
-          hasServerBApiKey: !!SERVER_B_API_KEY,
-          thumbnailKeysCount: thumbnailKeysToSign.size,
-        });
+        console.warn('[media-assets] Server B not configured - skipping presigned URL generation');
       } else {
         await Promise.all(
           Array.from(thumbnailKeysToSign.keys()).map(async (s3Key) => {
@@ -186,7 +203,6 @@ export async function GET(req: NextRequest) {
                   'x-api-key': SERVER_B_API_KEY,
                   'x-user-id': user.id,
                 },
-                // ✅ DEBUG: Add timeout to prevent hanging
                 signal: AbortSignal.timeout(10000), // 10 second timeout
               });
 
@@ -203,17 +219,15 @@ export async function GET(req: NextRequest) {
                   });
                 }
               } else {
-                // ✅ DEBUG: Log non-OK responses
                 const errorText = await res.text().catch(() => '');
                 console.warn('[media-assets] Server B returned error for presigned URL', {
                   s3Key,
                   status: res.status,
                   statusText: res.statusText,
-                  error: errorText.substring(0, 200), // Limit error text length
+                  error: errorText.substring(0, 200),
                 });
               }
             } catch (err) {
-              // ✅ DEBUG: Enhanced error logging
               const errorMessage = err instanceof Error ? err.message : String(err);
               const errorCause = err instanceof Error && err.cause ? String(err.cause) : undefined;
               const isConnectionError = errorMessage.includes('fetch failed') ||
@@ -227,25 +241,17 @@ export async function GET(req: NextRequest) {
                 isConnectionError,
                 serverBUrl: SERVER_B_URL ? `${SERVER_B_URL.substring(0, 50)}...` : 'not configured',
                 hint: isConnectionError
-                  ? 'Server B may not be running or SERVER_B_URL is incorrect. Check SERVER_B_URL env variable and ensure Server B is running.'
+                  ? 'Server B may not be running or SERVER_B_URL is incorrect.'
                   : 'Unknown error - check Server B logs',
               });
             }
           })
         );
       }
-
-      if (process.env.NODE_ENV !== 'production') {
-        console.log('[media-assets] Generated presigned URLs for media assets', {
-          totalAssets: assets.length,
-          uniqueThumbnailKeys: thumbnailKeysToSign.size,
-          thumbnailUrlsGenerated: thumbnailUrlMap.size,
-        });
-      }
     }
 
     // ✅ OPTIMIZATION: Map assets with bulk-signed URLs
-    const assetsWithPresignedThumbnails = assets.map((asset: any) => {
+    const assetsWithPresignedThumbnails = assets.map((asset: MediaAssetRow) => {
       if (!asset.thumbnail_url || !asset.thumbnail_url.startsWith('https://')) {
         return asset;
       }
@@ -262,9 +268,10 @@ export async function GET(req: NextRequest) {
     });
 
     return success({ assets: assetsWithPresignedThumbnails });
-  } catch (err: any) {
-    console.error("[media-assets] error", err);
-    return fail("Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("[media-assets] error", message);
+    return fail(message, 500);
   }
 }
 
@@ -324,9 +331,10 @@ export async function POST(req: NextRequest) {
     }
 
     return success({ asset: data });
-  } catch (err: any) {
-    console.error("[media-assets] POST error", err);
-    return fail("Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("[media-assets] POST error", message);
+    return fail(message, 500);
   }
 }
 
@@ -379,17 +387,20 @@ export async function DELETE(req: NextRequest) {
           "x-user-id": user.id,
         },
       });
-    } catch (fetchError: any) {
+    } catch (fetchError: unknown) {
       // Handle connection errors (ECONNREFUSED, network issues, etc.)
+      const fetchErrMsg = fetchError instanceof Error ? fetchError.message : String(fetchError);
+      const fetchErrCode = fetchError instanceof Error && 'code' in fetchError ? (fetchError as unknown as { code: string }).code : undefined;
+      const fetchErrCauseCode = fetchError instanceof Error && fetchError.cause && typeof fetchError.cause === 'object' && 'code' in fetchError.cause ? (fetchError.cause as { code: string }).code : undefined;
       const isConnectionError =
-        fetchError?.code === "ECONNREFUSED" ||
-        fetchError?.message?.includes("fetch failed") ||
-        fetchError?.cause?.code === "ECONNREFUSED";
+        fetchErrCode === "ECONNREFUSED" ||
+        fetchErrMsg.includes("fetch failed") ||
+        fetchErrCauseCode === "ECONNREFUSED";
 
       if (isConnectionError) {
         console.error("[media-assets] Cannot connect to Server B (JQM backend)", {
           SERVER_B_URL,
-          error: fetchError?.message || fetchError,
+          error: fetchErrMsg,
           hint: "Ensure JQM backend is running on the configured port (default: 3001)",
         });
         return fail(
@@ -409,9 +420,10 @@ export async function DELETE(req: NextRequest) {
     }
 
     return success({ id });
-  } catch (err: any) {
-    console.error("[media-assets] DELETE error", err);
-    return fail("Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("[media-assets] DELETE error", message);
+    return fail(message, 500);
   }
 }
 
@@ -451,8 +463,9 @@ export async function PATCH(req: NextRequest) {
     }
 
     return success({ asset: data });
-  } catch (err: any) {
-    console.error("[media-assets] PATCH error", err);
-    return fail("Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("[media-assets] PATCH error", message);
+    return fail(message, 500);
   }
 }

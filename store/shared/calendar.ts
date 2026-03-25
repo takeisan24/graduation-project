@@ -90,7 +90,6 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
 
         toast.success("Đã xóa bài đăng trên getlate.dev.");
       } catch (error: any) {
-        // console.error('[handleEventDelete] Error deleting post:', error);
         toast.error(CALENDAR_ERRORS.DELETE_FAILED(error.message || GENERIC_ERRORS.UNKNOWN_ERROR));
         return; // Don't delete from local state if API call failed
       }
@@ -175,7 +174,6 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
 
         toast.success("Đã cập nhật lịch đăng thành công.");
       } catch (error: any) {
-        // console.error('[handleEventUpdate] Error rescheduling post:', error);
         toast.error(CALENDAR_ERRORS.UPDATE_SCHEDULE_FAILED(error.message || GENERIC_ERRORS.UNKNOWN_ERROR));
         return; // Don't update local state if API call failed
       }
@@ -301,7 +299,6 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
             nextEvent.isFailed !== event.isFailed
           ) {
             changed = true;
-            // console.log(`[syncCalendarWithPostStatuses] Updating calendar event for post ${event.scheduled_post_id}: ${event.status} -> ${nextEvent.status}, ${event.noteType} -> ${nextEvent.noteType}`);
           }
 
           return nextEvent;
@@ -323,7 +320,6 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
       // Always save and return updated events to ensure UI re-renders
       if (changed || Object.keys(updatedEvents).length !== Object.keys(state.calendarEvents).length) {
         saveToLocalStorage('calendarEvents', updatedEvents);
-        // console.log(`[syncCalendarWithPostStatuses] ✅ Updated calendar events for ${updates.length} post(s)`);
         return { calendarEvents: updatedEvents };
       }
 
@@ -340,7 +336,6 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
         }
 
         saveToLocalStorage('calendarEvents', mergedEvents);
-        // console.log(`[syncCalendarWithPostStatuses] ✅ Synced calendar events for ${updates.length} post(s) (ensuring re-render)`);
         return { calendarEvents: mergedEvents };
       }
 

@@ -56,9 +56,10 @@ export async function POST(req: NextRequest) {
     // Return the provider URL to the client; the client will navigate with GET
     return NextResponse.json({ success: true, data: { url: data.url } }, { status: 200 });
 
-  } catch (err: any) {
-    console.error("OAuth auth error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("OAuth auth error:", message);
+    return fail(message, 500);
   }
 }
 

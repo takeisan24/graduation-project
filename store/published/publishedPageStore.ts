@@ -46,21 +46,11 @@ export const usePublishedPostsStore = create<PublishedPostsState>((set, get) => 
   loadPublishedPosts: async () => {
     const needsRefresh = loadFromLocalStorage<boolean>('needsRefreshPublishedPosts', false);
 
-    /* console.log("[loadPublishedPosts] Called", {
-      hasLoaded: get().hasLoadedPublishedPosts,
-      needsRefresh,
-      isLoadingGlobal: isLoadingPublishedPostsGlobal,
-      isLoadingStore: get().isLoadingPublishedPosts,
-      timestamp: new Date().toISOString()
-    }); */
-
     if (get().hasLoadedPublishedPosts && !needsRefresh) {
-      // console.log("[loadPublishedPosts] Already loaded and no refresh needed, skipping");
       return;
     }
 
     if (needsRefresh) {
-      // console.log("[loadPublishedPosts] Refresh flag detected, forcing reload from API");
       saveToLocalStorage('needsRefreshPublishedPosts', false);
       set({
         hasLoadedPublishedPosts: false,
@@ -70,16 +60,13 @@ export const usePublishedPostsStore = create<PublishedPostsState>((set, get) => 
     }
 
     if (isLoadingPublishedPostsGlobal) {
-      // console.log("[loadPublishedPosts] Already loading (global lock), skipping");
       return;
     }
 
     if (get().isLoadingPublishedPosts) {
-      // console.log("[loadPublishedPosts] Already loading (store lock), skipping");
       return;
     }
 
-    // console.log("[loadPublishedPosts] Setting locks and starting API call");
     isLoadingPublishedPostsGlobal = true;
     set({ isLoadingPublishedPosts: true });
 
@@ -90,7 +77,6 @@ export const usePublishedPostsStore = create<PublishedPostsState>((set, get) => 
         const limit = 100;
         const offset = 0;
 
-        // console.log("[loadPublishedPosts] Calling API /api/posts/published", { limit, offset });
         const response = await fetch(`/api/posts/published?limit=${limit}&offset=${offset}`, {
           method: 'GET',
           headers: {
@@ -103,7 +89,6 @@ export const usePublishedPostsStore = create<PublishedPostsState>((set, get) => 
           const result = await response.json();
           const apiPosts = result?.data?.posts || [];
           const totalCount = result?.data?.count || apiPosts.length;
-          // console.log("[loadPublishedPosts] API success, received", apiPosts.length, "posts (total:", totalCount, ")");
 
           const convertedPosts: PublishedPost[] = apiPosts.map((apiPost: any) => ({
             id: apiPost.id || Date.now(),
@@ -152,7 +137,6 @@ export const usePublishedPostsStore = create<PublishedPostsState>((set, get) => 
             .map((post) => String(post.id));
 
           if (tiktokPostsWithNullUrl.length > 0) {
-            // console.log(`[loadPublishedPosts] Found ${tiktokPostsWithNullUrl.length} TikTok posts with null URLs, requesting updates from backend`);
             fetch(`/api/posts/published/tiktok-urls`, {
               method: 'POST',
               headers: {
@@ -168,7 +152,6 @@ export const usePublishedPostsStore = create<PublishedPostsState>((set, get) => 
                   const updatedCount = Object.keys(updatedUrls).length;
 
                   if (updatedCount > 0) {
-                    // console.log(`[loadPublishedPosts] ✅ Received ${updatedCount} updated TikTok URLs from backend`);
                     const state = get();
                     const updatedPosts = state.publishedPosts.map((post) => {
                       const postId = String(post.id);
@@ -192,8 +175,6 @@ export const usePublishedPostsStore = create<PublishedPostsState>((set, get) => 
                           url: post.url
                         }))
                     );
-                  } else {
-                    // console.log(`[loadPublishedPosts] No TikTok URLs updated (still null)`);
                   }
                 } else {
                   console.warn(`[loadPublishedPosts] Failed to check TikTok URLs: ${response.status}`);
@@ -260,12 +241,10 @@ export const usePublishedPostsStore = create<PublishedPostsState>((set, get) => 
     const state = get();
 
     if (!state.publishedPostsHasMore) {
-      // console.log("[loadMorePublishedPosts] No more posts to load");
       return;
     }
 
     if (state.isLoadingMorePublishedPosts) {
-      // console.log("[loadMorePublishedPosts] Already loading more posts, skipping");
       return;
     }
 
@@ -283,7 +262,6 @@ export const usePublishedPostsStore = create<PublishedPostsState>((set, get) => 
       const limit = 100;
       const offset = state.publishedPostsOffset;
 
-      // console.log("[loadMorePublishedPosts] Loading more posts", { limit, offset });
       const response = await fetch(`/api/posts/published?limit=${limit}&offset=${offset}`, {
         method: 'GET',
         headers: {
@@ -296,8 +274,6 @@ export const usePublishedPostsStore = create<PublishedPostsState>((set, get) => 
         const result = await response.json();
         const apiPosts = result?.data?.posts || [];
         const totalCount = result?.data?.count || 0;
-
-        // console.log("[loadMorePublishedPosts] API success, received", apiPosts.length, "more posts");
 
         const newPosts: PublishedPost[] = apiPosts.map((apiPost: any) => ({
           id: apiPost.id || Date.now(),

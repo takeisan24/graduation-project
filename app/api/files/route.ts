@@ -20,9 +20,10 @@ export async function GET(req: NextRequest) {
 
     return success({ files });
 
-  } catch (err: any) {
-    console.error("GET /api/files error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("GET /api/files error:", message);
+    return fail(message, 500);
   }
 }
 
@@ -64,8 +65,9 @@ export async function DELETE(req: NextRequest) {
 
     return success({ message: "File deleted successfully" });
 
-  } catch (err: any) {
-    console.error("DELETE /api/files error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("DELETE /api/files error:", message);
+    return fail(message, 500);
   }
 }

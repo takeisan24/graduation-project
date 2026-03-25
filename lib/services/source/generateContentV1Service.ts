@@ -103,7 +103,7 @@ export async function generateContent(
     let aiResponse: string;
     try {
         if (isChatGPT) {
-            const messages: any[] = [];
+            const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [];
             messages.push({ role: 'system', content: MASTER_SYSTEM_PROMPT });
             messages.push({ role: 'user', content: final_prompt });
             aiResponse = await aiManager.generateText({
@@ -120,10 +120,11 @@ export async function generateContent(
                 promptParts: [final_prompt]
             });
         }
-    } catch (aiError: any) {
+    } catch (aiError: unknown) {
+        const aiErrorMessage = aiError instanceof Error ? aiError.message : "Unknown AI error";
         console.error("[GenerateContent] AI Error:", aiError);
         return {
-            error: JSON.stringify({ message: "Content generation failed" + aiError.message, details: aiError.message }),
+            error: JSON.stringify({ message: "Content generation failed: " + aiErrorMessage, details: aiErrorMessage }),
             status: 500
         };
     }

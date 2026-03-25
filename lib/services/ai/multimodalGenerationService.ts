@@ -137,8 +137,6 @@ export async function generateFromSourceWithCredits(
     ? platforms.filter(p => typeof p === 'string' && p.trim().length > 0)
     : ['facebook'];
 
-  console.log(`[MultimodalGeneration] User request - platforms: ${platformList.join(', ')}, count: ${platformList.length}`);
-
   // Centralized protection: auth + paywall check (skip deduction until success)
   // Use count = number of platforms to require enough credits upfront
   const protection = await withApiProtection(req, 'TEXT_ONLY', {
@@ -177,8 +175,6 @@ export async function generateFromSourceWithCredits(
     };
   }
 
-  console.log(`[MultimodalGeneration] Credits check passed - User ${user.id}, creditsRemaining: ${paywallResult.creditsRemaining}, will deduct ${totalCreditsNeeded} credits after generation`);
-
   // Generate content using selected provider via AI manager
   let aiResponse: string;
   let extractedContent: string | undefined; // Lưu extracted content để trả về cho FE
@@ -189,7 +185,6 @@ export async function generateFromSourceWithCredits(
       // ChatGPT + YouTube: 2-step process
       // Step 1: Extract content from YouTube using Gemini Flash
       // If video is too long (exceeds token limit), fallback to metadata extraction
-      console.log(`[MultimodalGeneration] ChatGPT + YouTube detected. Step 1: Extracting content from YouTube using Gemini Flash...`);
       const gemini = aiManager.getProvider('gemini');
 
       try {
@@ -218,12 +213,12 @@ Trả về dưới dạng văn bản súc tích (tối đa 500 từ) để làm 
           ]
         });
 
-        console.log(`[MultimodalGeneration] Step 1 completed. Extracted content length: ${extractedContent?.length || 0} characters`);
-      } catch (geminiError: any) {
+      } catch (geminiError: unknown) {
         // Check if error is due to token limit (video too long)
-        const isTokenLimitError = geminiError?.message?.includes('token count exceeds') ||
-          geminiError?.message?.includes('maximum number of tokens') ||
-          geminiError?.message?.includes('400 Bad Request');
+        const geminiErrorMessage = geminiError instanceof Error ? geminiError.message : "";
+        const isTokenLimitError = geminiErrorMessage.includes('token count exceeds') ||
+          geminiErrorMessage.includes('maximum number of tokens') ||
+          geminiErrorMessage.includes('400 Bad Request');
 
         if (isTokenLimitError) {
           console.warn(`[MultimodalGeneration] Video too long for Gemini Flash (token limit exceeded). Falling back to metadata extraction...`);
@@ -241,7 +236,6 @@ Trả về dưới dạng văn bản súc tích (tối đa 500 từ) để làm 
 
               // Format metadata for AI (this will be used directly in Step 2)
               extractedContent = formatYouTubeMetadataForAI(metadata, instructions);
-              console.log(`[MultimodalGeneration] Fallback: Extracted metadata (title: ${metadata.title}, description length: ${metadata.description?.length || 0})`);
             } else {
               // Last resort: use URL with instructions
               const instructions = promptParts
@@ -264,10 +258,6 @@ Trả về dưới dạng văn bản súc tích (tối đa 500 từ) để làm 
         }
       }
 
-      // Step 2: Generate posts using OpenAI with extracted content (attach PDF if exists)
-      // If PDF also exists, upload it and include file_id in the request
-      console.log(`[MultimodalGeneration] Step 2: Generating posts with OpenAI using extracted content...`);
-
       // Ensure extractedContent is defined (should always be set by this point)
       if (!extractedContent) {
         throw new Error('Extracted content is missing after YouTube extraction');
@@ -280,13 +270,11 @@ Trả về dưới dạng văn bản súc tích (tối đa 500 từ) để làm 
 
         for (const doc of documentFilesToUpload) {
           try {
-            console.log(`[MultimodalGeneration] Document detected. Uploading to OpenAI Files API: ${doc.uri}`);
             const fileName = doc.uri.split('/').pop() || 'document';
             // OpenAI Assistants API supports PDF, DOC, DOCX
             const fileId = await openai.uploadFile(doc.uri, fileName, 'assistants');
             openAIFileIds.push(fileId);
-            console.log(`[MultimodalGeneration] Document uploaded successfully. file_id: ${fileId}`);
-          } catch (uploadError: any) {
+          } catch (uploadError: unknown) {
             console.error(`[MultimodalGeneration] Failed to upload document ${doc.uri}:`, uploadError);
           }
         }
@@ -327,11 +315,11 @@ Trả về dưới dạng văn bản súc tích (tối đa 500 từ) để làm 
             try {
               const deleted = await openai.deleteFile(fileId);
               if (deleted) {
-                console.log(`[MultimodalGeneration] Successfully deleted OpenAI file: ${fileId}`);
+                // File deleted successfully
               } else {
                 console.warn(`[MultimodalGeneration] Failed to delete OpenAI file: ${fileId}`);
               }
-            } catch (deleteError: any) {
+            } catch (deleteError: unknown) {
               console.error(`[MultimodalGeneration] Error deleting OpenAI file ${fileId}:`, deleteError);
             }
           }
@@ -339,7 +327,6 @@ Trả về dưới dạng văn bản súc tích (tối đa 500 từ) để làm 
       }
     } else if (isChatGPT && hasAudio && audioFileUri) {
       // ChatGPT + Audio: 2-step process (transcribe/extract with Gemini, then OpenAI)
-      console.log(`[MultimodalGeneration] ChatGPT + Audio detected. Step 1: Extracting/transcribing audio using Gemini Flash...`);
       const gemini = aiManager.getProvider('gemini');
       try {
         const extractionPrompt = `Bạn là trợ lý tóm tắt audio. Hãy trích xuất:
@@ -361,8 +348,7 @@ Chỉ trả về văn bản.`;
             }
           ]
         });
-        console.log(`[MultimodalGeneration] Audio extraction completed. Length: ${extractedContent?.length || 0}`);
-      } catch (geminiError: any) {
+      } catch (geminiError: unknown) {
         console.error(`[MultimodalGeneration] Audio extraction failed:`, geminiError);
         // Fallback: use URL + instructions
         const instructions = promptParts
@@ -391,8 +377,6 @@ Chỉ trả về văn bản.`;
 
       // extractedContent giữ lại cho FE
 
-      console.log(`[MultimodalGeneration] Step 2 completed. Generated content length: ${aiResponse.length} characters`);
-
       // Lưu extractedContent để trả về cho FE (chỉ text, không có instructions)
       // Nếu extractedContent chứa instructions (từ fallback), chỉ lấy phần nội dung
       let finalExtractedContent: string = extractedContent;
@@ -413,11 +397,9 @@ Chỉ trả về văn bản.`;
         const openai = aiManager.getProvider('openai');
         for (const doc of documentFilesToUpload) {
           try {
-            console.log(`[MultimodalGeneration] Uploading Document to OpenAI: ${doc.uri}`);
             const fileName = doc.uri.split('/').pop() || 'document';
             const fileId = await openai.uploadFile(doc.uri, fileName, 'assistants');
             openAIFileIds.push(fileId);
-            console.log(`[MultimodalGeneration] Upload success: ${fileId}`);
           } catch (err) {
             console.error(`[MultimodalGeneration] Upload failed for ${doc.uri}`, err);
           }
@@ -474,11 +456,11 @@ Chỉ trả về văn bản.`;
             try {
               const deleted = await openai.deleteFile(fileId);
               if (deleted) {
-                console.log(`[MultimodalGeneration] Successfully deleted OpenAI file: ${fileId}`);
+                // File deleted successfully
               } else {
                 console.warn(`[MultimodalGeneration] Failed to delete OpenAI file: ${fileId}`);
               }
-            } catch (deleteError: any) {
+            } catch (deleteError: unknown) {
               console.error(`[MultimodalGeneration] Error deleting OpenAI file ${fileId}:`, deleteError);
               // Non-fatal: continue even if deletion fails
             }
@@ -493,8 +475,6 @@ Chỉ trả về văn bản.`;
       // [FIX] Transform URL text to Video File Data for Gemini Native Video Understanding
       let finalPromptParts = promptParts;
       if (hasYouTubeUrl && youtubeUrl) {
-        console.log(`[MultimodalGeneration] Gemini + YouTube detected. Transforming URL to Video Input: ${youtubeUrl}`);
-
         // Remove the URL string from PROMPT (to clean up) and append the structured fileData
         // We keep other text instructions.
         finalPromptParts = [
@@ -523,7 +503,6 @@ Chỉ trả về văn bản.`;
       }
 
       if (audioFileUri && typeof audioFileUri === 'string' && audioFileUri.startsWith('http')) {
-        console.log(`[MultimodalGeneration] Gemini + Audio Link detected. Processing: ${audioFileUri}`);
         try {
           // 1. Download
           const response = await fetch(audioFileUri);
@@ -531,7 +510,6 @@ Chỉ trả về văn bản.`;
           const buffer = Buffer.from(await response.arrayBuffer());
 
           // 2. Save temp
-          console.log('[MultimodalGeneration] Importing system modules...');
           const fs = await import('fs');
           const fsPromises = fs.promises || (fs as any).default?.promises;
           if (!fsPromises) throw new Error("fs.promises not found");
@@ -567,7 +545,6 @@ Chỉ trả về văn bản.`;
           ];
 
           await fs.promises.unlink(tempFilePath);
-          console.log(`[MultimodalGeneration] Audio ready for Gemini: ${uploadedAudioUri}`);
 
         } catch (err) {
           console.error('[MultimodalGeneration] Failed to process Audio for Gemini:', err);
@@ -596,7 +573,6 @@ Chỉ trả về văn bản.`;
       }
 
       if (docFileUri && typeof docFileUri === 'string' && docFileUri.startsWith('http')) {
-        console.log(`[MultimodalGeneration] Gemini + PDF Link detected. Processing: ${docFileUri}`);
         try {
           // 1. Download
           const response = await fetch(docFileUri);
@@ -637,9 +613,8 @@ Chỉ trả về văn bản.`;
           ];
 
           await fs.promises.unlink(tempFilePath);
-          console.log(`[MultimodalGeneration] PDF ready for Gemini: ${uploadedDocUri}`);
 
-        } catch (err: any) {
+        } catch (err: unknown) {
           console.error('[MultimodalGeneration] Failed to process PDF for Gemini:', err);
         }
       }
@@ -656,14 +631,15 @@ Chỉ trả về văn bản.`;
           });
         } finally {
           // [CLEANUP] Delete uploaded files from Gemini
-          if (audioFileName) await gemini.deleteFile(audioFileName).catch((e: any) => console.error("Failed to cleanup Audio file:", e));
-          if (docFileName) await gemini.deleteFile(docFileName).catch((e: any) => console.error("Failed to cleanup Document file:", e));
+          if (audioFileName) await gemini.deleteFile(audioFileName).catch((e: unknown) => console.error("Failed to cleanup Audio file:", e));
+          if (docFileName) await gemini.deleteFile(docFileName).catch((e: unknown) => console.error("Failed to cleanup Document file:", e));
         }
-      } catch (geminiError: any) {
+      } catch (geminiError: unknown) {
         // Check if error is due to token limit (video too long)
-        const isTokenLimitError = geminiError?.message?.includes('token count exceeds') ||
-          geminiError?.message?.includes('maximum number of tokens') ||
-          geminiError?.message?.includes('400 Bad Request');
+        const geminiErrorMsg = geminiError instanceof Error ? geminiError.message : "";
+        const isTokenLimitError = geminiErrorMsg.includes('token count exceeds') ||
+          geminiErrorMsg.includes('maximum number of tokens') ||
+          geminiErrorMsg.includes('400 Bad Request');
 
         if (isTokenLimitError && hasYouTubeUrl && youtubeUrl) {
           console.warn(`[MultimodalGeneration] Video too long for Gemini (token limit exceeded). Falling back to metadata extraction...`);
@@ -693,7 +669,6 @@ Chỉ trả về văn bản.`;
                 promptParts: [formattedPrompt]
               });
 
-              console.log(`[MultimodalGeneration] Fallback: Generated content using metadata (title: ${metadata.title})`);
             } else {
               // Last resort: use URL with instructions
               const instructions = promptParts
@@ -720,7 +695,7 @@ Chỉ trả về văn bản.`;
         }
       }
     }
-  } catch (aiError: any) {
+  } catch (aiError: unknown) {
     console.error("[MultimodalGeneration] Content generation error:", aiError);
     // Don't deduct credits if generation failed
     return {
@@ -900,7 +875,7 @@ Chỉ trả về văn bản.`;
       p_field: 'posts_created',
       p_amount: platformList.length
     });
-  } catch (usageErr: any) {
+  } catch (usageErr: unknown) {
     console.warn('[MultimodalGeneration] increment_usage error (posts_created):', usageErr);
     // Non-fatal: continue
   }

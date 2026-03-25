@@ -55,8 +55,9 @@ export async function GET(req: NextRequest) {
             usagePercent: limitBytes > 0 ? (totalBytes / limitBytes) * 100 : 0
         });
 
-    } catch (error: any) {
-        console.error("GET /api/usage/storage error:", error);
-        return fail("Server error", 500);
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Server error";
+        console.error("GET /api/usage/storage error:", message);
+        return fail(message, 500);
     }
 }

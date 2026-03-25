@@ -28,7 +28,6 @@ export function clearConnectionsCache() {
   cachedConnections = null;
   cacheTimestamp = null;
   fetchPromise = null;
-  console.log('[connectionsCache] Cache cleared');
 }
 
 /**
@@ -43,14 +42,12 @@ export async function fetchConnectionsWithCache(force = false): Promise<any[] | 
 
   // Return cached data if available, not forcing refresh, and cache is not stale
   if (!force && !isCacheStale && cachedConnections !== null) {
-    console.log('[connectionsCache] Returning cached connections');
     return cachedConnections;
   }
 
   // Return existing promise if a fetch is already in progress
   // This prevents multiple simultaneous API calls
   if (!force && fetchPromise) {
-    console.log('[connectionsCache] Reusing existing fetch promise');
     return fetchPromise;
   }
 
@@ -63,7 +60,6 @@ export async function fetchConnectionsWithCache(force = false): Promise<any[] | 
         return null;
       }
 
-      console.log('[connectionsCache] Fetching connections from API...');
       const res = await fetch('/api/late/connections', {
         headers: session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : undefined,
       });
@@ -83,7 +79,6 @@ export async function fetchConnectionsWithCache(force = false): Promise<any[] | 
         const connections = json.data?.connections || [];
         cachedConnections = connections;
         cacheTimestamp = Date.now(); // Update cache timestamp
-        console.log(`[connectionsCache] Cached ${connections.length} connections`);
         return connections;
       } else {
         cachedConnections = [];

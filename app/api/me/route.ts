@@ -75,8 +75,9 @@ export async function GET(req: NextRequest) {
       }
     });
   
-  } catch (err: any) {
-    console.error("me route error", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("me route error", message);
+    return fail(message, 500);
   }
 }

@@ -74,14 +74,8 @@ const getStorageKey = (): string => {
 
     const storageKey = `sb-${projectRef}-${domainHash}-auth-token`;
 
-    // Log storage key on first load for debugging (only in dev)
-    if (process.env.NODE_ENV === 'development') {
-      // console.log('[SupabaseClient] Storage key:', storageKey, 'for domain:', domain);
-    }
-
     return storageKey;
-  } catch (err) {
-    // console.warn('[SupabaseClient] Failed to generate domain-specific storage key, using default:', err);
+  } catch {
     return `sb-${projectRef}-auth-token`; // Fallback to default
   }
 };

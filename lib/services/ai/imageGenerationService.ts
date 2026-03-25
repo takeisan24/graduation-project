@@ -64,7 +64,6 @@ function parsePrompts(originalPrompt: string): string[] {
       if (segment) prompts.push(segment);
     }
     if (prompts.length >= 2) {
-      console.log(`[SmartPrompt] Split into ${prompts.length} prompts (regex)`);
       return prompts;
     }
   }
@@ -86,7 +85,6 @@ export async function generateImageWithCredits(
   req: NextRequest,
   request: ImageGenerationRequest
 ): Promise<ImageGenerationResult | { error: string; status: number }> {
-  console.log("[generateImageWithCredits] Request:", JSON.stringify(request));
   const {
     prompt,
     platform = 'general',
@@ -104,7 +102,6 @@ export async function generateImageWithCredits(
 
   // Default to Gemini if no modelId provided
   const imageModel = modelId || getBestModel('image');
-  console.log("[generateImageWithCredits] Selected model:", imageModel);
 
   // Centralized protection: auth + paywall check (skip deduction until success)
   const protection = await withApiProtection(req, 'WITH_IMAGE', {
@@ -131,10 +128,8 @@ export async function generateImageWithCredits(
     };
   }
 
-  console.log("[generateImageWithCredits] Parsing prompt...");
   // 1. ANALYZE & SPLIT PROMPT (regex-based, synchronous — no extra API call)
   const parsedPrompts = parsePrompts(prompt);
-  console.log("[generateImageWithCredits] Prompts to run:", parsedPrompts);
 
   const isMultiPrompt = parsedPrompts.length > 1;
   const promptsToRun = isMultiPrompt ? parsedPrompts : [prompt];
@@ -156,7 +151,7 @@ export async function generateImageWithCredits(
         useSearch,
         imageSize,
         onProviderSwitch: (fromModel, toModel) => {
-          console.log(`[generateImageWithCredits] Provider switch: ${fromModel} → ${toModel}`);
+          // Provider switch tracked
         }
       }).catch(err => {
         console.error(`Failed to generate for prompt: "${singlePrompt.substring(0, 40)}..."`, err);
@@ -250,7 +245,7 @@ export async function generateImageWithCredits(
       };
     }
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Image generation process failed:", error);
 
     const errorMessage = error instanceof Error ? error.message : "Image generation failed";

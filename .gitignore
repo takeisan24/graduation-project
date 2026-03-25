@@ -16,10 +16,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files
+# env files (keep .env.example for documentation)
 .env.local
 .env.product
-.env.example
 .env.production
 
 # vercel
@@ -37,8 +36,14 @@ settings.json
 
 #md_file
 *.md
+!CLAUDE.md
+!.claude/**/*.md
+!specs/**/*.md
 *.rar
 
+# Local overrides (gitignored)
+CLAUDE.local.md
+.claude/settings.local.json
 
 #Copilot insturctions
 .github

@@ -28,7 +28,7 @@ function CreateLayout({
 }: CreateLayoutProps) {
   // Get wizard state to adjust z-index
   return (
-    <div className="h-full bg-[#0C0717] text-white">
+    <div className="h-full bg-background text-foreground">
       {/* Sidebar - Always render (hamburger button needs to be in DOM) */}
       <Sidebar 
         activeSection={activeSection}

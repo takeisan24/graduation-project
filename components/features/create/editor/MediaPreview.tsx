@@ -1,6 +1,7 @@
 "use client";
 
 
+import { useTranslations } from 'next-intl';
 import { X as CloseIcon } from 'lucide-react';
 import { useCreateMediaStore, useCreateLightboxStore, useCreatePostsStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
@@ -8,6 +9,7 @@ import { useShallow } from 'zustand/react/shallow';
 import type { MediaFile } from '@/store/shared/types';
 
 export default function MediaPreview() {
+  const t = useTranslations('CreatePage.createSection.mediaPreview');
   const {
     uploadedMedia,
     postMedia,
@@ -44,12 +46,12 @@ export default function MediaPreview() {
   }
 
   return (
-    <div className="flex-shrink-0 border-t border-white/10 bg-[#2A2A30] px-[10px] py-3"> {/* Fixed với background */}
-      <div className="flex gap-3 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 pb-1">
+    <div className="flex-shrink-0 border-t border-border bg-card px-[10px] py-3"> {/* Fixed với background */}
+      <div className="flex gap-3 overflow-x-auto scrollbar-thin scrollbar-thumb-muted-foreground/30 scrollbar-track-secondary pb-1">
         {currentPostMedia.map((media) => (
           <div
             key={media.id}
-            className="relative w-40 h-32 flex-shrink-0 rounded-lg overflow-hidden border border-[#3A3A42] cursor-pointer" // <-- Thêm cursor-pointer
+            className="relative w-40 h-32 flex-shrink-0 rounded-lg overflow-hidden border border-border cursor-pointer" // <-- Thêm cursor-pointer
             onClick={() => openLightbox(media.preview, media.type)} // <-- Mở lightbox khi click vào media
           >
             {media.type === 'image' ? (
@@ -57,10 +59,7 @@ export default function MediaPreview() {
                 src={media.preview}
                 alt={`Uploaded media ${media.id}`}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                onError={(e) => {
-                  console.error("❌ Error loading image:", media.preview)
-                  console.error("Image details:", media)
-                }}
+                onError={() => {}}
               />
             ) : (
               <video
@@ -68,19 +67,7 @@ export default function MediaPreview() {
                 className="w-full h-full object-cover"
                 controls
                 preload="metadata"
-                onLoadedMetadata={(e) => {
-                  console.log("✅ Video loaded:", {
-                    src: media.preview,
-                    duration: e.currentTarget.duration,
-                    videoWidth: e.currentTarget.videoWidth,
-                    videoHeight: e.currentTarget.videoHeight
-                  })
-                }}
-                onError={(e) => {
-                  console.error("❌ Error loading video:", media.preview)
-                  console.error("Video details:", media)
-                  console.error("Error event:", e)
-                }}
+                onError={() => {}}
               />
             )}
 
@@ -93,8 +80,8 @@ export default function MediaPreview() {
                 e.stopPropagation();
                 handleMediaDownload(media);
               }}
-              aria-label="Tải xuống media này"
-              title="Tải xuống"
+              aria-label={t('downloadMedia')}
+              title={t('downloadMedia')}
             >
               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -108,7 +95,7 @@ export default function MediaPreview() {
                 e.stopPropagation(); // <-- QUAN TRỌNG: Ngăn chặn sự kiện click lan ra div cha
                 handleMediaRemove(media.id, selectedPostId);
               }}
-              aria-label="Xóa media này"
+              aria-label={t('removeMedia')}
             >
               <CloseIcon className="w-3 h-3" />
             </button>

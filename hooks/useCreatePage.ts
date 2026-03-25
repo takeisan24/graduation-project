@@ -225,7 +225,9 @@ export function useCreatePage() {
     try {
       localStorage.removeItem('openPosts')
       localStorage.removeItem('postContents')
-    } catch {}
+    } catch {
+      /* localStorage may be unavailable in SSR or private browsing */
+    }
     
     setOpenPosts([])
     setSelectedPostId(0)
@@ -691,7 +693,9 @@ export function useCreatePage() {
         }
         setCalendarEvents(updated)
         saveToLocalStorage('calendarEvents', updated)
-      } catch {}
+      } catch {
+        /* Silently ignore: calendar event creation is non-critical */
+      }
 
       // Remove from open posts
       handlePostDelete(postId)
@@ -701,7 +705,7 @@ export function useCreatePage() {
   const handleEditDraft = (post: any) => {
     try {
       setActiveSection('create')
-      try { window.history.pushState(null, '', `/create?section=create&draftId=${post.id}`) } catch {}
+      try { window.history.pushState(null, '', `/create?section=create&draftId=${post.id}`) } catch { /* pushState not available */ }
       const existing = openPosts.find(p => p.type === post.platform)
       let targetId = existing?.id
       if (!targetId) {
@@ -916,7 +920,9 @@ export function useCreatePage() {
   const handleClearCalendarEvents = () => {
     try {
       localStorage.removeItem('calendarEvents')
-    } catch {}
+    } catch {
+      /* localStorage may be unavailable in SSR or private browsing */
+    }
     setCalendarEvents({})
   }
   
@@ -1015,7 +1021,9 @@ export function useCreatePage() {
             }
           }
         }, delay)
-      } catch {}
+      } catch {
+        /* Silently ignore: scheduled post event parsing may fail for malformed input */
+      }
     }
     window.addEventListener('schedule-post', handler as any)
     return () => window.removeEventListener('schedule-post', handler as any)

@@ -33,7 +33,6 @@ export async function GET(req: NextRequest) {
     if (userRow) {
       plan = userRow.plan || 'free';
       creditsRemaining = userRow.credits_balance ?? 0;
-      console.log(`[api/limits] Loaded plan=${plan}, credits=${creditsRemaining} for user=${user.id}`);
     } else {
       // No users row yet -> ensure profile via RPC and use returned credits
       const ensuredCredits = await ensureUserProfile(user.id);
@@ -57,9 +56,10 @@ export async function GET(req: NextRequest) {
       posts: { current: mu?.scheduled_posts ?? 0, limit: getPlanPostLimit(plan) }
     });
 
-  } catch (err: any) {
-    console.error("limits route error", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("limits route error", message);
+    return fail(message, 500);
   }
 }
 

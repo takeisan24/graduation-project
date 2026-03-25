@@ -86,8 +86,9 @@ export async function GET(req: NextRequest) {
       }
     });
 
-  } catch (err: any) {
-    console.error("GET /api/usage error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("GET /api/usage error:", message);
+    return fail(message, 500);
   }
 }

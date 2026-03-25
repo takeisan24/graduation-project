@@ -20,9 +20,10 @@ export async function GET(req: NextRequest) {
     const projects = await getProjectsByUserId(user.id);
     
     return success(projects);
-  } catch (err: any) {
-    console.error("GET /api/projects error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("GET /api/projects error:", message);
+    return fail(message, 500);
   }
 }
 
@@ -82,8 +83,9 @@ export async function POST(req: NextRequest) {
       source_content: project.source_content, 
       created_at: project.created_at 
     }, 201);
-  } catch (err: any) {
-    console.error("POST /api/projects error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("POST /api/projects error:", message);
+    return fail(message, 500);
   }
 }

@@ -297,7 +297,6 @@ export function cleanupOldLocalStorageData(): void {
 
     if (removedCount > 0) {
       saveToLocalStorage('calendarEvents', cleanedEvents)
-      console.log(`[storage] Cleaned up ${removedCount} old calendar events`)
     }
 
     // Cleanup pending scheduled posts older than 7 days
@@ -314,7 +313,6 @@ export function cleanupOldLocalStorageData(): void {
 
     if (validPendingPosts.length < pendingPosts.length) {
       saveToLocalStorage('pendingScheduledPosts', validPendingPosts)
-      console.log(`[storage] Cleaned up ${pendingPosts.length - validPendingPosts.length} old pending posts`)
     }
 
   } catch (error) {
@@ -341,7 +339,6 @@ export function limitLocalStorageArray(key: string, maxItems: number = 1000): nu
     const removed = data.length - maxItems
     const limited = data.slice(-maxItems) // Keep last N items
     saveToLocalStorage(key, limited)
-    console.log(`[storage] Limited ${key} to ${maxItems} items, removed ${removed} old items`)
     return removed
   } catch (error) {
     console.error(`[storage] Error limiting array for key ${key}:`, error)

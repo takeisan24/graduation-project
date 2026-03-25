@@ -14,7 +14,6 @@ export const dynamic = 'force-dynamic';
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
-    console.log('[OAuth] Callback URL received:', url.toString())
     const code = url.searchParams.get('code');
     const localeFromQuery = url.searchParams.get('locale');
     const error = url.searchParams.get('error');
@@ -80,12 +79,12 @@ export async function GET(req: NextRequest) {
     };
 
     const frontendUrl = `${appUrl}/${locale}/auth/success?session=${encodeURIComponent(JSON.stringify(sessionData))}`;
-    console.log('[OAuth] Redirecting to frontend URL:', frontendUrl)
     return NextResponse.redirect(frontendUrl, { status: 303 });
 
-  } catch (err: any) {
-    console.error("OAuth callback error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("OAuth callback error:", message);
+    return fail(message, 500);
   }
 }
 

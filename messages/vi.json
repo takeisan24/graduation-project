@@ -152,7 +152,11 @@
     },
     "buttons": {
       "signIn": "Đăng nhập",
-      "getStarted": "Bắt đầu dùng thử"
+      "getStarted": "Bắt đầu dùng thử",
+      "signOut": "Đăng xuất",
+      "dashboard": "Bảng điều khiển",
+      "loading": "Đang tải...",
+      "toggleMenu": "Mở menu"
     }
   },
   "Footer": {
@@ -691,7 +695,11 @@
       "title": "Bài đã đăng",
       "loading": "Đang tải danh sách bài đã đăng...",
       "loadMore": "Xem thêm",
-      "loadingMore": "Đang tải..."
+      "loadingMore": "Đang tải...",
+      "open": "Mở",
+      "deleteFromList": "Xóa khỏi danh sách",
+      "confirmDelete": "Bạn có chắc chắn muốn xóa bài viết này không?",
+      "noPublishedPosts": "Không tìm thấy bài đăng đã xuất bản"
     },
     "failed": {
       "title": "Thất bại",
@@ -774,6 +782,15 @@
       }
     },
     "createSection": {
+      "mobileTabs": {
+        "sources": "Nguồn",
+        "posts": "Bài viết",
+        "aiChat": "AI Chat"
+      },
+      "mediaPreview": {
+        "downloadMedia": "Tải xuống",
+        "removeMedia": "Xóa media"
+      },
       "sourcePanel": {
         "sourcesTitle": "Nguồn đã lưu",
         "addSource": "Thêm nguồn",
@@ -802,7 +819,14 @@
           "tiktok": "TikTok",
           "pdf": "PDF",
           "audio": "Âm thanh"
-        }
+        },
+        "clearedImageList": "Đã xóa danh sách ảnh đã tạo",
+        "generateImageAI": "Tạo ảnh với AI",
+        "generatedImages": "Ảnh đã tạo",
+        "confirmClearTitle": "Xác nhận xóa?",
+        "confirmClearDescription": "Bạn có chắc chắn muốn xóa toàn bộ danh sách ảnh đã tạo không? Hành động này không thể hoàn tác.",
+        "cancelClear": "Hủy bỏ",
+        "confirmClearButton": "Đồng ý xóa"
       },
       "sourceModal": {
         "title": "Thêm nguồn mới",
@@ -1081,6 +1105,7 @@
         "aiChatPlaceholder": "Hỏi bất cứ điều gì hoặc yêu cầu tạo bài đăng...",
         "sendButton": "Gửi",
         "aiTyping": "AI đang trả lời",
+        "copiedToClipboard": "Đã sao chép nội dung vào bộ nhớ tạm!",
         "emptyState": {
           "title": "Trợ Lý AI Sẵn Sàng",
           "description": "Chat này sẽ tự động mở khi bạn có bài đăng. Tôi sẽ giúp bạn chỉnh sửa và tối ưu nội dung!",
@@ -1177,6 +1202,28 @@
         "publishNowButton": "Đăng ngay",
         "confirmSchedule": "Xác nhận lên lịch",
         "closeModal": "Đóng"
+      },
+      "mediaLibraryModal": {
+        "selectPostFirst": "Vui lòng chọn bài viết trước khi thêm media.",
+        "searchPlaceholder": "Tìm kiếm media...",
+        "loadingLibrary": "Đang tải thư viện...",
+        "error": "Lỗi: {error}",
+        "retry": "Thử lại",
+        "noMediaFound": "Không tìm thấy media nào",
+        "all": "Tất cả",
+        "video": "Video",
+        "image": "Ảnh",
+        "audio": "Audio",
+        "selectedCount": "Đã chọn {count} mục",
+        "selectMediaHint": "Chọn media để thêm vào bài viết",
+        "cancel": "Hủy",
+        "addToPost": "Thêm vào bài viết"
+      },
+      "lightboxModal": {
+        "downloadSuccess": "Đã tải xuống thành công!",
+        "downloadError": "Không thể tải xuống tệp tin.",
+        "download": "Tải về",
+        "close": "Đóng"
       }
     },
     "calendarSection": {
@@ -1185,6 +1232,14 @@
       "week": "Tuần",
       "clearAll": "Xóa tất cả",
       "confirmClearAll": "Bạn có chắc muốn xóa tất cả sự kiện trên lịch không? Hành động này không thể hoàn tác.",
+      "posted": "Đã đăng",
+      "publishing": "Đang đăng bài...",
+      "scheduled": "Lên lịch",
+      "failed": "Thất bại",
+      "empty": "Trống",
+      "eventMoved": "Đã cập nhật vị trí sự kiện.",
+      "addedSchedule": "Đã thêm lịch cho {platform}.",
+      "addedMedia": "Đã thêm {count} media vào bài viết.",
       "eventStatus": {
         "published": "Đã đăng",
         "scheduled": "Lên lịch",

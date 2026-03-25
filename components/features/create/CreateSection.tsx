@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 
 //Import component UI
@@ -22,6 +23,7 @@ import { useShallow } from 'zustand/react/shallow';
  * 3. Right panel (350px) - AI chatbox (collapsible)
  */
 export default function CreateSection() {
+  const t = useTranslations('CreatePage.createSection.mobileTabs');
   const [isSourcePanelOpen, setIsSourcePanelOpen] = useState(true);
   const [isAIChatOpen, setIsAIChatOpen] = useState(false); // Ẩn ở lúc đầu, chỉ mở khi có posts
   const hasResetOnMount = useRef(false); // Flag to ensure mount reset only runs once
@@ -113,36 +115,36 @@ export default function CreateSection() {
   return (
     <>
       {/* Mobile Navigation Tabs (Only visible on mobile) */}
-      <div className="lg:hidden flex border-b border-white/10 bg-[#1A0F30]">
+      <div className="lg:hidden flex border-b border-border bg-background">
         <button
           onClick={() => setActiveMobilePanel('sources')}
           className={`flex-1 py-3 text-base font-medium transition-colors ${
             activeMobilePanel === 'sources' 
-              ? 'text-[#E33265] border-b-2 border-[#E33265]' 
-              : 'text-gray-400 hover:text-white'
+              ? 'text-primary border-b-2 border-primary' 
+              : 'text-muted-foreground hover:text-foreground'
           }`}
         >
-          Nguồn
+          {t('sources')}
         </button>
         <button
           onClick={() => setActiveMobilePanel('editor')}
           className={`flex-1 py-3 text-base font-medium transition-colors ${
             activeMobilePanel === 'editor' 
-              ? 'text-[#E33265] border-b-2 border-[#E33265]' 
-              : 'text-gray-400 hover:text-white'
+              ? 'text-primary border-b-2 border-primary' 
+              : 'text-muted-foreground hover:text-foreground'
           }`}
         >
-          Bài viết
+          {t('posts')}
         </button>
         <button
           onClick={() => setActiveMobilePanel('chat')}
           className={`flex-1 py-3 text-base font-medium transition-colors ${
             activeMobilePanel === 'chat' 
-              ? 'text-[#E33265] border-b-2 border-[#E33265]' 
-              : 'text-gray-400 hover:text-white'
+              ? 'text-primary border-b-2 border-primary' 
+              : 'text-muted-foreground hover:text-foreground'
           }`}
         >
-          AI Chat
+          {t('aiChat')}
         </button>
       </div>
 
@@ -167,7 +169,7 @@ export default function CreateSection() {
           {isSourcePanelOpen && !isAddingSource && !isInWizard && (
             <button
               onClick={() => setIsSourcePanelOpen(false)}
-              className="hidden lg:block absolute right-2 top-2 z-10 bg-[#2A2A30] hover:bg-[#3A3A42] text-white p-1.5 rounded-lg shadow-lg border border-white/10 transition-all"
+              className="hidden lg:block absolute right-2 top-2 z-10 bg-secondary hover:bg-muted text-foreground p-1.5 rounded-lg shadow-lg border border-border transition-all"
               title="Close Sources Panel"
             >
               <PanelLeftClose className="w-4 h-4" />
@@ -179,7 +181,7 @@ export default function CreateSection() {
         {!isSourcePanelOpen && !isInWizard && (
           <button
             onClick={() => setIsSourcePanelOpen(true)}
-            className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 z-15 bg-[#E33265] hover:bg-[#c52b57] text-white p-2 rounded-r-lg shadow-lg transition-all"
+            className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 z-15 bg-primary hover:bg-primary/90 text-primary-foreground p-2 rounded-r-lg shadow-lg transition-all"
             title="Open Sources Panel"
           >
             <PanelLeftOpen className="w-5 h-5" />

@@ -71,12 +71,12 @@ export default function ConfirmModal({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.2 }}
-              className="bg-[#2A2A30] border border-[#3A3A42] rounded-xl shadow-2xl max-w-md w-full overflow-hidden"
+              className="bg-card border border-border rounded-xl shadow-2xl max-w-md w-full overflow-hidden"
             >
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -91,12 +91,12 @@ export default function ConfirmModal({
                 </div>
 
                 {/* Title */}
-                <h3 className="text-xl font-semibold text-white text-center mb-2">
+                <h3 className="text-xl font-semibold text-foreground text-center mb-2">
                   {title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-sm text-gray-400 text-center mb-6">
+                <p className="text-sm text-muted-foreground text-center mb-6">
                   {description}
                 </p>
 
@@ -105,13 +105,13 @@ export default function ConfirmModal({
                   <Button
                     onClick={onClose}
                     variant="outline"
-                    className="flex-1 border-[#3A3A42] text-white hover:bg-white/5"
+                    className="flex-1 border-border text-foreground hover:bg-secondary"
                   >
                     {cancelText}
                   </Button>
                   <Button
                     onClick={handleConfirm}
-                    className={`flex-1 text-white ${styles.button}`}
+                    className={`flex-1 text-primary-foreground ${styles.button}`}
                   >
                     {confirmText}
                   </Button>

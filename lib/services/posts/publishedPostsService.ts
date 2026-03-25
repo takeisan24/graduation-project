@@ -7,7 +7,37 @@
 import { getPublishedPosts } from "@/lib/services/db/posts";
 import { findConnectionsByUserId } from "@/lib/services/db/connections";
 import { Connection } from "@/lib/services/db/connections";
-import { ScheduledPost } from "@/lib/services/db/posts";
+import { ScheduledPost, PostPayload } from "@/lib/services/db/posts";
+
+/** Platform data from late.dev API response (deeply nested in JSONB payload) */
+interface PlatformData {
+  platform?: string;
+  platformPostUrl?: string;
+  url?: string;
+  post_url?: string;
+  username?: string;
+  displayName?: string;
+  profilePicture?: string;
+  avatar_url?: string;
+  accountId?: {
+    username?: string;
+    displayName?: string;
+    profilePicture?: string;
+    avatar_url?: string;
+  };
+  platformSpecificData?: {
+    tiktokUsername?: string;
+    __usernameSnapshot?: string;
+  };
+}
+
+/** Profile metadata shape used when extracting user info */
+interface ProfileInfo {
+  username?: string;
+  avatar_url?: string;
+  profilePicture?: string;
+  [key: string]: unknown;
+}
 
 export interface PublishedPost {
   id: string;
@@ -29,9 +59,9 @@ export interface PublishedPost {
  * Extract username from multiple sources
  */
 function extractUsername(
-  profileMetadata: any,
-  payload: any,
-  platformData: any,
+  profileMetadata: ProfileInfo,
+  payload: PostPayload,
+  platformData: PlatformData | null,
   connectedAccount: Connection | null
 ): string {
   return profileMetadata?.username 
@@ -50,9 +80,9 @@ function extractUsername(
  * Extract avatar URL from multiple sources
  */
 function extractAvatarUrl(
-  profileMetadata: any,
-  payload: any,
-  platformData: any
+  profileMetadata: ProfileInfo,
+  payload: PostPayload,
+  platformData: PlatformData | null
 ): string {
   return profileMetadata?.avatar_url 
     || profileMetadata?.profilePicture
@@ -72,9 +102,9 @@ function extractAvatarUrl(
  * Note: For TikTok, we only use platformPostUrl from late.dev API. If it's null, we need to retry fetching.
  */
 function extractPostUrl(
-  payload: any,
-  platformData: any,
-  lateDevPost: any,
+  payload: PostPayload,
+  platformData: PlatformData | null,
+  lateDevPost: Record<string, unknown>,
   platform: string,
   username: string
 ): string {
@@ -118,10 +148,10 @@ function transformPostToPublished(
   
   // Priority: status_check_response (for published posts) > late_dev_response (for scheduled posts)
   const platformData = 
-    statusCheckPlatforms.find((p: any) => 
+    statusCheckPlatforms.find((p: PlatformData) => 
       p.platform?.toLowerCase() === post.platform?.toLowerCase()
     ) ||
-    lateDevPlatforms.find((p: any) => 
+    lateDevPlatforms.find((p: PlatformData) => 
       p.platform?.toLowerCase() === post.platform?.toLowerCase()
     ) ||
     null;

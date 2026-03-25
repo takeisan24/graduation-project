@@ -89,8 +89,6 @@ export async function POST(request: NextRequest) {
         const uploadResult = await uploadResponse.json();
         const uploadedFile = uploadResult.file;
         
-        console.log(`✅ Upload thành công: ${uploadedFile.displayName} với URI: ${uploadedFile.uri}`);
-
     return success({
       fileUri: uploadResult.file.uri,
       fileName: uploadResult.file.displayName,

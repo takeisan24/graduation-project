@@ -7,8 +7,41 @@
 import { getFailedPosts } from "@/lib/services/db/posts";
 import { findConnectionsByUserId } from "@/lib/services/db/connections";
 import { Connection } from "@/lib/services/db/connections";
-import { ScheduledPost } from "@/lib/services/db/posts";
+import { ScheduledPost, PostPayload } from "@/lib/services/db/posts";
 import { getDateStringInTimezone } from "@/lib/utils/date";
+
+/** Platform data from late.dev API response (deeply nested in JSONB payload) */
+interface PlatformData {
+  platform?: string;
+  platformPostUrl?: string;
+  url?: string;
+  post_url?: string;
+  username?: string;
+  displayName?: string;
+  profilePicture?: string;
+  avatar_url?: string;
+  errorMessage?: string;
+  error?: string;
+  error_message?: string;
+  accountId?: {
+    username?: string;
+    displayName?: string;
+    profilePicture?: string;
+    avatar_url?: string;
+  };
+  platformSpecificData?: {
+    tiktokUsername?: string;
+    __usernameSnapshot?: string;
+  };
+}
+
+/** Profile metadata shape used when extracting user info */
+interface ProfileInfo {
+  username?: string;
+  avatar_url?: string;
+  profilePicture?: string;
+  [key: string]: unknown;
+}
 
 export interface FailedPost {
   id: string;
@@ -18,7 +51,7 @@ export interface FailedPost {
   time: string; // HH:MM
   error: string;
   errorMessage: string | null;
-  errorDetails: any;
+  errorDetails: Record<string, unknown> | string | null;
   profileName: string;
   profilePic: string;
   url: string | null;
@@ -33,9 +66,9 @@ export interface FailedPost {
  * Extract username from multiple sources
  */
 function extractUsername(
-  profileMetadata: any,
-  payload: any,
-  platformData: any,
+  profileMetadata: ProfileInfo,
+  payload: PostPayload,
+  platformData: PlatformData | null,
   connectedAccount: Connection | null
 ): string {
   return profileMetadata?.username 
@@ -54,9 +87,9 @@ function extractUsername(
  * Extract avatar URL from multiple sources
  */
 function extractAvatarUrl(
-  profileMetadata: any,
-  payload: any,
-  platformData: any
+  profileMetadata: ProfileInfo,
+  payload: PostPayload,
+  platformData: PlatformData | null
 ): string {
   return profileMetadata?.avatar_url 
     || profileMetadata?.profilePicture
@@ -76,8 +109,8 @@ function extractAvatarUrl(
  * Note: For TikTok, we only use platformPostUrl from late.dev API. If it's null, we need to retry fetching.
  */
 function extractPostUrl(
-  payload: any,
-  platformData: any,
+  payload: PostPayload,
+  platformData: PlatformData | null,
   platform: string,
   username: string
 ): string | null {
@@ -98,8 +131,8 @@ function extractPostUrl(
  * Extract error message from multiple sources
  */
 function extractErrorMessage(
-  payload: any,
-  platformData: any,
+  payload: PostPayload,
+  platformData: PlatformData | null,
   defaultMessage = "Unknown error"
 ): { message: string; detailedMessage: string | null } {
   const platformErrorMessage = platformData?.errorMessage
@@ -150,10 +183,10 @@ function transformPostToFailed(
 
   const platformData =
     lateDevPlatforms.find(
-      (p: any) => p.platform?.toLowerCase() === post.platform?.toLowerCase()
+      (p: PlatformData) => p.platform?.toLowerCase() === post.platform?.toLowerCase()
     ) ||
     statusCheckPlatforms.find(
-      (p: any) => p.platform?.toLowerCase() === post.platform?.toLowerCase()
+      (p: PlatformData) => p.platform?.toLowerCase() === post.platform?.toLowerCase()
     ) ||
     null;
   
@@ -171,7 +204,7 @@ function transformPostToFailed(
   // Extract media URLs from payload (supports both camelCase and snake_case for backward compatibility)
   const mediaUrls: string[] | null =
     (Array.isArray(payload.mediaUrls) && payload.mediaUrls.length > 0 && payload.mediaUrls)
-    || (Array.isArray((payload as any).media_urls) && (payload as any).media_urls.length > 0 && (payload as any).media_urls)
+    || (Array.isArray(payload.media_urls) && payload.media_urls.length > 0 && payload.media_urls)
     || null;
   
   return {

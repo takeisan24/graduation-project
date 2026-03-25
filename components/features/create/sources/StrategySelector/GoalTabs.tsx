@@ -92,7 +92,7 @@ export default function GoalTabs({ value, onChange }: GoalTabsProps) {
     {/* 1. Fade Trái (Màu nền trùng với màu background form #1E1E23) */}
       <div 
         className={cn(
-          "absolute left-0 top-0 bottom-0 z-10 w-8 bg-gradient-to-r from-[#1E1E23] to-transparent pointer-events-none transition-opacity duration-300",
+          "absolute left-0 top-0 bottom-0 z-10 w-8 bg-gradient-to-r from-background to-transparent pointer-events-none transition-opacity duration-300",
           showLeftFade ? "opacity-100" : "opacity-0"
         )}
       />
@@ -100,7 +100,7 @@ export default function GoalTabs({ value, onChange }: GoalTabsProps) {
       {/* 2. Fade Phải */}
       <div 
         className={cn(
-          "absolute right-0 top-0 bottom-0 z-10 w-12 bg-gradient-to-l from-[#1E1E23] to-transparent pointer-events-none transition-opacity duration-300 flex items-center justify-end pr-1",
+          "absolute right-0 top-0 bottom-0 z-10 w-12 bg-gradient-to-l from-background to-transparent pointer-events-none transition-opacity duration-300 flex items-center justify-end pr-1",
           showRightFade ? "opacity-100" : "opacity-0"
         )}
       >
@@ -109,7 +109,7 @@ export default function GoalTabs({ value, onChange }: GoalTabsProps) {
       {/* 3. Gợi ý lăn chuột (Icon nhỏ hiện ra ở giữa khi hover, tự mất khi đã scroll) */}
       {showRightFade && showScrollHint && (
          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none opacity-0 group-hover/container:opacity-100 transition-opacity duration-500 delay-200">
-            <div className="bg-black/60 backdrop-blur-sm text-white/80 px-2 py-1 rounded-full text-[10px] flex items-center gap-1.5 shadow-lg border border-white/10 animate-pulse">
+            <div className="bg-black/60 backdrop-blur-sm text-white/80 px-2 py-1 rounded-full text-[10px] flex items-center gap-1.5 shadow-lg border border-border animate-pulse">
                 <MoveHorizontal className="w-3 h-3" />
                 <span>Lăn chuột</span>
             </div>
@@ -122,7 +122,7 @@ export default function GoalTabs({ value, onChange }: GoalTabsProps) {
             className="w-full overflow-x-auto scroll-smooth snap-x snap-mandatory py-1"
             style={{ 
               scrollbarWidth: 'thin',  // Firefox: thin scrollbar
-              scrollbarColor: 'rgba(227, 50, 101, 0.5) rgba(42, 42, 48, 0.5)', // Firefox: thumb và track color
+              scrollbarColor: 'var(--primary) rgba(42, 42, 48, 0.5)', // Firefox: thumb và track color
             }}
         >
           {/* TabsList: inline-flex để content không bị co lại */}
@@ -135,18 +135,18 @@ export default function GoalTabs({ value, onChange }: GoalTabsProps) {
                   snap-start flex-shrink-0 px-4 py-2.5 rounded-full text-sm font-medium border transition-all duration-200
                   
                   /* Active State */
-                  data-[state=active]:border-[#E33265] 
-                  data-[state=active]:bg-[#E33265]/10 
-                  data-[state=active]:text-[#E33265]
-                  data-[state=active]:shadow-[0_0_15px_rgba(227,50,101,0.2)]
+                  data-[state=active]:border-primary 
+                  data-[state=active]:bg-primary/10 
+                  data-[state=active]:text-primary
+                  data-[state=active]:shadow-[0_0_15px_hsl(var(--primary)/0.2)]
                   
                   /* Inactive State */
-                  data-[state=inactive]:border-white/10
-                  data-[state=inactive]:bg-[#2A2A30]
-                  data-[state=inactive]:text-gray-400
-                  data-[state=inactive]:hover:bg-white/5
-                  data-[state=inactive]:hover:text-white
-                  data-[state=inactive]:hover:border-white/20
+                  data-[state=inactive]:border-border
+                  data-[state=inactive]:bg-card
+                  data-[state=inactive]:text-muted-foreground
+                  data-[state=inactive]:hover:bg-secondary
+                  data-[state=inactive]:hover:text-foreground
+                  data-[state=inactive]:hover:border-border
                 `}
               >
                 {t(`goals.${goal.slug}.label`, { defaultValue: goal.label })}

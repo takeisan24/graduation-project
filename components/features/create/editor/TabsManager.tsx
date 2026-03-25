@@ -103,7 +103,7 @@ export default function TabsManager() {
             <div 
                 ref={scrollContainerRef}
                 onWheel={handleWheel}
-                className="flex items-center gap-2 min-w-0 flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent"
+                className="flex items-center gap-2 min-w-0 flex-1 overflow-x-auto scrollbar-thin scrollbar-thumb-muted-foreground/30 scrollbar-track-transparent"
             >
                 {/* Show all tabs when expanded, or show first 4 when collapsed */}
                 {posts.map((post, index) => {
@@ -117,8 +117,8 @@ export default function TabsManager() {
                             key={post.id}
                             className={`flex items-center gap-1.5 px-2 lg:px-2.5 py-1.5 cursor-pointer rounded-t-lg transition-all flex-shrink-0 ${
                                 selectedPostId === post.id
-                                    ? "border-b-2 border-[#E33265] text-white bg-[#2A2A30]"
-                                    : "border-b border-transparent text-gray-400 hover:text-white hover:bg-[#2A2A30]/50"
+                                    ? "border-b-2 border-primary text-foreground bg-card"
+                                    : "border-b border-transparent text-muted-foreground hover:text-foreground hover:bg-card/50"
                             }`}
                             onClick={() => handlePostSelect(post.id)}
                         >
@@ -151,7 +151,7 @@ export default function TabsManager() {
                 {posts.length > 4 && (
                     <button
                         onClick={() => setIsTabsCollapsed(!isTabsCollapsed)}
-                        className="flex-shrink-0 px-1.5 py-1 text-xs text-gray-400 hover:text-white transition-colors flex items-center gap-0.5 rounded-lg hover:bg-[#2A2A30]/50"
+                        className="flex-shrink-0 px-1.5 py-1 text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-0.5 rounded-lg hover:bg-card/50"
                     >
                         {isTabsCollapsed ? (
                             <>
@@ -173,21 +173,21 @@ export default function TabsManager() {
                 <Button 
                     variant="outline" 
                     size="sm" 
-                    className="border-2 border-[#7C3AED] text-white bg-[#7C3AED]/10 hover:bg-[#7C3AED]/20 hover:border-[#7C3AED] hover:shadow-lg hover:shadow-[#7C3AED]/30 transition-all duration-300 relative group"
+                    className="border-2 border-accent text-foreground bg-accent/10 hover:bg-accent/20 hover:border-accent hover:shadow-lg hover:shadow-accent/30 transition-all duration-300 relative group"
                     onClick={() => setShowPostPicker(prev => !prev)}
                 >
                     {/* Pulse animation when: haven't seen tour AND no posts yet */}
                     {!hasSeenTour && posts.length === 0 && (
                         <span className="absolute -top-1 -right-1 flex h-3 w-3 z-10">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7C3AED] opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-3 w-3 bg-[#7C3AED]"></span>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-accent"></span>
                         </span>
                     )}
                     <PlusIcon className={`w-4 h-4 group-hover:rotate-90 transition-transform duration-300 ${posts.length > 0 ? '' : 'mr-1.5'}`} />
                     {posts.length === 0 && <span>{t('addPost')}</span>}
                 </Button>
                 {showPostPicker && (
-                    <div className="absolute right-0 top-full z-20 mt-2 w-[13.75rem] bg-[#2A2A30] border border-[#3A3A42] rounded-lg shadow-lg p-3">
+                    <div className="absolute right-0 top-full z-20 mt-2 w-[13.75rem] bg-card border border-border rounded-lg shadow-lg p-3">
                         <div className="space-y-1">
                             {platformOptions.map((option) => (
                                 <button
@@ -196,7 +196,7 @@ export default function TabsManager() {
                                         handlePostCreate(option.name);
                                         setShowPostPicker(false);
                                     }}
-                                    className="w-full text-left px-4 py-3 rounded-md hover:bg-white/5 text-base text-gray-200 flex items-center gap-4"
+                                    className="w-full text-left px-4 py-3 rounded-md hover:bg-secondary text-base text-muted-foreground flex items-center gap-4"
                                 >
                                     <img src={option.icon} alt={option.name} className={`w-7 h-7 ${["Twitter", "Threads"].includes(option.name) ? "filter brightness-0 invert" : ""}`} />
                                     <span>{option.name}</span>

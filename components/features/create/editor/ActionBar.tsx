@@ -129,9 +129,9 @@ export default function ActionBar() {
   };
 
   return (
-    <div className="sticky bottom-0 left-0 right-0 bg-[#44424D]">
+    <div className="sticky bottom-0 left-0 right-0 bg-muted">
       {/* Use 15px top padding for buttons and 0 bottom to tighten bottom spacing */}
-      <div className="relative border-t border-white/10 pt-[15px] pb-0 flex items-center justify-between opacity-100">
+      <div className="relative border-t border-border pt-[15px] pb-0 flex items-center justify-between opacity-100">
         {/* Character and Credit count aligned to the right, above line */}
         {/* Place count above divider with a 15px gap below it. Approx height ~16px => offset 16 + 15 = 31px */}
         <div className="absolute -top-[31px] right-0 flex items-center gap-3 pr-[10px]">
@@ -139,7 +139,7 @@ export default function ActionBar() {
             <Coins className="w-3.5 h-3.5" />
             {creditsRemaining}
           </span>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-muted-foreground">
             {(postContents[selectedPostId] ?? "").length}/{getCharLimit()} {t('characterCount')}
           </span>
         </div>
@@ -158,7 +158,7 @@ export default function ActionBar() {
             <Button
               size="sm"
               variant="outline"
-              className="h-9 px-3 lg:px-4 cursor-pointer bg-black hover:bg-[#E33265]/50 hover:border-[#E33265]/80 border-black text-white"
+              className="h-9 px-3 lg:px-4 cursor-pointer bg-background hover:bg-primary/50 hover:border-primary/80 border-background text-foreground"
               asChild
             >
               <span className="flex items-center gap-2">
@@ -174,7 +174,7 @@ export default function ActionBar() {
               ref={generateButtonRef}
               size="sm"
               variant="outline"
-              className="h-9 px-3 lg:px-4 bg-black hover:bg-[#7C3AED]/50 hover:border-[#7C3AED]/80 border-black text-white"
+              className="h-9 px-3 lg:px-4 bg-background hover:bg-accent/50 hover:border-accent/80 border-background text-foreground"
               onClick={() => setShowGenerateMenu(!showGenerateMenu)}
             >
               <SparklesIcon className="w-4 h-4 lg:mr-2" />
@@ -187,7 +187,7 @@ export default function ActionBar() {
           {showGenerateMenu && (
             <div
               ref={generateMenuRef}
-              className="fixed w-48 bg-[#2A2A30] border border-[#3A3A42] rounded-md shadow-2xl py-2 z-[9999]"
+              className="fixed w-48 bg-card border border-border rounded-md shadow-2xl py-2 z-[9999]"
               style={{
                 top: `${menuPosition.top}px`,
                 left: `${menuPosition.left}px`
@@ -199,7 +199,7 @@ export default function ActionBar() {
                   setIsImageGenModalOpen(true, 'content');
                   setShowGenerateMenu(false);
                 }}
-                className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/5 flex items-center gap-3"
+                className="w-full text-left px-4 py-2 text-sm text-muted-foreground hover:bg-secondary flex items-center gap-3"
               >
                 <ImageIcon className="w-4 h-4" />
                 {t('generateImage')}
@@ -210,7 +210,7 @@ export default function ActionBar() {
                   setIsVideoGenModalOpen(true);
                   setShowGenerateMenu(false);
                 }}
-                className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/5 flex items-center gap-3"
+                className="w-full text-left px-4 py-2 text-sm text-muted-foreground hover:bg-secondary flex items-center gap-3"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -223,7 +223,7 @@ export default function ActionBar() {
                   setIsMediaLibraryModalOpen(true);
                   setShowGenerateMenu(false);
                 }}
-                className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/5 flex items-center gap-3"
+                className="w-full text-left px-4 py-2 text-sm text-muted-foreground hover:bg-secondary flex items-center gap-3"
               >
                 <ImageIcon className="w-4 h-4" />
                 {t('mediaLibrary')}
@@ -286,7 +286,7 @@ export default function ActionBar() {
           <Button
             size="sm"
             variant="outline"
-            className="h-9 px-3 lg:px-4 border-[#E33265] text-white hover:bg-[#E33265]/10"
+            className="h-9 px-3 lg:px-4 border-primary text-foreground hover:bg-primary/10"
             onClick={() => {
               if (!selectedPostId) return;
               handleClonePost(selectedPostId, postMedia, (newPostId, clonedMedia) => {
@@ -306,7 +306,7 @@ export default function ActionBar() {
           <Button
             size="sm"
             variant="outline"
-            className="h-9 px-3 lg:px-4 lg:w-16 border-[#E33265] text-white hover:bg-[#E33265]/10 transition-all"
+            className="h-9 px-3 lg:px-4 lg:w-16 border-primary text-foreground hover:bg-primary/10 transition-all"
             onClick={() => {
               if (!selectedPostId || !currentPost) return;
               const content = postContents[selectedPostId] || '';
@@ -329,7 +329,7 @@ export default function ActionBar() {
 
           <Button
             onClick={() => setIsPublishModalOpen(true)}
-            className="h-9 px-4 bg-[#E33265] hover:bg-[#c52b57] text-white shadow-lg shadow-[#E33265]/20"
+            className="h-9 px-4 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
           >
             <span className="flex items-center gap-2">
               <span className="hidden lg:inline text-sm font-bold">{t('publish')}</span>
@@ -345,12 +345,12 @@ export default function ActionBar() {
 
       {/* Target Language Dialog */}
       <Dialog open={isTranslateDialogOpen} onOpenChange={setIsTranslateDialogOpen}>
-        <DialogContent className="bg-[#2A2A30] border-[#3A3A42] text-white sm:max-w-md p-2 sm:p-4 shadow-2xl rounded-2xl">
+        <DialogContent className="bg-card border-border text-foreground sm:max-w-md p-2 sm:p-4 shadow-2xl rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">Chọn ngôn ngữ đích</DialogTitle>
-            <DialogDescription className="text-gray-400 mt-1.5 flex flex-col gap-1">
+            <DialogDescription className="text-muted-foreground mt-1.5 flex flex-col gap-1">
               <span>Bạn muốn dịch bài viết sang ngôn ngữ nào?</span>
-              <span className="flex items-center gap-1 text-[#E33265] font-medium text-xs bg-[#E33265]/10 w-fit px-2 py-0.5 rounded-md mt-1">
+              <span className="flex items-center gap-1 text-primary font-medium text-xs bg-primary/10 w-fit px-2 py-0.5 rounded-md mt-1">
                 <SparklesIcon className="w-3 h-3" /> Chi phí: 1 Credit
               </span>
             </DialogDescription>
@@ -360,7 +360,7 @@ export default function ActionBar() {
             <select 
               value={targetLanguage}
               onChange={(e) => setTargetLanguage(e.target.value)}
-              className="w-full bg-[#1E1E23] border border-white/10 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-blue-500/50 shadow-inner"
+              className="w-full bg-background border border-border rounded-xl p-3.5 text-sm text-foreground focus:outline-none focus:border-blue-500/50 shadow-inner"
             >
               <option value="vi">Tiếng Việt</option>
               <option value="en">Tiếng Anh (English)</option>
@@ -376,7 +376,7 @@ export default function ActionBar() {
             <Button 
               variant="outline" 
               onClick={() => setIsTranslateDialogOpen(false)}
-              className="border-white/10 text-gray-300 hover:text-white hover:bg-[#3A3A42]/50 bg-transparent rounded-lg"
+              className="border-border text-muted-foreground hover:text-foreground hover:bg-muted/50 bg-transparent rounded-lg"
             >
               Hủy
             </Button>

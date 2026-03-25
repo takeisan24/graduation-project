@@ -5,9 +5,11 @@ import { X as CloseIcon, Download } from 'lucide-react';
 import { useCreateLightboxStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 
 
 export default function LightboxModal() {
+  const t = useTranslations('CreatePage.createSection.lightboxModal');
   // Lấy state và action từ store
   const { lightboxMedia, closeLightbox } = useCreateLightboxStore(useShallow(state => ({
     lightboxMedia: state.lightboxMedia,
@@ -30,10 +32,10 @@ export default function LightboxModal() {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
-      toast.success("Đã tải xuống thành công!");
+      toast.success(t('downloadSuccess'));
     } catch (error) {
       console.error("Download error:", error);
-      toast.error("Không thể tải xuống tệp tin.");
+      toast.error(t('downloadError'));
     }
   };
 
@@ -53,7 +55,7 @@ export default function LightboxModal() {
       >
         <div className="absolute -top-14 right-0 flex gap-3">
           <button
-            className="bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-4 py-2 text-white flex items-center gap-2 transition-all shadow-lg border border-white/5 active:scale-95"
+            className="bg-secondary backdrop-blur-sm hover:bg-secondary/80 rounded-lg px-4 py-2 text-foreground flex items-center gap-2 transition-all shadow-lg border border-border active:scale-95"
             onClick={handleDownload}
             aria-label="Tải xuống"
           >
@@ -62,7 +64,7 @@ export default function LightboxModal() {
           </button>
 
           <button
-            className="bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg p-2.5 text-white transition-all shadow-lg border border-white/5 active:scale-95"
+            className="bg-secondary backdrop-blur-sm hover:bg-secondary/80 rounded-lg p-2.5 text-foreground transition-all shadow-lg border border-border active:scale-95"
             onClick={closeLightbox}
             aria-label="Đóng"
           >
@@ -74,7 +76,7 @@ export default function LightboxModal() {
           <img
             src={url}
             alt="Ảnh phóng to"
-            className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-white/5"
+            className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-border"
           />
         ) : (
           <video
@@ -82,7 +84,7 @@ export default function LightboxModal() {
             controls
             autoPlay
             loop
-            className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-white/5"
+            className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl border border-border"
           />
         )}
       </div>

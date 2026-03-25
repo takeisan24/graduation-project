@@ -24,8 +24,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     }
 
     return success(project);
-  } catch (err: any) {
-    console.error("GET /api/projects/[id] error:", err);
-    return fail(err.message || "Server error", 500);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("GET /api/projects/[id] error:", message);
+    return fail(message, 500);
   }
 }

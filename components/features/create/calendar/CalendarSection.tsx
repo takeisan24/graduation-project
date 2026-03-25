@@ -10,6 +10,7 @@ import { formatTime24h } from "@/lib/utils/date";
 import { toast } from "sonner";
 import { autoUpdatePublishingStatus as autoUpdatePublishingStatusFn } from "@/store/shared/statusCheck";
 import { CALENDAR_ERRORS } from "@/lib/messages/errors";
+import { useTranslations } from "next-intl";
 
 // Import các component con đã tạo
 import { CalendarToolbar } from "./CalendarToolbar";
@@ -20,20 +21,20 @@ import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 
 // --- HELPER FUNCTIONS (Tách ra từ file backup) ---
 
-const getNoteText = (event: CalendarEvent): string => {
+const getNoteTextWithT = (event: CalendarEvent, t: (key: string) => string): string => {
     const formattedTime = formatTime24h(event.time);
     const hasTime = Boolean(formattedTime);
     switch (event.noteType) {
         case 'green':
-            return hasTime ? `Đã đăng ${formattedTime}` : 'Đã đăng';
+            return hasTime ? `${t('posted')} ${formattedTime}` : t('posted');
         case 'blue':
-            return hasTime ? `Đang đăng bài... ${formattedTime}` : 'Đang đăng bài...';
+            return hasTime ? `${t('publishing')} ${formattedTime}` : t('publishing');
         case 'yellow':
             const hasContentOrTime = !!(event.content || event.time);
-            if (!hasContentOrTime) return 'Trống';
-            return hasTime ? `Lên lịch ${formattedTime}` : 'Lên lịch';
+            if (!hasContentOrTime) return t('empty');
+            return hasTime ? `${t('scheduled')} ${formattedTime}` : t('scheduled');
         case 'red':
-            return hasTime ? `Thất bại ${formattedTime}` : 'Thất bại';
+            return hasTime ? `${t('failed')} ${formattedTime}` : t('failed');
         default:
             return hasTime ? `${event.platform} ${formattedTime}` : event.platform;
     }
@@ -43,6 +44,7 @@ const getNoteText = (event: CalendarEvent): string => {
 type DeleteModalState = { event: CalendarEvent; date: Date } | null;
 
 export default function CalendarSection() {
+    const t = useTranslations('CreatePage.calendarSection');
     const router = useRouter();
     // Lấy các action cần thiết từ Zustand store
     const { calendarEvents, addEvent, updateEvent, deleteEvent } = useCalendarStore(
@@ -83,6 +85,8 @@ export default function CalendarSection() {
         return startOfWeek;
     }, []);
     const [currentWeekStart, setCurrentWeekStart] = useState<Date>(getMondayOfCurrentWeek());
+
+    const getNoteText = useCallback((event: CalendarEvent) => getNoteTextWithT(event, t), [t]);
 
     // Auto-update posts to "publishing" status when scheduled time arrives
     // Also set up interval to check periodically when user is on calendar page
@@ -198,7 +202,7 @@ export default function CalendarSection() {
 
             if (data.platform) { // Kéo từ icon
                 addEvent(date.getFullYear(), date.getMonth(), date.getDate(), data.platform, time);
-                toast.success(`Đã thêm lịch cho ${data.platform}.`);
+                toast.success(t('addedSchedule', { platform: data.platform }));
             } else if (data.event && data.oldDate) { // Kéo từ một event đã có
                 const oldDate = new Date(data.oldDate);
                 const newTime =  time || data.event.time;
@@ -206,7 +210,7 @@ export default function CalendarSection() {
                     oldDate.getFullYear(), oldDate.getMonth(), oldDate.getDate(), data.event,
                     date.getFullYear(), date.getMonth(), date.getDate(), newTime 
                 );
-                toast.info("Đã cập nhật vị trí sự kiện.");
+                toast.info(t('eventMoved'));
             }
         } catch (err) { console.error("Drop failed:", err); toast.error(CALENDAR_ERRORS.DROP_FAILED); }
     };
