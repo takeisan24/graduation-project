@@ -36,14 +36,8 @@ settings.json
 
 #md_file
 *.md
-!CLAUDE.md
-!.claude/**/*.md
 !specs/**/*.md
 *.rar
-
-# Local overrides (gitignored)
-CLAUDE.local.md
-.claude/settings.local.json
 
 #Copilot insturctions
 .github
@@ -54,3 +48,8 @@ PROMPT.md
 
 # Agent files
 .agent
+
+# AI tools config
+.claude/
+CLAUDE.md
+CLAUDE.local.md
