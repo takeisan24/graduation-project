@@ -35,7 +35,7 @@ export default function TestimonialSection() {
   return (
     <section className="py-20 md:py-32">
       {/* THÊM LỚP BỌC BÊN NGOÀI */}
-      <div className="container mx-auto px-4 border border-white/30 bg-white/[.03] rounded-2xl p-8 md:p-16">
+      <div className="container mx-auto px-4 border border-border bg-muted/30 rounded-2xl p-8 md:p-16">
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
           
           {/* CỘT BÊN TRÁI: QUOTE VÀ THÔNG TIN TÁC GIẢ */}
@@ -48,7 +48,7 @@ export default function TestimonialSection() {
           >
             <div className="mb-6">
               <Image 
-                src="/placeholder-logo.svg" // Thay bằng logo thật
+                src="/images/placeholder-logo.svg"
                 alt="Company Logo"
                 width={150}
                 height={40}
@@ -60,7 +60,7 @@ export default function TestimonialSection() {
             </blockquote>
             <div className="flex items-center gap-4">
               <Image 
-                src="/shego.jpg" // Thay bằng ảnh chân dung thật
+                src="/images/shego.jpg"
                 alt={t('author.name')}
                 width={56}
                 height={56}

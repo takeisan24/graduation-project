@@ -59,14 +59,13 @@ export const SYSTEM_PROMPTS = {
  * Platform-specific context instructions
  */
 export const PLATFORM_CONTEXTS = {
-  instagram: "Instagram: Focus on visual appeal, hashtags, emojis, and community engagement.",
   tiktok: "TikTok: Focus on viral potential, trending elements, short-form content, and youth appeal.",
-  x: "X (Twitter): Focus on concise messaging, current events, and thought leadership.",
-  linkedin: "LinkedIn: Focus on professional value, industry insights, and business networking.",
-  facebook: "Facebook: Focus on community building, shareable content, and diverse audience appeal.",
-  threads: "Threads: Focus on conversational tone, personal connection, and Instagram-inspired engagement.",
-  bluesky: "Bluesky: Focus on thoughtful discourse, community building, and decentralized social media values.",
+  instagram: "Instagram: Focus on visual appeal, hashtags, emojis, and community engagement.",
   youtube: "YouTube: Focus on SEO optimization, detailed descriptions, and audience retention strategies.",
+  facebook: "Facebook: Focus on community building, shareable content, and diverse audience appeal.",
+  x: "X (Twitter): Focus on concise messaging, current events, and thought leadership.",
+  threads: "Threads: Focus on conversational tone, personal connection, and Instagram-inspired engagement.",
+  linkedin: "LinkedIn: Focus on professional value, industry insights, and business networking.",
   pinterest: "Pinterest: Focus on keyword-rich descriptions, lifestyle inspiration, and visual discovery."
 } as const;
 
@@ -180,9 +179,6 @@ export const TEXT_GENERATION_PROMPTS = {
 
     threads: (extracted: { title: string; summary: string }) =>
       `Create a Threads post based on: ${extracted.title}. Summary: ${extracted.summary}. Keep it conversational and engaging.`,
-
-    bluesky: (extracted: { title: string; summary: string }) =>
-      `Create a Bluesky post based on: ${extracted.title}. Summary: ${extracted.summary}. Focus on thoughtful discourse.`,
 
     youtube: (extracted: { title: string; summary: string }) =>
       `Create a YouTube description based on: ${extracted.title}. Summary: ${extracted.summary}. Include SEO keywords and timestamps.`,

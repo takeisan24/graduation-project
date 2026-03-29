@@ -36,7 +36,7 @@ export async function generateContentForPlatforms({
   sourceContent,
   filePublicUrl,
   userId,
-  platforms = ['instagram', 'tiktok', 'x', 'linkedin', 'facebook', 'threads', 'bluesky', 'youtube', 'pinterest'],
+  platforms = ['tiktok', 'instagram', 'youtube', 'facebook', 'x', 'threads', 'linkedin', 'pinterest'],
   mediaTypes = ['text', 'image'],
   textModel,
   imageModel,

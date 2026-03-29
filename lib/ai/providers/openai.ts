@@ -394,7 +394,6 @@ export class OpenAIProvider {
       linkedin: `Create a professional LinkedIn post that adds value. Title: ${extracted.title}. Summary: ${extracted.summary}`,
       facebook: `Create an engaging Facebook post. Post length should be flexible. Title: ${extracted.title}. Summary: ${extracted.summary}`,
       threads: `Create a Threads post that's conversational and engaging, similar to Twitter but more personal. Title: ${extracted.title}. Summary: ${extracted.summary}`,
-      bluesky: `Create a Bluesky post that's thoughtful and community-focused. Title: ${extracted.title}. Summary: ${extracted.summary}`,
       youtube: `Create a YouTube video description that's SEO-optimized and engaging. Title: ${extracted.title}. Summary: ${extracted.summary}`,
       pinterest: `Create a Pinterest pin description that's keyword-rich and inspiring. Title: ${extracted.title}. Summary: ${extracted.summary}`
     };

@@ -63,7 +63,7 @@ export const useCreateChatStore = create<CreateChatState>((set, get) => ({
     //     const geminiSystemInstruction = `
     //     Bạn là một trợ lý viết bài cho mạng xã hội chuyên nghiệp. 
 
-    //     Nhiệm vụ của bạn là giúp người dùng tạo nội dung hấp dẫn cho các nền tảng như Facebook, Twitter, Instagram, LinkedIn, TikTok, Threads, Bluesky, YouTube, Pinterest.
+    //     Nhiệm vụ của bạn là giúp người dùng tạo nội dung hấp dẫn cho các nền tảng như Facebook, Twitter, Instagram, LinkedIn, TikTok, Threads, YouTube, Pinterest.
 
     //     Khi người dùng yêu cầu tạo bài đăng, hãy trả lời theo định dạng JSON sau:
 
@@ -76,7 +76,7 @@ export const useCreateChatStore = create<CreateChatState>((set, get) => ({
     //     }
     //     \`\`\`
 
-    //     Các "Tên nền tảng" hợp lệ là: Facebook, Twitter, Instagram, LinkedIn, TikTok, Threads, Bluesky, YouTube, Pinterest.
+    //     Các "Tên nền tảng" hợp lệ là: Facebook, Twitter, Instagram, LinkedIn, TikTok, Threads, YouTube, Pinterest.
 
     //     Nếu người dùng chỉ hỏi chung chung hoặc cần trợ giúp khác, hãy trả lời bằng văn bản thuần túy, thân thiện và hữu ích.
 
@@ -87,7 +87,7 @@ export const useCreateChatStore = create<CreateChatState>((set, get) => ({
     //     const openAISystemInstruction = `
     //     Bạn là một trợ lý viết bài cho mạng xã hội chuyên nghiệp. 
 
-    //     Nhiệm vụ của bạn là giúp người dùng tạo nội dung hấp dẫn cho các nền tảng như Facebook, Twitter, Instagram, LinkedIn, TikTok, Threads, Bluesky, YouTube, Pinterest.
+    //     Nhiệm vụ của bạn là giúp người dùng tạo nội dung hấp dẫn cho các nền tảng như Facebook, Twitter, Instagram, LinkedIn, TikTok, Threads, YouTube, Pinterest.
 
     //     Khi người dùng yêu cầu tạo NHIỀU bài đăng cho nhiều nền tảng trong CÙNG MỘT LẦN, bạn phải tạo RIÊNG TỪNG BÀI cho TỪNG nền tảng.
     //     Mỗi nền tảng tương ứng với MỘT phần tử trong mảng JSON.
@@ -113,7 +113,7 @@ export const useCreateChatStore = create<CreateChatState>((set, get) => ({
     //     - Mỗi phần tử trong mảng chỉ được chứa DUY NHẤT một nền tảng trong field "platform" (ví dụ: "Facebook" hoặc "Instagram"), KHÔNG gộp nhiều nền tảng vào cùng một chuỗi.
     //     - Nếu người dùng yêu cầu 4 nền tảng (Facebook, Instagram, TikTok, LinkedIn), bạn phải trả về MẢNG 4 PHẦN TỬ, mỗi phần tử là một bài riêng cho từng nền tảng.
 
-    //     Các "Tên nền tảng" hợp lệ là: Facebook, Twitter, Instagram, LinkedIn, TikTok, Threads, Bluesky, YouTube, Pinterest.
+    //     Các "Tên nền tảng" hợp lệ là: Facebook, Twitter, Instagram, LinkedIn, TikTok, Threads, YouTube, Pinterest.
 
     //     Nếu người dùng chỉ hỏi chung chung hoặc cần trợ giúp khác, hãy trả lời bằng văn bản thuần túy, thân thiện và hữu ích.
 
@@ -211,7 +211,7 @@ ${VIDEO_SCRIPT_TEMPLATES}
     ]
     \`\`\`
     
-    Valid Platforms: Facebook, Twitter, Instagram, LinkedIn, TikTok, Threads, Bluesky, YouTube, Pinterest.
+    Valid Platforms: Facebook, Twitter, Instagram, LinkedIn, TikTok, Threads, YouTube, Pinterest.
     EXCEPTION: If the user input is a general question (not a content creation request), reply normally.
     `;
 

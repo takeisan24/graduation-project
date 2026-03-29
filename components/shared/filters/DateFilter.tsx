@@ -36,7 +36,7 @@ export function DateFilter({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as 'newest' | 'oldest')}
-        className="appearance-none flex items-center gap-2 px-4 py-2 bg-[#2A2A30] border border-[#3A3A42] rounded-lg text-[#F5F5F7] hover:bg-[#3A3A42] transition-colors cursor-pointer pr-8"
+        className="appearance-none flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg text-foreground hover:bg-secondary transition-colors cursor-pointer pr-8"
       >
         <option value="newest">{tCommon('newest')}</option>
         <option value="oldest">{tCommon('oldest')}</option>

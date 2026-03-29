@@ -118,7 +118,6 @@ function generateImagePrompt(platform: string, extracted: { title: string; summa
     linkedin: "LinkedIn style, professional, business-focused, clean design",
     facebook: "Facebook style, engaging, colorful, social media optimized",
     threads: "Threads style, modern, clean, Instagram-inspired but more personal",
-    bluesky: "Bluesky style, thoughtful, community-focused, clean and modern",
     youtube: "YouTube thumbnail style, bold text, high contrast, click-worthy, 16:9 aspect ratio",
     pinterest: "Pinterest style, vertical format, inspiring, lifestyle-focused, high-quality"
   };
@@ -141,7 +140,6 @@ function generateVideoPrompt(platform: string, extracted: { title: string; summa
     linkedin: "LinkedIn style, professional, educational",
     facebook: "Facebook style, engaging, shareable, community-focused",
     threads: "Threads style, vertical, conversational, Instagram-inspired",
-    bluesky: "Bluesky style, thoughtful, community-focused, clean",
     youtube: "YouTube Shorts style, vertical, engaging, high-quality",
     pinterest: "Pinterest style, vertical, inspiring, lifestyle-focused"
   };
@@ -183,7 +181,7 @@ export async function refineContentWithAI({
 export async function generateAllPlatformContent(
   request: Omit<ContentGenerationRequest, 'platforms' | 'mediaTypes'>
 ): Promise<GeneratedContent[]> {
-  const platforms = ['instagram', 'tiktok', 'x', 'linkedin', 'facebook', 'threads', 'bluesky', 'youtube', 'pinterest'];
+  const platforms = ['tiktok', 'instagram', 'youtube', 'facebook', 'x', 'threads', 'linkedin', 'pinterest'];
   const mediaTypes: ('text' | 'image' | 'video')[] = ['text', 'image', 'video'];
 
   return generateContentForPlatforms({
@@ -201,7 +199,7 @@ export async function generateAllPlatformContent(
 export async function generateTextOnlyContent(
   request: Omit<ContentGenerationRequest, 'platforms' | 'mediaTypes'>
 ): Promise<GeneratedContent[]> {
-  const platforms = ['instagram', 'tiktok', 'x', 'linkedin', 'facebook', 'threads', 'bluesky', 'youtube', 'pinterest'];
+  const platforms = ['tiktok', 'instagram', 'youtube', 'facebook', 'x', 'threads', 'linkedin', 'pinterest'];
   const mediaTypes: ('text' | 'image' | 'video')[] = ['text'];
 
   return generateContentForPlatforms({
@@ -219,7 +217,7 @@ export async function generateTextOnlyContent(
 export async function generateImageOnlyContent(
   request: Omit<ContentGenerationRequest, 'platforms' | 'mediaTypes'>
 ): Promise<GeneratedContent[]> {
-  const platforms = ['instagram', 'tiktok', 'x', 'linkedin', 'facebook', 'threads', 'bluesky', 'youtube', 'pinterest'];
+  const platforms = ['tiktok', 'instagram', 'youtube', 'facebook', 'x', 'threads', 'linkedin', 'pinterest'];
   const mediaTypes: ('text' | 'image' | 'video')[] = ['text', 'image'];
 
   return generateContentForPlatforms({
@@ -237,7 +235,7 @@ export async function generateImageOnlyContent(
 export async function generateVideoOnlyContent(
   request: Omit<ContentGenerationRequest, 'platforms' | 'mediaTypes'>
 ): Promise<GeneratedContent[]> {
-  const platforms = ['instagram', 'tiktok', 'x', 'linkedin', 'facebook', 'threads', 'bluesky', 'youtube', 'pinterest'];
+  const platforms = ['tiktok', 'instagram', 'youtube', 'facebook', 'x', 'threads', 'linkedin', 'pinterest'];
   const mediaTypes: ('text' | 'image' | 'video')[] = ['text', 'video'];
 
   return generateContentForPlatforms({

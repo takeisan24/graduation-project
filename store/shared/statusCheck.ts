@@ -190,14 +190,12 @@ export async function checkPostStatusAtScheduledTime(
       saveToLocalStorage('pendingScheduledPosts', remainingPosts);
 
       if (data.statusChanged && isFinal) {
-        console.log(`[checkPostStatusAtScheduledTime] ✅ Post ${postId} status changed to ${resolvedStatus}`);
         // Avoid duplicate toast - check if we've already shown toast for this post
         // Also check if immediate publish already showed toast
         const toastKey = `${postId}-${resolvedStatus}`;
         const immediatePublishKey = typeof window !== 'undefined' ? sessionStorage.getItem(`immediate-publish-${postId}`) : null;
 
         if (shownToastForPosts.has(toastKey) || immediatePublishKey === 'true') {
-          console.log(`[checkPostStatusAtScheduledTime] Toast already shown for post ${postId} with status ${resolvedStatus}, skipping`);
         } else {
           // Format time detail for toast message
           const scheduledDateTime = new Date(scheduledAt);
@@ -232,7 +230,6 @@ export async function checkPostStatusAtScheduledTime(
   const statusCheckBuffer = getStatusCheckBuffer(platform);
   const checkDelay = delay + statusCheckBuffer;
 
-  console.log(`[checkPostStatusAtScheduledTime] Will check post ${postId} in ${Math.round(checkDelay / 1000)}s (platform: ${platform || 'unknown'}, buffer: ${Math.round(statusCheckBuffer / 1000)}s, scheduled: ${scheduledAt}, now: ${now.toISOString()})`);
 
   const timerId = setTimeout(executeStatusCheck, checkDelay);
   scheduledStatusCheckTimers[postId] = timerId;
@@ -257,7 +254,6 @@ export async function checkPendingScheduledPosts(options: {
     let pendingEntries: PendingScheduledPost[] = [...pendingPosts];
 
     if (pendingPosts.length === 0) {
-      console.log('[checkPendingScheduledPosts] No pending posts to check');
       return;
     }
 
@@ -274,7 +270,6 @@ export async function checkPendingScheduledPosts(options: {
 
     if (validPendingPosts.length < pendingPosts.length) {
       const removedCount = pendingPosts.length - validPendingPosts.length;
-      console.log(`[checkPendingScheduledPosts] Cleaned up ${removedCount} old pending post(s) from localStorage`);
       saveToLocalStorage('pendingScheduledPosts', validPendingPosts);
       pendingEntries = validPendingPosts;
     }
@@ -320,7 +315,6 @@ export async function checkPendingScheduledPosts(options: {
             const normalizedStatus = normalizeLateLifecycleStatus(postData.status);
 
             if (isFinalLateStatus(normalizedStatus)) {
-              console.log(`[checkPendingScheduledPosts] Post ${p.postId} already has final status: ${normalizedStatus}, removing from localStorage`);
               postsToRemove.push(p.postId);
               continue;
             }
@@ -365,15 +359,12 @@ export async function checkPendingScheduledPosts(options: {
       });
       pendingEntries = pendingEntries.filter(p => !postsToRemove.includes(p.postId));
       saveToLocalStorage('pendingScheduledPosts', pendingEntries);
-      console.log(`[checkPendingScheduledPosts] Removed ${postsToRemove.length} posts from localStorage (already in final state or not found)`);
     }
 
     if (postsToCheckFromDB.length === 0) {
-      console.log('[checkPendingScheduledPosts] No posts ready to check yet (all are either already final or not yet due)');
       return;
     }
 
-    console.log(`[checkPendingScheduledPosts] Checking ${postsToCheckFromDB.length} pending posts`);
 
     const response = await fetch('/api/late/posts/check-pending', {
       method: 'POST',
@@ -396,7 +387,6 @@ export async function checkPendingScheduledPosts(options: {
     const data = result?.data ?? result;
 
     if (data.results && data.results.length > 0) {
-      console.log(`[checkPendingScheduledPosts] ✅ Checked ${data.results.length} posts`);
 
       const pendingMap = new Map(pendingEntries.map((entry) => [entry.postId, entry]));
       const statusUpdates: Array<{ postId: string; status: LateLifecycleStatus; url?: string | null; platform?: string | null }> = [];
@@ -499,7 +489,6 @@ export async function checkPendingScheduledPosts(options: {
           const immediatePublishKey = typeof window !== 'undefined' ? sessionStorage.getItem(`immediate-publish-${postIdStr}`) : null;
 
           if (shownToastForPosts.has(toastKey) || immediatePublishKey === 'true') {
-            console.log(`[checkPendingPostsWithStores] Toast already shown for post ${postIdStr} with status ${resolvedStatus}, skipping`);
             return;
           }
 
@@ -658,7 +647,6 @@ export async function autoUpdatePublishingStatus(
   }
 
   if (hasChanges && updates.length > 0) {
-    console.log(`[autoUpdatePublishingStatus] Updating ${updates.length} post(s) to "publishing" status`);
     onUpdate(updates);
   }
 }

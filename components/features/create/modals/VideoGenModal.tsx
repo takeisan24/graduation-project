@@ -164,7 +164,7 @@ export default function VideoGenModal() {
             </div>
             {/* Person Generation - Temporarily Commented */}
             {/* <div>
-                  <label className="block text-white mb-2 text-sm font-medium">{t('safetyLabel')}</label>
+                  <label className="block text-foreground mb-2 text-sm font-medium">{t('safetyLabel')}</label>
                   <select
                     value={videoPersonGeneration}
                     onChange={(e) => setVideoPersonGeneration(e.target.value as typeof videoPersonGeneration)}

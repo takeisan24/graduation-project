@@ -43,14 +43,14 @@ export function CalendarToolbar({
   return (
     <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-4 mb-2 mt-1 mr-2 lg:mr-8 px-2 lg:px-0">
       <div className="flex items-center gap-2">
-        <Button size="icon" variant="ghost" className="w-8 h-8 text-white/80 hover:text-white" onClick={onPrev}>‹</Button>
-        <div className="px-2 lg:px-4 py-1 rounded-md border border-white/20 bg-white/10 text-white flex items-center justify-center min-w-[140px] lg:min-w-[180px] text-sm lg:text-base">
+        <Button size="icon" variant="ghost" className="w-8 h-8 text-muted-foreground hover:text-foreground" onClick={onPrev}>‹</Button>
+        <div className="px-2 lg:px-4 py-1 rounded-md border border-border bg-secondary text-foreground flex items-center justify-center min-w-[140px] lg:min-w-[180px] text-sm lg:text-base">
           {calendarView === 'monthly' ? `${months[currentMonth]}, ${currentYear}` : getWeekRangeLabel()}
         </div>
-        <Button size="icon" variant="ghost" className="w-8 h-8 text-white/80 hover:text-white" onClick={onNext}>›</Button>
+        <Button size="icon" variant="ghost" className="w-8 h-8 text-muted-foreground hover:text-foreground" onClick={onNext}>›</Button>
       </div>
       
-      <div className="flex-grow flex justify-start lg:justify-center items-center gap-3 sm:gap-4 md:gap-6 lg:gap-10 order-last md:order-none w-full md:w-auto mt-4 md:mt-0 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 pb-2">
+      <div className="flex-grow flex justify-start lg:justify-center items-center gap-3 sm:gap-4 md:gap-6 lg:gap-10 order-last md:order-none w-full md:w-auto mt-4 md:mt-0 overflow-x-auto scrollbar-thin scrollbar-thumb-muted-foreground/30 pb-2">
         {SOCIAL_PLATFORMS.map((platform) => (
           <img
             key={platform.name}
@@ -65,7 +65,7 @@ export function CalendarToolbar({
         ))}
       </div>
 
-      <div className="inline-flex rounded-lg overflow-hidden border border-white/10 ml-auto md:ml-4">
+      <div className="inline-flex rounded-lg overflow-hidden border border-border ml-auto md:ml-4">
         <Button variant={calendarView === 'monthly' ? 'secondary' : 'ghost'} size="sm" onClick={() => onSetView('monthly')} className={`text-xs lg:text-sm ${calendarView === 'monthly' ? 'bg-white/10' : ''}`}>{t('month')}</Button>
         <Button variant={calendarView === 'weekly' ? 'secondary' : 'ghost'} size="sm" onClick={() => onSetView('weekly')} className={`text-xs lg:text-sm ${calendarView === 'weekly' ? 'bg-white/10' : ''}`}>{t('week')}</Button>
       </div>

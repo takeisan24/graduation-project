@@ -55,7 +55,7 @@ export default function AIChatbox() {
     // const systemKeywords = [
     //     "Đã tạo", "Đã xong", "Đã cập nhật", "Đã lên lịch", "Đã thêm",
     //     "Xin lỗi", "Rất tiếc", "Đã có lỗi", "Bài", "Caption", "Tweet",
-    //     "Facebook", "Twitter", "Instagram", "LinkedIn", "TikTok", "Threads", "Bluesky", "YouTube", "Pinterest"
+    //     "Facebook", "Twitter", "Instagram", "LinkedIn", "TikTok", "Threads", "YouTube", "Pinterest"
     // ];
 
     // const startsWithSystemKeyword = systemKeywords.some(keyword => 

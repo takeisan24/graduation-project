@@ -221,7 +221,6 @@ YÊU CẦU NGHIÊM NGẶT:
           }
         ];
 
-        console.log('[YouTube] Passing YouTube URL to service layer for processing:', resourceUrl);
       } else if (sourceType === 'tiktok') {
         promptParts = [
           `${idea}\n${instructions}\n\nNguồn video (TikTok): ${resourceUrl}\nHãy truy cập và trích xuất ý chính rồi tạo bài theo định dạng JSON yêu cầu.`,
@@ -280,7 +279,6 @@ YÊU CẦU NGHIÊM NGẶT:
       // Chỉ lưu nếu sourceType là YouTube (extractedContent chỉ có khi gen từ YouTube)
       if (data?.extractedContent && sourceType === 'youtube') {
         set({ extractedContent: data.extractedContent });
-        console.log('[Sources] Saved extracted content for chat AI:', data.extractedContent.substring(0, 100) + '...');
       } else if (sourceType !== 'youtube') {
         // Clear extractedContent nếu gen từ nguồn khác (không phải YouTube)
         // để tránh dùng content cũ từ lần gen trước

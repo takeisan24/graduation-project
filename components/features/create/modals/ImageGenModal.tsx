@@ -156,10 +156,10 @@ export default function ImageGenModal() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-0.5">
-                    <span className="text-sm font-medium text-blue-200">
+                    <span className="text-sm font-medium text-foreground">
                       Google Search
                     </span>
-                    <span className="text-[10px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded border border-blue-500/30">
+                    <span className="text-[10px] bg-blue-500/20 text-muted-foreground px-1.5 py-0.5 rounded border border-blue-500/30">
                       Real-time
                     </span>
                   </div>
@@ -185,7 +185,7 @@ export default function ImageGenModal() {
             <Button variant="outline" className="border-border text-foreground hover:bg-secondary hover:border-border transition-colors" onClick={closeModal}>{t('cancel')}</Button>
             <Button className="bg-accent hover:bg-accent/90 text-white shadow-lg shadow-accent/20 transition-all" onClick={handleGenerateClick} disabled={!imagePrompt.trim() || isGenerating || isSubmitting}>
               {isGenerating ? (
-                <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />{t('generating')}</>
+                <><div className="w-4 h-4 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin mr-2" />{t('generating')}</>
               ) : (
                 <><SparklesIcon className="w-4 h-4 mr-2" />{t('generate')}</>
               )}

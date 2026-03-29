@@ -91,7 +91,6 @@ export function useAuth() {
         // Strict check: Only hydrate if USER ID CHANGED.
         // If it's the same user, it's just a session re-validation or token refresh that Supabase labeled as SIGNED_IN.
         if (!isSameUser) {
-          console.log('[useAuth] New user detected, hydrating stores');
           hasHydratedData = false;
           hydrateStores(currentSession);
           router.refresh();
@@ -99,10 +98,7 @@ export function useAuth() {
           // If same user, checking hasHydratedData to be extra safe, but primarily relying on isSameUser check.
           // If not hydrated yet for this user (unlikely if isSameUser is true), hydrate.
           if (!hasHydratedData) {
-            console.log('[useAuth] Same user but missing data, hydrating');
             hydrateStores(currentSession);
-          } else {
-            console.log('[useAuth] Session valid for same user, skipping re-hydration');
           }
         }
       } else if (event === 'SIGNED_OUT') {

@@ -105,7 +105,7 @@ create table if not exists connected_accounts (
   updated_at timestamptz default now(),
 
   constraint connected_accounts_platform_check check (
-    platform in ('instagram', 'tiktok', 'x', 'linkedin', 'facebook', 'threads', 'bluesky', 'youtube', 'pinterest')
+    platform in ('tiktok', 'instagram', 'youtube', 'facebook', 'x', 'threads', 'linkedin', 'pinterest')
   )
 );
 

@@ -35,14 +35,13 @@ type LateConnection = {
 }
 
 const PROVIDER_SLUGS: Record<string, string | null> = {
-  Facebook: "facebook",
+  TikTok: "tiktok",
   Instagram: "instagram",
+  YouTube: "youtube",
+  Facebook: "facebook",
   Twitter: "twitter",
   Threads: "threads",
   LinkedIn: "linkedin",
-  Bluesky: "bluesky", // Uses credentials instead of OAuth
-  YouTube: "youtube",
-  TikTok: "tiktok",
   Pinterest: "pinterest"
 }
 
@@ -73,10 +72,6 @@ export default function SettingsSection() {
   // Credits and limit stores removed - validation handled server-side
 
   const [actionId, setActionId] = useState<string | null>(null)
-  const [showBlueskyCredentials, setShowBlueskyCredentials] = useState(false)
-  const [blueskyIdentifier, setBlueskyIdentifier] = useState("")
-  const [blueskyPassword, setBlueskyPassword] = useState("")
-  const [blueskyProfileId, setBlueskyProfileId] = useState<string | null>(null)
   const hasFetchedRef = useRef(false) // Track if initial fetch has completed
   // Track whether we should force a refresh on next window focus after an OAuth attempt
   const shouldRefetchOnFocusRef = useRef(false)
@@ -320,20 +315,9 @@ export default function SettingsSection() {
       }
       const json = await res.json()
 
-      // Check if Bluesky requires credentials instead of OAuth
-      if (json?.requiresCredentials && provider === "bluesky") {
-        console.log('[Settings] Bluesky requires credentials, showing form')
-        setBlueskyProfileId(json.profileId || null)
-        setShowBlueskyCredentials(true)
-        setActionId(provider)
-        return
-      }
-
       if (!json?.url) {
         throw new Error('Missing OAuth redirect URL from backend')
       }
-
-      console.log('[Settings] Opening OAuth popup for', provider, 'with URL:', json.url.substring(0, 100) + '...')
 
       // Use popup window for better UX instead of redirecting entire page
       // Mở popup ngay lập tức để user thấy OAuth login page
@@ -486,65 +470,6 @@ export default function SettingsSection() {
     }
   }, [fetchConnections])
 
-  /**
-   * Handles Bluesky credentials submission
-   */
-  const handleBlueskyCredentials = useCallback(async () => {
-    if (!blueskyIdentifier || !blueskyPassword) {
-      setLocalError(t('blueskyError'))
-      return
-    }
-
-    try {
-      setLocalError(null)
-      const { data: { session } } = await supabaseClient.auth.getSession()
-
-      const res = await fetch('/api/late/connections/bluesky/credentials', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
-        },
-        body: JSON.stringify({
-          identifier: blueskyIdentifier,
-          password: blueskyPassword,
-          profileId: blueskyProfileId
-        })
-      })
-
-      if (!res.ok) {
-        if (res.status === 401) {
-          console.warn('[Settings] Unauthorized (401) when submitting Bluesky credentials, forcing logout')
-          setActionId(null)
-          await handleUnauthorizedOnClient('settings_bluesky_credentials')
-          return
-        }
-        const errorText = await res.text()
-        throw new Error(errorText || 'Failed to connect Bluesky account')
-      }
-
-      const result = await res.json()
-
-      // Clear form and refresh connections
-      setBlueskyIdentifier("")
-      setBlueskyPassword("")
-      setBlueskyProfileId(null)
-      setShowBlueskyCredentials(false)
-      setActionId(null)
-
-      // Force refresh connections + credits/limits after successful Bluesky connect
-      clearConnectionsCache()
-      await refreshConnectedAccounts() // Dùng store's refreshConnectedAccounts thay vì fetchConnections
-      await refreshCredits(true)       // Đảm bảo profileLimits được cập nhật ngay
-
-      console.log('[Settings] Bluesky account connected successfully:', result)
-    } catch (err: any) {
-      console.error('[Settings] Failed to connect Bluesky:', err)
-      setLocalError(err?.message || 'Failed to connect Bluesky account')
-      setActionId(null)
-    }
-  }, [blueskyIdentifier, blueskyPassword, blueskyProfileId, fetchConnections])
-
   const handleResetTour = useCallback(() => {
     if (typeof window === 'undefined') return
     try {
@@ -601,7 +526,7 @@ export default function SettingsSection() {
       {/* Global overlay while connecting social account (any provider) */}
       {isConnectingInProgress && (
         <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm text-center px-4">
-          <div className="w-12 h-12 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          <div className="w-12 h-12 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
           <p className="mt-4 text-foreground text-sm sm:text-base">
             {t('connecting')}
           </p>
@@ -689,69 +614,6 @@ export default function SettingsSection() {
 
         {/* Onboarding Tour Card Removed - Moved to User Profile */}
 
-
-        {/* Bluesky Credentials Form Modal */}
-        {showBlueskyCredentials && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-card border border-border rounded-lg p-6 max-w-md w-full mx-4">
-              <h3 className="text-xl font-bold mb-4 text-foreground">{t('blueskyTitle')}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {t('blueskyDesc')}
-              </p>
-
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-foreground/90 mb-2">
-                    {t('identifierLabel')}
-                  </label>
-                  <input
-                    type="text"
-                    value={blueskyIdentifier}
-                    onChange={(e) => setBlueskyIdentifier(e.target.value)}
-                    placeholder="username.bsky.social hoặc email"
-                    className="w-full px-3 py-2 bg-secondary border border-border rounded-md text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    autoFocus
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground/90 mb-2">
-                    {t('passwordLabel')}
-                  </label>
-                  <input
-                    type="password"
-                    value={blueskyPassword}
-                    onChange={(e) => setBlueskyPassword(e.target.value)}
-                    placeholder="Mật khẩu Bluesky"
-                    className="w-full px-3 py-2 bg-secondary border border-border rounded-md text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-3 mt-6">
-                <button
-                  onClick={() => {
-                    setShowBlueskyCredentials(false)
-                    setBlueskyIdentifier("")
-                    setBlueskyPassword("")
-                    setBlueskyProfileId(null)
-                    setActionId(null)
-                  }}
-                  className="flex-1 px-4 py-2 bg-secondary hover:bg-secondary text-foreground border border-border rounded-md transition-colors"
-                >
-                  {t('cancel')}
-                </button>
-                <button
-                  onClick={handleBlueskyCredentials}
-                  disabled={!blueskyIdentifier || !blueskyPassword || actionId === "bluesky"}
-                  className="flex-1 px-4 py-2 bg-purple-500/10 hover:bg-purple-500/20 text-purple-200 border border-purple-500/40 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {actionId === "bluesky" ? t('connectingBtn') : t('connect')}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         <div className="mt-8 mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3">
@@ -915,10 +777,7 @@ export default function SettingsSection() {
                 if (!id) return
                 navigator.clipboard.writeText(id).then(() => {
                   // Could show a toast notification here
-                  console.log('ID copied to clipboard:', id)
-                }).catch(err => {
-                  console.error('Failed to copy ID:', err)
-                })
+                }).catch(() => {})
               }
 
               const username = connection?.profile_metadata?.username || connection?.profile_name || ''

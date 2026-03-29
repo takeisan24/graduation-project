@@ -93,7 +93,7 @@ export default function ActionBar() {
 
   const getCharLimit = () => {
     const platform = currentPost?.type || 'default';
-    const limits: Record<string, number> = { Twitter: 280, Instagram: 2200, LinkedIn: 3000, Facebook: 63206, Pinterest: 500, TikTok: 2200, Threads: 500, Bluesky: 300, YouTube: 5000, default: 5000 };
+    const limits: Record<string, number> = { Twitter: 280, Instagram: 2200, LinkedIn: 3000, Facebook: 63206, Pinterest: 500, TikTok: 2200, Threads: 500, YouTube: 5000, default: 5000 };
     return limits[platform] ?? limits.default;
   };
 
@@ -238,7 +238,7 @@ export default function ActionBar() {
               variant="outline"
               onClick={() => handleFormatPost(selectedPostId)}
               disabled={isFormatting}
-              className={`h-9 px-3 lg:px-4 border-purple-500/50 text-purple-300 hover:bg-purple-500/10 hover:text-white hover:border-purple-500 transition-all ${isFormatting ? 'animate-pulse' : ''}`}
+              className={`h-9 px-3 lg:px-4 border-purple-500/30 text-purple-600 dark:text-purple-400 hover:bg-purple-500/10 hover:border-purple-500 transition-all ${isFormatting ? 'animate-pulse' : ''}`}
               title="Tự động định dạng lại bài viết cho đẹp mắt"
             >
               {isFormatting ? (
@@ -262,7 +262,7 @@ export default function ActionBar() {
               variant="outline"
               onClick={() => setIsTranslateDialogOpen(true)}
               disabled={isTranslating}
-              className={`h-9 px-3 lg:px-4 border-blue-500/50 text-blue-300 hover:bg-blue-500/10 hover:text-white hover:border-blue-500 transition-all ${isTranslating ? 'animate-pulse' : ''}`}
+              className={`h-9 px-3 lg:px-4 border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10 hover:border-blue-500 transition-all ${isTranslating ? 'animate-pulse' : ''}`}
               title="Dịch bài viết"
             >
               {isTranslating ? (

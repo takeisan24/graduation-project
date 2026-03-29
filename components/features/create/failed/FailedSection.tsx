@@ -21,7 +21,6 @@ const getAccountsForPlatform = (platform: string) => {
     'LinkedIn': [{ username: 'LinkedIn User', profilePic: '/shego.jpg' }],
     'Facebook': [{ username: 'Facebook User', profilePic: '/shego.jpg' }],
     'Threads': [{ username: '@threads_user', profilePic: '/shego.jpg' }],
-    'Bluesky': [{ username: '@bluesky_user', profilePic: '/shego.jpg' }],
     'YouTube': [{ username: 'YouTube Channel', profilePic: '/shego.jpg' }],
     'TikTok': [{ username: '@tiktok_user', profilePic: '/shego.jpg' }],
     'Pinterest': [{ username: 'Pinterest User', profilePic: '/shego.jpg' }]

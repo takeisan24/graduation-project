@@ -288,7 +288,6 @@ export const useCreatePostsStore = create<CreatePostsState>((set, get) => ({
         pinterest: 'Pinterest',
         tiktok: 'TikTok',
         threads: 'Threads',
-        bluesky: 'Bluesky',
         youtube: 'YouTube',
       };
       return map[lower] || name;

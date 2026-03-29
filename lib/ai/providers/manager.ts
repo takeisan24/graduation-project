@@ -395,7 +395,6 @@ export class AIProviderManager {
       linkedin: "LinkedIn style, professional, business-focused, clean design",
       facebook: "Facebook style, engaging, colorful, social media optimized",
       threads: "Threads style, modern, clean, Instagram-inspired but more personal",
-      bluesky: "Bluesky style, thoughtful, community-focused, clean and modern",
       youtube: "YouTube thumbnail style, bold text, high contrast, click-worthy, 16:9 aspect ratio",
       pinterest: "Pinterest style, vertical format, inspiring, lifestyle-focused, high-quality"
     };
@@ -415,7 +414,6 @@ export class AIProviderManager {
       linkedin: "LinkedIn style, professional, educational",
       facebook: "Facebook style, engaging, shareable, community-focused",
       threads: "Threads style, vertical, conversational, Instagram-inspired",
-      bluesky: "Bluesky style, thoughtful, community-focused, clean",
       youtube: "YouTube Shorts style, vertical, engaging, high-quality",
       pinterest: "Pinterest style, vertical, inspiring, lifestyle-focused"
     };

@@ -109,7 +109,7 @@ export default function GoalTabs({ value, onChange }: GoalTabsProps) {
       {/* 3. Gợi ý lăn chuột (Icon nhỏ hiện ra ở giữa khi hover, tự mất khi đã scroll) */}
       {showRightFade && showScrollHint && (
          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none opacity-0 group-hover/container:opacity-100 transition-opacity duration-500 delay-200">
-            <div className="bg-black/60 backdrop-blur-sm text-white/80 px-2 py-1 rounded-full text-[10px] flex items-center gap-1.5 shadow-lg border border-border animate-pulse">
+            <div className="bg-secondary backdrop-blur-sm text-muted-foreground px-2 py-1 rounded-full text-[10px] flex items-center gap-1.5 shadow-lg border border-border animate-pulse">
                 <MoveHorizontal className="w-3 h-3" />
                 <span>Lăn chuột</span>
             </div>

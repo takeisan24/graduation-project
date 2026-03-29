@@ -229,7 +229,6 @@ const normalizePlatform = (aiPlatformValue: string) => {
     if (key === 'linkedin') return 'LinkedIn';
     if (key === 'pinterest') return 'pinterest';
     if (key === 'threads') return 'Threads';
-    if (key === 'bluesky') return 'Bluesky';
     if (key === 'youtube') return 'YouTube';
 
     return aiPlatformValue;

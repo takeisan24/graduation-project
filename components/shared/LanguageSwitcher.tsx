@@ -26,34 +26,32 @@ export default function LanguageSwitcher() {
 
   return (
     <div className="relative flex items-center border border-border rounded-lg p-0.5 bg-secondary/50">
-      <Button 
+      <Button
         size="sm"
         variant='ghost'
-        className={`relative z-10 h-7 px-2 text-xs hover:bg-secondary transition-opacity ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
-        // Vô hiệu hóa nút khi đang chuyển đổi
-        disabled={isPending} 
+        className={`relative z-10 h-7 px-2 text-xs transition-opacity ${locale === 'vi' ? 'text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'} ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
+        disabled={isPending}
         onClick={() => switchLocale('vi')}
       >
         VI
         {locale === 'vi' && (
-          <motion.div 
+          <motion.div
             layoutId='active-language-highlight'
             className='absolute inset-0 bg-primary rounded-md -z-10'
             transition = {{type: 'spring', stiffness: 300, damping: 30}}
           />
         )}
       </Button>
-      <Button 
+      <Button
         size="sm"
         variant='ghost'
-        className={`relative z-10 h-7 px-2 text-xs hover:bg-secondary transition-opacity ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
-        // Vô hiệu hóa nút khi đang chuyển đổi
+        className={`relative z-10 h-7 px-2 text-xs transition-opacity ${locale === 'en' ? 'text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'} ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
         disabled={isPending}
         onClick={() => switchLocale('en')}
       >
         EN
         {locale === 'en' && (
-          <motion.div 
+          <motion.div
             layoutId='active-language-highlight'
             className='absolute inset-0 bg-primary rounded-md -z-10'
             transition = {{type: 'spring', stiffness: 300, damping: 30}}

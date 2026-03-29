@@ -110,8 +110,6 @@ export default function CalendarSection() {
     useEffect(() => {
         // This effect will run whenever calendarEvents changes
         // The calendar component will automatically re-render because it subscribes to calendarEvents
-        // We just need to ensure the subscription is active
-        console.log('[CalendarSection] Calendar events updated, re-rendering calendar');
     }, [calendarEvents]);
 
     // --- EVENT HANDLERS (Logic từ file backup) ---

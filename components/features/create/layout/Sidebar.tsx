@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher"
 import { Button } from "@/components/ui/button"
 import { useNavigationStore } from "@/store"
@@ -9,10 +9,9 @@ import { useAuth } from "@/hooks/useAuth"
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { supabaseClient } from "@/lib/supabaseClient";
 import { toast } from "sonner";
-import { GENERIC_ERRORS } from "@/lib/messages/errors";
+import useSWR from "swr";
 
 interface SidebarProps {
   activeSection: string
@@ -42,15 +41,42 @@ export default function Sidebar({
   const t = useTranslations('CreatePage.sidebar');
   const { user, signOut, loading: authLoading } = useAuth();
 
-  // Credits store removed - using default values
-  const creditsRemaining = 0;
-  const creditsUsed = 0;
-  const totalCredits = 0;
-  const currentPlan = 'free';
-  const profileLimits = { current: 0, limit: 0 };
-  const isLoadingCredits = false;
-  const storageUsage = null;
-  const refreshCredits = useCallback((_force?: boolean) => {}, []);
+  // Fetch credits and usage data from API
+  const { data: usageData, isLoading: isLoadingCredits, mutate: refreshCredits } = useSWR(
+    user ? '/api/usage' : null,
+    async (url: string) => {
+      const session = await supabaseClient.auth.getSession();
+      const token = session.data.session?.access_token;
+      if (!token) return null;
+      const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+      if (!res.ok) return null;
+      const json = await res.json();
+      return json.data;
+    },
+    { revalidateOnFocus: false, dedupingInterval: 30000 }
+  );
+
+  // Fetch storage data separately
+  const { data: storageData_raw } = useSWR(
+    user ? '/api/usage/storage' : null,
+    async (url: string) => {
+      const session = await supabaseClient.auth.getSession();
+      const token = session.data.session?.access_token;
+      if (!token) return null;
+      const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+      if (!res.ok) return null;
+      const json = await res.json();
+      return json.data;
+    },
+    { revalidateOnFocus: false, dedupingInterval: 60000 }
+  );
+
+  const creditsRemaining = usageData?.credits?.balance ?? usageData?.credits?.remaining ?? 0;
+  const creditsUsed = usageData?.credits?.used ?? 0;
+  const totalCredits = usageData?.credits?.total ?? 0;
+  const currentPlan = usageData?.plan || 'free';
+  const profileLimits = usageData?.limits?.profiles ?? { current: 0, limit: 2 };
+  const storageUsage = storageData_raw ?? null;
 
   // --- STORAGE DATA ---
   // Default fallback if loading or null
@@ -130,13 +156,13 @@ export default function Sidebar({
         {
           id: "create",
           label: t('createPost'),
-          icon: "/Create.svg",
+          icon: "/icons/sidebar/Create.svg",
           url: "/create"
         },
         {
           id: "calendar",
           label: t('calendar'),
-          icon: "/Calendar.svg",
+          icon: "/icons/sidebar/Calendar.svg",
           url: "/calendar"
         }
       ]
@@ -147,19 +173,19 @@ export default function Sidebar({
         {
           id: "drafts",
           label: t('drafts'),
-          icon: "/Draft.svg",
+          icon: "/icons/sidebar/Draft.svg",
           url: "/drafts"
         },
         {
           id: "published",
           label: t('published'),
-          icon: "/Published.svg",
+          icon: "/icons/sidebar/Published.svg",
           url: "/published"
         },
         {
           id: "failed",
           label: t('failed'),
-          icon: "/Failed.svg",
+          icon: "/icons/sidebar/Failed.svg",
           url: "/failed"
         }
       ]
@@ -170,13 +196,13 @@ export default function Sidebar({
         {
           id: "api-dashboard",
           label: t('apiDashboard'),
-          icon: "/API.svg",
+          icon: "/icons/sidebar/API.svg",
           url: "/api-dashboard"
         },
         {
           id: "settings",
           label: t('settings'),
-          icon: "/Settings.svg",
+          icon: "/icons/sidebar/Settings.svg",
           url: "/settings"
         }
       ]
@@ -225,13 +251,6 @@ export default function Sidebar({
     touchStartRef.current = null;
   };
 
-  // Global event listener for edge swipe - REMOVED (User requested removal)
-  /*
-  useEffect(() => {
-     // ... (Swipe logic disabled) ...
-  }, [isSidebarOpen, onSidebarToggle]);
-  */
-
   return (
     <>
       {/* Mobile: Hamburger Button - Restored & Redesigned */}
@@ -258,20 +277,7 @@ export default function Sidebar({
         </svg>
       </button>
 
-      {/* Visual Hint for Swipe (Removed as we restored Hamburger) */}
-
-
-      {/* Visual Hint for Swipe (Optional, maybe a small pill on the left edge?) */}
-
-
-      {/* Legacy Hamburger (Commented out / Removed for Swipe UX) */}
-      {/* 
-      <button
-        className="lg:hidden fixed top-4 right-4 z-[60]..."
-      > ... </button> 
-      */}
-
-      {/* Mobile: Overlay - Also handles Close Swipe via touch handlers */}
+      {/* Mobile: Overlay */}
       {isSidebarOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-black/70 z-[45] backdrop-blur-sm"
@@ -429,7 +435,7 @@ export default function Sidebar({
           {!authLoading && user && (
             <div className="pt-3 px-4 pb-3 relative group"
               onMouseEnter={() => {
-                if (window.innerWidth >= 1024) refreshCredits(false);
+                if (window.innerWidth >= 1024) refreshCredits();
               }}
             >
               {/* Tooltip hiện khi hover (Desktop) HOẶC Click (Mobile) - Absolute positioned */}
@@ -500,23 +506,6 @@ export default function Sidebar({
                     </div>
                   </div>
 
-                  {/* Mobile Action: Open Debug/Plan Modal */}
-                  {/* <div className="lg:hidden mt-2 border-t border-border/50 pt-2">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            if (onPlanModalClick) onPlanModalClick();
-                            setShowMobileTooltip(false);
-                        }}
-                        className="w-full h-7 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary"
-                    >
-                        {t('currentPlan')} / Debug
-                    </Button>
-                </div> */}
-
-
                   {/* Arrow tooltip */}
                   <div className={`absolute -bottom-1.5 w-3 h-3 bg-card border-b border-r border-border transform rotate-45 ${isSidebarOpen ? 'left-1/2 -translate-x-1/2' : 'left-4'}`}></div>
                 </div>
@@ -531,7 +520,7 @@ export default function Sidebar({
                   if (window.innerWidth < 1024) {
                     setShowMobileTooltip(!showMobileTooltip);
                     // Optional: Also refresh credits when opening
-                    if (!showMobileTooltip) refreshCredits(false);
+                    if (!showMobileTooltip) refreshCredits();
                     return;
                   }
                   // Desktop: Click opens Plan/Debug Modal
@@ -601,7 +590,7 @@ export default function Sidebar({
             <div className="px-4 py-2 border-t border-border/50">
               <div className={`w-full flex items-center gap-2 p-2 rounded-lg bg-gradient-to-br from-secondary/50 to-secondary/20 border border-border hover:border-purple-500/30 hover:bg-secondary/60 transition-all duration-200 group/lang ${isSidebarOpen ? '' : 'justify-center'}`}>
                 <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border border-purple-500/30 shrink-0 group-hover/lang:scale-105 transition-transform duration-200">
-                  <img src="/Language.svg" alt="Language" className="w-3.5 h-3.5 opacity-80 group-hover/lang:opacity-100 transition-opacity" />
+                  <img src="/icons/sidebar/Language.svg" alt="Language" className="w-3.5 h-3.5 opacity-80 group-hover/lang:opacity-100 transition-opacity" />
                 </div>
                 {isSidebarOpen && (
                   <div className="flex-1 flex items-center justify-between ml-2 overflow-hidden">
@@ -643,11 +632,9 @@ export default function Sidebar({
                   <div className="min-w-0 flex flex-col">
                     <span className="text-base lg:text-sm font-medium text-foreground truncate max-w-[100px]" title={user.email}>{user.email?.split('@')[0]}</span>
 
-                    {/* --- ĐÃ SỬA: Dùng biến planLabel thay vì cứng 'Free Plan' --- */}
                     <span className="text-[10px] text-muted-foreground font-medium bg-secondary px-1.5 py-0.5 rounded w-fit capitalize">
                       {planLabel}
                     </span>
-                    {/* -------------------------------------------------------- */}
 
                   </div>
 
@@ -687,9 +674,7 @@ export default function Sidebar({
                     <div className="overflow-hidden">
                       <p className="text-sm font-bold text-foreground truncate">{user.email}</p>
 
-                      {/* --- ĐÃ SỬA: Đảm bảo tooltip cũng dùng planLabel --- */}
                       <p className="text-xs text-muted-foreground capitalize">{planLabel} Plan</p>
-                      {/* -------------------------------------------------- */}
 
                     </div>
                   </div>
@@ -708,9 +693,6 @@ export default function Sidebar({
           )}
         </div>
 
-        {/* Debug Plan Modal has been moved to CreateLayout for proper overlay rendering */}
-
-        {/* Top-Up Modal has been moved to CreateLayout for proper overlay rendering */}
       </div>
     </>
   )

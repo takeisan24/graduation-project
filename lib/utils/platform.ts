@@ -46,15 +46,14 @@ export function getPlatformColor(platform: string): string {
  */
 export function getPlatformName(platform: string): string {
   const nameMap: Record<string, string> = {
+    'tiktok': 'TikTok',
+    'instagram': 'Instagram',
+    'youtube': 'YouTube',
+    'facebook': 'Facebook',
     'x': 'Twitter',
     'twitter': 'Twitter',
-    'instagram': 'Instagram',
-    'facebook': 'Facebook',
-    'linkedin': 'LinkedIn',
     'threads': 'Threads',
-    'bluesky': 'Bluesky',
-    'youtube': 'YouTube',
-    'tiktok': 'TikTok',
+    'linkedin': 'LinkedIn',
     'pinterest': 'Pinterest'
   }
   return nameMap[platform.toLowerCase()] || platform

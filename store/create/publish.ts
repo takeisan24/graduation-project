@@ -161,7 +161,6 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
             }
 
             mediaUrls.push(upload_url);
-            console.log(`[handlePublish] Uploaded media to S3 via Server B: ${upload_url}`);
           } catch (uploadError: any) {
             console.error(`[handlePublish] Error uploading media via presigned URL:`, uploadError);
             toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(uploadError.message || GENERIC_ERRORS.UNKNOWN_ERROR));
@@ -201,7 +200,6 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
 
         // If post was saved to DB with failed status, reload failed posts
         if (errorData.scheduledPost) {
-          console.log('[handlePublish] Post failed but was saved to DB, reloading failed posts...');
           saveToLocalStorage('needsRefreshFailedPosts', true);
           if ((globalThis as any).reloadFailedPostsTimeout) {
             clearTimeout((globalThis as any).reloadFailedPostsTimeout);
@@ -332,7 +330,6 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
     scheduledDateTime.setHours(hour, minute, 0, 0);
     const scheduledAt = scheduledDateTime.toISOString();
 
-    console.log(`[schedulePost] Local time: ${hour}:${minute}, Timezone: ${userTimezone}, UTC ISO: ${scheduledAt}`);
 
     let schedulingToastId: string | number | undefined;
     try {
@@ -436,7 +433,6 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
             }
 
             mediaUrls.push(upload_url);
-            console.log(`[schedulePost] Uploaded media to S3 via Server B: ${upload_url}`);
           } catch (uploadError: any) {
             console.error(`[schedulePost] Error uploading blob media via presigned URL:`, uploadError);
             toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(uploadError.message || GENERIC_ERRORS.UNKNOWN_ERROR));
@@ -482,7 +478,6 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
 
         // If post was saved to DB with failed status, reload failed posts
         if (errorData.scheduledPost) {
-          console.log('[schedulePost] Post failed but was saved to DB, reloading failed posts...');
           saveToLocalStorage('needsRefreshFailedPosts', true);
           if ((globalThis as any).reloadFailedPostsTimeout) {
             clearTimeout((globalThis as any).reloadFailedPostsTimeout);
@@ -550,7 +545,6 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
       });
 
       saveToLocalStorage('pendingScheduledPosts', pendingScheduledPosts);
-      console.log(`[schedulePost] Saved ${scheduledPosts.length} scheduled posts to localStorage for status checking`);
 
       // Schedule status checks for each post
       scheduledPosts.forEach((sp: any) => {
