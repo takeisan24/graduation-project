@@ -747,6 +747,21 @@
       "accountSettings": "Account Settings",
       "language": "Language"
     },
+    "topBar": {
+      "toggleTheme": "Toggle theme",
+      "signOut": "Sign Out",
+      "signOutSuccess": "Signed out successfully!",
+      "signOutRedirect": "Redirecting to sign in...",
+      "breadcrumb": {
+        "create": "Create Post",
+        "calendar": "Calendar",
+        "drafts": "Drafts",
+        "published": "Published",
+        "failed": "Failed",
+        "api-dashboard": "Dashboard",
+        "settings": "Social Accounts"
+      }
+    },
     "apiDashboard": {
       "title": "Dashboard",
       "subtitle": "Overview of activity and system usage",

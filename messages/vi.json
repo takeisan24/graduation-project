@@ -747,6 +747,21 @@
       "accountSettings": "Cài đặt tài khoản",
       "language": "Ngôn ngữ"
     },
+    "topBar": {
+      "toggleTheme": "Chuyển giao diện",
+      "signOut": "Đăng xuất",
+      "signOutSuccess": "Đăng xuất thành công!",
+      "signOutRedirect": "Đang chuyển đến trang đăng nhập...",
+      "breadcrumb": {
+        "create": "Tạo bài viết",
+        "calendar": "Lịch",
+        "drafts": "Bản nháp",
+        "published": "Đã đăng",
+        "failed": "Thất bại",
+        "api-dashboard": "Dashboard",
+        "settings": "Tài khoản MXH"
+      }
+    },
     "apiDashboard": {
       "title": "Dashboard",
       "subtitle": "Tổng quan về hoạt động và sử dụng hệ thống",
