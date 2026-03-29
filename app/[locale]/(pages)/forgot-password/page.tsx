@@ -4,7 +4,8 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ArrowLeft, Loader2, GraduationCap, CheckCircle2 } from "lucide-react"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { ArrowLeft, Loader2, GraduationCap, Mail } from "lucide-react"
 import CreatorHubIcon from "@/components/shared/CreatorHubIcon"
 import Link from "next/link"
 import { useTranslations } from "next-intl"
@@ -16,7 +17,7 @@ export default function ForgotPasswordPage() {
   const tCommon = useTranslations('Common.auth')
   const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,8 +30,7 @@ export default function ForgotPasswordPage() {
       })
       if (error) throw error
 
-      setSuccess(true)
-      toast.success("Password reset link sent to your email")
+      setShowSuccess(true)
     } catch (error: any) {
       toast.error(error.message || "Failed to send reset password email")
     } finally {
@@ -88,20 +88,34 @@ export default function ForgotPasswordPage() {
             <p className="text-muted-foreground">{t('subtitle')}</p>
           </div>
 
-          {success ? (
-            <div className="text-center space-y-6 py-8">
-              <div className="flex justify-center">
-                <div className="h-16 w-16 rounded-full bg-success/10 flex items-center justify-center">
-                  <CheckCircle2 className="h-8 w-8 text-success" />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-xl font-semibold">Check your email</h3>
-                <p className="text-muted-foreground">
-                  We have sent a password reset link to{" "}
-                  <span className="font-medium text-foreground">{email}</span>
-                </p>
-              </div>
+          <form className="space-y-5" onSubmit={handleSubmit}>
+            <div className="space-y-2">
+              <Label htmlFor="email">{tCommon('email')}</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder={tCommon('emailPlaceholder')}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="h-12"
+                required
+              />
+            </div>
+
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full h-12 text-base bg-gradient-to-r from-utc-royal to-utc-sky text-white shadow-sm hover:shadow-accent hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
+              disabled={loading}
+            >
+              {loading ? (
+                <><Loader2 className="h-4 w-4 mr-2 animate-spin" />{t('form.sending')}</>
+              ) : (
+                t('form.submitButton')
+              )}
+            </Button>
+
+            <div className="text-center pt-4">
               <Link
                 href="/signin"
                 className="inline-flex items-center gap-2 text-sm text-utc-royal hover:underline font-medium"
@@ -110,47 +124,32 @@ export default function ForgotPasswordPage() {
                 {t('backToSignIn')}
               </Link>
             </div>
-          ) : (
-            <form className="space-y-5" onSubmit={handleSubmit}>
-              <div className="space-y-2">
-                <Label htmlFor="email">{tCommon('email')}</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder={tCommon('emailPlaceholder')}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-12"
-                  required
-                />
-              </div>
-
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full h-12 text-base bg-gradient-to-r from-utc-royal to-utc-sky text-white shadow-sm hover:shadow-accent hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
-                disabled={loading}
-              >
-                {loading ? (
-                  <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Sending...</>
-                ) : (
-                  t('form.submitButton')
-                )}
-              </Button>
-
-              <div className="text-center pt-4">
-                <Link
-                  href="/signin"
-                  className="inline-flex items-center gap-2 text-sm text-utc-royal hover:underline font-medium"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  {t('backToSignIn')}
-                </Link>
-              </div>
-            </form>
-          )}
+          </form>
         </div>
       </div>
+
+      {/* Success Dialog */}
+      <Dialog open={showSuccess} onOpenChange={setShowSuccess}>
+        <DialogContent className="sm:max-w-sm bg-card border-border">
+          <div className="flex flex-col items-center text-center py-4 space-y-4">
+            <div className="h-14 w-14 rounded-full bg-utc-royal/10 flex items-center justify-center">
+              <Mail className="h-7 w-7 text-utc-royal" />
+            </div>
+            <h3 className="text-lg font-semibold">{t('successDialog.title')}</h3>
+            <p className="text-sm text-muted-foreground">
+              {t('successDialog.description')}{" "}
+              <span className="font-medium text-foreground">{email}</span>
+            </p>
+            <p className="text-xs text-muted-foreground">{t('successDialog.checkInbox')}</p>
+            <Button variant="outline" className="w-full" asChild>
+              <Link href="/signin">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                {t('successDialog.backToSignIn')}
+              </Link>
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

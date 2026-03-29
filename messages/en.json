@@ -333,13 +333,19 @@
     "rememberMe": "Remember me",
     "forgotPassword": "Forgot password?",
     "signIn": "Sign In",
+    "signingIn": "Signing in...",
     "orContinueWith": "Or continue with",
     "noAccount": "Don't have an account?",
     "createAccount": "Create account",
     "termsText": "By signing in, you agree to our",
     "termsOfService": "Terms of Service",
     "and": "and",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "successDialog": {
+      "title": "Sign in successful!",
+      "description": "Redirecting to your workspace...",
+      "redirect": "Go now"
+    }
   },
   "SignUpPage": {
     "title": "Create New Account",
@@ -366,8 +372,42 @@
     "title": "Forgot Password?",
     "subtitle": "Don't worry! Enter your email to receive a password reset link.",
     "form": {
-      "submitButton": "Send Reset Link"
+      "submitButton": "Send Reset Link",
+      "sending": "Sending..."
     },
+    "backToSignIn": "Back to Sign In",
+    "successDialog": {
+      "title": "Email sent!",
+      "description": "We have sent a password reset link to",
+      "checkInbox": "Please check your inbox (including spam folder).",
+      "backToSignIn": "Back to Sign In"
+    }
+  },
+  "UpdatePasswordPage": {
+    "title": "Set new password",
+    "subtitle": "Enter a new password for your account.",
+    "form": {
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Update Password",
+      "updating": "Updating...",
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 6 characters"
+    },
+    "successDialog": {
+      "title": "Password reset successful!",
+      "description": "Your password has been updated. Please sign in with your new password.",
+      "signInButton": "Go to Sign In"
+    },
+    "invalidLink": "Invalid link. Please request a new password reset.",
+    "expiredLink": "Link expired or invalid. Please try again."
+  },
+  "AuthSuccessPage": {
+    "title": "Authentication successful!",
+    "settingUp": "Setting up your account...",
+    "redirecting": "Redirecting...",
+    "goToCreate": "Go to content creation",
+    "errorTitle": "Authentication failed",
     "backToSignIn": "Back to Sign In"
   },
   "PricingPage": {

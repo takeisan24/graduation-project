@@ -3,33 +3,29 @@
 import { useEffect, useRef, useState, useCallback } from "react"
 import { useRouter, useSearchParams, useParams } from "next/navigation"
 import { supabaseClient } from "@/lib/supabaseClient"
-import Header from "@/components/shared/header"
-import Footer from "@/components/shared/footer"
-import { Sparkles, CheckCircle2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { CheckCircle2, Loader2, ArrowRight, XCircle } from "lucide-react"
+import CreatorHubIcon from "@/components/shared/CreatorHubIcon"
 import { useAuth } from "@/hooks/useAuth"
+import { useTranslations } from "next-intl"
 
-/**
- * Page to handle OAuth callback success
- * Redirects user after setting session
- */
 export default function AuthSuccessPage() {
   const router = useRouter()
   const params = useParams()
   const searchParams = useSearchParams()
   const { isAuthenticated } = useAuth()
+  const t = useTranslations("AuthSuccessPage")
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const autoRedirectRef = useRef<HTMLButtonElement | null>(null)
 
-  // Get locale from URL params (e.g., /vi/auth/success or /en/auth/success)
   const currentLocale = (params?.locale as string) || 'vi'
   const redirectPath = searchParams.get('next') ? decodeURIComponent(searchParams.get('next')!) : `/${currentLocale}/create`
 
   const navigateToCreate = useCallback(() => {
     try {
       window.location.href = redirectPath
-    } catch (navErr) {
-      console.error('[AuthSuccess] Failed to navigate via button fallback:', navErr)
+    } catch {
       router.push(redirectPath)
     }
   }, [redirectPath, router])
@@ -37,51 +33,37 @@ export default function AuthSuccessPage() {
   useEffect(() => {
     const handleAuthSuccess = async () => {
       try {
-        // Get session from URL params
         const sessionParam = searchParams.get("session")
 
         if (sessionParam) {
-          // Case 1: Session is passed via query (server-exchanged flow)
           const session = JSON.parse(decodeURIComponent(sessionParam))
-
           const { error: sessionError } = await supabaseClient.auth.setSession({
             access_token: session.access_token,
             refresh_token: session.refresh_token,
           })
           if (sessionError) throw sessionError
         } else {
-          // Case 2: No session param - rely on detectSessionInUrl and persisted session
-          // Wait for SIGNED_IN event or an existing session for up to ~3s
-          const waitForSession = async (): Promise<void> => {
-            return new Promise((resolve, reject) => {
-              let resolved = false
-              // Reduce wait time to speed up redirect experience
-              const timeout = setTimeout(async () => {
-                if (resolved) return
-                const { data: { session } } = await supabaseClient.auth.getSession()
-                if (session) {
-                  resolved = true
-                  resolve()
-                } else {
-                  reject(new Error("No session found after OAuth redirect"))
-                }
-              }, 1000) // was 3000ms, reduced to 1500ms to avoid long wait
+          await new Promise<void>((resolve, reject) => {
+            let resolved = false
+            const timeout = setTimeout(async () => {
+              if (resolved) return
+              const { data: { session } } = await supabaseClient.auth.getSession()
+              if (session) { resolved = true; resolve() }
+              else reject(new Error("No session found after OAuth redirect"))
+            }, 1000)
 
-              const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((event, session) => {
-                if (!resolved && event === 'SIGNED_IN' && session) {
-                  resolved = true
-                  clearTimeout(timeout)
-                  subscription.unsubscribe()
-                  resolve()
-                }
-              })
+            const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((event, session) => {
+              if (!resolved && event === 'SIGNED_IN' && session) {
+                resolved = true
+                clearTimeout(timeout)
+                subscription.unsubscribe()
+                resolve()
+              }
             })
-          }
-
-          await waitForSession()
+          })
         }
 
-        // Best-effort: ensure user profile exists via RPC on the client as well
+        // Ensure user profile exists
         try {
           const { data: { session } } = await supabaseClient.auth.getSession()
           if (session?.user?.id) {
@@ -92,24 +74,17 @@ export default function AuthSuccessPage() {
               p_avatar_url: (session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture) ?? null,
             })
           }
-        } catch (e) {
+        } catch {
           // non-blocking
-          console.warn('[AuthSuccess] ensure_user_profile RPC warning:', e)
         }
 
-        // Verify session exists before redirecting
         const { data: { session: finalSession } } = await supabaseClient.auth.getSession()
-        if (!finalSession) {
-          throw new Error("Session not found after authentication")
-        }
+        if (!finalSession) throw new Error("Session not found after authentication")
 
-        console.log('[AuthSuccess] Authentication successful, redirecting to create page with locale:', currentLocale)
-
-        // Redirect to create page with locale prefix (e.g., /vi/create or /en/create)
-        // Use window.location for full page reload to ensure all state is properly initialized
-        navigateToCreate()
+        setIsLoading(false)
+        // Auto redirect after showing success
+        setTimeout(navigateToCreate, 1500)
       } catch (err: any) {
-        console.error("Auth success error:", err)
         setError(err.message || "Failed to complete authentication")
         setIsLoading(false)
       }
@@ -118,62 +93,63 @@ export default function AuthSuccessPage() {
     handleAuthSuccess()
   }, [searchParams, router, isAuthenticated, currentLocale, navigateToCreate])
 
-  useEffect(() => {
-    if (error) return
-    const timer = setTimeout(() => {
-      autoRedirectRef.current?.click()
-    }, 500) // Reduced from 1000ms for faster experience
-    return () => clearTimeout(timer)
-  }, [error])
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Header />
-        <div className="flex-1 flex items-center justify-center px-4">
-          <div className="text-center max-w-md">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-destructive/10 rounded-2xl mb-4">
-              <span className="text-destructive text-2xl">✕</span>
-            </div>
-            <h1 className="text-2xl font-bold mb-2">Authentication Failed</h1>
-            <p className="text-muted-foreground mb-4">{error}</p>
-            <button
-              onClick={() => router.push("/signin")}
-              className="text-primary hover:underline"
-            >
-              Return to Sign In
-            </button>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Header />
-      <div className="flex-1 flex items-center justify-center px-4">
-        <div className="text-center max-w-md">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/10 rounded-2xl mb-4">
-            <CheckCircle2 className="w-8 h-8 text-green-500" />
-          </div>
-          <h1 className="text-2xl font-bold mb-2">Authentication Successful!</h1>
-          <p className="text-muted-foreground">
-            {isLoading ? "Setting up your account..." : "Redirecting..."}
-          </p>
-          <button
-            ref={autoRedirectRef}
-            onClick={navigateToCreate}
-            className="mt-6 inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-60"
-            disabled={Boolean(error)}
-          >
-            Tới trang tạo content
-          </button>
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="text-center max-w-sm space-y-6">
+        {/* Logo */}
+        <div className="flex justify-center mb-2">
+          <CreatorHubIcon className="h-12 w-12" />
         </div>
+
+        {error ? (
+          <>
+            <div className="h-16 w-16 mx-auto rounded-full bg-destructive/10 flex items-center justify-center">
+              <XCircle className="h-8 w-8 text-destructive" />
+            </div>
+            <h1 className="text-xl font-semibold">{t("errorTitle")}</h1>
+            <p className="text-sm text-muted-foreground">{error}</p>
+            <Button
+              variant="outline"
+              onClick={() => router.push("/signin")}
+              className="w-full"
+            >
+              {t("backToSignIn")}
+            </Button>
+          </>
+        ) : isLoading ? (
+          <>
+            <div className="h-16 w-16 mx-auto rounded-full bg-utc-royal/10 flex items-center justify-center">
+              <Loader2 className="h-8 w-8 text-utc-royal animate-spin" />
+            </div>
+            <h1 className="text-xl font-semibold">{t("settingUp")}</h1>
+            <div className="flex justify-center gap-2">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="w-2 h-2 rounded-full bg-utc-royal animate-pulse"
+                  style={{ animationDelay: `${i * 0.2}s` }}
+                />
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="h-16 w-16 mx-auto rounded-full bg-success/10 flex items-center justify-center">
+              <CheckCircle2 className="h-8 w-8 text-success" />
+            </div>
+            <h1 className="text-xl font-semibold">{t("title")}</h1>
+            <p className="text-sm text-muted-foreground">{t("redirecting")}</p>
+            <Button
+              ref={autoRedirectRef}
+              onClick={navigateToCreate}
+              className="w-full bg-gradient-to-r from-utc-royal to-utc-sky text-white"
+            >
+              {t("goToCreate")}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </>
+        )}
       </div>
-      <Footer />
     </div>
   )
 }
-

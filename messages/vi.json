@@ -333,13 +333,19 @@
     "rememberMe": "Ghi nhớ đăng nhập",
     "forgotPassword": "Quên mật khẩu?",
     "signIn": "Đăng nhập",
+    "signingIn": "Đang đăng nhập...",
     "orContinueWith": "Hoặc tiếp tục với",
     "noAccount": "Chưa có tài khoản?",
     "createAccount": "Tạo tài khoản",
     "termsText": "Bằng cách đăng nhập, bạn đồng ý với",
     "termsOfService": "Điều khoản dịch vụ",
     "and": "và",
-    "privacyPolicy": "Chính sách bảo mật"
+    "privacyPolicy": "Chính sách bảo mật",
+    "successDialog": {
+      "title": "Đăng nhập thành công!",
+      "description": "Đang chuyển hướng đến trang làm việc...",
+      "redirect": "Đi ngay"
+    }
   },
   "SignUpPage": {
     "title": "Tạo tài khoản mới",
@@ -366,9 +372,43 @@
     "title": "Quên mật khẩu?",
     "subtitle": "Đừng lo lắng! Nhập email của bạn để nhận liên kết đặt lại mật khẩu.",
     "form": {
-      "submitButton": "Gửi liên kết đặt lại"
+      "submitButton": "Gửi liên kết đặt lại",
+      "sending": "Đang gửi..."
     },
-    "backToSignIn": "Quay lại trang Đăng nhập"
+    "backToSignIn": "Quay lại trang Đăng nhập",
+    "successDialog": {
+      "title": "Đã gửi email!",
+      "description": "Chúng tôi đã gửi liên kết đặt lại mật khẩu đến",
+      "checkInbox": "Vui lòng kiểm tra hộp thư (bao gồm cả thư rác).",
+      "backToSignIn": "Quay lại Đăng nhập"
+    }
+  },
+  "UpdatePasswordPage": {
+    "title": "Đặt mật khẩu mới",
+    "subtitle": "Nhập mật khẩu mới cho tài khoản của bạn.",
+    "form": {
+      "newPassword": "Mật khẩu mới",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "submit": "Cập nhật mật khẩu",
+      "updating": "Đang cập nhật...",
+      "passwordMismatch": "Mật khẩu không khớp",
+      "passwordTooShort": "Mật khẩu phải có ít nhất 6 ký tự"
+    },
+    "successDialog": {
+      "title": "Đặt lại mật khẩu thành công!",
+      "description": "Mật khẩu của bạn đã được cập nhật. Vui lòng đăng nhập bằng mật khẩu mới.",
+      "signInButton": "Đến trang Đăng nhập"
+    },
+    "invalidLink": "Liên kết không hợp lệ. Vui lòng yêu cầu đặt lại mật khẩu mới.",
+    "expiredLink": "Liên kết đã hết hạn hoặc không hợp lệ. Vui lòng thử lại."
+  },
+  "AuthSuccessPage": {
+    "title": "Xác thực thành công!",
+    "settingUp": "Đang thiết lập tài khoản...",
+    "redirecting": "Đang chuyển hướng...",
+    "goToCreate": "Đi đến trang tạo nội dung",
+    "errorTitle": "Xác thực thất bại",
+    "backToSignIn": "Quay lại Đăng nhập"
   },
   "PricingPage": {
     "headerTitle": "Chọn Gói Phù hợp với Sức sáng tạo của bạn",

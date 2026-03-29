@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, EyeOff, ArrowRight, Loader2, GraduationCap, Sparkles, Share2, Calendar } from "lucide-react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Eye, EyeOff, ArrowRight, Loader2, GraduationCap, Sparkles, Share2, Calendar, CheckCircle2 } from "lucide-react";
 import CreatorHubIcon from "@/components/shared/CreatorHubIcon";
 import Link from "next/link";
 import { supabaseClient } from "@/lib/supabaseClient";
@@ -29,6 +30,14 @@ export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [oauthProviderLoading, setOauthProviderLoading] = useState<"google" | "facebook" | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [redirectUrl, setRedirectUrl] = useState("");
+
+  const doRedirect = useCallback((url: string) => {
+    setRedirectUrl(url);
+    setShowSuccess(true);
+    setTimeout(() => { window.location.href = url; }, 1500);
+  }, []);
 
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
@@ -87,7 +96,7 @@ export default function SignInPage() {
 
       const nextParam = new URLSearchParams(window.location.search).get("redirect") ||
         new URLSearchParams(window.location.search).get("next");
-      window.location.href = nextParam ? decodeURIComponent(nextParam) : `/${currentLocale}/create`;
+      doRedirect(nextParam ? decodeURIComponent(nextParam) : `/${currentLocale}/create`);
     } catch (err: any) {
       setError(err.message || "An error occurred during login");
     } finally {
@@ -267,7 +276,7 @@ export default function SignInPage() {
               disabled={isLoading}
             >
               {isLoading ? (
-                <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Signing in...</>
+                <><Loader2 className="h-4 w-4 mr-2 animate-spin" />{t("signingIn")}</>
               ) : (
                 <>{t("signIn")}<ArrowRight className="ml-2 h-4 w-4" /></>
               )}
@@ -318,6 +327,26 @@ export default function SignInPage() {
           </p>
         </div>
       </div>
+
+      {/* Success Dialog */}
+      <Dialog open={showSuccess}>
+        <DialogContent className="sm:max-w-sm bg-card border-border [&>button]:hidden">
+          <div className="flex flex-col items-center text-center py-4 space-y-4">
+            <div className="h-14 w-14 rounded-full bg-success/10 flex items-center justify-center">
+              <CheckCircle2 className="h-7 w-7 text-success" />
+            </div>
+            <h3 className="text-lg font-semibold">{t("successDialog.title")}</h3>
+            <p className="text-sm text-muted-foreground">{t("successDialog.description")}</p>
+            <Button
+              className="w-full bg-gradient-to-r from-utc-royal to-utc-sky text-white"
+              onClick={() => { window.location.href = redirectUrl; }}
+            >
+              {t("successDialog.redirect")}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
