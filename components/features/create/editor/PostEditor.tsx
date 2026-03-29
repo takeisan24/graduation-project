@@ -4,15 +4,82 @@
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 
+import { Button } from '@/components/ui/button';
 import { useCreatePostsStore, useCreateSourcesStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslations } from 'next-intl';
-import { PlusCircle, Trash2, MessageSquare, ChevronLeft, ChevronRight, History } from 'lucide-react';
+import { Trash2, ChevronLeft, ChevronRight, History, FolderPlus, PenLine } from 'lucide-react';
 import CreatorHubIcon from '@/components/shared/CreatorHubIcon';
+import { PlatformIcon } from '@/components/shared/PlatformIcon';
+import { getPlatformColors } from '@/lib/constants/platformColors';
 
 import TabsManager from './TabsManager';
 import MediaPreview from './MediaPreview';
 import ActionBar from './ActionBar';
+
+const QUICK_PLATFORMS = [
+  { id: 'TikTok', label: 'TikTok' },
+  { id: 'Instagram', label: 'Instagram' },
+  { id: 'YouTube', label: 'YouTube' },
+  { id: 'Facebook', label: 'Facebook' },
+  { id: 'Twitter', label: 'X (Twitter)' },
+  { id: 'LinkedIn', label: 'LinkedIn' },
+]
+
+function EmptyStateInteractive() {
+  const t = useTranslations('CreatePage.createSection.postPanel');
+  const handlePostCreate = useCreatePostsStore(state => state.handlePostCreate);
+  const setIsSourceModalOpen = useCreateSourcesStore(state => state.setIsSourceModalOpen);
+
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center p-6 gap-8 min-h-0">
+      {/* Header */}
+      <div className="text-center space-y-3">
+        <CreatorHubIcon className="w-10 h-10 mx-auto" />
+        <div>
+          <h3 className="text-lg font-semibold">{t('emptyState.title')}</h3>
+          <p className="text-sm text-muted-foreground mt-1">{t('emptyState.description')}</p>
+        </div>
+      </div>
+
+      {/* Quick create: pick a platform */}
+      <div className="w-full max-w-md space-y-3">
+        <p className="text-xs font-medium text-muted-foreground text-center uppercase tracking-wider">{t('emptyState.step2.title')}</p>
+        <div className="grid grid-cols-3 gap-2">
+          {QUICK_PLATFORMS.map(({ id, label }) => {
+            const colors = getPlatformColors(id);
+            return (
+              <button
+                key={id}
+                onClick={() => handlePostCreate(id)}
+                className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border ${colors.border} ${colors.tint} ${colors.darkTint} hover:scale-[1.02] hover:shadow-md active:scale-[0.98] transition-all text-sm`}
+              >
+                <PlatformIcon platform={id} size={16} />
+                <span className="truncate">{label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Or add source */}
+      <div className="flex items-center gap-3">
+        <div className="h-px w-12 bg-border" />
+        <span className="text-xs text-muted-foreground">hoặc</span>
+        <div className="h-px w-12 bg-border" />
+      </div>
+
+      <Button
+        variant="outline"
+        className="gap-2"
+        onClick={() => setIsSourceModalOpen(true)}
+      >
+        <FolderPlus className="h-4 w-4" />
+        {t('emptyState.step1.title')}
+      </Button>
+    </div>
+  );
+}
 
 export default function PostEditor() {
     const t = useTranslations('CreatePage.createSection.postPanel');
@@ -53,21 +120,8 @@ export default function PostEditor() {
             {/* Editor Card */}
             <Card className="bg-card border-border p-0 gap-0 rounded-[5px] flex-1 flex flex-col w-full overflow-hidden">
                 {selectedPostId === 0 || posts.length === 0 ? (
-                    <div className="flex-1 flex items-center justify-center p-6 min-h-0">
-                        <div className="text-center space-y-4 max-w-sm">
-                            <div className="flex justify-center">
-                                <CreatorHubIcon className="w-12 h-12" />
-                            </div>
-                            <div className="space-y-1.5">
-                                <h3 className="text-lg font-semibold text-foreground">
-                                    {t('emptyState.title')}
-                                </h3>
-                                <p className="text-sm text-muted-foreground">
-                                    {t('emptyState.description')}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    <EmptyStateInteractive />
+
                 ) : (
                     <div className="flex-1 flex flex-col min-h-0 relative">
                         {/* --- UI VERSION CONTROL: HIỂN THỊ KHI CÓ > 1 VERSION --- */}
