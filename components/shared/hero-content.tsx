@@ -1,7 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Zap, Share2, Calendar } from "lucide-react";
+import { ArrowRight, Zap, Share2, Calendar } from "lucide-react";
+import CreatorHubIcon from "./CreatorHubIcon";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
@@ -125,9 +126,7 @@ export default function HeroContent() {
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-utc-royal/10 to-utc-sky/10 border border-utc-royal/20" />
 
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-utc-royal to-utc-sky flex items-center justify-center shadow-accent">
-                  <Sparkles className="h-10 w-10 text-white" />
-                </div>
+                <CreatorHubIcon className="h-20 w-20 shadow-accent rounded-2xl" />
               </div>
 
               {/* Floating cards */}

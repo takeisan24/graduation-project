@@ -1,7 +1,8 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Loader2, Sparkles } from "lucide-react"
+import { Loader2 } from "lucide-react"
+import CreatorHubIcon from "./CreatorHubIcon"
 import { useTranslations } from "next-intl"
 
 export default function PageLoader() {
@@ -27,7 +28,7 @@ export default function PageLoader() {
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
-            <Sparkles className="h-6 w-6 text-primary" />
+            <CreatorHubIcon className="h-6 w-6" />
           </motion.div>
         </motion.div>
 

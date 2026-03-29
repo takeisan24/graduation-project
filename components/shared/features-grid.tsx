@@ -1,7 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { Link2, Share2, Sparkles, MessageSquare, Calendar, Zap } from "lucide-react";
+import { Link2, Share2, Wand2, MessageSquare, Calendar, Zap } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 
@@ -23,7 +23,7 @@ export default function FeaturesGrid() {
   const features = [
     { icon: <Link2 className="h-5 w-5 text-white" />, title: t('features.feature1.title'), description: t('features.feature1.description'), featured: true },
     { icon: <Share2 className="h-5 w-5 text-white" />, title: t('features.feature2.title'), description: t('features.feature2.description') },
-    { icon: <Sparkles className="h-5 w-5 text-white" />, title: t('features.feature3.title'), description: t('features.feature3.description') },
+    { icon: <Wand2 className="h-5 w-5 text-white" />, title: t('features.feature3.title'), description: t('features.feature3.description') },
     { icon: <MessageSquare className="h-5 w-5 text-white" />, title: t('features.feature4.title'), description: t('features.feature4.description') },
     { icon: <Calendar className="h-5 w-5 text-white" />, title: t('features.feature5.title'), description: t('features.feature5.description') },
     { icon: <Zap className="h-5 w-5 text-white" />, title: t('features.feature6.title'), description: t('features.feature6.description') }
