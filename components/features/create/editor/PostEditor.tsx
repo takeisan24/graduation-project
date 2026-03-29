@@ -7,7 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { useCreatePostsStore, useCreateSourcesStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslations } from 'next-intl';
-import { PlusCircle, Trash2, MessageSquare, Sparkles, ChevronLeft, ChevronRight, History } from 'lucide-react';
+import { PlusCircle, Trash2, MessageSquare, ChevronLeft, ChevronRight, History } from 'lucide-react';
+import CreatorHubIcon from '@/components/shared/CreatorHubIcon';
 
 import TabsManager from './TabsManager';
 import MediaPreview from './MediaPreview';
@@ -59,7 +60,7 @@ export default function PostEditor() {
                             <div className="flex justify-center">
                                 <div className="relative">
                                     <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20">
-                                        <Sparkles className="w-8 h-8 text-primary" />
+                                        <CreatorHubIcon className="w-8 h-8 text-primary" />
                                     </div>
                                     <div className="absolute -bottom-1.5 -right-1.5 w-7 h-7 bg-primary rounded-lg flex items-center justify-center shadow-md">
                                         <PlusCircle className="w-4 h-4 text-primary-foreground" />
@@ -167,7 +168,7 @@ export default function PostEditor() {
                             placeholder={`${t('postContentPlaceholder')} ${currentPost?.type || "post"}?`}
                             value={postContents[selectedPostId] ?? ""}
                             onChange={(e) => handlePostContentChange(selectedPostId, e.target.value)}
-                            className="flex-1 min-h-0 bg-card border-0 resize-none text-base md:text-sm text-foreground placeholder:text-muted-foreground focus:ring-0 focus:outline-none p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/30 scrollbar-track-secondary rounded-none"
+                            className="flex-1 min-h-0 bg-card border-0 resize-none text-base md:text-sm text-foreground placeholder:text-muted-foreground focus:border-utc-royal/50 focus:ring-2 focus:ring-utc-royal/20 focus:outline-none p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/30 scrollbar-track-secondary rounded-none"
                         />
 
                         {/* MediaPreview + ActionBar - Fixed ở bottom, luôn visible */}

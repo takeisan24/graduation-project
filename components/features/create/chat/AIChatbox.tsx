@@ -296,16 +296,16 @@ export default function AIChatbox() {
             <div className="space-y-4 min-h-0">
               {chatMessages.map((message, index) => (
                 <div key={index} className={`flex flex-col ${message.role === "user" ? "items-end" : "items-start"}`}>
-                  <div className={`relative group max-w-[85%] rounded-lg p-3 break-words border ${message.role === "user"
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-card text-card-foreground border-border"
+                  <div className={`relative group max-w-[85%] p-3 break-words ${message.role === "user"
+                      ? "ml-auto bg-utc-royal/10 border border-utc-royal/20 rounded-2xl rounded-br-sm text-foreground"
+                      : "mr-auto bg-muted border border-border rounded-2xl rounded-bl-sm text-foreground"
                     }`}>
                     {/* Nút Copy Thông Minh - Góc trên bên phải */}
                     {shouldShowCopyButton(message) && (
-                      <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <button
                           onClick={() => handleCopyMessage(message.content, index)}
-                          className="p-1.5 rounded-full bg-muted border border-border hover:bg-muted/80 text-muted-foreground hover:text-foreground shadow-sm transition-all"
+                          className="p-1.5 rounded-full bg-background border border-border hover:bg-muted text-muted-foreground hover:text-foreground shadow-sm transition-all"
                           title="Sao chép nội dung này để Format"
                         >
                           {copiedIndex === index ? (
@@ -350,7 +350,7 @@ export default function AIChatbox() {
             <textarea
               ref={textareaRef}
               placeholder={t('aiChatPlaceholder')}
-              className="w-full bg-card border-2 border-border rounded-lg outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 resize-none text-foreground placeholder-muted-foreground text-sm p-3 pr-12 transition-all overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/30 scrollbar-track-secondary"
+              className="w-full bg-card border-2 border-border rounded-lg outline-none focus:border-utc-royal/50 focus:ring-2 focus:ring-utc-royal/20 resize-none text-foreground placeholder-muted-foreground text-sm p-3 pr-12 transition-all overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/30 scrollbar-track-secondary"
               style={{ minHeight: '60px', maxHeight: '200px' }}
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
@@ -360,7 +360,7 @@ export default function AIChatbox() {
             <button
               onClick={handleSend}
               disabled={!chatInput.trim() || isTyping}
-              className='absolute right-3 bottom-3 text-white bg-gradient-to-br from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 disabled:from-muted disabled:to-muted disabled:cursor-not-allowed rounded-lg p-2 transition-all hover:scale-105 active:scale-95 shadow-lg'
+              className='absolute right-3 bottom-3 text-white bg-gradient-to-r from-utc-royal to-utc-sky hover:opacity-90 disabled:from-muted disabled:to-muted disabled:cursor-not-allowed rounded-lg p-2 transition-all hover:scale-105 active:scale-95 shadow-lg'
             >
               <SendIcon className='w-4 h-4' />
             </button>

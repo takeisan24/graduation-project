@@ -174,7 +174,7 @@ export default function ActionBar() {
               ref={generateButtonRef}
               size="sm"
               variant="outline"
-              className="h-9 px-3 lg:px-4 bg-background hover:bg-accent/50 hover:border-accent/80 border-background text-foreground"
+              className="h-9 px-3 lg:px-4 bg-gradient-to-r from-utc-royal to-utc-sky text-white hover:opacity-90 border-0"
               onClick={() => setShowGenerateMenu(!showGenerateMenu)}
             >
               <SparklesIcon className="w-4 h-4 lg:mr-2" />
@@ -193,41 +193,44 @@ export default function ActionBar() {
                 left: `${menuPosition.left}px`
               }}
             >
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => {
                   setIsImageGenModalOpen(true, 'content');
                   setShowGenerateMenu(false);
                 }}
-                className="w-full text-left px-4 py-2 text-sm text-muted-foreground hover:bg-secondary flex items-center gap-3"
+                className="w-full justify-start px-4 py-2 h-auto text-sm text-muted-foreground hover:bg-secondary rounded-none"
               >
-                <ImageIcon className="w-4 h-4" />
+                <ImageIcon className="w-4 h-4 mr-3" />
                 {t('generateImage')}
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => {
                   setIsVideoGenModalOpen(true);
                   setShowGenerateMenu(false);
                 }}
-                className="w-full text-left px-4 py-2 text-sm text-muted-foreground hover:bg-secondary flex items-center gap-3"
+                className="w-full justify-start px-4 py-2 h-auto text-sm text-muted-foreground hover:bg-secondary rounded-none"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
                 {t('generateVideo')}
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => {
                   setIsMediaLibraryModalOpen(true);
                   setShowGenerateMenu(false);
                 }}
-                className="w-full text-left px-4 py-2 text-sm text-muted-foreground hover:bg-secondary flex items-center gap-3"
+                className="w-full justify-start px-4 py-2 h-auto text-sm text-muted-foreground hover:bg-secondary rounded-none"
               >
-                <ImageIcon className="w-4 h-4" />
+                <ImageIcon className="w-4 h-4 mr-3" />
                 {t('mediaLibrary')}
-              </button>
+              </Button>
             </div>
           )}
 
@@ -329,7 +332,7 @@ export default function ActionBar() {
 
           <Button
             onClick={() => setIsPublishModalOpen(true)}
-            className="h-9 px-4 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
+            className="h-9 px-4 bg-gradient-to-r from-utc-royal to-utc-sky text-white hover:opacity-90 border-0 shadow-lg shadow-utc-royal/20"
           >
             <span className="flex items-center gap-2">
               <span className="hidden lg:inline text-sm font-bold">{t('publish')}</span>
