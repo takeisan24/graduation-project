@@ -170,10 +170,8 @@ export default function CreateSection() {
           {/* Editor area (spacious, takes remaining space) */}
           <div className={`flex-1 min-h-0 relative ${isConfiguringPosts ? 'z-30' : 'z-10'}
             ${activeMobilePanel === 'editor' ? 'block' : 'hidden lg:block'}`}>
-            <div className={`relative ${isConfiguringPosts ? 'z-30' : 'z-0'} h-full w-full overflow-y-auto`}>
-              <div className="max-w-4xl mx-auto px-4 lg:px-8 py-4">
-                <PostEditorWrapper mode={isConfiguringPosts ? 'configure' : 'normal'} />
-              </div>
+            <div className={`relative ${isConfiguringPosts ? 'z-30' : 'z-0'} h-full w-full`}>
+              <PostEditorWrapper mode={isConfiguringPosts ? 'configure' : 'normal'} />
             </div>
             {/* Wizard overlay */}
             {isInWizard && !isConfiguringPosts && (

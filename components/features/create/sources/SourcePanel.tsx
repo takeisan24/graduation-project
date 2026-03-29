@@ -147,34 +147,14 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
                     <span className="ml-2 text-lg md:text-base group-hover:scale-110 transition-transform inline-block">+</span>
                 </Button>
 
-                <Button
-                    size="sm"
-                    className="text-base md:text-sm bg-gradient-to-r from-accent to-violet-700 hover:from-violet-700 hover:to-violet-800 text-primary-foreground px-4 py-3 md:py-2 transition-all duration-300 border-0 relative group shadow-lg shadow-accent/30 hover:shadow-accent/50 w-full md:w-auto mt-1"
-                    onClick={() => useImageGenModalStore.getState().setIsImageGenModalOpen(true, 'sidebar')}
-                >
-                    <SparklesIcon className="w-5 h-5 md:w-4 md:h-4 mr-2 inline-block group-hover:scale-110 transition-transform" />
-                    {t('generateImageAI')}
-                </Button>
             </div>
 
             <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
                 {savedSources.length === 0 ? (
-                    <div className="mt-4 p-4 md:p-5 rounded-xl bg-gradient-to-br from-primary/10 via-card to-card border-2 border-dashed border-primary/30 hover:border-primary/50 transition-all duration-300 group flex-shrink-0">
-                        <div className="flex justify-center mb-4">
-                            <div className="relative">
-                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                    <FileTextIcon className="w-8 h-8 text-primary group-hover:scale-110 transition-transform" />
-                                </div>
-                                <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center animate-pulse">
-                                    <span className="text-white text-xs font-bold">+</span>
-                                </div>
-                            </div>
-                        </div>
-                        <p className="text-base text-foreground text-center font-semibold mb-2">
+                    <div className="mt-3 p-4 rounded-lg border border-dashed border-border text-center">
+                        <FileTextIcon className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+                        <p className="text-sm text-muted-foreground">
                             {tModal('title')}
-                        </p>
-                        <p className="text-xs text-muted-foreground text-center leading-relaxed">
-                            {tModal('description')}
                         </p>
                     </div>
                 ) : (

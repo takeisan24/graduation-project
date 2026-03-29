@@ -53,66 +53,17 @@ export default function PostEditor() {
             {/* Editor Card */}
             <Card className="bg-card border-border p-0 gap-0 rounded-[5px] flex-1 flex flex-col w-full overflow-hidden">
                 {selectedPostId === 0 || posts.length === 0 ? (
-                    <div className="flex-1 flex items-center justify-center p-6 md:p-8 relative overflow-hidden min-h-0">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5"></div>
-
-                        <div className="max-w-xl text-center space-y-5 relative z-10">
+                    <div className="flex-1 flex items-center justify-center p-6 min-h-0">
+                        <div className="text-center space-y-4 max-w-sm">
                             <div className="flex justify-center">
-                                <div className="relative">
-                                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20">
-                                        <CreatorHubIcon className="w-8 h-8 text-primary" />
-                                    </div>
-                                    <div className="absolute -bottom-1.5 -right-1.5 w-7 h-7 bg-primary rounded-lg flex items-center justify-center shadow-md">
-                                        <PlusCircle className="w-4 h-4 text-primary-foreground" />
-                                    </div>
-                                </div>
+                                <CreatorHubIcon className="w-12 h-12" />
                             </div>
-
-                            <div className="space-y-2">
-                                <h3 className="text-xl font-bold text-foreground">
+                            <div className="space-y-1.5">
+                                <h3 className="text-lg font-semibold text-foreground">
                                     {t('emptyState.title')}
                                 </h3>
-                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                <p className="text-sm text-muted-foreground">
                                     {t('emptyState.description')}
-                                </p>
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
-                                <div className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border hover:border-primary/40 hover:shadow-md transition-all group">
-                                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-sm flex-shrink-0">
-                                        1
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
-                                            {t('emptyState.step1.title')}
-                                        </p>
-                                        <p className="text-xs text-muted-foreground leading-relaxed">
-                                            {t('emptyState.step1.description')}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-3 p-4 rounded-xl bg-card border border-border hover:border-accent/40 hover:shadow-md transition-all group">
-                                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-accent-foreground font-bold text-sm flex-shrink-0">
-                                        2
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-semibold text-foreground mb-1 group-hover:text-accent transition-colors">
-                                            {t('emptyState.step2.title')}
-                                        </p>
-                                        <p className="text-xs text-muted-foreground leading-relaxed">
-                                            {t('emptyState.step2.description')}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start gap-3 p-3 rounded-xl bg-primary/5 border border-primary/20">
-                                <MessageSquare className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                                <p className="text-xs text-left leading-relaxed">
-                                    <strong className="font-semibold text-foreground text-sm">{t('emptyState.tip.title')}</strong>
-                                    {' '}
-                                    <span className="text-muted-foreground">{t('emptyState.tip.description')}</span>
                                 </p>
                             </div>
                         </div>
