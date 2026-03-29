@@ -293,7 +293,7 @@ export default function CalendarSection() {
 
     // --- RENDER COMPONENT ---
     return (
-        <div className="w-full max-w-none py-3 flex flex-col h-[calc(100vh-80px)]">
+        <div className="w-full max-w-none flex flex-col h-full overflow-hidden">
             <SectionHeader icon={Calendar} title={tHeaders('calendar.title')} description={tHeaders('calendar.description')} />
             <CalendarToolbar
                 calendarView={calendarView}

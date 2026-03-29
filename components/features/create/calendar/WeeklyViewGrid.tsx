@@ -38,7 +38,7 @@ export function WeeklyViewGrid({
   const isToday = (date: Date) => new Date().toDateString() === date.toDateString();
 
   return (
-    <div className="rounded-lg border border-border overflow-hidden mt-4 h-[calc(100vh-120px)] flex flex-col">
+    <div className="rounded-lg border border-border overflow-hidden mt-2 flex-1 flex flex-col">
       {/* Weekday headers */}
       <div className="flex bg-secondary sticky top-0 z-10">
         <div className="w-16 flex-shrink-0 flex items-center justify-center py-2 border-r border-border">

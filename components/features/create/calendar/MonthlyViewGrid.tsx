@@ -31,7 +31,7 @@ export function MonthlyViewGrid({
   const todayTime = today.getTime();
   
     return (
-    <div className="rounded-lg border border-border overflow-hidden mt-4 h-[calc(100vh-180px)] lg:h-[calc(100vh-120px)] flex flex-col mx-2 lg:mx-0">
+    <div className="rounded-lg border border-border overflow-hidden mt-2 flex-1 flex flex-col mx-2 lg:mx-0">
       {/* Weekday headers */}
       <div className="grid grid-cols-7 bg-secondary">
         {weekdays.map((day) => (
