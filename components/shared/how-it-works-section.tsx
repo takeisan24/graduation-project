@@ -1,115 +1,115 @@
-// components/shared/how-it-works-section.tsx
-
 "use client"
 
-import { Card } from "@/components/ui/card"
-import { Link2, Zap, Share2 } from "lucide-react"
+import { Link2, Zap, Share2, ArrowRight } from "lucide-react"
 import { useTranslations } from "next-intl"
-import Image from "next/image" // Thêm Image component
+
+// Re-use parent translations for section label
 import { motion } from "framer-motion"
+
+const easeOut = [0.16, 1, 0.3, 1] as const;
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: easeOut } }
+};
+
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } }
+};
 
 export default function HowItWorksSection() {
   const t = useTranslations('HomePage.howItWorks');
-
-  // Định nghĩa animation variants
-  const fadeInAnimation = {
-    initial: { opacity: 0, y: 30 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.3}
-  };
+  const tLabels = useTranslations('HomePage.sectionLabels');
 
   const steps = [
     {
-      icon: <Link2 className="h-8 w-8 text-primary" />,
+      icon: <Link2 className="h-6 w-6 text-white" />,
       title: t('step1.title'),
       description: t('step1.description'),
-      image: "/how-it-works-1.png" // Đường dẫn đến ảnh cho bước 1
+      number: "01",
     },
     {
-      icon: <Zap className="h-8 w-8 text-primary" />,
+      icon: <Zap className="h-6 w-6 text-white" />,
       title: t('step2.title'),
       description: t('step2.description'),
-      image: "/how-it-works-2.png" // Đường dẫn đến ảnh cho bước 2
+      number: "02",
     },
     {
-      icon: <Share2 className="h-8 w-8 text-primary" />,
+      icon: <Share2 className="h-6 w-6 text-white" />,
       title: t('step3.title'),
       description: t('step3.description'),
-      image: "/how-it-works-3.png" // Đường dẫn đến ảnh cho bước 3
+      number: "03",
     }
   ];
 
   return (
-    <section className="py-20 md:py-32">
-      {/* Sửa đổi ở đây: Thêm div bao bọc với border */}
-      <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto">
-        <motion.div 
-          className="text-center mb-16 max-w-3xl mx-auto"
-          initial="initial"
-          whileInView="whileInView"
-          viewport={fadeInAnimation.viewport}
-          transition={{ duration: 0.5 }}
-          variants={fadeInAnimation}
+    <section className="py-28 md:py-36">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section header */}
+        <motion.div
+          className="text-center mb-20"
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
+          <motion.div variants={fadeInUp}>
+            <div className="section-label mx-auto mb-6 w-fit">
+              <span className="section-label-dot animate-pulse-dot" />
+              <span className="section-label-text">{tLabels('howItWorks')}</span>
+            </div>
+          </motion.div>
+          <motion.h2 variants={fadeInUp} className="font-display text-3xl md:text-[3.25rem] leading-tight mb-4">
             {t('title')}
-          </h2>
-          <p className="text-xl text-muted-foreground text-pretty">
+          </motion.h2>
+          <motion.p variants={fadeInUp} className="text-lg text-muted-foreground max-w-2xl mx-auto">
             {t('subtitle')}
-          </p>
+          </motion.p>
         </motion.div>
-        </div>
 
-        {/* Thay đổi cấu trúc hiển thị để thêm ảnh */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        {/* Timeline steps */}
+        <motion.div
+          className="relative grid md:grid-cols-3 gap-8 md:gap-6"
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          {/* Connecting line (desktop only) */}
+          <div className="hidden md:block absolute top-16 left-[16.5%] right-[16.5%] h-[2px] bg-gradient-to-r from-utc-royal/20 via-utc-sky/30 to-utc-gold/20" />
+
           {steps.map((step, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.8, y: 30 }}
-              whileInView={{ opacity: 1, scale: 1, y: 0 }}
-              whileHover={{ 
-                scale: 1.05,
-                y: -12,
-                rotateY: 5,
-                transition: { duration: 0.4, ease: "easeOut" }
-              }}
-              whileTap={{ scale: 0.95 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: index * 0.2, ease: [0.34, 1.56, 0.64, 1] }}
-            >
-            <Card className="p-6 bg-card border-border hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/25 transition-all duration-300 text-center flex flex-col items-center cursor-pointer group">
-              <motion.div 
-                className="w-full aspect-video rounded-lg overflow-hidden mb-6 bg-muted/30"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Image
-                  src={step.image}
-                  alt={step.title}
-                  width={400}
-                  height={225}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                />
-              </motion.div>
-              <motion.div 
-                className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4"
-                whileHover={{
-                  rotate: 360,
-                  scale: 1.2,
-                  transition: { duration: 0.6 }
-                }}
-              >
-                {step.icon}
-              </motion.div>
-              <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">
+            <motion.div key={step.number} variants={fadeInUp} className="relative text-center">
+              {/* Step number circle */}
+              <div className="relative mx-auto mb-8">
+                <div className="w-32 h-32 mx-auto rounded-full border-2 border-utc-royal/10 flex items-center justify-center bg-card">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-utc-royal to-utc-sky flex items-center justify-center shadow-accent">
+                    {step.icon}
+                  </div>
+                </div>
+
+                {/* Step number badge */}
+                <div className="absolute -top-2 -right-2 w-10 h-10 rounded-full bg-card border-2 border-border flex items-center justify-center shadow-md">
+                  <span className="text-sm font-bold font-mono text-utc-royal">{step.number}</span>
+                </div>
+
+                {/* Arrow connector (between steps on desktop) */}
+                {index < steps.length - 1 && (
+                  <div className="hidden md:flex absolute top-1/2 -right-[calc(50%-4rem)] -translate-y-1/2 items-center justify-center w-8 h-8 rounded-full bg-utc-royal/10 border border-utc-royal/20">
+                    <ArrowRight className="h-4 w-4 text-utc-royal" />
+                  </div>
+                )}
+              </div>
+
+              {/* Content */}
+              <h3 className="text-xl font-semibold mb-3 tracking-tight">{step.title}</h3>
+              <p className="text-muted-foreground leading-relaxed max-w-xs mx-auto">
                 {step.description}
               </p>
-            </Card>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

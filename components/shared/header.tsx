@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Menu, X, User, LogOut } from "lucide-react";
+import { Menu, X, User, LogOut, ArrowRight, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useTranslations } from 'next-intl';
 import { useAuth } from "@/hooks/useAuth";
@@ -12,42 +13,64 @@ export default function Header() {
   const t = useTranslations('Header');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isAuthenticated, loading, signOut } = useAuth();
+  const { theme, setTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-      <div className="container mx-auto px-4 h-14 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
-          <Sparkles className="h-5 w-5 text-primary" />
-          <span className="text-lg font-bold">CreatorHub</span>
+    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        {/* Logo - UTC branded */}
+        <Link href="/" className="flex items-center gap-2.5 group" onClick={() => setIsMobileMenuOpen(false)}>
+          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-utc-royal to-utc-sky flex items-center justify-center shadow-sm">
+            <span className="text-white font-bold text-sm">C</span>
+          </div>
+          <span className="text-lg font-semibold tracking-tight">
+            Creator<span className="gradient-text">Hub</span>
+          </span>
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="h-9 w-9 text-muted-foreground hover:text-foreground"
+            aria-label="Toggle theme"
+          >
+            <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
+          </Button>
           <LanguageSwitcher />
           {loading ? (
-            <div className="text-sm text-muted-foreground">{t('buttons.loading')}</div>
+            <div className="text-sm text-muted-foreground px-3">{t('buttons.loading')}</div>
           ) : isAuthenticated && user ? (
             <>
-              <Link href="/create" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                {t('buttons.dashboard')}
-              </Link>
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary/10">
-                <User className="h-4 w-4 text-primary" />
-                <span className="text-sm">{user.email}</span>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/create">
+                  {t('buttons.dashboard')}
+                </Link>
+              </Button>
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-utc-royal/5 border border-utc-royal/10">
+                <User className="h-3.5 w-3.5 text-utc-royal" />
+                <span className="text-sm text-foreground/80">{user.email}</span>
               </div>
-              <Button size="sm" variant="ghost" onClick={signOut}>
-                <LogOut className="h-4 w-4 mr-1" />
+              <Button size="sm" variant="ghost" onClick={signOut} className="text-muted-foreground hover:text-foreground">
+                <LogOut className="h-4 w-4 mr-1.5" />
                 {t('buttons.signOut')}
               </Button>
             </>
           ) : (
             <>
-              <Link prefetch={false} href="/signin" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                {t('buttons.signIn')}
-              </Link>
-              <Button size="sm" asChild>
-                <Link prefetch={false} href="/signup">{t('buttons.getStarted')}</Link>
+              <Button variant="ghost" size="sm" asChild>
+                <Link prefetch={false} href="/signin">
+                  {t('buttons.signIn')}
+                </Link>
+              </Button>
+              <Button size="sm" className="bg-gradient-to-r from-utc-royal to-utc-sky text-white shadow-sm hover:shadow-accent hover:-translate-y-0.5 transition-all duration-200" asChild>
+                <Link prefetch={false} href="/signup">
+                  {t('buttons.getStarted')}
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                </Link>
               </Button>
             </>
           )}
@@ -68,32 +91,51 @@ export default function Header() {
 
       {/* Mobile panel */}
       {isMobileMenuOpen && (
-        <div className="absolute top-full left-0 w-full bg-background border-b border-border md:hidden">
-          <div className="container mx-auto px-6 py-4 flex flex-col gap-4">
-            <LanguageSwitcher />
+        <div className="absolute top-full left-0 w-full bg-background/95 backdrop-blur-xl border-b border-border md:hidden">
+          <div className="max-w-6xl mx-auto px-6 py-5 flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="h-9 w-9 text-muted-foreground"
+                aria-label="Toggle theme"
+              >
+                <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
+              </Button>
+              <LanguageSwitcher />
+            </div>
             {loading ? (
               <div className="text-sm text-muted-foreground">{t('buttons.loading')}</div>
             ) : isAuthenticated && user ? (
               <>
-                <Link href="/create" className="text-sm text-muted-foreground hover:text-foreground" onClick={() => setIsMobileMenuOpen(false)}>
-                  {t('buttons.dashboard')}
-                </Link>
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary/10">
-                  <User className="h-4 w-4 text-primary" />
+                <Button variant="ghost" className="w-full justify-start" asChild>
+                  <Link href="/create" onClick={() => setIsMobileMenuOpen(false)}>
+                    {t('buttons.dashboard')}
+                  </Link>
+                </Button>
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-utc-royal/5 border border-utc-royal/10">
+                  <User className="h-4 w-4 text-utc-royal" />
                   <span className="text-sm">{user.email}</span>
                 </div>
-                <Button variant="ghost" className="w-full justify-start" onClick={() => { signOut(); setIsMobileMenuOpen(false); }}>
+                <Button variant="ghost" className="w-full justify-start text-muted-foreground" onClick={() => { signOut(); setIsMobileMenuOpen(false); }}>
                   <LogOut className="h-4 w-4 mr-2" />
                   {t('buttons.signOut')}
                 </Button>
               </>
             ) : (
               <>
-                <Link prefetch={false} href="/signin" className="text-sm text-muted-foreground hover:text-foreground" onClick={() => setIsMobileMenuOpen(false)}>
-                  {t('buttons.signIn')}
-                </Link>
-                <Button className="w-full" asChild>
-                  <Link prefetch={false} href="/signup" onClick={() => setIsMobileMenuOpen(false)}>{t('buttons.getStarted')}</Link>
+                <Button variant="ghost" className="w-full justify-start" asChild>
+                  <Link prefetch={false} href="/signin" onClick={() => setIsMobileMenuOpen(false)}>
+                    {t('buttons.signIn')}
+                  </Link>
+                </Button>
+                <Button className="w-full bg-gradient-to-r from-utc-royal to-utc-sky text-white" asChild>
+                  <Link prefetch={false} href="/signup" onClick={() => setIsMobileMenuOpen(false)}>
+                    {t('buttons.getStarted')}
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                  </Link>
                 </Button>
               </>
             )}

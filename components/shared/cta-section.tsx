@@ -3,14 +3,17 @@
 import { useCallback, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Loader2 } from "lucide-react"
-import {useTranslations, useLocale} from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/useAuth"
 import { supabaseClient } from "@/lib/supabaseClient"
 
+const easeOut = [0.16, 1, 0.3, 1] as const;
+
 export default function CTASection() {
   const t = useTranslations('HomePage.ctaSection');
+  const tLabels = useTranslations('HomePage.sectionLabels');
   const locale = useLocale()
   const router = useRouter()
   const { isAuthenticated, loading: authLoading } = useAuth()
@@ -18,81 +21,64 @@ export default function CTASection() {
 
   const handleGetStarted = useCallback(async () => {
     if (isCtaLoading) return
-
     setIsCtaLoading(true)
-
     try {
       let hasSession = isAuthenticated
-
       if (!hasSession && authLoading) {
-        // Ensure we read the latest session before deciding where to redirect
         const { data: { session } } = await supabaseClient.auth.getSession()
         hasSession = Boolean(session)
       }
-
-      const targetPath = hasSession ? `/${locale}/create` : `/${locale}/signin`
-      router.push(targetPath)
-    } catch (error) {
-      console.warn('[CTASection] Failed to determine auth state, sending user to signin as fallback:', error)
+      router.push(hasSession ? `/${locale}/create` : `/${locale}/signin`)
+    } catch {
       router.push(`/${locale}/signin`)
     } finally {
       setIsCtaLoading(false)
     }
   }, [authLoading, isAuthenticated, isCtaLoading, locale, router])
-  
+
   return (
-    <section className="py-20 md:py-32">
-      <div className="container mx-auto px-4">
-        <motion.div 
-          className="bg-primary/5 border border-white/30 border-white[.03] rounded-2xl p-8 md:p-16"
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: false, amount: 0.3 }}
-          transition={{ duration: 0.6 }}
+    <section className="section-inverted relative py-28 md:py-36 overflow-hidden">
+      {/* Textures */}
+      <div className="dot-pattern absolute inset-0" />
+      <div className="radial-glow radial-glow-blue w-[500px] h-[500px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+
+      <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.7, ease: easeOut }}
         >
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.h2 
-              className="text-4xl md:text-6xl font-bold mb-6 text-balance"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+          {/* Section label */}
+          <div className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/5 px-5 py-2 mb-8">
+            <span className="h-2 w-2 rounded-full bg-utc-gold animate-pulse-dot" />
+            <span className="font-mono text-xs uppercase tracking-[0.15em] text-utc-gold">
+              {tLabels('cta')}
+            </span>
+          </div>
+
+          <h2 className="font-display text-3xl md:text-[3.25rem] leading-tight mb-6">
+            {t('title')}
+          </h2>
+
+          <p className="text-lg opacity-70 mb-10 max-w-xl mx-auto leading-relaxed">
+            {t('subtitle')}
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button
+              size="lg"
+              className="h-14 px-10 text-base bg-gradient-to-r from-utc-royal to-utc-sky text-white shadow-accent hover:shadow-accent-lg hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 group"
+              onClick={handleGetStarted}
+              disabled={isCtaLoading}
             >
-              {t('title')}
-            </motion.h2>
-            <motion.p 
-              className="text-xl text-muted-foreground mb-8 text-pretty max-w-2xl mx-auto leading-relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              {t('subtitle')}
-            </motion.p>
-            <motion.div 
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              <Button 
-                size="lg" 
-                className="text-base px-8"
-                onClick={handleGetStarted}
-                disabled={isCtaLoading}
-              >
-                <span>{t('cta')}</span>
-                {isCtaLoading ? (
-                  <Loader2 className="ml-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                )}
-              </Button>
-              <Button size="lg" variant="outline" className="text-base px-8 bg-transparent">
-                <a href="/pricing">{t('pricing_view')}</a>
-              </Button>
-            </motion.div>
+              <span>{t('cta')}</span>
+              {isCtaLoading ? (
+                <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+              ) : (
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              )}
+            </Button>
           </div>
         </motion.div>
       </div>
