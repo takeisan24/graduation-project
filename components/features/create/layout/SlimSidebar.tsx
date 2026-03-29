@@ -117,7 +117,7 @@ export default function SlimSidebar({
   return (
     <>
       {/* Desktop slim sidebar */}
-      <aside className="hidden lg:flex flex-col items-center w-16 flex-none border-r border-border/50 bg-background py-3 gap-1">
+      <aside className="hidden lg:flex flex-col items-center w-16 flex-none border-r border-border/50 bg-card/50 py-3 gap-1">
         {/* Menu group */}
         <div className="flex flex-col items-center gap-1">
           {menuItems.map((item) => renderNavItem(item))}
