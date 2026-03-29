@@ -195,7 +195,7 @@ export default function SignUpPage() {
             <Button
               type="button"
               variant="outline"
-              className="w-full h-12"
+              className="w-full h-12 hover:bg-muted hover:text-foreground"
               onClick={() => handleOAuthSignup("google")}
               disabled={isLoading || oauthProviderLoading !== null}
             >

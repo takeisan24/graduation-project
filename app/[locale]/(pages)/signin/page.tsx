@@ -244,7 +244,7 @@ export default function SignInPage() {
             <Button
               type="button"
               variant="outline"
-              className="w-full h-12"
+              className="w-full h-12 hover:bg-muted hover:text-foreground"
               onClick={() => handleOAuthLogin("google")}
               disabled={isLoading || !!oauthProviderLoading}
             >
