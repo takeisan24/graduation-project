@@ -9,14 +9,14 @@
  * Note: invert=true applies filter to convert dark icons to white for better visibility
  */
 export const SOCIAL_PLATFORMS = [
-  { name: 'TikTok', icon: '/tiktok.png', color: 'bg-black', invert: true },
-  { name: 'Instagram', icon: '/instagram.png', color: 'bg-pink-500' },
-  { name: 'YouTube', icon: '/ytube.png', color: 'bg-red-500' },
-  { name: 'Facebook', icon: '/fb.svg', color: 'bg-blue-500' },
-  { name: 'Twitter', icon: '/x.png', color: 'bg-black', invert: true },
-  { name: 'Threads', icon: '/threads.png', color: 'bg-black', invert: true },
-  { name: 'LinkedIn', icon: '/link.svg', color: 'bg-blue-600' },
-  { name: 'Pinterest', icon: '/pinterest.svg', color: 'bg-red-500' }
+  { name: 'TikTok', icon: '/icons/platforms/tiktok.png', color: 'bg-black', invert: true },
+  { name: 'Instagram', icon: '/icons/platforms/instagram.png', color: 'bg-pink-500' },
+  { name: 'YouTube', icon: '/icons/platforms/ytube.png', color: 'bg-red-500' },
+  { name: 'Facebook', icon: '/icons/platforms/fb.svg', color: 'bg-blue-500' },
+  { name: 'Twitter', icon: '/icons/platforms/x.png', color: 'bg-black', invert: true },
+  { name: 'Threads', icon: '/icons/platforms/threads.png', color: 'bg-black', invert: true },
+  { name: 'LinkedIn', icon: '/icons/platforms/link.svg', color: 'bg-blue-600' },
+  { name: 'Pinterest', icon: '/icons/platforms/pinterest.svg', color: 'bg-red-500' }
 ] as const
 
 /**
@@ -28,15 +28,15 @@ export const socialPlatforms = SOCIAL_PLATFORMS
  * Platform icon mapping (case-insensitive)
  */
 export const PLATFORM_ICON_MAP: Record<string, string> = {
-  'tiktok': '/tiktok.png',
-  'instagram': '/instagram.png',
-  'youtube': '/ytube.png',
-  'facebook': '/fb.svg',
-  'twitter': '/x.png',
-  'x': '/x.png',
-  'threads': '/threads.png',
-  'linkedin': '/link.svg',
-  'pinterest': '/pinterest.svg'
+  'tiktok': '/icons/platforms/tiktok.png',
+  'instagram': '/icons/platforms/instagram.png',
+  'youtube': '/icons/platforms/ytube.png',
+  'facebook': '/icons/platforms/fb.svg',
+  'twitter': '/icons/platforms/x.png',
+  'x': '/icons/platforms/x.png',
+  'threads': '/icons/platforms/threads.png',
+  'linkedin': '/icons/platforms/link.svg',
+  'pinterest': '/icons/platforms/pinterest.svg'
 }
 
 /**

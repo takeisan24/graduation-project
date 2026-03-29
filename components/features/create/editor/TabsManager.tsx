@@ -7,6 +7,7 @@ import { PlusIcon, X as CloseIcon, ChevronDown, ChevronUp } from 'lucide-react';
 import { useCreatePostsStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslations } from 'next-intl';
+import { getPlatformColors } from '@/lib/constants/platformColors';
 
 // Dữ liệu này có thể chuyển ra file constants để dùng chung
 const platformOptions = [
@@ -110,17 +111,22 @@ export default function TabsManager() {
                     if (isTabsCollapsed && index >= 4) return null;
                     
                     const platformIcon = getPlatformIcon(post.type);
-                    
+                    const pColors = getPlatformColors(post.type);
+
                     return (
                         <div
                             key={post.id}
-                            className={`flex items-center gap-1.5 px-2 lg:px-2.5 py-1.5 cursor-pointer rounded-t-lg transition-all flex-shrink-0 ${
+                            className={`group relative flex items-center gap-1.5 px-2 lg:px-2.5 py-1.5 cursor-pointer rounded-t-lg transition-all flex-shrink-0 ${
                                 selectedPostId === post.id
-                                    ? "border-b-2 border-primary text-foreground bg-card"
-                                    : "border-b border-transparent text-muted-foreground hover:text-foreground hover:bg-card/50"
+                                    ? "text-foreground bg-card"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-card/50"
                             }`}
                             onClick={() => handlePostSelect(post.id)}
                         >
+                            {/* Platform color indicator */}
+                            {selectedPostId === post.id && (
+                              <div className={`absolute bottom-0 left-1 right-1 h-[2px] rounded-full ${pColors.dot}`} />
+                            )}
                             {/* Platform Icon */}
                             <img 
                                 src={platformIcon} 
@@ -133,15 +139,17 @@ export default function TabsManager() {
                                     {post.type}
                                 </span>
                             )}
-                            <button
+                            <Button
+                                variant="ghost"
+                                size="icon"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handlePostDelete(post.id);
                                 }}
-                                className="p-0.5 rounded-full hover:bg-red-500/20 transition-colors flex-shrink-0"
+                                className="h-5 w-5 p-0 rounded-full hover:bg-destructive/20 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0"
                             >
                                 <CloseIcon className="w-3 h-3" />
-                            </button>
+                            </Button>
                         </div>
                     );
                 })}

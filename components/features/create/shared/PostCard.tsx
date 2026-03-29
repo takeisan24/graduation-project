@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { PlatformIcon } from "@/components/shared/PlatformIcon"
 import { formatDate } from "@/lib/utils/date"
+import { getPlatformColors } from "@/lib/constants/platformColors"
 import { Pencil, Trash2, RefreshCw, AlertTriangle } from "lucide-react"
 import { useTranslations } from "next-intl"
 
@@ -32,22 +33,23 @@ export default function PostCard({ post, variant, onEdit, onDelete, onRetry, onC
   const content = post.content || t("noContent")
   const platform = post.platform || "unknown"
   const date = post.created_at ? formatDate(post.created_at) : ""
+  const colors = getPlatformColors(platform)
 
   return (
     <Card
-      className="group relative overflow-hidden bg-card border-border hover:border-utc-royal/30 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+      className={`group relative overflow-hidden bg-card ${colors.border} hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer ${colors.tint} ${colors.darkTint}`}
       onClick={onClick}
     >
-      {/* Gradient top border for failed */}
-      {variant === "failed" && (
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-destructive to-destructive/50" />
-      )}
+      {/* Platform color top border */}
+      <div className={`absolute top-0 left-0 right-0 h-[2px] ${variant === "failed" ? "bg-gradient-to-r from-destructive to-destructive/50" : colors.dot}`} />
 
       <div className="p-4">
-        {/* Header: platform + date */}
+        {/* Header: platform badge + date */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <PlatformIcon platform={platform} size={18} />
+            <div className={`w-6 h-6 rounded-md ${colors.bg} flex items-center justify-center`}>
+              <PlatformIcon platform={platform} size={14} />
+            </div>
             <span className="text-xs font-medium capitalize">{platform}</span>
           </div>
           {date && <span className="text-xs text-muted-foreground">{date}</span>}
