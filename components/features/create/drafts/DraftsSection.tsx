@@ -3,11 +3,10 @@
 import { usePostFilters } from "@/hooks/usePostFilters"
 import { useFilteredPosts } from "@/hooks/useFilteredPosts"
 import { FilterBar } from "@/components/shared/filters/FilterBar"
-import { PlatformIcon } from "@/components/shared/PlatformIcon"
-import { formatDate } from "@/lib/utils/date"
 import { useTranslations } from 'next-intl'
-import { FileText } from 'lucide-react'
+import { FileText, FileX } from 'lucide-react'
 import SectionHeader from '../layout/SectionHeader'
+import PostCard from '../shared/PostCard'
 
 import { useDraftsStore, useCreatePostsStore, useNavigationStore } from "@/store"
 import { useShallow } from 'zustand/react/shallow'
@@ -35,6 +34,7 @@ export default function DraftsSection() {
   const filteredPosts = useFilteredPosts(draftPosts, searchTerm, platformFilter, dateFilter)
 
   const tHeaders = useTranslations('CreatePage.sectionHeaders');
+  const tCard = useTranslations('CreatePage.postCard');
 
   return (
     <div className="w-full max-w-none overflow-hidden h-full flex flex-col">
@@ -51,56 +51,37 @@ export default function DraftsSection() {
       />
       </div>
 
-      {/* Draft Posts List */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
-        <div className="space-y-[1px]">
-          {filteredPosts.map((post) => (
-            <div 
-              key={post.id} 
-              className="group rounded-xl hover:bg-primary/70 transition-colors cursor-pointer"
-              onClick={() =>
-                onEditDraft(post, (platform, content, mediaUrls) => {
-                  // Khi user click 1 bản nháp:
-                  // - Chuyển sang section 'create' để hiển thị trang chỉnh sửa
-                  // - Mở post tương ứng trong editor, kèm media URLs nếu có
-                  setActiveSection('create')
-                  openPostFromUrl(platform, content, undefined, mediaUrls)
-                })
-              }
-            >
-              <div className="flex items-center px-2 lg:px-4 py-2 lg:py-3 w-full">
-                {/* Left: platform icon + content */}
-                <div className="flex items-center gap-2 lg:gap-3 flex-1 min-w-0">
-                  <PlatformIcon 
-                    platform={post.platformIcon || post.platform}
-                    size={24}
-                    variant="inline"
-                    className="lg:w-[27px] lg:h-[27px]"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-foreground/90 truncate flex-1 min-w-0 text-sm lg:text-base">
-                      {post.content}
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Right: date and trash */}
-                <div className="flex items-center gap-2 lg:gap-3 ml-2 lg:ml-4 flex-shrink-0">
-                  <span className="text-xs lg:text-sm text-foreground/80 whitespace-nowrap">
-                    {formatDate(post.time, 'vi-VN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
-                  </span>
-                  <button
-                    className="w-7 h-7 lg:w-8 lg:h-8 flex items-center justify-center rounded hover:bg-secondary"
-                    onClick={(e) => { e.stopPropagation(); onDeleteDraft(post.id) }}
-                    aria-label="Xóa bản nháp"
-                  >
-                    <img src="/icons/sidebar/Trash.svg" alt="Delete" className="opacity-80 w-4 h-4 lg:w-[19px] lg:h-[19px]" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Draft Posts Grid */}
+      <div className="flex-1 overflow-y-auto px-4 lg:px-6 pb-4">
+        {filteredPosts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-center py-16">
+            <FileX className="h-12 w-12 text-muted-foreground/30 mb-4" />
+            <p className="text-muted-foreground">{tCard('emptyDrafts')}</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            {filteredPosts.map((post) => (
+              <PostCard
+                key={post.id}
+                post={{ id: post.id, platform: post.platform, content: post.content, created_at: post.time }}
+                variant="draft"
+                onClick={() =>
+                  onEditDraft(post, (platform, content, mediaUrls) => {
+                    setActiveSection('create')
+                    openPostFromUrl(platform, content, undefined, mediaUrls)
+                  })
+                }
+                onEdit={() =>
+                  onEditDraft(post, (platform, content, mediaUrls) => {
+                    setActiveSection('create')
+                    openPostFromUrl(platform, content, undefined, mediaUrls)
+                  })
+                }
+                onDelete={() => onDeleteDraft(post.id)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

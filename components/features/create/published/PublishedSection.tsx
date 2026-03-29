@@ -1,21 +1,21 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useTranslations } from "next-intl"
 import { useShallow } from "zustand/react/shallow"
 import { usePublishedPostsStore } from "@/store/published/publishedPageStore"
 import { usePostFilters } from "@/hooks/usePostFilters"
 import { useFilteredPosts } from "@/hooks/useFilteredPosts"
 import { FilterBar } from "@/components/shared/filters/FilterBar"
-import { PlatformIcon } from "@/components/shared/PlatformIcon"
-import { formatDate } from "@/lib/utils/date"
 import { PublishedPost } from "@/store/shared/types"
-import { ExternalLink, Trash2, Heart, MessageCircle, Share2, CheckCircle } from "lucide-react"
+import { FileX, CheckCircle } from "lucide-react"
 import SectionHeader from '../layout/SectionHeader'
+import PostCard from '../shared/PostCard'
 
 export default function PublishedSection() {
   const t = useTranslations('CreatePage.published')
   const tHeaders = useTranslations('CreatePage.sectionHeaders')
+  const tCard = useTranslations('CreatePage.postCard')
   
   const { 
     publishedPosts, 
@@ -60,109 +60,36 @@ export default function PublishedSection() {
     <div className="w-full max-w-none py-2 lg:py-3 overflow-hidden h-full flex flex-col">
       <SectionHeader icon={CheckCircle} title={tHeaders('published.title')} description={tHeaders('published.description')} />
       
-      <FilterBar 
-        platformFilter={platformFilter}
-        dateFilter={dateFilter}
-        searchTerm={searchTerm}
-        onPlatformChange={setPlatformFilter}
-        onDateChange={setDateFilter}
-        onSearchChange={setSearchTerm}
-      />
-      
-      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
-        <div className="space-y-[1px] pb-4">
-          {filteredPosts && filteredPosts.length > 0 ? (
-            filteredPosts.map((post) => (
-              <div 
-                key={post.id} 
-                className="group rounded-xl bg-card hover:bg-muted transition-colors border border-border p-3 lg:p-4 mb-2 cursor-pointer flex flex-col sm:flex-row gap-3"
+      <div className="px-4 lg:px-6 py-3">
+        <FilterBar
+          platformFilter={platformFilter}
+          dateFilter={dateFilter}
+          searchTerm={searchTerm}
+          onPlatformChange={setPlatformFilter}
+          onDateChange={setDateFilter}
+          onSearchChange={setSearchTerm}
+        />
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-4 lg:px-6 pb-4">
+        {filteredPosts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-center py-16">
+            <FileX className="h-12 w-12 text-muted-foreground/30 mb-4" />
+            <p className="text-muted-foreground">{tCard('emptyPublished')}</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            {filteredPosts.map((post) => (
+              <PostCard
+                key={post.id}
+                post={{ id: post.id, platform: post.platform, content: post.content, created_at: post.time, status: post.status }}
+                variant="published"
                 onClick={() => post.url && handleViewPost(post.url)}
-              >
-                {/* Icon & Content */}
-                <div className="flex-1 min-w-0 flex gap-3">
-                  <div className="flex-shrink-0 pt-1">
-                    <PlatformIcon 
-                      platform={post.platform} 
-                      size={24} 
-                      className="opacity-90"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                     <p className="text-sm lg:text-base text-foreground/90 line-clamp-2 mb-2">
-                       {post.content}
-                     </p>
-                     
-                     {/* Mobile Engagement Stats (visible on small screens) */}
-                     <div className="flex sm:hidden items-center gap-4 text-xs text-muted-foreground mb-1">
-                        <div className="flex items-center gap-1">
-                          <Heart className="w-3 h-3" />
-                          <span>{post.engagement?.likes || 0}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <MessageCircle className="w-3 h-3" />
-                          <span>{post.engagement?.comments || 0}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Share2 className="w-3 h-3" />
-                          <span>{post.engagement?.shares || 0}</span>
-                        </div>
-                     </div>
+              />
+            ))}
+          </div>
+        )}
 
-                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                       <span>{formatDate(post.time, 'vi-VN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</span>
-                       {post.url && (
-                         <span className="flex items-center gap-1 hover:text-primary transition-colors">
-                           <ExternalLink className="w-3 h-3" />
-                           {t('open')}
-                         </span>
-                       )}
-                     </div>
-                  </div>
-                </div>
-
-                {/* Desktop Engagement & Actions */}
-                <div className="hidden sm:flex flex-col items-end gap-2 text-right pl-2 border-l border-border min-w-[100px]">
-                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <div className="flex flex-col items-center" title="Likes">
-                        <Heart className="w-3.5 h-3.5 mb-0.5" />
-                        <span>{post.engagement?.likes || 0}</span>
-                      </div>
-                      <div className="flex flex-col items-center" title="Comments">
-                        <MessageCircle className="w-3.5 h-3.5 mb-0.5" />
-                        <span>{post.engagement?.comments || 0}</span>
-                      </div>
-                      <div className="flex flex-col items-center" title="Shares">
-                        <Share2 className="w-3.5 h-3.5 mb-0.5" />
-                        <span>{post.engagement?.shares || 0}</span>
-                      </div>
-                   </div>
-                   
-                   <div className="mt-auto">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (confirm(t('confirmDelete'))) {
-                             handleDeletePost(post.id);
-                          }
-                        }}
-                        className="p-1.5 hover:bg-secondary rounded text-muted-foreground hover:text-red-400 transition-colors"
-                        title={t('deleteFromList')}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                   </div>
-                </div>
-              </div>
-            ))
-          ) : (
-             !isLoadingPublishedPosts && (
-                <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-                  <p>{t('noPublishedPosts')}</p>
-                </div>
-             )
-          )}
-        </div>
-        
         {/* Load More Button */}
         {publishedPostsHasMore && (
           <div className="flex justify-center py-4">

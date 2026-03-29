@@ -747,6 +747,20 @@
       "accountSettings": "Cài đặt tài khoản",
       "language": "Ngôn ngữ"
     },
+    "postCard": {
+      "edit": "Chỉnh sửa",
+      "delete": "Xóa",
+      "retry": "Thử lại",
+      "noContent": "Chưa có nội dung",
+      "loadMore": "Tải thêm",
+      "emptyDrafts": "Chưa có bản nháp nào",
+      "emptyDraftsAction": "Tạo bài viết đầu tiên",
+      "emptyPublished": "Chưa có bài đăng nào",
+      "emptyPublishedAction": "Tạo và xuất bản bài viết",
+      "emptyFailed": "Không có bài đăng thất bại",
+      "emptyFailedDesc": "Tuyệt vời! Tất cả bài đăng đều thành công.",
+      "confirmDelete": "Bạn có chắc muốn xóa bài viết này?"
+    },
     "sectionHeaders": {
       "create": { "title": "Tạo bài viết", "description": "Soạn và tạo nội dung cho mạng xã hội" },
       "calendar": { "title": "Lịch", "description": "Lên lịch và quản lý thời gian đăng bài" },

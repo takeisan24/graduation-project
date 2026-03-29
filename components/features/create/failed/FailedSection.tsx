@@ -7,32 +7,18 @@ import { useFailedPostsStore } from "@/store/failed/failedPageStore"
 import { usePostFilters } from "@/hooks/usePostFilters"
 import { useFilteredPosts } from "@/hooks/useFilteredPosts"
 import { FilterBar } from "@/components/shared/filters/FilterBar"
-import { FailedPostItem } from "./FailedPostItem"
 import { RetryDetailModal } from "./RetryDetailModal"
 import { ConfirmDeleteFailedPostModal } from "./ConfirmDeleteFailedPostModal"
 import { LoadingModal, SuccessModal } from "./GenericStatusModals"
 import { FailedPost } from "@/store/shared/types"
-import { XCircle } from "lucide-react"
+import { FileX, XCircle } from "lucide-react"
 import SectionHeader from '../layout/SectionHeader'
-
-// Helper to get mock accounts if profile data is missing
-const getAccountsForPlatform = (platform: string) => {
-  const mockAccounts = {
-    'Twitter': [{ username: '@whatevername', profilePic: '/shego.jpg' }],
-    'Instagram': [{ username: '@instagram_user', profilePic: '/shego.jpg' }],
-    'LinkedIn': [{ username: 'LinkedIn User', profilePic: '/shego.jpg' }],
-    'Facebook': [{ username: 'Facebook User', profilePic: '/shego.jpg' }],
-    'Threads': [{ username: '@threads_user', profilePic: '/shego.jpg' }],
-    'YouTube': [{ username: 'YouTube Channel', profilePic: '/shego.jpg' }],
-    'TikTok': [{ username: '@tiktok_user', profilePic: '/shego.jpg' }],
-    'Pinterest': [{ username: 'Pinterest User', profilePic: '/shego.jpg' }]
-  }
-  return mockAccounts[platform as keyof typeof mockAccounts] || [{ username: 'Unknown Account', profilePic: '/shego.jpg' }]
-}
+import PostCard from '../shared/PostCard'
 
 export default function FailedSection() {
   const t = useTranslations('CreatePage.failed')
   const tHeaders = useTranslations('CreatePage.sectionHeaders')
+  const tCard = useTranslations('CreatePage.postCard')
   
   const { 
     failedPosts, 
@@ -116,43 +102,37 @@ export default function FailedSection() {
       <div className="w-full max-w-none py-2 lg:py-3 overflow-hidden h-full flex flex-col">
         <SectionHeader icon={XCircle} title={tHeaders('failed.title')} description={tHeaders('failed.description')} />
         
-        <FilterBar 
-          platformFilter={platformFilter}
-          dateFilter={dateFilter}
-          searchTerm={searchTerm}
-          onPlatformChange={setPlatformFilter}
-          onDateChange={setDateFilter}
-          onSearchChange={setSearchTerm}
-        />
-        
-        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
-          <div className="space-y-[1px] pb-4">
-            {filteredPosts && filteredPosts.length > 0 ? (
-              filteredPosts.map((post) => {
-                // Determine account info for display
-                const account = post.profileName && post.profilePic
-                  ? { username: post.profileName, profilePic: post.profilePic }
-                  : getAccountsForPlatform(post.platform)[0]
+        <div className="px-4 lg:px-6 py-3">
+          <FilterBar
+            platformFilter={platformFilter}
+            dateFilter={dateFilter}
+            searchTerm={searchTerm}
+            onPlatformChange={setPlatformFilter}
+            onDateChange={setDateFilter}
+            onSearchChange={setSearchTerm}
+          />
+        </div>
 
-                return (
-                  <FailedPostItem 
-                    key={post.id} 
-                    post={post} 
-                    account={account}
-                    onRetry={() => handleRetryClick(post)}
-                    onDelete={() => handleDeleteClick(post.id)}
-                  />
-                )
-              })
-            ) : (
-             !isLoadingFailedPosts && (
-                <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-                  <p>No failed posts found</p>
-                </div>
-             )
-            )}
-          </div>
-          
+        <div className="flex-1 overflow-y-auto px-4 lg:px-6 pb-4">
+          {filteredPosts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-center py-16">
+              <FileX className="h-12 w-12 text-muted-foreground/30 mb-4" />
+              <p className="text-muted-foreground">{tCard('emptyFailed')}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              {filteredPosts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={{ id: post.id, platform: post.platform, content: post.content, created_at: post.created_at, error_message: post.error_message }}
+                  variant="failed"
+                  onRetry={() => handleRetryClick(post)}
+                  onDelete={() => handleDeleteClick(post.id)}
+                />
+              ))}
+            </div>
+          )}
+
           {/* Load More Button */}
           {failedPostsHasMore && (
             <div className="flex justify-center py-4">
