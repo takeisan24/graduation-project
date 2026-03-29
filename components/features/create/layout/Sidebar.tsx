@@ -3,8 +3,9 @@
 import { useEffect, useRef, useState } from "react"
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher"
 import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { useNavigationStore } from "@/store"
-import { Zap, AlertTriangle, RefreshCw, Plus, HardDrive, ChevronUp, LogOut, Users, Settings } from "lucide-react";
+import { Zap, AlertTriangle, RefreshCw, Plus, HardDrive, ChevronUp, LogOut, Users, Settings, CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth"
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
@@ -89,14 +90,17 @@ export default function Sidebar({
   // --------------------------------------------------
   // --- STATE XỬ LÝ LOGOUT ---
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [showSignOutDialog, setShowSignOutDialog] = useState(false);
 
   const handleSignOut = async () => {
     if (isLoggingOut) return;
     setIsLoggingOut(true);
     try {
-      await signOut();
-      // useAuth sẽ tự động redirect, nhưng ta có thể push thêm để chắc chắn
-      router.push('/signin');
+      const success = await signOut();
+      if (success) {
+        setShowSignOutDialog(true);
+        setTimeout(() => { window.location.href = '/signin'; }, 1500);
+      }
     } catch (error) {
       console.error("Logout failed", error);
       setIsLoggingOut(false);
@@ -694,6 +698,19 @@ export default function Sidebar({
         </div>
 
       </div>
+
+      {/* Sign Out Success Dialog */}
+      <Dialog open={showSignOutDialog}>
+        <DialogContent className="sm:max-w-sm bg-card border-border [&>button]:hidden">
+          <div className="flex flex-col items-center text-center py-4 space-y-4">
+            <div className="h-14 w-14 rounded-full bg-success/10 flex items-center justify-center">
+              <CheckCircle2 className="h-7 w-7 text-success" />
+            </div>
+            <h3 className="text-lg font-semibold">{t('signOutSuccess')}</h3>
+            <p className="text-sm text-muted-foreground">{t('signOutRedirect')}</p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

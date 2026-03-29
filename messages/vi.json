@@ -690,6 +690,8 @@
       "apiDashboard": "API Dashboard",
       "settings": "Tài khoản MXH",
       "logout": "Đăng xuất",
+      "signOutSuccess": "Đăng xuất thành công!",
+      "signOutRedirect": "Đang chuyển đến trang đăng nhập...",
       "profile": "Hồ sơ",
       "credits": "Tín dụng",
       "storage": "Dung lượng",

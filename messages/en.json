@@ -690,6 +690,8 @@
       "apiDashboard": "API Dashboard",
       "settings": "Social Accounts",
       "logout": "Log Out",
+      "signOutSuccess": "Signed out successfully!",
+      "signOutRedirect": "Redirecting to sign in...",
       "profile": "Profile",
       "credits": "Credits",
       "storage": "Storage",
