@@ -10,10 +10,12 @@ import { FilterBar } from "@/components/shared/filters/FilterBar"
 import { PlatformIcon } from "@/components/shared/PlatformIcon"
 import { formatDate } from "@/lib/utils/date"
 import { PublishedPost } from "@/store/shared/types"
-import { ExternalLink, Trash2, Heart, MessageCircle, Share2 } from "lucide-react"
+import { ExternalLink, Trash2, Heart, MessageCircle, Share2, CheckCircle } from "lucide-react"
+import SectionHeader from '../layout/SectionHeader'
 
 export default function PublishedSection() {
   const t = useTranslations('CreatePage.published')
+  const tHeaders = useTranslations('CreatePage.sectionHeaders')
   
   const { 
     publishedPosts, 
@@ -55,8 +57,8 @@ export default function PublishedSection() {
   }
 
   return (
-    <div className="w-full max-w-none px-2 lg:px-4 py-2 lg:py-3 overflow-hidden h-full flex flex-col">
-      <h2 className="text-2xl font-bold mb-6">{t('title')}</h2>
+    <div className="w-full max-w-none py-2 lg:py-3 overflow-hidden h-full flex flex-col">
+      <SectionHeader icon={CheckCircle} title={tHeaders('published.title')} description={tHeaders('published.description')} />
       
       <FilterBar 
         platformFilter={platformFilter}

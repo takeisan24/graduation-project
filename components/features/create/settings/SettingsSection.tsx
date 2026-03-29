@@ -12,7 +12,8 @@ import { clearConnectionsCache } from "@/lib/cache/connectionsCache";
 import { getAppUrl } from "@/lib/utils/urlConfig";
 import { useConnectionsStore } from "@/store"
 import { Button } from "@/components/ui/button"
-import { Info, RotateCcw } from "lucide-react"
+import { Info, RotateCcw, Settings } from "lucide-react"
+import SectionHeader from '../layout/SectionHeader'
 import { toast } from "sonner"
 import { useLocale, useTranslations } from "next-intl"
 import { handleErrorWithModal } from "@/lib/utils/errorHandler"
@@ -54,6 +55,7 @@ const PROVIDER_SLUGS: Record<string, string | null> = {
  */
 export default function SettingsSection() {
   const t = useTranslations('CreatePage.settings')
+  const tHeaders = useTranslations('CreatePage.sectionHeaders')
   const locale = useLocale(); // Lấy ngôn ngữ hiện tại ('vi' hoặc 'en')
   // Tối ưu: Dùng trực tiếp từ store thay vì local state để tránh duplicate state
   const {
@@ -522,7 +524,7 @@ export default function SettingsSection() {
   }, [fetchConnections, refreshCredits])
 
   return (
-    <div className="relative w-full max-w-none px-2 lg:px-4 py-2 lg:py-3 h-full overflow-y-auto">
+    <div className="relative w-full max-w-none py-2 lg:py-3 h-full overflow-y-auto">
       {/* Global overlay while connecting social account (any provider) */}
       {isConnectingInProgress && (
         <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm text-center px-4">
@@ -607,10 +609,7 @@ export default function SettingsSection() {
       <div className={
         `space-y-6 ${isConnectingInProgress ? 'pointer-events-none select-none opacity-60' : ''}`
       }>
-        <h2 className="text-2xl font-bold mb-6">{t('title')}</h2>
-        <p className="text-muted-foreground mb-6">
-          {t('description')}
-        </p>
+        <SectionHeader icon={Settings} title={tHeaders('settings.title')} description={tHeaders('settings.description')} />
 
         {/* Onboarding Tour Card Removed - Moved to User Profile */}
 

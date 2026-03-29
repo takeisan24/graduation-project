@@ -747,6 +747,15 @@
       "accountSettings": "Cài đặt tài khoản",
       "language": "Ngôn ngữ"
     },
+    "sectionHeaders": {
+      "create": { "title": "Tạo bài viết", "description": "Soạn và tạo nội dung cho mạng xã hội" },
+      "calendar": { "title": "Lịch", "description": "Lên lịch và quản lý thời gian đăng bài" },
+      "drafts": { "title": "Bản nháp", "description": "Tiếp tục chỉnh sửa các bài viết đã lưu" },
+      "published": { "title": "Đã đăng", "description": "Theo dõi các bài viết đã xuất bản" },
+      "failed": { "title": "Thất bại", "description": "Xem lại và thử lại các bài đăng lỗi" },
+      "api-dashboard": { "title": "Dashboard", "description": "Theo dõi sử dụng API và phân tích" },
+      "settings": { "title": "Tài khoản MXH", "description": "Kết nối và quản lý tài khoản mạng xã hội" }
+    },
     "topBar": {
       "toggleTheme": "Chuyển giao diện",
       "signOut": "Đăng xuất",

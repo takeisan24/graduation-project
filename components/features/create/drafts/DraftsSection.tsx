@@ -6,6 +6,8 @@ import { FilterBar } from "@/components/shared/filters/FilterBar"
 import { PlatformIcon } from "@/components/shared/PlatformIcon"
 import { formatDate } from "@/lib/utils/date"
 import { useTranslations } from 'next-intl'
+import { FileText } from 'lucide-react'
+import SectionHeader from '../layout/SectionHeader'
 
 import { useDraftsStore, useCreatePostsStore, useNavigationStore } from "@/store"
 import { useShallow } from 'zustand/react/shallow'
@@ -32,10 +34,13 @@ export default function DraftsSection() {
   const { platformFilter, dateFilter, searchTerm, setPlatformFilter, setDateFilter, setSearchTerm } = usePostFilters()
   const filteredPosts = useFilteredPosts(draftPosts, searchTerm, platformFilter, dateFilter)
 
+  const tHeaders = useTranslations('CreatePage.sectionHeaders');
+
   return (
-    <div className="w-full max-w-none px-2 lg:px-4 py-2 lg:py-3 overflow-hidden h-full flex flex-col">
-      <h2 className="text-lg lg:text-xl font-bold mb-3 lg:mb-4">{t('title')}</h2>
+    <div className="w-full max-w-none overflow-hidden h-full flex flex-col">
+      <SectionHeader icon={FileText} title={tHeaders('drafts.title')} description={tHeaders('drafts.description')} />
       
+      <div className="px-4 lg:px-6 py-3">
       <FilterBar
         platformFilter={platformFilter}
         dateFilter={dateFilter}
@@ -44,7 +49,8 @@ export default function DraftsSection() {
         onDateChange={setDateFilter}
         onSearchChange={setSearchTerm}
       />
-      
+      </div>
+
       {/* Draft Posts List */}
       <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
         <div className="space-y-[1px]">

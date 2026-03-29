@@ -747,6 +747,15 @@
       "accountSettings": "Account Settings",
       "language": "Language"
     },
+    "sectionHeaders": {
+      "create": { "title": "Create Post", "description": "Compose and generate content for social media" },
+      "calendar": { "title": "Calendar", "description": "Schedule and manage your posting timeline" },
+      "drafts": { "title": "Drafts", "description": "Continue working on your saved drafts" },
+      "published": { "title": "Published", "description": "Track your published content" },
+      "failed": { "title": "Failed", "description": "Review and retry failed posts" },
+      "api-dashboard": { "title": "Dashboard", "description": "Monitor API usage and analytics" },
+      "settings": { "title": "Social Accounts", "description": "Connect and manage your social media accounts" }
+    },
     "topBar": {
       "toggleTheme": "Toggle theme",
       "signOut": "Sign Out",

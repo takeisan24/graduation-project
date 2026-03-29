@@ -2,33 +2,23 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
-import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { PanelLeftClose, PanelLeftOpen, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-//Import component UI
 import AIChatbox from './chat/AIChatbox';
 import SourcePanel from './sources/SourcePanel';
 import PostEditorWrapper from './editor/PostEditorWrapper';
 import OnboardingTour from './layout/OnboardingTour';
 
-// Import modal manager
-
-// Import store for wizard state
 import { useNavigationStore, useCreateSourcesStore, useCreatePostsStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 
-/**
- * Create section component with collapsible three-panel layout:
- * 1. Left panel (241px) - Sources management (collapsible)
- * 2. Main panel (flex-1) - Post creation editor (always visible)
- * 3. Right panel (350px) - AI chatbox (collapsible)
- */
 export default function CreateSection() {
   const t = useTranslations('CreatePage.createSection.mobileTabs');
   const [isSourcePanelOpen, setIsSourcePanelOpen] = useState(true);
-  const [isAIChatOpen, setIsAIChatOpen] = useState(false); // Ẩn ở lúc đầu, chỉ mở khi có posts
-  const hasResetOnMount = useRef(false); // Flag to ensure mount reset only runs once
-  
-  // Get wizard state and actions from store
+  const [isAIChatOpen, setIsAIChatOpen] = useState(false);
+  const hasResetOnMount = useRef(false);
+
   const { wizardStep, setWizardStep } = useNavigationStore(useShallow(state => ({
     wizardStep: state.wizardStep,
     setWizardStep: state.setWizardStep
@@ -37,196 +27,151 @@ export default function CreateSection() {
   const openPosts = useCreatePostsStore(state => state.openPosts);
   const sourceToGenerate = useCreateSourcesStore(state => state.sourceToGenerate);
   const isSourceModalOpen = useCreateSourcesStore(state => state.isSourceModalOpen);
-  
-  // Reset wizardStep to 'idle' when component mounts if wizardStep is stuck
-  // This handles cases where user refreshes page or navigates back to create page
-  // with wizardStep still set in localStorage from a previous session
+
+  // Reset wizardStep on mount if stuck
   useEffect(() => {
-    // Only run once on mount
     if (hasResetOnMount.current) return;
     hasResetOnMount.current = true;
-    
-    // Reset if we're in configuringPosts but no sourceToGenerate (modal was closed/refreshed)
-    if (wizardStep === 'configuringPosts' && !sourceToGenerate) {
-      setWizardStep('idle');
-    }
-    // Reset if we're in addingSource but no modal is open (user refreshed during form)
-    // This allows user to start fresh if they refresh during the add source flow
-    if (wizardStep === 'addingSource' && !isSourceModalOpen) {
-      setWizardStep('idle');
-    }
+    if (wizardStep === 'configuringPosts' && !sourceToGenerate) setWizardStep('idle');
+    if (wizardStep === 'addingSource' && !isSourceModalOpen) setWizardStep('idle');
   }, [wizardStep, sourceToGenerate, isSourceModalOpen, setWizardStep]);
-  
-  // Auto-reset wizardStep to 'idle' when sourceToGenerate becomes null
-  // This handles cases where modal is closed without going through onCancel/onComplete
+
   useEffect(() => {
-    // If we're in configuringPosts step but sourceToGenerate is null, reset to idle
-    // This can happen if modal is closed unexpectedly
-    // Note: When in 'addingSource' step, sourceToGenerate is expected to be null,
-    // so we only check for 'configuringPosts' step
-    if (wizardStep === 'configuringPosts' && !sourceToGenerate) {
-      setWizardStep('idle');
-    }
+    if (wizardStep === 'configuringPosts' && !sourceToGenerate) setWizardStep('idle');
   }, [sourceToGenerate, wizardStep, setWizardStep]);
-  
-  // Check if user has completed first flow
+
   useEffect(() => {
     const hasCompleted = localStorage.getItem('hasCompletedFirstFlow');
-    // If already completed or has sources, don't trigger wizard automatically
-    if (hasCompleted || savedSources.length > 0) {
-      // Do nothing, user can trigger wizard manually
-    }
+    if (!hasCompleted && savedSources.length > 0) { /* noop */ }
   }, [savedSources.length]);
-  
-  // Save completion when wizard finishes
+
   useEffect(() => {
     if (wizardStep === 'idle' && savedSources.length > 0) {
-      const hasCompleted = localStorage.getItem('hasCompletedFirstFlow');
-      if (!hasCompleted) {
+      if (!localStorage.getItem('hasCompletedFirstFlow')) {
         localStorage.setItem('hasCompletedFirstFlow', 'true');
       }
     }
   }, [wizardStep, savedSources.length]);
-  
-  // Auto-open/close AI Chat Panel based on posts
+
+  // Auto-open/close AI Chat based on posts
   useEffect(() => {
-    if (openPosts.length > 0 && !isAIChatOpen) {
-      // Open when posts are created
-      setIsAIChatOpen(true);
-    } else if (openPosts.length === 0 && isAIChatOpen) {
-      // Close when all posts are closed
-      setIsAIChatOpen(false);
-    }
-  }, [openPosts.length, isAIChatOpen]); // Track both length and panel state
-  
-  // Determine panel states based on wizard step
+    if (openPosts.length > 0 && !isAIChatOpen) setIsAIChatOpen(true);
+    else if (openPosts.length === 0 && isAIChatOpen) setIsAIChatOpen(false);
+  }, [openPosts.length, isAIChatOpen]);
+
   const isAddingSource = wizardStep === 'addingSource';
   const isConfiguringPosts = wizardStep === 'configuringPosts';
   const isInWizard = wizardStep !== 'idle';
-  
-  // Mobile panel state (mobile only shows one panel at a time)
-  const [activeMobilePanel, setActiveMobilePanel] = useState<'sources' | 'editor' | 'chat'>('editor');
-  
-  const expandedWidth = 'w-[700px]'; // Bạn có thể tăng lên w-[700px] nếu muốn rộng hơn nữa
-  const collapsedWidth = 'w-[241px]';
 
-  const sourcePanelWidth = isAddingSource ? expandedWidth : collapsedWidth;
+  const [activeMobilePanel, setActiveMobilePanel] = useState<'sources' | 'editor' | 'chat'>('editor');
+
+  const sourcePanelWidth = isAddingSource ? 'w-[700px]' : 'w-[241px]';
 
   return (
     <>
-      {/* Mobile Navigation Tabs (Only visible on mobile) */}
+      {/* Mobile Navigation Tabs */}
       <div className="lg:hidden flex border-b border-border bg-background">
-        <button
-          onClick={() => setActiveMobilePanel('sources')}
-          className={`flex-1 py-3 text-base font-medium transition-colors ${
-            activeMobilePanel === 'sources' 
-              ? 'text-primary border-b-2 border-primary' 
-              : 'text-muted-foreground hover:text-foreground'
-          }`}
-        >
-          {t('sources')}
-        </button>
-        <button
-          onClick={() => setActiveMobilePanel('editor')}
-          className={`flex-1 py-3 text-base font-medium transition-colors ${
-            activeMobilePanel === 'editor' 
-              ? 'text-primary border-b-2 border-primary' 
-              : 'text-muted-foreground hover:text-foreground'
-          }`}
-        >
-          {t('posts')}
-        </button>
-        <button
-          onClick={() => setActiveMobilePanel('chat')}
-          className={`flex-1 py-3 text-base font-medium transition-colors ${
-            activeMobilePanel === 'chat' 
-              ? 'text-primary border-b-2 border-primary' 
-              : 'text-muted-foreground hover:text-foreground'
-          }`}
-        >
-          {t('aiChat')}
-        </button>
-      </div>
-
-      <div className="flex h-full w-full relative">
-        {/* Left Panel - Sources */}
-        <div
-          className={`transition-all duration-300 ease-in-out ${
-            isSourcePanelOpen ? sourcePanelWidth : 'w-0'
-          } overflow-hidden relative ${isAddingSource ? 'z-30' : 'z-10'}
-          ${activeMobilePanel === 'sources' ? 'flex-1 w-full lg:w-auto' : 'hidden lg:block lg:flex-none'}`}
-        >
-          {/* Wrapper với width cố định để content co lại đúng */}
-          <div className={`h-full ${isAddingSource ? 'w-full lg:w-[700px]' : 'w-full lg:w-[241px]'} transition-all duration-300 relative ${isAddingSource ? 'z-30' : 'z-0'}`}>
-            <SourcePanel mode={isAddingSource ? 'form' : 'list'} />
-          </div>
-          
-          {/* Spotlight overlay - OUTSIDE wrapper để cover toàn bộ panel kể cả scroll */}
-          {isInWizard && !isAddingSource && (
-            <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto animate-in fade-in duration-300 cursor-not-allowed" />
-          )}
-          {/* Toggle Button inside Source Panel (Desktop only) */}
-          {isSourcePanelOpen && !isAddingSource && !isInWizard && (
-            <button
-              onClick={() => setIsSourcePanelOpen(false)}
-              className="hidden lg:block absolute right-2 top-2 z-10 bg-secondary hover:bg-muted text-foreground p-1.5 rounded-lg shadow-lg border border-border transition-all"
-              title="Close Sources Panel"
-            >
-              <PanelLeftClose className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-
-        {/* Toggle Button - Left Panel (when closed, Desktop only) */}
-        {!isSourcePanelOpen && !isInWizard && (
+        {(['sources', 'editor', 'chat'] as const).map((panel) => (
           <button
-            onClick={() => setIsSourcePanelOpen(true)}
-            className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 z-15 bg-primary hover:bg-primary/90 text-primary-foreground p-2 rounded-r-lg shadow-lg transition-all"
-            title="Open Sources Panel"
+            key={panel}
+            onClick={() => setActiveMobilePanel(panel)}
+            className={`flex-1 py-3 text-sm font-medium transition-colors ${
+              activeMobilePanel === panel
+                ? 'text-utc-royal border-b-2 border-utc-royal'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
           >
-            <PanelLeftOpen className="w-5 h-5" />
+            {panel === 'sources' ? t('sources') : panel === 'editor' ? t('posts') : t('aiChat')}
           </button>
-        )}
+        ))}
+      </div>
 
-        {/* Main Panel - Editor (Always visible on desktop, conditional on mobile) */}
-        <div className={`flex-1 min-w-0 relative transition-all duration-300 ease-in-out ${isConfiguringPosts ? 'z-30' : 'z-10'}
-          ${activeMobilePanel === 'editor' ? 'block' : 'hidden lg:block'}`}>
-          <div className={`relative ${isConfiguringPosts ? 'z-30' : 'z-0'} h-full w-full`}>
-            <PostEditorWrapper mode={isConfiguringPosts ? 'configure' : 'normal'} />
+      {/* Desktop layout: top area (Sources + Editor) + bottom area (AI Chat) */}
+      <div className="flex flex-col h-full w-full">
+        {/* Top: Sources + Editor */}
+        <div className="flex flex-1 min-h-0 relative">
+          {/* Left Panel - Sources */}
+          <div
+            className={`transition-all duration-300 ease-in-out ${
+              isSourcePanelOpen ? sourcePanelWidth : 'w-0'
+            } overflow-hidden relative ${isAddingSource ? 'z-30' : 'z-10'}
+            ${activeMobilePanel === 'sources' ? 'flex-1 w-full lg:w-auto' : 'hidden lg:block lg:flex-none'}`}
+          >
+            <div className={`h-full ${isAddingSource ? 'w-full lg:w-[700px]' : 'w-full lg:w-[241px]'} transition-all duration-300 relative ${isAddingSource ? 'z-30' : 'z-0'}`}>
+              <SourcePanel mode={isAddingSource ? 'form' : 'list'} />
+            </div>
+            {isInWizard && !isAddingSource && (
+              <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto animate-in fade-in duration-300 cursor-not-allowed" />
+            )}
+            {isSourcePanelOpen && !isAddingSource && !isInWizard && (
+              <Button
+                variant="secondary"
+                size="icon"
+                className="hidden lg:flex absolute right-2 top-2 z-10 h-7 w-7"
+                onClick={() => setIsSourcePanelOpen(false)}
+              >
+                <PanelLeftClose className="w-4 h-4" />
+              </Button>
+            )}
           </div>
-          
-          {/* Spotlight overlay - OUTSIDE wrapper để cover toàn bộ panel kể cả scroll */}
-          {isInWizard && !isConfiguringPosts && (
-            <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto animate-in fade-in duration-300 cursor-not-allowed" />
+
+          {/* Toggle - Left Panel (when closed) */}
+          {!isSourcePanelOpen && !isInWizard && (
+            <Button
+              size="icon"
+              className="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 z-15 rounded-l-none h-10 w-8 bg-gradient-to-r from-utc-royal to-utc-sky text-white"
+              onClick={() => setIsSourcePanelOpen(true)}
+            >
+              <PanelLeftOpen className="w-4 h-4" />
+            </Button>
+          )}
+
+          {/* Main Panel - Editor */}
+          <div className={`flex-1 min-w-0 relative transition-all duration-300 ease-in-out ${isConfiguringPosts ? 'z-30' : 'z-10'}
+            ${activeMobilePanel === 'editor' ? 'block' : 'hidden lg:block'}`}>
+            <div className={`relative ${isConfiguringPosts ? 'z-30' : 'z-0'} h-full w-full`}>
+              <PostEditorWrapper mode={isConfiguringPosts ? 'configure' : 'normal'} />
+            </div>
+            {isInWizard && !isConfiguringPosts && (
+              <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto animate-in fade-in duration-300 cursor-not-allowed" />
+            )}
+          </div>
+        </div>
+
+        {/* Bottom Panel - AI Chat (desktop only, mobile uses tabs) */}
+        <div className={`hidden lg:block relative ${isInWizard ? 'z-0' : 'z-10'}`}>
+          {/* Toggle bar */}
+          <button
+            onClick={() => setIsAIChatOpen(!isAIChatOpen)}
+            className="w-full h-10 flex items-center justify-center gap-2 border-t border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors text-sm text-muted-foreground"
+          >
+            <MessageSquare className="h-4 w-4" />
+            <span>AI Chat</span>
+            {isAIChatOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
+          </button>
+
+          {/* Chat content */}
+          <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
+            isAIChatOpen ? 'h-[250px]' : 'h-0'
+          }`}>
+            <div className="h-[250px] border-t border-border/50">
+              <AIChatbox />
+            </div>
+          </div>
+
+          {/* Wizard overlay for bottom panel */}
+          {isInWizard && isAIChatOpen && (
+            <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto cursor-not-allowed" />
           )}
         </div>
 
-        {/* Right Panel - AI Chat */}
-        <div
-          className={`transition-all duration-300 ease-in-out ${
-            isAIChatOpen ? 'w-[350px]' : 'w-0'
-          } overflow-hidden relative z-10
-          ${activeMobilePanel === 'chat' ? 'flex-1 w-full lg:w-[350px]' : 'hidden lg:block lg:flex-none'}`}
-        >
-          {/* Wrapper với width cố định để content co lại đúng */}
-          <div className="h-full w-full lg:w-[350px] transition-all duration-300 relative z-0">
-            <AIChatbox />
-          </div>
-          
-          {/* Spotlight overlay - OUTSIDE wrapper để cover toàn bộ panel kể cả scroll */}
-          {isInWizard && (
-            <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto animate-in fade-in duration-300 cursor-not-allowed" />
-          )}
+        {/* Mobile AI Chat (full panel when chat tab active) */}
+        <div className={`lg:hidden ${activeMobilePanel === 'chat' ? 'flex-1' : 'hidden'}`}>
+          <AIChatbox />
         </div>
       </div>
-      
-      {/* 
-        Note: ModalManager has been moved to CreateLayout to work across all sections.
-        It's no longer needed here.
-      */}
-      
-      {/* Onboarding tour for first-time users */}
+
       <OnboardingTour />
     </>
   )
-}   
+}

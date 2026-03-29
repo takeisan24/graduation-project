@@ -3,7 +3,8 @@
 import { useTranslations } from 'next-intl';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Zap, Activity, FileText, CheckCircle2, XCircle, Users, Sparkles, ImageIcon, Video, Brain, TrendingUp, Copy, RefreshCw, Plus, Key, Shield, AlertTriangle } from "lucide-react"
+import { Zap, Activity, FileText, CheckCircle2, XCircle, Users, Sparkles, ImageIcon, Video, Brain, TrendingUp, Copy, RefreshCw, Plus, Key, Shield, AlertTriangle, BarChart3 } from "lucide-react"
+import SectionHeader from '../layout/SectionHeader'
 import { cn } from "@/lib/utils/cn";
 import { useApiDashboardPageStore } from "@/store/api-dashboard/apiDashboardPageStore";
 import { usePublishedPostsStore } from "@/store/published/publishedPageStore";
@@ -38,6 +39,7 @@ const MOCK_AI_STATS = [
 
 export default function ApiDashboardSection() {
   const t = useTranslations('CreatePage.apiDashboard');
+  const tHeaders = useTranslations('CreatePage.sectionHeaders');
   const locale = useLocale();
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -228,17 +230,9 @@ export default function ApiDashboardSection() {
   };
   
   return (
-    <div className="w-full max-w-none px-2 lg:px-4 py-2 lg:py-3 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
+    <div className="w-full max-w-none py-2 lg:py-3 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 lg:gap-0 mb-4 lg:mb-6">
-        <div>
-          <h2 className="text-xl lg:text-2xl font-bold text-foreground">{t('title')}</h2>
-          <p className="text-xs lg:text-sm text-muted-foreground mt-1">{t('subtitle')}</p>
-        </div>
-        <Badge className={cn("text-primary-foreground px-3 lg:px-4 py-1.5 lg:py-2 text-xs lg:text-sm font-semibold self-start lg:self-auto uppercase tracking-wide border-none", getPlanColor())}>
-          {formatPlanName(currentPlan)}
-        </Badge>
-      </div>
+      <SectionHeader icon={BarChart3} title={tHeaders('api-dashboard.title')} description={tHeaders('api-dashboard.description')} />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-4 lg:mb-6 bg-card text-xs lg:text-sm h-auto sm:h-10 p-1 gap-1">

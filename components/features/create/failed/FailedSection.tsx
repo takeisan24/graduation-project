@@ -12,6 +12,8 @@ import { RetryDetailModal } from "./RetryDetailModal"
 import { ConfirmDeleteFailedPostModal } from "./ConfirmDeleteFailedPostModal"
 import { LoadingModal, SuccessModal } from "./GenericStatusModals"
 import { FailedPost } from "@/store/shared/types"
+import { XCircle } from "lucide-react"
+import SectionHeader from '../layout/SectionHeader'
 
 // Helper to get mock accounts if profile data is missing
 const getAccountsForPlatform = (platform: string) => {
@@ -30,6 +32,7 @@ const getAccountsForPlatform = (platform: string) => {
 
 export default function FailedSection() {
   const t = useTranslations('CreatePage.failed')
+  const tHeaders = useTranslations('CreatePage.sectionHeaders')
   
   const { 
     failedPosts, 
@@ -110,8 +113,8 @@ export default function FailedSection() {
 
   return (
     <>
-      <div className="w-full max-w-none px-2 lg:px-4 py-2 lg:py-3 overflow-hidden h-full flex flex-col">
-        <h2 className="text-2xl font-bold mb-6">{t('title')}</h2>
+      <div className="w-full max-w-none py-2 lg:py-3 overflow-hidden h-full flex flex-col">
+        <SectionHeader icon={XCircle} title={tHeaders('failed.title')} description={tHeaders('failed.description')} />
         
         <FilterBar 
           platformFilter={platformFilter}

@@ -11,6 +11,8 @@ import { toast } from "sonner";
 import { autoUpdatePublishingStatus as autoUpdatePublishingStatusFn } from "@/store/shared/statusCheck";
 import { CALENDAR_ERRORS } from "@/lib/messages/errors";
 import { useTranslations } from "next-intl";
+import { Calendar } from "lucide-react";
+import SectionHeader from '../layout/SectionHeader';
 
 // Import các component con đã tạo
 import { CalendarToolbar } from "./CalendarToolbar";
@@ -45,6 +47,7 @@ type DeleteModalState = { event: CalendarEvent; date: Date } | null;
 
 export default function CalendarSection() {
     const t = useTranslations('CreatePage.calendarSection');
+    const tHeaders = useTranslations('CreatePage.sectionHeaders');
     const router = useRouter();
     // Lấy các action cần thiết từ Zustand store
     const { calendarEvents, addEvent, updateEvent, deleteEvent } = useCalendarStore(
@@ -290,7 +293,8 @@ export default function CalendarSection() {
 
     // --- RENDER COMPONENT ---
     return (
-        <div className="w-full max-w-none px-4 py-3 flex flex-col h-[calc(100vh-80px)]">
+        <div className="w-full max-w-none py-3 flex flex-col h-[calc(100vh-80px)]">
+            <SectionHeader icon={Calendar} title={tHeaders('calendar.title')} description={tHeaders('calendar.description')} />
             <CalendarToolbar
                 calendarView={calendarView}
                 currentMonth={currentMonth}
