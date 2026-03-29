@@ -1,7 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 
-import { Inter } from "next/font/google";
+import { Inter, Calistoga, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import { NextIntlClientProvider } from 'next-intl'
@@ -9,20 +9,26 @@ import { getMessages } from 'next-intl/server'
 import { Toaster } from 'sonner'
 import { ToastTranslationProvider } from '@/components/providers/ToastTranslationProvider'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 import "./globals.css"
 
 
 const fontSans = Inter({ subsets: ['latin', 'vietnamese'], variable: '--font-sans', display: 'swap' })
+const fontDisplay = Calistoga({ weight: '400', subsets: ['latin', 'vietnamese'], variable: '--font-display', display: 'swap' })
+const fontMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono', display: 'swap' })
 export const metadata: Metadata = {
-  title: "CreatorHub: Hỗ trợ Lập kế hoạch & Sáng tạo Nội dung đa nền tảng bằng AI",
+  title: {
+    default: "CreatorHub — Đồ án tốt nghiệp | Hỗ trợ Sáng tạo Nội dung đa nền tảng bằng AI",
+    template: "%s | CreatorHub",
+  },
   description:
-    "Biến một nguồn duy nhất thành hàng loạt nội dung đa phương tiện và lên lịch đăng bài chỉ trong vài phút.",
+    "Hệ thống hỗ trợ lập kế hoạch và sáng tạo nội dung đa nền tảng mạng xã hội bằng Generative AI. Đồ án tốt nghiệp ngành CNTT — Trường Đại học Giao thông Vận tải (UTC).",
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/favicon.ico',
-  }
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/apple-icon.svg',
+  },
 }
 
 export default async function RootLayout({
@@ -36,16 +42,18 @@ export default async function RootLayout({
   const messages = await getMessages();
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={`font-sans ${fontSans.variable} antialiased`}>
+      <body className={`font-sans ${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <NextIntlClientProvider messages={messages}>
-            <ToastTranslationProvider>
-              <Suspense fallback={null}>
-                {children}
-              </Suspense>
-              <Toaster richColors position="bottom-left" />
-              <Analytics debug={false} />
-            </ToastTranslationProvider>
+            <TooltipProvider>
+              <ToastTranslationProvider>
+                <Suspense fallback={null}>
+                  {children}
+                </Suspense>
+                <Toaster richColors position="bottom-left" />
+                <Analytics debug={false} />
+              </ToastTranslationProvider>
+            </TooltipProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>
