@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, LogOut, ArrowRight, Sun, Moon } from "lucide-react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Menu, X, User, LogOut, ArrowRight, Sun, Moon, CheckCircle2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useTranslations } from 'next-intl';
@@ -12,10 +13,21 @@ import { useAuth } from "@/hooks/useAuth";
 export default function Header() {
   const t = useTranslations('Header');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showSignOutDialog, setShowSignOutDialog] = useState(false);
   const { user, isAuthenticated, loading, signOut } = useAuth();
   const { theme, setTheme } = useTheme();
 
+  const handleSignOut = useCallback(async () => {
+    setIsMobileMenuOpen(false);
+    const success = await signOut();
+    if (success) {
+      setShowSignOutDialog(true);
+      setTimeout(() => { window.location.href = '/'; }, 1500);
+    }
+  }, [signOut]);
+
   return (
+    <>
     <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo - UTC branded */}
@@ -54,7 +66,7 @@ export default function Header() {
                 <User className="h-3.5 w-3.5 text-utc-royal" />
                 <span className="text-sm text-foreground/80">{user.email}</span>
               </div>
-              <Button size="sm" variant="ghost" onClick={signOut} className="text-muted-foreground hover:text-foreground">
+              <Button size="sm" variant="ghost" onClick={handleSignOut} className="text-muted-foreground hover:text-foreground">
                 <LogOut className="h-4 w-4 mr-1.5" />
                 {t('buttons.signOut')}
               </Button>
@@ -119,7 +131,7 @@ export default function Header() {
                   <User className="h-4 w-4 text-utc-royal" />
                   <span className="text-sm">{user.email}</span>
                 </div>
-                <Button variant="ghost" className="w-full justify-start text-muted-foreground" onClick={() => { signOut(); setIsMobileMenuOpen(false); }}>
+                <Button variant="ghost" className="w-full justify-start text-muted-foreground" onClick={handleSignOut}>
                   <LogOut className="h-4 w-4 mr-2" />
                   {t('buttons.signOut')}
                 </Button>
@@ -143,5 +155,19 @@ export default function Header() {
         </div>
       )}
     </header>
+
+      {/* Sign Out Success Dialog */}
+      <Dialog open={showSignOutDialog}>
+        <DialogContent className="sm:max-w-sm bg-card border-border [&>button]:hidden">
+          <div className="flex flex-col items-center text-center py-4 space-y-4">
+            <div className="h-14 w-14 rounded-full bg-success/10 flex items-center justify-center">
+              <CheckCircle2 className="h-7 w-7 text-success" />
+            </div>
+            <h3 className="text-lg font-semibold">{t('signOutDialog.title')}</h3>
+            <p className="text-sm text-muted-foreground">{t('signOutDialog.description')}</p>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

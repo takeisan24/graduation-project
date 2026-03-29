@@ -110,8 +110,8 @@ export function useAuth() {
         clearLocalStorage();
         const { resetAllStores } = await import('@/lib/utils/storeReset');
         resetAllStores();
-        // Redirect về trang chủ mới
-        window.location.href = '/';
+        // Không redirect ở đây - để component gọi signOut tự kiểm soát redirect timing
+        // (ví dụ: hiện dialog trước rồi mới redirect)
       } else {
         // Các event khác (TOKEN_REFRESHED, etc.) - chỉ cập nhật session
         setSession(currentSession);
@@ -126,13 +126,15 @@ export function useAuth() {
   }, [router, user?.id]); // Thêm user?.id vào dependency để so sánh
 
   // Các hàm tiện ích giữ nguyên
-  const signOut = async () => {
+  const signOut = async (): Promise<boolean> => {
     try {
       setLoading(true);
       await supabaseClient.auth.signOut();
+      return true;
     } catch (error) {
       console.error("Sign out error:", error);
       setLoading(false);
+      return false;
     }
   };
 

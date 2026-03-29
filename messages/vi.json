@@ -157,6 +157,10 @@
       "dashboard": "Bảng điều khiển",
       "loading": "Đang tải...",
       "toggleMenu": "Mở menu"
+    },
+    "signOutDialog": {
+      "title": "Đăng xuất thành công!",
+      "description": "Đang chuyển về trang chủ..."
     }
   },
   "Footer": {

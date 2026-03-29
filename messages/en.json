@@ -157,6 +157,10 @@
       "dashboard": "Dashboard",
       "loading": "Loading...",
       "toggleMenu": "Toggle menu"
+    },
+    "signOutDialog": {
+      "title": "Signed out successfully!",
+      "description": "Redirecting to home page..."
     }
   },
   "Footer": {
