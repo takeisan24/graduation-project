@@ -181,13 +181,30 @@
   },
   "HomePage": {
     "hero": {
-      "AI_powered": "AI-powered Content Automation",
-      "title": "Transform One Source Into Complete Social Media Content",
-      "subtitle": "Turn any article, video, audio, or idea into a full multimedia content suite for Instagram, TikTok, X, and LinkedIn. Automate end-to-end.",
-      "ctaPrimary": "Start Free",
-      "ctaSecondary": "Watch Demo"
+      "badge": "Graduation Thesis",
+      "titlePre": "AI-Powered ",
+      "titleHighlight": "Content Planning",
+      "titlePost": " & Creation for Multiple Platforms",
+      "subtitle": "Transform a single content source into optimized posts for multiple social media platforms, using Generative AI to automate the creative process.",
+      "ctaPrimary": "Try it now",
+      "ctaSecondary": "View features",
+      "platformsLabel": "Supported:"
     },
-    "socialProof": "Trusted by creators and agencies worldwide",
+    "stats": {
+      "platforms": { "value": "8", "label": "Social Platforms", "trend": "TikTok, IG, YT..." },
+      "aiModels": { "value": "2", "label": "AI Providers", "trend": "Gemini, OpenAI GPT" },
+      "scheduling": { "value": "Auto", "label": "Post Scheduling", "trend": "Built-in Calendar" },
+      "multiplier": { "value": "1→N", "label": "Source → Posts", "trend": "Multi-version" }
+    },
+    "sectionLabels": {
+      "features": "Features",
+      "howItWorks": "Process",
+      "useCases": "Use Cases",
+      "techStack": "Technology",
+      "cta": "Get Started",
+      "learnMore": "Learn more"
+    },
+    "socialProof": "Supported platforms",
     "howItWorks": {
       "title": "How It Works in 3 Simple Steps",
       "subtitle": "CreatorHub's automation process saves you maximum time and effort.",
@@ -229,8 +246,8 @@
         }
       }
     },
-    "featuresTitle": "Everything You Need to Automate Social Media",
-    "featureSubtitle": "Powerful AI tools to transform any content into platform-ready posts",
+    "featuresTitle": "Core System Features",
+    "featureSubtitle": "AI-powered tools that transform content into optimized posts for each platform",
     "features": {
       "feature1": {
         "title": "Multi-Source Input",
@@ -253,51 +270,61 @@
         "description": "Schedule posts across all platforms with intuitive calendar and automatic optimal time suggestions."
       },
       "feature6": {
-        "title": "Direct Publishing",
-        "description": "Connect your social media accounts once and publish directly without leaving the platform."
+        "title": "Publishing & Integration",
+        "description": "Publish posts to social media platforms via API integration, manage posting status directly within the system."
       }
     },
-    "useCasesTitle": "Designed for Every Workflow",
-    "useCasesSubtitle": "Turn ideas into content faster than ever, no matter who you are.",
+    "useCasesTitle": "Real-World Use Cases",
+    "useCasesSubtitle": "See how CreatorHub helps create content for multiple platforms from various sources.",
     "card": [
       {
-        "title": "Repurpose Long Videos",
+        "title": "Create Content from YouTube/TikTok Videos",
         "description": [
-          "Turn long YouTube videos into 10 short clips for Reels and TikTok.",
-          "Automatically extract key points to create Twitter posts.",
-          "Generate thumbnail images and quotes from video content."
+          "Input a YouTube or TikTok video URL, AI automatically analyzes the content.",
+          "Generate optimized posts for each platform: X, LinkedIn, Facebook, Instagram.",
+          "Automatically extract key points and write platform-specific captions."
         ]
       },
       {
-        "title": "Convert Blog Posts",
+        "title": "Convert Articles & Documents",
         "description": [
-          "Transform a blog post into a series of in-depth LinkedIn posts.",
-          "Create Instagram carousel slides from main points.",
-          "Summarize articles into concise Facebook posts."
+          "Input a blog URL or upload PDF/Word files as content sources.",
+          "Create a series of in-depth LinkedIn posts from a single article.",
+          "Generate Instagram carousel slides from main points."
         ]
       },
       {
         "title": "Create from Ideas",
         "description": [
-          "Start with just an idea, AI develops it into video scripts.",
-          "Generate multiple caption variations for A/B testing.",
-          "Plan content for the entire week from just a few bullet points."
+          "Start with just a text idea, AI develops it into video scripts.",
+          "Generate multiple content versions for 8 platforms simultaneously.",
+          "Use AI Chat to refine content with natural language commands."
         ]
       },
       {
-        "title": "Manage Multiple Clients",
+        "title": "AI Media Generation & Scheduling",
         "description": [
-          "Batch create content for multiple brands from different sources.",
-          "Maintain consistent brand voice thanks to AI Assistant.",
-          "Save hours of work each week to focus on strategy."
+          "Generate illustrations with Gemini AI in multiple sizes and resolutions.",
+          "Create videos from text descriptions using Veo 3.0 (Google AI).",
+          "Schedule posts automatically with built-in Calendar and direct publishing."
         ]
       }
     ],
     "ctaSection": {
-      "title": "Start Automating Your Content Today",
-      "subtitle": "Join creators expanding their social media presence with AI. No credit card required.",
-      "cta": "Start Free",
-      "pricing_view": "View Pricing"
+      "title": "Ready to explore CreatorHub?",
+      "subtitle": "Discover the multi-platform content creation support system built as part of an IT graduation thesis.",
+      "cta": "Try it now"
+    },
+    "techStack": {
+      "title": "Architecture & Technology",
+      "subtitle": "Modern architecture, secure, and scalable"
+    },
+    "footer": {
+      "thesis": "Graduation Thesis — Information Technology",
+      "university": "University of Transport and Communications (UTC)",
+      "student": "Student: Vu Tuan Anh — IT4",
+      "builtWith": "Built with Next.js, Supabase, and Generative AI",
+      "systemStatus": "System is running"
     }
   },
   "SignInPage": {

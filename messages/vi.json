@@ -181,13 +181,30 @@
   },
   "HomePage": {
     "hero": {
-      "AI_powered": "Tự động hóa nội dung hỗ trợ bởi AI",
-      "title": "Chuyển đổi một nguồn thành nội dung truyền thông xã hội hoàn chỉnh",
-      "subtitle": "Biến bất kỳ bài viết, video, âm thanh hoặc ý tưởng nào thành bộ nội dung đa phương tiện đầy đủ cho Instagram, TikTok, X và LinkedIn. Tự động hóa từ đầu đến cuối.",
-      "ctaPrimary": "Bắt đầu Miễn phí",
-      "ctaSecondary": "Xem Demo"
+      "badge": "Đồ án tốt nghiệp",
+      "titlePre": "Hỗ trợ Lập kế hoạch & ",
+      "titleHighlight": "Sáng tạo Nội dung",
+      "titlePost": " đa nền tảng bằng AI",
+      "subtitle": "Biến một nguồn nội dung duy nhất thành bài đăng tối ưu cho nhiều nền tảng mạng xã hội, sử dụng Generative AI để tự động hóa quy trình sáng tạo.",
+      "ctaPrimary": "Trải nghiệm ngay",
+      "ctaSecondary": "Xem tính năng",
+      "platformsLabel": "Hỗ trợ:"
     },
-    "socialProof": "Được tin cậy bởi các nhà sáng tạo và agency trên toàn thế giới",
+    "stats": {
+      "platforms": { "value": "8", "label": "Nền tảng MXH", "trend": "TikTok, IG, YT..." },
+      "aiModels": { "value": "2", "label": "AI Providers", "trend": "Gemini, OpenAI GPT" },
+      "scheduling": { "value": "Auto", "label": "Lên lịch đăng", "trend": "Calendar tích hợp" },
+      "multiplier": { "value": "1→N", "label": "Nguồn → Bài viết", "trend": "Đa phiên bản" }
+    },
+    "sectionLabels": {
+      "features": "Tính năng",
+      "howItWorks": "Quy trình",
+      "useCases": "Ứng dụng",
+      "techStack": "Công nghệ",
+      "cta": "Bắt đầu",
+      "learnMore": "Tìm hiểu thêm"
+    },
+    "socialProof": "Nền tảng được hỗ trợ",
     "howItWorks": {
       "title": "Hoạt động chỉ trong 3 bước đơn giản",
       "subtitle": "Quy trình tự động hóa của CreatorHub giúp bạn tiết kiệm thời gian và công sức tối đa.",
@@ -229,8 +246,8 @@
         }
       }
     },
-    "featuresTitle": "Mọi thứ bạn cần để tự động hóa phương tiện truyền thông xã hội",
-    "featureSubtitle": "Các công cụ AI mạnh mẽ giúp chuyển đổi mọi nội dung thành bài đăng sẵn sàng cho nền tảng",
+    "featuresTitle": "Tính năng chính của hệ thống",
+    "featureSubtitle": "Các công cụ AI hỗ trợ chuyển đổi nội dung thành bài đăng tối ưu cho từng nền tảng",
     "features": {
       "feature1": {
         "title": "Nhập liệu từ nhiều nguồn",
@@ -253,51 +270,61 @@
         "description": "Lên lịch bài đăng trên tất cả các nền tảng với lịch trực quan và tự động đề xuất thời gian tối ưu."
       },
       "feature6": {
-        "title": "Xuất bản trực tiếp",
-        "description": "Kết nối tài khoản mạng xã hội của bạn một lần và xuất bản trực tiếp mà không cần rời khỏi nền tảng."
+        "title": "Xuất bản & Tích hợp",
+        "description": "Xuất bản bài đăng lên các nền tảng MXH thông qua tích hợp API, quản lý trạng thái đăng bài ngay trong hệ thống."
       }
     },
-    "useCasesTitle": "Được thiết kế cho mọi quy trình làm việc",
-    "useCasesSubtitle": "Biến ý tưởng thành nội dung nhanh hơn bao giờ hết, bất kể bạn là ai.",
+    "useCasesTitle": "Các tình huống ứng dụng thực tế",
+    "useCasesSubtitle": "Xem cách CreatorHub hỗ trợ sáng tạo nội dung cho nhiều nền tảng từ các nguồn khác nhau.",
     "card": [
       {
-        "title": "Tái sử dụng Video dài",
+        "title": "Tạo nội dung từ Video YouTube/TikTok",
         "description": [
-          "Biến video YouTube dài thành 10 clip ngắn cho Reels và TikTok.",
-          "Tự động trích xuất các ý chính để tạo bài đăng Twitter.",
-          "Tạo hình ảnh thumbnail và trích dẫn từ nội dung video."
+          "Nhập URL video YouTube hoặc TikTok, AI tự động phân tích nội dung.",
+          "Tạo bài đăng tối ưu cho từng nền tảng: X, LinkedIn, Facebook, Instagram.",
+          "Tự động trích xuất ý chính và viết caption phù hợp từng kênh."
         ]
       },
       {
-        "title": "Chuyển đổi Bài Blog",
+        "title": "Chuyển đổi Bài viết & Tài liệu",
         "description": [
-          "Chuyển đổi một bài blog thành một chuỗi bài đăng LinkedIn chuyên sâu.",
-          "Tạo các slide ảnh carousel cho Instagram từ các luận điểm chính.",
-          "Tóm tắt bài viết thành các bài đăng Facebook ngắn gọn."
+          "Nhập URL bài blog hoặc upload file PDF/Word làm nguồn nội dung.",
+          "Tạo chuỗi bài đăng LinkedIn chuyên sâu từ một bài viết gốc.",
+          "Tạo slide carousel cho Instagram từ các luận điểm chính."
         ]
       },
       {
         "title": "Sáng tạo từ Ý tưởng",
         "description": [
-          "Bắt đầu chỉ với một ý tưởng, AI sẽ phát triển thành kịch bản video.",
-          "Tạo ra nhiều phiên bản caption khác nhau để thử nghiệm A/B.",
-          "Lên kế hoạch nội dung cho cả tuần chỉ từ một vài gạch đầu dòng."
+          "Bắt đầu chỉ với một ý tưởng văn bản, AI phát triển thành kịch bản video.",
+          "Tạo nhiều phiên bản nội dung cho 8 nền tảng cùng lúc.",
+          "Sử dụng AI Chat để tinh chỉnh nội dung bằng ngôn ngữ tự nhiên."
         ]
       },
       {
-        "title": "Quản lý nhiều Khách hàng",
+        "title": "Tạo media bằng AI & Lên lịch đăng",
         "description": [
-          "Tạo nội dung hàng loạt cho nhiều thương hiệu từ các nguồn khác nhau.",
-          "Duy trì giọng văn thương hiệu nhất quán nhờ Trợ lý AI.",
-          "Tiết kiệm hàng giờ làm việc mỗi tuần để tập trung vào chiến lược."
+          "Tạo hình ảnh minh họa bằng Gemini AI với nhiều kích thước và độ phân giải.",
+          "Tạo video từ mô tả văn bản bằng Veo 3.0 (Google AI).",
+          "Lên lịch đăng bài tự động với Calendar tích hợp và đăng trực tiếp."
         ]
       }
     ],
     "ctaSection": {
-      "title": "Bắt đầu tự động hóa nội dung của bạn ngay hôm nay",
-      "subtitle": "Tham gia cùng những nhà sáng tạo đang mở rộng sự hiện diện trên mạng xã hội bằng AI. Không cần thẻ tín dụng.",
-      "cta": "Bắt đầu Miễn phí",
-      "pricing_view": "Xem Bảng giá"
+      "title": "Sẵn sàng trải nghiệm CreatorHub?",
+      "subtitle": "Khám phá hệ thống hỗ trợ sáng tạo nội dung đa nền tảng được xây dựng như một phần của đồ án tốt nghiệp ngành CNTT.",
+      "cta": "Trải nghiệm ngay"
+    },
+    "techStack": {
+      "title": "Kiến trúc & Công nghệ",
+      "subtitle": "Kiến trúc hiện đại, bảo mật, và có khả năng mở rộng"
+    },
+    "footer": {
+      "thesis": "Đồ án tốt nghiệp — Ngành Công nghệ Thông tin",
+      "university": "Trường Đại học Giao thông Vận tải (UTC)",
+      "student": "Sinh viên: Vũ Tuấn Anh — CNTT4",
+      "builtWith": "Xây dựng với Next.js, Supabase, và Generative AI",
+      "systemStatus": "Hệ thống đang hoạt động"
     }
   },
   "SignInPage": {
