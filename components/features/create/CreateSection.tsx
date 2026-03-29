@@ -148,20 +148,32 @@ export default function CreateSection() {
             </Button>
           </div>
 
-          {/* Sources dropdown panel (collapsible) */}
-          <div className={`hidden lg:block transition-all duration-300 ease-in-out overflow-hidden border-b border-border/50 ${
-            isSourcesOpen ? (isAddingSource ? 'max-h-[500px]' : 'max-h-[280px]') : 'max-h-0'
-          }`}>
-            <div className={`${isAddingSource ? 'h-[500px]' : 'h-[280px]'}`}>
-              <SourcePanel mode={isAddingSource ? 'form' : 'list'} />
-            </div>
-          </div>
+          {/* Sources dropdown panel (overlay, not pushing content) */}
+          {isSourcesOpen && (
+            <>
+              {/* Backdrop */}
+              <div
+                className="hidden lg:block fixed inset-0 z-20"
+                onClick={() => { if (!isInWizard) setIsSourcesOpen(false); }}
+              />
+              {/* Panel */}
+              <div className={`hidden lg:block absolute left-0 right-0 top-[41px] z-30 border-b border-border/50 bg-card shadow-lg transition-all duration-200 ${
+                isAddingSource ? 'max-h-[500px]' : 'max-h-[220px]'
+              } overflow-y-auto`}>
+                <div className="max-w-3xl mx-auto">
+                  <SourcePanel mode={isAddingSource ? 'form' : 'list'} />
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Editor area (spacious, takes remaining space) */}
           <div className={`flex-1 min-h-0 relative ${isConfiguringPosts ? 'z-30' : 'z-10'}
             ${activeMobilePanel === 'editor' ? 'block' : 'hidden lg:block'}`}>
-            <div className={`relative ${isConfiguringPosts ? 'z-30' : 'z-0'} h-full w-full`}>
-              <PostEditorWrapper mode={isConfiguringPosts ? 'configure' : 'normal'} />
+            <div className={`relative ${isConfiguringPosts ? 'z-30' : 'z-0'} h-full w-full overflow-y-auto`}>
+              <div className="max-w-4xl mx-auto px-4 lg:px-8 py-4">
+                <PostEditorWrapper mode={isConfiguringPosts ? 'configure' : 'normal'} />
+              </div>
             </div>
             {/* Wizard overlay */}
             {isInWizard && !isConfiguringPosts && (
@@ -171,18 +183,20 @@ export default function CreateSection() {
         </div>
 
         {/* ─── AI Chat slide-in panel (desktop) ─── */}
-        <div className={`hidden lg:flex flex-col transition-all duration-300 ease-in-out border-l border-border/50 bg-card/30 ${
+        <div className={`hidden lg:flex flex-col transition-all duration-300 ease-in-out border-l border-border/50 bg-background ${
           isAIChatOpen ? 'w-[380px]' : 'w-0'
         } overflow-hidden`}>
           {/* Chat header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 flex-shrink-0">
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/50 bg-card/50 flex-shrink-0">
             <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded-md bg-gradient-to-br from-utc-royal to-utc-sky flex items-center justify-center">
+              <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-utc-royal to-utc-sky flex items-center justify-center">
                 <MessageSquare className="h-3.5 w-3.5 text-white" />
               </div>
-              <span className="text-sm font-medium">AI Assistant</span>
+              <div>
+                <span className="text-sm font-semibold">AI Assistant</span>
+              </div>
             </div>
-            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={toggleChat}>
+            <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground" onClick={toggleChat}>
               <X className="h-4 w-4" />
             </Button>
           </div>
