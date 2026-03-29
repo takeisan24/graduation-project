@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
-import { PanelLeftClose, PanelLeftOpen, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
+import { MessageSquare, X, ChevronDown, FolderOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 import AIChatbox from './chat/AIChatbox';
@@ -13,11 +13,28 @@ import OnboardingTour from './layout/OnboardingTour';
 import { useNavigationStore, useCreateSourcesStore, useCreatePostsStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 
+/**
+ * CreateSection — Hybrid Typefully + Gemini layout
+ *
+ * Desktop:
+ * ┌──────────────────────────────────┬───────────────────┐
+ * │ [Sources ▾ (3)]  [Platform tabs] │                   │
+ * ├──────────────────────────────────┤ AI Chat (slide-in)│
+ * │                                  │                   │
+ * │  EDITOR (spacious, centered)     │ Messages...       │
+ * │  Content + Media                 │                   │
+ * │                                  │ [Input] [Send]    │
+ * ├──────────────────────────────────┤                   │
+ * │ [🖼️][🎬][📝]    [Draft][Publish]│                   │
+ * └──────────────────────────────────┴───────────────────┘
+ *
+ * Mobile: Tab-based (Sources | Editor | Chat)
+ */
 export default function CreateSection() {
   const t = useTranslations('CreatePage.createSection.mobileTabs');
-  const [isSourcePanelOpen, setIsSourcePanelOpen] = useState(true);
+  const [isSourcesOpen, setIsSourcesOpen] = useState(false);
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
-  const [manualChatToggle, setManualChatToggle] = useState(false); // user tự bấm mở
+  const [manualChatToggle, setManualChatToggle] = useState(false);
   const hasResetOnMount = useRef(false);
 
   const { wizardStep, setWizardStep } = useNavigationStore(useShallow(state => ({
@@ -42,11 +59,6 @@ export default function CreateSection() {
   }, [sourceToGenerate, wizardStep, setWizardStep]);
 
   useEffect(() => {
-    const hasCompleted = localStorage.getItem('hasCompletedFirstFlow');
-    if (!hasCompleted && savedSources.length > 0) { /* noop */ }
-  }, [savedSources.length]);
-
-  useEffect(() => {
     if (wizardStep === 'idle' && savedSources.length > 0) {
       if (!localStorage.getItem('hasCompletedFirstFlow')) {
         localStorage.setItem('hasCompletedFirstFlow', 'true');
@@ -54,7 +66,7 @@ export default function CreateSection() {
     }
   }, [wizardStep, savedSources.length]);
 
-  // Auto-open AI Chat when posts appear, auto-close only if user didn't manually open
+  // Auto-open AI Chat when posts appear
   useEffect(() => {
     if (openPosts.length > 0 && !isAIChatOpen) {
       setIsAIChatOpen(true);
@@ -63,17 +75,25 @@ export default function CreateSection() {
     }
   }, [openPosts.length, isAIChatOpen, manualChatToggle]);
 
+  // Wizard opens sources panel automatically
+  useEffect(() => {
+    if (wizardStep === 'addingSource') setIsSourcesOpen(true);
+  }, [wizardStep]);
+
   const isAddingSource = wizardStep === 'addingSource';
   const isConfiguringPosts = wizardStep === 'configuringPosts';
   const isInWizard = wizardStep !== 'idle';
 
   const [activeMobilePanel, setActiveMobilePanel] = useState<'sources' | 'editor' | 'chat'>('editor');
 
-  const sourcePanelWidth = isAddingSource ? 'w-[700px]' : 'w-[241px]';
+  const toggleChat = () => {
+    setIsAIChatOpen(!isAIChatOpen);
+    setManualChatToggle(!isAIChatOpen);
+  };
 
   return (
     <>
-      {/* Mobile Navigation Tabs */}
+      {/* ═══ MOBILE: Tab navigation ═══ */}
       <div className="lg:hidden flex border-b border-border bg-background">
         {(['sources', 'editor', 'chat'] as const).map((panel) => (
           <Button
@@ -91,87 +111,96 @@ export default function CreateSection() {
         ))}
       </div>
 
-      {/* Desktop layout: top area (Sources + Editor) + bottom area (AI Chat) */}
-      <div className="flex flex-col h-full w-full">
-        {/* Top: Sources + Editor */}
-        <div className="flex flex-1 min-h-0 relative">
-          {/* Left Panel - Sources */}
-          <div
-            className={`transition-all duration-300 ease-in-out ${
-              isSourcePanelOpen ? sourcePanelWidth : 'w-0'
-            } overflow-hidden relative ${isAddingSource ? 'z-30' : 'z-10'}
-            ${activeMobilePanel === 'sources' ? 'flex-1 w-full lg:w-auto' : 'hidden lg:block lg:flex-none'}`}
-          >
-            <div className={`h-full ${isAddingSource ? 'w-full lg:w-[700px]' : 'w-full lg:w-[241px]'} transition-all duration-300 relative ${isAddingSource ? 'z-30' : 'z-0'}`}>
-              <SourcePanel mode={isAddingSource ? 'form' : 'list'} />
-            </div>
-            {isInWizard && !isAddingSource && (
-              <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto animate-in fade-in duration-300 cursor-not-allowed" />
-            )}
-            {isSourcePanelOpen && !isAddingSource && !isInWizard && (
-              <Button
-                variant="secondary"
-                size="icon"
-                className="hidden lg:flex absolute right-2 top-2 z-10 h-7 w-7"
-                onClick={() => setIsSourcePanelOpen(false)}
-              >
-                <PanelLeftClose className="w-4 h-4" />
-              </Button>
-            )}
+      {/* ═══ DESKTOP: Hybrid layout ═══ */}
+      <div className="flex h-full w-full relative">
+
+        {/* ─── Main content area (editor + sources dropdown) ─── */}
+        <div className="flex-1 min-w-0 flex flex-col h-full relative">
+
+          {/* Top bar: Sources dropdown toggle */}
+          <div className="hidden lg:flex items-center gap-2 px-4 py-2 border-b border-border/50 bg-card/30">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 text-xs"
+              onClick={() => setIsSourcesOpen(!isSourcesOpen)}
+            >
+              <FolderOpen className="h-3.5 w-3.5" />
+              {t('sources')}
+              {savedSources.length > 0 && (
+                <span className="ml-1 px-1.5 py-0.5 rounded-full bg-utc-royal/10 text-utc-royal text-[10px] font-semibold">
+                  {savedSources.length}
+                </span>
+              )}
+              <ChevronDown className={`h-3 w-3 transition-transform ${isSourcesOpen ? 'rotate-180' : ''}`} />
+            </Button>
+
+            {/* AI Chat toggle (desktop) */}
+            <div className="flex-1" />
+            <Button
+              variant={isAIChatOpen ? "default" : "outline"}
+              size="sm"
+              className={`gap-2 text-xs ${isAIChatOpen ? 'bg-gradient-to-r from-utc-royal to-utc-sky text-white' : ''}`}
+              onClick={toggleChat}
+            >
+              <MessageSquare className="h-3.5 w-3.5" />
+              {t('aiChat')}
+            </Button>
           </div>
 
-          {/* Toggle - Left Panel (when closed) */}
-          {!isSourcePanelOpen && !isInWizard && (
-            <Button
-              size="icon"
-              className="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 z-15 rounded-l-none h-10 w-8 bg-gradient-to-r from-utc-royal to-utc-sky text-white"
-              onClick={() => setIsSourcePanelOpen(true)}
-            >
-              <PanelLeftOpen className="w-4 h-4" />
-            </Button>
-          )}
+          {/* Sources dropdown panel (collapsible) */}
+          <div className={`hidden lg:block transition-all duration-300 ease-in-out overflow-hidden border-b border-border/50 ${
+            isSourcesOpen ? (isAddingSource ? 'max-h-[500px]' : 'max-h-[280px]') : 'max-h-0'
+          }`}>
+            <div className={`${isAddingSource ? 'h-[500px]' : 'h-[280px]'}`}>
+              <SourcePanel mode={isAddingSource ? 'form' : 'list'} />
+            </div>
+          </div>
 
-          {/* Main Panel - Editor */}
-          <div className={`flex-1 min-w-0 relative transition-all duration-300 ease-in-out ${isConfiguringPosts ? 'z-30' : 'z-10'}
+          {/* Editor area (spacious, takes remaining space) */}
+          <div className={`flex-1 min-h-0 relative ${isConfiguringPosts ? 'z-30' : 'z-10'}
             ${activeMobilePanel === 'editor' ? 'block' : 'hidden lg:block'}`}>
             <div className={`relative ${isConfiguringPosts ? 'z-30' : 'z-0'} h-full w-full`}>
               <PostEditorWrapper mode={isConfiguringPosts ? 'configure' : 'normal'} />
             </div>
+            {/* Wizard overlay */}
             {isInWizard && !isConfiguringPosts && (
               <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto animate-in fade-in duration-300 cursor-not-allowed" />
             )}
           </div>
         </div>
 
-        {/* Bottom Panel - AI Chat (desktop only, mobile uses tabs) */}
-        <div className={`hidden lg:block relative ${isInWizard ? 'z-0' : 'z-10'}`}>
-          {/* Toggle bar */}
-          <Button
-            variant="ghost"
-            onClick={() => { setIsAIChatOpen(!isAIChatOpen); setManualChatToggle(!isAIChatOpen); }}
-            className="w-full h-10 rounded-none flex items-center justify-center gap-2 border-t border-border/50 bg-muted/30 hover:bg-muted/50 text-sm text-muted-foreground"
-          >
-            <MessageSquare className="h-4 w-4" />
-            <span>{t('aiChat')}</span>
-            {isAIChatOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
-          </Button>
-
-          {/* Chat content */}
-          <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
-            isAIChatOpen ? 'h-[250px]' : 'h-0'
-          }`}>
-            <div className="h-[250px] border-t border-border/50">
-              <AIChatbox />
+        {/* ─── AI Chat slide-in panel (desktop) ─── */}
+        <div className={`hidden lg:flex flex-col transition-all duration-300 ease-in-out border-l border-border/50 bg-card/30 ${
+          isAIChatOpen ? 'w-[380px]' : 'w-0'
+        } overflow-hidden`}>
+          {/* Chat header */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 flex-shrink-0">
+            <div className="flex items-center gap-2">
+              <div className="h-6 w-6 rounded-md bg-gradient-to-br from-utc-royal to-utc-sky flex items-center justify-center">
+                <MessageSquare className="h-3.5 w-3.5 text-white" />
+              </div>
+              <span className="text-sm font-medium">AI Assistant</span>
             </div>
+            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={toggleChat}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          {/* Chat content */}
+          <div className="flex-1 min-h-0 w-[380px]">
+            <AIChatbox />
           </div>
 
-          {/* Wizard overlay for bottom panel */}
-          {isInWizard && isAIChatOpen && (
+          {/* Wizard overlay */}
+          {isInWizard && (
             <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto cursor-not-allowed" />
           )}
         </div>
 
-        {/* Mobile AI Chat (full panel when chat tab active) */}
+        {/* ─── Mobile panels ─── */}
+        <div className={`lg:hidden ${activeMobilePanel === 'sources' ? 'flex-1' : 'hidden'}`}>
+          <SourcePanel mode={isAddingSource ? 'form' : 'list'} />
+        </div>
         <div className={`lg:hidden ${activeMobilePanel === 'chat' ? 'flex-1' : 'hidden'}`}>
           <AIChatbox />
         </div>
