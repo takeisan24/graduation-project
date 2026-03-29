@@ -57,8 +57,9 @@ export function MonthlyViewGrid({
                 cell.isClicked ? "border-2 border-primary" : "border-t border-b border-border"
               } ${
                 !cell.inCurrentMonth && !isPast ? 'bg-secondary' : ''
-              } ${i < 7 ? 'border-t-0' : ''} ${i % 7 === 0 ? 'border-l' : ''} ${i % 7 === 6 ? 'border-r' : ''}
-              `}
+              } ${i < 7 ? 'border-t-0' : ''} ${i % 7 === 0 ? 'border-l' : ''} ${i % 7 === 6 ? 'border-r' : ''} ${
+                cell.isToday ? 'ring-2 ring-utc-royal/50 bg-utc-royal/5' : ''
+              }`}
             onClick={isPast ? undefined : () => onDayClick(cell)}
             onDragOver={isPast ? undefined : onDragOver}
             onDrop={isPast ? undefined : (e) => onDrop(e, cell)}

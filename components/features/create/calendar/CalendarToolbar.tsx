@@ -66,8 +66,8 @@ export function CalendarToolbar({
       </div>
 
       <div className="inline-flex rounded-lg overflow-hidden border border-border ml-auto md:ml-4">
-        <Button variant={calendarView === 'monthly' ? 'secondary' : 'ghost'} size="sm" onClick={() => onSetView('monthly')} className={`text-xs lg:text-sm ${calendarView === 'monthly' ? 'bg-white/10' : ''}`}>{t('month')}</Button>
-        <Button variant={calendarView === 'weekly' ? 'secondary' : 'ghost'} size="sm" onClick={() => onSetView('weekly')} className={`text-xs lg:text-sm ${calendarView === 'weekly' ? 'bg-white/10' : ''}`}>{t('week')}</Button>
+        <Button variant={calendarView === 'monthly' ? 'secondary' : 'ghost'} size="sm" onClick={() => onSetView('monthly')} className={`text-xs lg:text-sm ${calendarView === 'monthly' ? 'bg-gradient-to-r from-utc-royal to-utc-sky text-white border-0' : ''}`}>{t('month')}</Button>
+        <Button variant={calendarView === 'weekly' ? 'secondary' : 'ghost'} size="sm" onClick={() => onSetView('weekly')} className={`text-xs lg:text-sm ${calendarView === 'weekly' ? 'bg-gradient-to-r from-utc-royal to-utc-sky text-white border-0' : ''}`}>{t('week')}</Button>
       </div>
     </div>
   );

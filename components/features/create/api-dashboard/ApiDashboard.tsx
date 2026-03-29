@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Zap, Activity, FileText, CheckCircle2, XCircle, Users, Sparkles, ImageIcon, Video, Brain, TrendingUp, Copy, RefreshCw, Plus, Key, Shield, AlertTriangle, BarChart3 } from "lucide-react"
 import SectionHeader from '../layout/SectionHeader'
 import { cn } from "@/lib/utils/cn";
+import { getPlatformColors } from '@/lib/constants/platformColors';
 import { useApiDashboardPageStore } from "@/store/api-dashboard/apiDashboardPageStore";
 import { usePublishedPostsStore } from "@/store/published/publishedPageStore";
 import { useFailedPostsStore } from "@/store/failed/failedPageStore";
@@ -27,7 +28,8 @@ function Badge({ className, variant = "default", ...props }: React.HTMLAttribute
 
 // Helper Function
 const PlatformIcon = ({ platform, size = 20, className}: { platform: string, size?: number, className?: string }) => {
-    return <div className={cn("rounded bg-secondary p-1 flex items-center justify-center font-bold text-xs w-6 h-6", className)}>{platform?.[0] || '?'}</div>
+    const colors = getPlatformColors(platform);
+    return <div className={cn("rounded p-1 flex items-center justify-center font-bold text-xs w-6 h-6", colors.bg, colors.text, className)}>{platform?.[0] || '?'}</div>
 };
 
 // Fallback Mock Data for Charts (only used if absolutely no real data)
@@ -236,10 +238,10 @@ export default function ApiDashboardSection() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-4 lg:mb-6 bg-card text-xs lg:text-sm h-auto sm:h-10 p-1 gap-1">
-          <TabsTrigger value="overview">{t('overview')}</TabsTrigger>
-          <TabsTrigger value="analytics">{t('analytics')}</TabsTrigger>
-          <TabsTrigger value="credits">{t('credits')}</TabsTrigger>
-          <TabsTrigger value="activity">{t('activity')}</TabsTrigger>
+          <TabsTrigger value="overview" className={activeTab === 'overview' ? 'border-b-2 border-utc-royal bg-utc-royal/5' : ''}>{t('overview')}</TabsTrigger>
+          <TabsTrigger value="analytics" className={activeTab === 'analytics' ? 'border-b-2 border-utc-royal bg-utc-royal/5' : ''}>{t('analytics')}</TabsTrigger>
+          <TabsTrigger value="credits" className={activeTab === 'credits' ? 'border-b-2 border-utc-royal bg-utc-royal/5' : ''}>{t('credits')}</TabsTrigger>
+          <TabsTrigger value="activity" className={activeTab === 'activity' ? 'border-b-2 border-utc-royal bg-utc-royal/5' : ''}>{t('activity')}</TabsTrigger>
           {/* API Keys Tab hidden as requested */}
           {/* <TabsTrigger value="api-keys">{t('apiKeys')}</TabsTrigger> */}
         </TabsList>
@@ -249,30 +251,30 @@ export default function ApiDashboardSection() {
           {/* Primary Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
             {/* Credits Card */}
-            <Card className="bg-gradient-to-br from-purple-900/50 to-purple-800/30 border-purple-500/30 p-5">
+            <Card className="bg-gradient-to-br from-utc-royal/10 to-utc-sky/5 border-utc-royal/20 p-5">
               <div className="flex items-center gap-2 mb-3">
-                <Zap className="w-5 h-5 text-purple-300" />
-                <span className="text-sm text-purple-200 font-medium">{t('credits')}</span>
+                <Zap className="w-5 h-5 text-utc-royal" />
+                <span className="text-sm text-utc-royal font-medium">{t('credits')}</span>
               </div>
               <div className="text-foreground text-3xl font-bold mb-2">
                 {creditsRemaining.toLocaleString()}
-                <span className="text-lg text-purple-300 font-normal ml-1">/ {creditLimit.toLocaleString()}</span>
+                <span className="text-lg text-utc-royal/70 font-normal ml-1">/ {creditLimit.toLocaleString()}</span>
               </div>
-              <div className="w-full bg-purple-950/50 rounded-full h-2 mb-2">
-                <div 
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-300"
+              <div className="w-full bg-utc-royal/10 rounded-full h-2 mb-2">
+                <div
+                  className="bg-gradient-to-r from-utc-royal to-utc-sky h-2 rounded-full transition-all duration-300"
                   style={{ width: `${Math.min(creditPercentage, 100)}%` }}
                 />
               </div>
-              <div className="text-xs text-purple-300">
+              <div className="text-xs text-utc-royal/70">
                 {t('used', { count: creditsUsed.toLocaleString(), percent: creditPercentage.toFixed(1) })}
               </div>
             </Card>
 
             {/* Post Limits Card */}
-            <Card className="bg-card border-border p-5">
+            <Card className="bg-gradient-to-br from-emerald-500/10 to-green-500/5 border-emerald-500/20 p-5">
               <div className="flex items-center gap-2 mb-3">
-                <FileText className="w-5 h-5 text-blue-400" />
+                <FileText className="w-5 h-5 text-emerald-400" />
                 <span className="text-sm text-muted-foreground font-medium">{t('monthlyPosts')}</span>
               </div>
               <div className="text-foreground text-3xl font-bold mb-2">
@@ -286,7 +288,7 @@ export default function ApiDashboardSection() {
             </Card>
 
             {/* Success Rate Card */}
-            <Card className="bg-card border-border p-5">
+            <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 border-green-500/20 p-5">
               <div className="flex items-center gap-2 mb-3">
                 <Activity className="w-5 h-5 text-green-400" />
                 <span className="text-sm text-muted-foreground font-medium">{t('successRate')}</span>
@@ -300,7 +302,7 @@ export default function ApiDashboardSection() {
             </Card>
             
             {/* Profiles Card */}
-             <Card className="bg-card border-border p-5">
+             <Card className="bg-gradient-to-br from-utc-gold/10 to-utc-gold-bright/5 border-utc-gold/20 p-5">
               <div className="flex items-center gap-2 mb-3">
                 <Users className="w-5 h-5 text-orange-400" />
                 <span className="text-sm text-muted-foreground font-medium">{t('activeProfiles')}</span>

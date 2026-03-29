@@ -19,6 +19,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { handleErrorWithModal } from "@/lib/utils/errorHandler"
 import { LIMIT_ERRORS, GENERIC_ERRORS } from "@/lib/messages/errors"
 import { handleUnauthorizedOnClient } from "@/lib/utils/authClient"
+import { getPlatformColors } from '@/lib/constants/platformColors'
 
 type LateConnection = {
   id: string
@@ -663,8 +664,9 @@ export default function SettingsSection() {
                       const connectionDate = connection?.created_at ? formatDate(connection.created_at, locale) : 'N/A'
                       const connectionTime = connection?.created_at ? formatTime(connection.created_at, locale, { hour: "2-digit", minute: "2-digit" }) : ''
                       const platformName = connection.platform || 'unknown'
+                      const rowPlatColors = getPlatformColors(platformName);
                       return (
-                        <tr key={connection.id} className="border-b border-border last:border-0 group hover:bg-secondary/30 transition-colors">
+                        <tr key={connection.id} className={`border-b border-border last:border-0 group hover:bg-secondary/30 transition-colors ${rowPlatColors.border}`}>
                           <td className="py-4 px-5">
                             <div className="flex items-center gap-3">
                               <PlatformIcon platform={platformName} size={32} variant="inline" />
@@ -795,12 +797,18 @@ export default function SettingsSection() {
                 || ''
               const truncatedId = truncateId(displayId)
 
+              const platColors = getPlatformColors(platform.name);
+
               return (
                 <button
                   key={idx}
                   onClick={() => provider && handleConnect(platform.name)}
                   disabled={isDisabled}
-                  className="group flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 rounded-xl bg-muted border border-border hover:border-primary/50 hover:bg-muted/80 transition-all duration-200 disabled:opacity-50"
+                  className={`group flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 rounded-xl border transition-all duration-200 disabled:opacity-50 ${
+                    connection
+                      ? `${platColors.tint} ${platColors.darkTint} ${platColors.border} hover:border-primary/50`
+                      : 'bg-muted border-border hover:border-primary/50 hover:bg-muted/80'
+                  }`}
                 >
                   <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                     <PlatformIcon platform={platform.name} size={36} variant="wrapper" />

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { CalendarEvent } from "@/lib/types/calendar";
 import { convert24HourToAmPm, convertAmPmTo24Hour } from "@/lib/utils/date";
 import { useTranslations } from 'next-intl';
+import { getPlatformColors } from '@/lib/constants/platformColors';
 
 // --- TYPE DEFINITIONS ---
 interface PopupData {
@@ -43,6 +44,7 @@ export function CalendarPopups({ popupData, onClose, onOpenInEditor, onConfirmDe
 
   const { x, y, event, date } = popupData;
   const isYellowNote = event.noteType === 'yellow';
+  const platformColors = getPlatformColors(event.platform);
 
   const handleEditTimeClick = () => {
     const initialTime = event.time ? convert24HourToAmPm(event.time) : { hour: 9, minute: 0, ampm: 'AM' as const };
@@ -65,7 +67,7 @@ export function CalendarPopups({ popupData, onClose, onOpenInEditor, onConfirmDe
             
             {/* --- THAY ĐỔI TOÀN BỘ PHẦN POPUP CONTENT NÀY --- */}
             <div
-                className="fixed z-[100] bg-card border border-border rounded-lg shadow-lg flex flex-col"
+                className={`fixed z-[100] bg-card border rounded-lg shadow-lg flex flex-col border-t-2 ${platformColors.border}`}
                 style={{ left: `${x}px`, top: `${y}px`, transform: 'translate(-50%, -110%)' }}
                 onClick={(e) => e.stopPropagation()} // Ngăn backdrop bị click
             >
