@@ -759,7 +759,8 @@
       "emptyPublishedAction": "Tạo và xuất bản bài viết",
       "emptyFailed": "Không có bài đăng thất bại",
       "emptyFailedDesc": "Tuyệt vời! Tất cả bài đăng đều thành công.",
-      "confirmDelete": "Bạn có chắc muốn xóa bài viết này?"
+      "confirmDelete": "Bạn có chắc muốn xóa bài viết này?",
+      "published": "Đã đăng"
     },
     "sectionHeaders": {
       "create": { "title": "Tạo bài viết", "description": "Soạn và tạo nội dung cho mạng xã hội" },

@@ -72,17 +72,18 @@ export default function CreateSection() {
       {/* Mobile Navigation Tabs */}
       <div className="lg:hidden flex border-b border-border bg-background">
         {(['sources', 'editor', 'chat'] as const).map((panel) => (
-          <button
+          <Button
             key={panel}
+            variant="ghost"
             onClick={() => setActiveMobilePanel(panel)}
-            className={`flex-1 py-3 text-sm font-medium transition-colors ${
+            className={`flex-1 py-3 rounded-none text-sm font-medium ${
               activeMobilePanel === panel
                 ? 'text-utc-royal border-b-2 border-utc-royal'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             {panel === 'sources' ? t('sources') : panel === 'editor' ? t('posts') : t('aiChat')}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -141,14 +142,15 @@ export default function CreateSection() {
         {/* Bottom Panel - AI Chat (desktop only, mobile uses tabs) */}
         <div className={`hidden lg:block relative ${isInWizard ? 'z-0' : 'z-10'}`}>
           {/* Toggle bar */}
-          <button
+          <Button
+            variant="ghost"
             onClick={() => setIsAIChatOpen(!isAIChatOpen)}
-            className="w-full h-10 flex items-center justify-center gap-2 border-t border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors text-sm text-muted-foreground"
+            className="w-full h-10 rounded-none flex items-center justify-center gap-2 border-t border-border/50 bg-muted/30 hover:bg-muted/50 text-sm text-muted-foreground"
           >
             <MessageSquare className="h-4 w-4" />
-            <span>AI Chat</span>
+            <span>{t('aiChat')}</span>
             {isAIChatOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
-          </button>
+          </Button>
 
           {/* Chat content */}
           <div className={`transition-all duration-300 ease-in-out overflow-hidden ${

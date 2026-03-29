@@ -78,16 +78,17 @@ export default function SlimSidebar({
     const disabled = isInWizard && !isActive
 
     const btn = (
-      <button
+      <Button
         key={item.id}
+        variant="ghost"
         onClick={() => handleNavClick(item.id)}
         disabled={disabled}
         data-tour={`nav-${item.id}`}
         className={`relative flex items-center gap-3 rounded-lg transition-all duration-200 ${
-          showLabel ? "w-full px-3 py-2.5 text-sm" : "w-10 h-10 justify-center"
+          showLabel ? "w-full px-3 py-2.5 text-sm justify-start" : "w-10 h-10 p-0 justify-center"
         } ${
           isActive
-            ? "bg-utc-royal/10 text-utc-royal"
+            ? "bg-utc-royal/10 text-utc-royal hover:bg-utc-royal/15"
             : disabled
             ? "opacity-30 cursor-not-allowed text-muted-foreground"
             : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -99,7 +100,7 @@ export default function SlimSidebar({
         )}
         <Icon className="h-[18px] w-[18px] flex-shrink-0" />
         {showLabel && <span>{labelMap[item.id]}</span>}
-      </button>
+      </Button>
     )
 
     if (showLabel) return btn

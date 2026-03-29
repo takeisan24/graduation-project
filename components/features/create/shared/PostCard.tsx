@@ -113,8 +113,8 @@ export default function PostCard({ post, variant, onEdit, onDelete, onRetry, onC
             </>
           )}
           {variant === "published" && (
-            <span className="text-xs text-muted-foreground">
-              {post.status === "posted" ? "✓ Published" : post.status}
+            <span className="text-xs text-success">
+              {post.status === "posted" ? `✓ ${t("published")}` : post.status}
             </span>
           )}
         </div>

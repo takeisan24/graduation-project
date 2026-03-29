@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { useTranslations } from "next-intl"
+import { Button } from "@/components/ui/button"
 import { useShallow } from "zustand/react/shallow"
 import { usePublishedPostsStore } from "@/store/published/publishedPageStore"
 import { usePostFilters } from "@/hooks/usePostFilters"
@@ -93,13 +94,13 @@ export default function PublishedSection() {
         {/* Load More Button */}
         {publishedPostsHasMore && (
           <div className="flex justify-center py-4">
-            <button
+            <Button
               onClick={() => loadMorePublishedPosts()}
               disabled={isLoadingMorePublishedPosts}
-              className="px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-gradient-to-r from-utc-royal to-utc-sky text-white"
             >
               {isLoadingMorePublishedPosts ? t('loadingMore') : t('loadMore')}
-            </button>
+            </Button>
           </div>
         )}
       </div>

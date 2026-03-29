@@ -24,7 +24,6 @@ export default function DraftsSection() {
       draftPosts: state.draftPosts,
       onEditDraft: state.handleEditDraft,
       onDeleteDraft: state.handleDeleteDraft,
-      onPublishDraft: state.handlePublishDraft,
     }))
   )
   // Lấy hàm mở post trong editor và hàm đổi section để khi click bản nháp sẽ nhảy sang trang tạo bài viết

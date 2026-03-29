@@ -759,7 +759,8 @@
       "emptyPublishedAction": "Create and publish a post",
       "emptyFailed": "No failed posts",
       "emptyFailedDesc": "Great! All posts published successfully.",
-      "confirmDelete": "Are you sure you want to delete this post?"
+      "confirmDelete": "Are you sure you want to delete this post?",
+      "published": "Published"
     },
     "sectionHeaders": {
       "create": { "title": "Create Post", "description": "Compose and generate content for social media" },
