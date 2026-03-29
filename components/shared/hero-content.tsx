@@ -139,8 +139,8 @@ export default function HeroContent() {
                   <Zap className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <div className="text-xs font-semibold">AI Generate</div>
-                  <div className="text-[10px] text-muted-foreground">Auto content</div>
+                  <div className="text-xs font-semibold">{t('hero.floatingCards.aiTitle')}</div>
+                  <div className="text-[10px] text-muted-foreground">{t('hero.floatingCards.aiDesc')}</div>
                 </div>
               </motion.div>
 
@@ -153,8 +153,8 @@ export default function HeroContent() {
                   <Share2 className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <div className="text-xs font-semibold">Multi-platform</div>
-                  <div className="text-[10px] text-muted-foreground">8 platforms</div>
+                  <div className="text-xs font-semibold">{t('hero.floatingCards.platformTitle')}</div>
+                  <div className="text-[10px] text-muted-foreground">{t('hero.floatingCards.platformDesc')}</div>
                 </div>
               </motion.div>
 
@@ -167,8 +167,8 @@ export default function HeroContent() {
                   <Calendar className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <div className="text-xs font-semibold">Schedule</div>
-                  <div className="text-[10px] text-muted-foreground">Auto publish</div>
+                  <div className="text-xs font-semibold">{t('hero.floatingCards.scheduleTitle')}</div>
+                  <div className="text-[10px] text-muted-foreground">{t('hero.floatingCards.scheduleDesc')}</div>
                 </div>
               </motion.div>
 

@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Eye, EyeOff, ArrowRight, Loader2, GraduationCap, Sparkles, Share2, Calendar, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 import CreatorHubIcon from "@/components/shared/CreatorHubIcon";
+import AuthBrandPanel from "@/components/shared/AuthBrandPanel";
 import Link from "next/link";
 import { supabaseClient } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
@@ -135,60 +136,7 @@ export default function SignInPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left panel - UTC Branding */}
-      <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden bg-gradient-to-br from-utc-navy via-utc-royal to-utc-sky">
-        {/* Dot pattern */}
-        <div className="dot-pattern absolute inset-0" />
-
-        {/* Radial glows */}
-        <div className="radial-glow w-[500px] h-[500px] -top-40 -left-40 bg-utc-sky/10" />
-        <div className="radial-glow w-[400px] h-[400px] -bottom-32 -right-32 bg-utc-gold/8" />
-
-        <div className="relative z-10 flex flex-col justify-between p-12 text-white w-full">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <CreatorHubIcon className="h-10 w-10" />
-            <span className="text-xl font-semibold tracking-tight">CreatorHub</span>
-          </div>
-
-          {/* Center content */}
-          <div className="space-y-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-sm">
-              <GraduationCap className="h-4 w-4" />
-              <span className="font-mono text-xs uppercase tracking-wider">Đồ án tốt nghiệp — UTC</span>
-            </div>
-
-            <h2 className="text-4xl font-display leading-tight">
-              Sáng tạo nội dung<br />
-              <span className="text-utc-gold-bright">đa nền tảng</span><br />
-              bằng AI
-            </h2>
-
-            <p className="text-white/70 text-lg max-w-sm leading-relaxed">
-              Biến một nguồn nội dung thành bài đăng tối ưu cho 8 nền tảng mạng xã hội.
-            </p>
-
-            {/* Feature pills */}
-            <div className="flex flex-wrap gap-3">
-              {[
-                { icon: <Sparkles className="h-3.5 w-3.5" />, text: "AI Generate" },
-                { icon: <Share2 className="h-3.5 w-3.5" />, text: "8 Platforms" },
-                { icon: <Calendar className="h-3.5 w-3.5" />, text: "Auto Schedule" },
-              ].map((item) => (
-                <div key={item.text} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-sm text-white/80">
-                  {item.icon}
-                  <span>{item.text}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Bottom */}
-          <p className="text-white/40 text-sm">
-            Trường Đại học Giao thông Vận tải
-          </p>
-        </div>
-      </div>
+      <AuthBrandPanel variant="signin" />
 
       {/* Right panel - Form */}
       <div className="flex-1 flex items-center justify-center px-6 py-12 bg-background">
@@ -306,7 +254,7 @@ export default function SignInPage() {
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
               </svg>
-              {oauthProviderLoading === "google" ? "Redirecting…" : tCommon("google")}
+              {oauthProviderLoading === "google" ? t("oauthRedirecting") : tCommon("google")}
             </Button>
 
             {/* Links */}

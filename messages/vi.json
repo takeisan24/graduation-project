@@ -192,7 +192,15 @@
       "subtitle": "Biến một nguồn nội dung duy nhất thành bài đăng tối ưu cho nhiều nền tảng mạng xã hội, sử dụng Generative AI để tự động hóa quy trình sáng tạo.",
       "ctaPrimary": "Trải nghiệm ngay",
       "ctaSecondary": "Xem tính năng",
-      "platformsLabel": "Hỗ trợ:"
+      "platformsLabel": "Hỗ trợ:",
+      "floatingCards": {
+        "aiTitle": "AI Generate",
+        "aiDesc": "Tự động tạo nội dung",
+        "platformTitle": "Multi-platform",
+        "platformDesc": "8 nền tảng MXH",
+        "scheduleTitle": "Lên lịch",
+        "scheduleDesc": "Đăng bài tự động"
+      }
     },
     "stats": {
       "platforms": { "value": "8", "label": "Nền tảng MXH", "trend": "TikTok, IG, YT..." },
@@ -331,6 +339,39 @@
       "systemStatus": "Hệ thống đang hoạt động"
     }
   },
+  "AuthPanel": {
+    "badge": "Đồ án tốt nghiệp — UTC",
+    "university": "Trường Đại học Giao thông Vận tải",
+    "pills": {
+      "aiGenerate": "AI Generate",
+      "platforms": "8 Nền tảng",
+      "autoSchedule": "Lên lịch tự động"
+    },
+    "signin": {
+      "heading1": "Sáng tạo nội dung",
+      "heading2": "đa nền tảng",
+      "heading3": "bằng AI",
+      "description": "Biến một nguồn nội dung thành bài đăng tối ưu cho 8 nền tảng mạng xã hội."
+    },
+    "signup": {
+      "heading1": "Bắt đầu hành trình",
+      "heading2": "sáng tạo",
+      "heading3": "của bạn",
+      "description": "Tạo tài khoản để trải nghiệm hệ thống hỗ trợ sáng tạo nội dung đa nền tảng bằng AI."
+    },
+    "forgotPassword": {
+      "heading1": "Khôi phục",
+      "heading2": "tài khoản",
+      "heading3": "của bạn",
+      "description": "Đừng lo lắng, chúng tôi sẽ gửi link đặt lại mật khẩu qua email cho bạn."
+    },
+    "updatePassword": {
+      "heading1": "Bảo mật",
+      "heading2": "tài khoản",
+      "heading3": "của bạn",
+      "description": "Đặt mật khẩu mới để bảo vệ tài khoản CreatorHub của bạn."
+    }
+  },
   "SignInPage": {
     "title": "Chào mừng trở lại!",
     "subtitle": "Nhập thông tin đăng nhập của bạn",
@@ -338,6 +379,7 @@
     "forgotPassword": "Quên mật khẩu?",
     "signIn": "Đăng nhập",
     "signingIn": "Đang đăng nhập...",
+    "oauthRedirecting": "Đang chuyển hướng...",
     "orContinueWith": "Hoặc tiếp tục với",
     "noAccount": "Chưa có tài khoản?",
     "createAccount": "Tạo tài khoản",
@@ -361,8 +403,11 @@
       "lastNamePlaceholder": "Nguyễn",
       "confirmPasswordLabel": "Xác nhận mật khẩu",
       "confirmPasswordPlaceholder": "Nhập lại mật khẩu",
-      "signUpButton": "Đăng ký"
+      "signUpButton": "Đăng ký",
+      "signingUp": "Đang tạo tài khoản...",
+      "passwordMismatch": "Mật khẩu không khớp"
     },
+    "oauthRedirecting": "Đang chuyển hướng...",
     "divider": "Hoặc đăng ký với",
     "hasAccount": "Đã có tài khoản? ",
     "signInLink": "Đăng nhập",

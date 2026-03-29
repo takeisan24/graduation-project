@@ -192,7 +192,15 @@
       "subtitle": "Transform a single content source into optimized posts for multiple social media platforms, using Generative AI to automate the creative process.",
       "ctaPrimary": "Try it now",
       "ctaSecondary": "View features",
-      "platformsLabel": "Supported:"
+      "platformsLabel": "Supported:",
+      "floatingCards": {
+        "aiTitle": "AI Generate",
+        "aiDesc": "Auto content creation",
+        "platformTitle": "Multi-platform",
+        "platformDesc": "8 social platforms",
+        "scheduleTitle": "Schedule",
+        "scheduleDesc": "Auto publish"
+      }
     },
     "stats": {
       "platforms": { "value": "8", "label": "Social Platforms", "trend": "TikTok, IG, YT..." },
@@ -331,6 +339,39 @@
       "systemStatus": "System is running"
     }
   },
+  "AuthPanel": {
+    "badge": "Graduation Thesis — UTC",
+    "university": "University of Transport and Communications",
+    "pills": {
+      "aiGenerate": "AI Generate",
+      "platforms": "8 Platforms",
+      "autoSchedule": "Auto Schedule"
+    },
+    "signin": {
+      "heading1": "Create content",
+      "heading2": "multi-platform",
+      "heading3": "with AI",
+      "description": "Transform a single content source into optimized posts for 8 social media platforms."
+    },
+    "signup": {
+      "heading1": "Start your",
+      "heading2": "creative",
+      "heading3": "journey",
+      "description": "Create an account to experience the AI-powered multi-platform content creation system."
+    },
+    "forgotPassword": {
+      "heading1": "Recover",
+      "heading2": "your account",
+      "heading3": "",
+      "description": "Don't worry, we'll send you a password reset link via email."
+    },
+    "updatePassword": {
+      "heading1": "Secure",
+      "heading2": "your account",
+      "heading3": "",
+      "description": "Set a new password to protect your CreatorHub account."
+    }
+  },
   "SignInPage": {
     "title": "Welcome Back!",
     "subtitle": "Enter your credentials",
@@ -338,6 +379,7 @@
     "forgotPassword": "Forgot password?",
     "signIn": "Sign In",
     "signingIn": "Signing in...",
+    "oauthRedirecting": "Redirecting...",
     "orContinueWith": "Or continue with",
     "noAccount": "Don't have an account?",
     "createAccount": "Create account",
@@ -361,8 +403,11 @@
       "lastNamePlaceholder": "Doe",
       "confirmPasswordLabel": "Confirm Password",
       "confirmPasswordPlaceholder": "Re-enter password",
-      "signUpButton": "Sign Up"
+      "signUpButton": "Sign Up",
+      "signingUp": "Creating account...",
+      "passwordMismatch": "Passwords do not match"
     },
+    "oauthRedirecting": "Redirecting...",
     "divider": "Or sign up with",
     "hasAccount": "Already have an account? ",
     "signInLink": "Sign In",

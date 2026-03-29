@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { ArrowLeft, Loader2, GraduationCap, Mail } from "lucide-react"
+import { ArrowLeft, Loader2, Mail } from "lucide-react"
 import CreatorHubIcon from "@/components/shared/CreatorHubIcon"
+import AuthBrandPanel from "@/components/shared/AuthBrandPanel"
 import Link from "next/link"
 import { useTranslations } from "next-intl"
 import { supabaseClient } from "@/lib/supabaseClient"
@@ -40,37 +41,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left panel - UTC Branding */}
-      <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden bg-gradient-to-br from-utc-navy via-utc-royal to-utc-sky">
-        <div className="dot-pattern absolute inset-0" />
-        <div className="radial-glow w-[500px] h-[500px] -top-40 -left-40 bg-utc-sky/10" />
-        <div className="radial-glow w-[400px] h-[400px] -bottom-32 -right-32 bg-utc-gold/8" />
-
-        <div className="relative z-10 flex flex-col justify-between p-12 text-white w-full">
-          <div className="flex items-center gap-3">
-            <CreatorHubIcon className="h-10 w-10" />
-            <span className="text-xl font-semibold tracking-tight">CreatorHub</span>
-          </div>
-
-          <div className="space-y-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 text-sm">
-              <GraduationCap className="h-4 w-4" />
-              <span className="font-mono text-xs uppercase tracking-wider">Đồ án tốt nghiệp — UTC</span>
-            </div>
-
-            <h2 className="text-4xl font-display leading-tight">
-              Khôi phục<br />
-              <span className="text-utc-gold-bright">tài khoản</span> của bạn
-            </h2>
-
-            <p className="text-white/70 text-lg max-w-sm leading-relaxed">
-              Đừng lo lắng, chúng tôi sẽ gửi link đặt lại mật khẩu qua email cho bạn.
-            </p>
-          </div>
-
-          <p className="text-white/40 text-sm">Trường Đại học Giao thông Vận tải</p>
-        </div>
-      </div>
+      <AuthBrandPanel variant="forgotPassword" />
 
       {/* Right panel - Form */}
       <div className="flex-1 flex items-center justify-center px-6 py-12 bg-background">
