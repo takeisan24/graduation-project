@@ -48,14 +48,15 @@ function EmptyStateInteractive({ onOpenSources }: { onOpenSources?: () => void }
           {QUICK_PLATFORMS.map(({ id, label }) => {
             const colors = getPlatformColors(id);
             return (
-              <button
+              <Button
                 key={id}
+                variant="outline"
                 onClick={() => handlePostCreate(id)}
-                className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border ${colors.border} ${colors.tint} ${colors.darkTint} hover:scale-[1.02] hover:shadow-md active:scale-[0.98] transition-all text-sm`}
+                className={`flex items-center gap-2 h-auto px-3 py-2.5 ${colors.border} ${colors.tint} ${colors.darkTint} hover:scale-[1.02] hover:shadow-md active:scale-[0.98] transition-all text-sm`}
               >
                 <PlatformIcon platform={id} size={16} />
                 <span className="truncate">{label}</span>
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -132,36 +133,40 @@ export default function PostEditor({ onOpenSources }: { onOpenSources?: () => vo
                                 </div>
 
                                 <div className="flex items-center bg-card rounded border border-border p-0.5">
-                                    <button
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
                                         onClick={() => navigatePostVersion(selectedPostId, 'prev')}
                                         disabled={currentVerIndex === 0}
-                                        className="p-1 hover:bg-secondary rounded-sm disabled:opacity-30 disabled:hover:bg-transparent transition-colors text-foreground"
+                                        className="h-6 w-6 p-0"
                                         aria-label="Previous version"
                                     >
                                         <ChevronLeft className="w-3.5 h-3.5" />
-                                    </button>
+                                    </Button>
 
                                     <span className="text-[10px] font-mono text-muted-foreground mx-2 min-w-[30px] text-center">
                                         v{currentVerIndex + 1}/{totalVersions}
                                     </span>
 
-                                    <button
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
                                         onClick={() => navigatePostVersion(selectedPostId, 'next')}
                                         disabled={currentVerIndex === totalVersions - 1}
-                                        className="p-1 hover:bg-secondary rounded-sm disabled:opacity-30 disabled:hover:bg-transparent transition-colors text-foreground"
+                                        className="h-6 w-6 p-0"
                                         aria-label="Next version"
                                     >
                                         <ChevronRight className="w-3.5 h-3.5" />
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            deletePostVersion(selectedPostId, currentVerIndex);
-                                        }}
-                                        className="p-1.5 hover:bg-red-500/20 text-muted-foreground hover:text-red-500 rounded transition-colors"
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => deletePostVersion(selectedPostId, currentVerIndex)}
+                                        className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
                                         aria-label="Delete version"
                                     >
                                         <Trash2 className="w-3.5 h-3.5" />
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         )}

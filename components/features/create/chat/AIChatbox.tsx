@@ -207,7 +207,7 @@ export default function AIChatbox() {
         </div>
 
         {/* Chat Messages */}
-        <div ref={chatScrollRef} className="flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/30 scrollbar-track-secondary opacity-80 p-2">
+        <div ref={chatScrollRef} className="flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/30 scrollbar-track-secondary p-3">
           {chatMessages.length === 0 ? (
             /* Empty State with Guide */
             <div className="h-full flex items-center justify-center p-4 min-h-0">

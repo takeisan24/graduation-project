@@ -149,22 +149,20 @@ export default function CreateSection() {
           </div>
 
           {/* Sources dropdown panel (overlay, not pushing content) */}
+          {isSourcesOpen && !isInWizard && (
+            <div
+              className="hidden lg:block fixed inset-0 z-20"
+              onClick={() => setIsSourcesOpen(false)}
+            />
+          )}
           {isSourcesOpen && (
-            <>
-              {/* Backdrop */}
-              <div
-                className="hidden lg:block fixed inset-0 z-20"
-                onClick={() => { if (!isInWizard) setIsSourcesOpen(false); }}
-              />
-              {/* Panel */}
-              <div className={`hidden lg:block absolute left-0 right-0 top-[41px] z-30 border-b border-border/50 bg-card shadow-lg transition-all duration-200 ${
-                isAddingSource ? 'max-h-[500px]' : 'max-h-[220px]'
-              } overflow-y-auto`}>
-                <div className="max-w-3xl mx-auto">
-                  <SourcePanel mode={isAddingSource ? 'form' : 'list'} />
-                </div>
+            <div className={`hidden lg:block absolute left-0 right-0 top-[41px] z-30 border-b border-border/50 bg-card shadow-lg ${
+              isAddingSource ? 'max-h-[500px]' : 'max-h-[220px]'
+            } overflow-y-auto`}>
+              <div className="max-w-3xl mx-auto">
+                <SourcePanel mode={isAddingSource ? 'form' : 'list'} />
               </div>
-            </>
+            </div>
           )}
 
           {/* Editor area (spacious, takes remaining space) */}
@@ -175,7 +173,7 @@ export default function CreateSection() {
             </div>
             {/* Wizard overlay */}
             {isInWizard && !isConfiguringPosts && (
-              <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto animate-in fade-in duration-300 cursor-not-allowed" />
+              <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto select-none cursor-not-allowed animate-in fade-in duration-300" />
             )}
           </div>
         </div>
@@ -205,7 +203,7 @@ export default function CreateSection() {
 
           {/* Wizard overlay */}
           {isInWizard && (
-            <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto cursor-not-allowed" />
+            <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto select-none cursor-not-allowed animate-in fade-in duration-300" />
           )}
         </div>
 
