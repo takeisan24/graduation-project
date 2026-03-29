@@ -17,6 +17,7 @@ export default function CreateSection() {
   const t = useTranslations('CreatePage.createSection.mobileTabs');
   const [isSourcePanelOpen, setIsSourcePanelOpen] = useState(true);
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
+  const [manualChatToggle, setManualChatToggle] = useState(false); // user tự bấm mở
   const hasResetOnMount = useRef(false);
 
   const { wizardStep, setWizardStep } = useNavigationStore(useShallow(state => ({
@@ -53,11 +54,14 @@ export default function CreateSection() {
     }
   }, [wizardStep, savedSources.length]);
 
-  // Auto-open/close AI Chat based on posts
+  // Auto-open AI Chat when posts appear, auto-close only if user didn't manually open
   useEffect(() => {
-    if (openPosts.length > 0 && !isAIChatOpen) setIsAIChatOpen(true);
-    else if (openPosts.length === 0 && isAIChatOpen) setIsAIChatOpen(false);
-  }, [openPosts.length, isAIChatOpen]);
+    if (openPosts.length > 0 && !isAIChatOpen) {
+      setIsAIChatOpen(true);
+    } else if (openPosts.length === 0 && isAIChatOpen && !manualChatToggle) {
+      setIsAIChatOpen(false);
+    }
+  }, [openPosts.length, isAIChatOpen, manualChatToggle]);
 
   const isAddingSource = wizardStep === 'addingSource';
   const isConfiguringPosts = wizardStep === 'configuringPosts';
@@ -144,7 +148,7 @@ export default function CreateSection() {
           {/* Toggle bar */}
           <Button
             variant="ghost"
-            onClick={() => setIsAIChatOpen(!isAIChatOpen)}
+            onClick={() => { setIsAIChatOpen(!isAIChatOpen); setManualChatToggle(!isAIChatOpen); }}
             className="w-full h-10 rounded-none flex items-center justify-center gap-2 border-t border-border/50 bg-muted/30 hover:bg-muted/50 text-sm text-muted-foreground"
           >
             <MessageSquare className="h-4 w-4" />
