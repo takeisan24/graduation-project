@@ -28,7 +28,7 @@ export default function Header() {
 
   return (
     <>
-    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo - UTC branded */}
         <Link href="/" className="flex items-center gap-2.5 group" onClick={() => setIsMobileMenuOpen(false)}>
@@ -103,7 +103,7 @@ export default function Header() {
 
       {/* Mobile panel */}
       {isMobileMenuOpen && (
-        <div className="absolute top-full left-0 w-full bg-background/95 backdrop-blur-xl border-b border-border md:hidden">
+        <div className="absolute top-full left-0 w-full bg-background/95 backdrop-blur-sm border-b border-border md:hidden">
           <div className="max-w-6xl mx-auto px-6 py-5 flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <Button

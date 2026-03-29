@@ -34,10 +34,7 @@ const PLATFORM_TO_PROVIDER: Record<string, string> = {
   "Pinterest": "pinterest"
 };
 
-let renderCount = 0; // Biến đếm số lần render
-
 export default function PublishModal() {
-    renderCount++;
 
     const t = useTranslations('CreatePage.createSection.publishModal');
 

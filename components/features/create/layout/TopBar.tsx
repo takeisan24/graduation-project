@@ -45,7 +45,7 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
 
   return (
     <>
-      <header className="h-14 flex-none border-b border-border/50 bg-background/80 backdrop-blur-xl flex items-center px-4 gap-3 z-50">
+      <header className="h-14 flex-none border-b border-border/50 bg-background/90 backdrop-blur-sm flex items-center px-4 gap-3 z-50">
         {/* Mobile menu button */}
         <Button
           variant="ghost"

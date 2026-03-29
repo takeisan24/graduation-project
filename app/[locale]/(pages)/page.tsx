@@ -1,12 +1,15 @@
+import dynamic from "next/dynamic";
 import Header from "@/components/shared/header";
 import HeroContent from "@/components/shared/hero-content";
-import StatsSection from "@/components/shared/stats-section";
-import FeaturesGrid from "@/components/shared/features-grid";
-import HowItWorksSection from "@/components/shared/how-it-works-section";
-import UseCasesSection from "@/components/shared/use-cases-section";
-import TechStackSection from "@/components/shared/tech-stack-section";
-import CTASection from "@/components/shared/cta-section";
 import Footer from "@/components/shared/footer";
+
+// Lazy load below-the-fold sections (not visible on initial viewport)
+const StatsSection = dynamic(() => import("@/components/shared/stats-section"));
+const FeaturesGrid = dynamic(() => import("@/components/shared/features-grid"));
+const HowItWorksSection = dynamic(() => import("@/components/shared/how-it-works-section"));
+const UseCasesSection = dynamic(() => import("@/components/shared/use-cases-section"));
+const TechStackSection = dynamic(() => import("@/components/shared/tech-stack-section"));
+const CTASection = dynamic(() => import("@/components/shared/cta-section"));
 
 /**
  * Landing page - Trang giới thiệu đồ án tốt nghiệp
