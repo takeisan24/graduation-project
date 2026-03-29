@@ -10,11 +10,10 @@ import { useTranslations } from 'next-intl';
 
 // Dữ liệu này có thể chuyển ra file constants để dùng chung
 const platformOptions = [
-    { name: "Twitter", icon: "/x.png" }, { name: "Instagram", icon: "/instagram.png" },
-    { name: "LinkedIn", icon: "/link.svg" }, { name: "Facebook", icon: "/fb.svg" },
-    { name: "Pinterest", icon: "/pinterest.svg" }, { name: "TikTok", icon: "/tiktok.png" },
-    { name: "Threads", icon: "/threads.png" }, { name: "Bluesky", icon: "/bluesky.png" },
-    { name: "YouTube", icon: "/ytube.png" }
+    { name: "TikTok", icon: "/icons/platforms/tiktok.png" }, { name: "Instagram", icon: "/icons/platforms/instagram.png" },
+    { name: "YouTube", icon: "/icons/platforms/ytube.png" }, { name: "Facebook", icon: "/icons/platforms/fb.svg" },
+    { name: "Twitter", icon: "/icons/platforms/x.png" }, { name: "Threads", icon: "/icons/platforms/threads.png" },
+    { name: "LinkedIn", icon: "/icons/platforms/link.svg" }, { name: "Pinterest", icon: "/icons/platforms/pinterest.svg" }
 ];
 
 // Helper to get platform icon

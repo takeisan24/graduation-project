@@ -56,7 +56,7 @@ export function FailedPostItem({ post, account, onRetry, onDelete, maxWidth}: Fa
             }}
             aria-label={t('delete')}
           >
-            <img src="/Trash.svg" alt="Delete" className="opacity-80" style={{ width: 19, height: 19 }} />
+            <img src="/icons/sidebar/Trash.svg" alt="Delete" className="opacity-80" style={{ width: 19, height: 19 }} />
           </button>
         </div>
       </div>

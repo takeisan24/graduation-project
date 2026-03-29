@@ -42,15 +42,14 @@ export function PlatformFilter({
 
   const platformOptions: PlatformOption[] = [
     { value: "all", label: tCommon('allPlatforms'), icon: null },
-    { value: "twitter", label: "Twitter (X)", icon: "/x.png" },
-    { value: "instagram", label: "Instagram", icon: "/instagram.png" },
-    { value: "linkedin", label: "LinkedIn", icon: "/link.svg" },
-    { value: "facebook", label: "Facebook", icon: "/fb.svg" },
-    { value: "threads", label: "Threads", icon: "/threads.png" },
-    { value: "bluesky", label: "Bluesky", icon: "/bluesky.png" },
-    { value: "youtube", label: "YouTube", icon: "/ytube.png" },
-    { value: "tiktok", label: "TikTok", icon: "/tiktok.png" },
-    { value: "pinterest", label: "Pinterest", icon: "/pinterest.svg" }
+    { value: "tiktok", label: "TikTok", icon: "/icons/platforms/tiktok.png" },
+    { value: "instagram", label: "Instagram", icon: "/icons/platforms/instagram.png" },
+    { value: "youtube", label: "YouTube", icon: "/icons/platforms/ytube.png" },
+    { value: "facebook", label: "Facebook", icon: "/icons/platforms/fb.svg" },
+    { value: "twitter", label: "Twitter (X)", icon: "/icons/platforms/x.png" },
+    { value: "threads", label: "Threads", icon: "/icons/platforms/threads.png" },
+    { value: "linkedin", label: "LinkedIn", icon: "/icons/platforms/link.svg" },
+    { value: "pinterest", label: "Pinterest", icon: "/icons/platforms/pinterest.svg" }
   ]
 
   const handleSelect = (optionValue: string) => {
@@ -62,7 +61,7 @@ export function PlatformFilter({
     <div className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 bg-[#2A2A30] border border-[#3A3A42] rounded-lg text-[#F5F5F7] hover:bg-[#3A3A42] transition-colors"
+        className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg text-foreground hover:bg-secondary transition-colors"
       >
         <span>{tCommon('filterByPlatform')}</span>
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,12 +70,12 @@ export function PlatformFilter({
       </button>
       
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-48 bg-[#2A2A30] border border-[#3A3A42] rounded-lg shadow-lg z-50">
+        <div className="absolute top-full left-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-50">
           {platformOptions.map((option) => (
             <button
               key={option.value}
               onClick={() => handleSelect(option.value)}
-              className="w-full flex items-center gap-3 px-4 py-3 text-left text-[#F5F5F7] hover:bg-[#3A3A42] transition-colors first:rounded-t-lg last:rounded-b-lg"
+              className="w-full flex items-center gap-3 px-4 py-3 text-left text-foreground hover:bg-secondary transition-colors first:rounded-t-lg last:rounded-b-lg"
             >
               {option.icon && (
                 <img 

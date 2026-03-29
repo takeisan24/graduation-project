@@ -88,7 +88,7 @@ export default function DraftsSection() {
                     onClick={(e) => { e.stopPropagation(); onDeleteDraft(post.id) }}
                     aria-label="Xóa bản nháp"
                   >
-                    <img src="/Trash.svg" alt="Delete" className="opacity-80 w-4 h-4 lg:w-[19px] lg:h-[19px]" />
+                    <img src="/icons/sidebar/Trash.svg" alt="Delete" className="opacity-80 w-4 h-4 lg:w-[19px] lg:h-[19px]" />
                   </button>
                 </div>
               </div>
