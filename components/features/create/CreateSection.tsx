@@ -171,7 +171,7 @@ export default function CreateSection() {
           <div className={`flex-1 min-h-0 relative ${isConfiguringPosts ? 'z-30' : 'z-10'}
             ${activeMobilePanel === 'editor' ? 'block' : 'hidden lg:block'}`}>
             <div className={`relative ${isConfiguringPosts ? 'z-30' : 'z-0'} h-full w-full`}>
-              <PostEditorWrapper mode={isConfiguringPosts ? 'configure' : 'normal'} />
+              <PostEditorWrapper mode={isConfiguringPosts ? 'configure' : 'normal'} onOpenSources={() => setIsSourcesOpen(true)} />
             </div>
             {/* Wizard overlay */}
             {isInWizard && !isConfiguringPosts && (

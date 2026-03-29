@@ -26,10 +26,9 @@ const QUICK_PLATFORMS = [
   { id: 'LinkedIn', label: 'LinkedIn' },
 ]
 
-function EmptyStateInteractive() {
+function EmptyStateInteractive({ onOpenSources }: { onOpenSources?: () => void }) {
   const t = useTranslations('CreatePage.createSection.postPanel');
   const handlePostCreate = useCreatePostsStore(state => state.handlePostCreate);
-  const setIsSourceModalOpen = useCreateSourcesStore(state => state.setIsSourceModalOpen);
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-6 gap-8 min-h-0">
@@ -72,7 +71,7 @@ function EmptyStateInteractive() {
       <Button
         variant="outline"
         className="gap-2"
-        onClick={() => setIsSourceModalOpen(true)}
+        onClick={() => onOpenSources?.()}
       >
         <FolderPlus className="h-4 w-4" />
         {t('emptyState.step1.title')}
@@ -81,7 +80,7 @@ function EmptyStateInteractive() {
   );
 }
 
-export default function PostEditor() {
+export default function PostEditor({ onOpenSources }: { onOpenSources?: () => void } = {}) {
     const t = useTranslations('CreatePage.createSection.postPanel');
     
 
@@ -120,7 +119,7 @@ export default function PostEditor() {
             {/* Editor Card */}
             <Card className="bg-card border-border p-0 gap-0 rounded-[5px] flex-1 flex flex-col w-full overflow-hidden">
                 {selectedPostId === 0 || posts.length === 0 ? (
-                    <EmptyStateInteractive />
+                    <EmptyStateInteractive onOpenSources={onOpenSources} />
 
                 ) : (
                     <div className="flex-1 flex flex-col min-h-0 relative">

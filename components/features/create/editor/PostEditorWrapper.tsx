@@ -10,9 +10,10 @@ import { useTranslations } from 'next-intl';
 
 interface PostEditorWrapperProps {
   mode?: 'normal' | 'configure';
+  onOpenSources?: () => void;
 }
 
-export default function PostEditorWrapper({ mode = 'normal' }: PostEditorWrapperProps) {
+export default function PostEditorWrapper({ mode = 'normal', onOpenSources }: PostEditorWrapperProps) {
   const t = useTranslations('CreatePage.createSection.postEditorWrapper');
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -92,5 +93,5 @@ export default function PostEditorWrapper({ mode = 'normal' }: PostEditorWrapper
     );
   }
 
-  return <PostEditor />;
+  return <PostEditor onOpenSources={onOpenSources} />;
 }
