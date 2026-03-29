@@ -10,6 +10,7 @@ import { Toaster } from 'sonner'
 import { ToastTranslationProvider } from '@/components/providers/ToastTranslationProvider'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import NextTopLoader from 'nextjs-toploader'
 
 import "./globals.css"
 
@@ -44,6 +45,7 @@ export default async function RootLayout({
     <html lang={locale} suppressHydrationWarning>
       <body className={`font-sans ${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          <NextTopLoader color="#2563EB" height={3} showSpinner={false} speed={300} />
           <NextIntlClientProvider messages={messages}>
             <TooltipProvider>
               <ToastTranslationProvider>

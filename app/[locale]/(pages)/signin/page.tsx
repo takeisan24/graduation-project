@@ -10,7 +10,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Eye, EyeOff, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 import CreatorHubIcon from "@/components/shared/CreatorHubIcon";
 import AuthBrandPanel from "@/components/shared/AuthBrandPanel";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { supabaseClient } from "@/lib/supabaseClient";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslations } from "next-intl";
