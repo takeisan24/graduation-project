@@ -83,7 +83,7 @@ export default function AuthSuccessPage() {
 
         setIsLoading(false)
         // Auto redirect after showing success
-        setTimeout(navigateToCreate, 1500)
+        setTimeout(navigateToCreate, 700)
       } catch (err: any) {
         setError(err.message || "Failed to complete authentication")
         setIsLoading(false)

@@ -63,7 +63,7 @@ export default function SectionPage({ params }: { params: { section: string } })
       const timer = setTimeout(() => {
         setIsInitialLoad(false)
         sessionStorage.setItem('hasLoadedApp', 'true')
-      }, 800)
+      }, 300)
       return () => clearTimeout(timer)
     }
   }, [])

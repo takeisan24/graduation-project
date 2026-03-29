@@ -36,7 +36,7 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
     const success = await signOut()
     if (success) {
       setShowSignOutDialog(true)
-      setTimeout(() => { window.location.href = "/signin" }, 1500)
+      setTimeout(() => { window.location.href = "/signin" }, 700)
     }
   }, [signOut])
 

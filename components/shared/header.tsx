@@ -22,7 +22,7 @@ export default function Header() {
     const success = await signOut();
     if (success) {
       setShowSignOutDialog(true);
-      setTimeout(() => { window.location.href = '/'; }, 1500);
+      setTimeout(() => { window.location.href = '/'; }, 700);
     }
   }, [signOut]);
 
@@ -74,12 +74,12 @@ export default function Header() {
           ) : (
             <>
               <Button variant="ghost" size="sm" asChild>
-                <Link prefetch={false} href="/signin">
+                <Link href="/signin">
                   {t('buttons.signIn')}
                 </Link>
               </Button>
               <Button size="sm" className="bg-gradient-to-r from-utc-royal to-utc-sky text-white shadow-sm hover:shadow-accent hover:-translate-y-0.5 transition-all duration-200" asChild>
-                <Link prefetch={false} href="/signup">
+                <Link href="/signup">
                   {t('buttons.getStarted')}
                   <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                 </Link>
@@ -139,12 +139,12 @@ export default function Header() {
             ) : (
               <>
                 <Button variant="ghost" className="w-full justify-start" asChild>
-                  <Link prefetch={false} href="/signin" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link href="/signin" onClick={() => setIsMobileMenuOpen(false)}>
                     {t('buttons.signIn')}
                   </Link>
                 </Button>
                 <Button className="w-full bg-gradient-to-r from-utc-royal to-utc-sky text-white" asChild>
-                  <Link prefetch={false} href="/signup" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)}>
                     {t('buttons.getStarted')}
                     <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                   </Link>

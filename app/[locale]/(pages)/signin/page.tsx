@@ -37,7 +37,7 @@ export default function SignInPage() {
   const doRedirect = useCallback((url: string) => {
     setRedirectUrl(url);
     setShowSuccess(true);
-    setTimeout(() => { window.location.href = url; }, 1500);
+    setTimeout(() => { window.location.href = url; }, 700);
   }, []);
 
   useEffect(() => {
