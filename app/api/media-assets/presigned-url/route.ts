@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
         status: res.status,
         error: errorJson.error || errorJson.message || errorText,
       });
-      return fail(errorJson.error || "Failed to get presigned URL", res.status);
+      return fail(String(errorJson.error || "Failed to get presigned URL"), res.status);
     }
 
     const json = await res.json();

@@ -71,22 +71,24 @@ export async function POST(req: NextRequest) {
     }
 
     // Save scheduled posts to DB
-    const { createPost } = await import("@/lib/services/db/posts");
+    const { createScheduledPost } = await import("@/lib/services/db/posts");
     const scheduledPosts = [];
     const errors: string[] = [];
 
     for (const post of posts) {
       for (const profileId of post.profileIds) {
         try {
-          const savedPost = await createPost({
+          const savedPost = await createScheduledPost({
             user_id: user.id,
             platform: post.platform,
-            profile_id: profileId,
-            text_content: post.text,
-            media_urls: post.mediaUrls || [],
             scheduled_at: scheduledAt,
-            timezone: timezone || DEFAULT_TIMEZONE,
-            status: "scheduled"
+            status: "scheduled",
+            payload: {
+              text: post.text,
+              mediaUrls: post.mediaUrls || [],
+              profile_id: profileId,
+              timezone: timezone || DEFAULT_TIMEZONE
+            }
           });
           if (savedPost) {
             scheduledPosts.push(savedPost);

@@ -46,5 +46,3 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Export the generatePlatformText function for use in other files
-export { generatePlatformText } from "@/lib/ai/contentService";

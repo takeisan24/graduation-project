@@ -34,21 +34,23 @@ export async function POST(req: NextRequest, { params }: { params: { draftId: st
     }
 
     // Save scheduled posts to DB
-    const { createPost } = await import("@/lib/services/db/posts");
+    const { createScheduledPost } = await import("@/lib/services/db/posts");
     const results = [];
 
     for (const profileId of profileIds) {
       try {
-        const savedPost = await createPost({
+        const savedPost = await createScheduledPost({
           user_id: user.id,
           draft_id: draftId,
-          platform: draft.platform,
-          profile_id: profileId,
-          text_content: draft.text_content,
-          media_urls: draft.media_urls || [],
+          platform: draft.platform || '',
           scheduled_at: scheduledTime,
-          timezone: timezone || DEFAULT_TIMEZONE,
-          status: "scheduled"
+          status: "scheduled",
+          payload: {
+            text: draft.text_content ?? undefined,
+            mediaUrls: draft.media_urls || [],
+            profile_id: profileId,
+            timezone: timezone || DEFAULT_TIMEZONE
+          }
         });
         results.push({ profileId, success: true, post: savedPost });
       } catch (e: unknown) {
