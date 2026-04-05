@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronDownIcon, ImageIcon, SparklesIcon, Wand2, Languages, Coins } from 'lucide-react';
+import { ChevronDownIcon, ImageIcon, SparklesIcon, Wand2, Languages } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 
 import { useCreatePostsStore, useCreateMediaStore, usePublishModalStore, useImageGenModalStore, useVideoGenModalStore, useMediaLibraryModalStore, useDraftsStore } from '@/store';
@@ -12,7 +12,6 @@ import { useLocale, useTranslations } from 'next-intl';
 export default function ActionBar() {
   const t = useTranslations('CreatePage.createSection.actionBar');
   const locale = useLocale();
-  const creditsRemaining = 0; // Credits store removed
 
   const {
     selectedPostId,
@@ -52,7 +51,6 @@ export default function ActionBar() {
     }))
   );
 
-  // State cục bộ cho UI của action bar
   const [showGenerateMenu, setShowGenerateMenu] = useState(false);
   const [isTranslateDialogOpen, setIsTranslateDialogOpen] = useState(false);
   const [targetLanguage, setTargetLanguage] = useState(locale === 'vi' ? 'en' : 'vi');
@@ -61,15 +59,13 @@ export default function ActionBar() {
   const generateButtonRef = useRef<HTMLButtonElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Đóng dropdown khi click ra ngoài và tính toán vị trí
   useEffect(() => {
     if (!showGenerateMenu) return;
 
-    // Tính toán vị trí dropdown
     if (generateButtonRef.current) {
       const rect = generateButtonRef.current.getBoundingClientRect();
       setMenuPosition({
-        top: rect.top - 120, // Hiển thị phía trên button
+        top: rect.top - 120,
         left: rect.left
       });
     }
@@ -99,51 +95,32 @@ export default function ActionBar() {
 
   const shouldShowFormatButton = () => {
     const content = postContents[selectedPostId] || "";
-
-    // Đảm bảo content là string
     const textContent = typeof content === "string" ? content : String(content || "");
-
-    // Quá ngắn thì không cần format
     if (textContent.length < 50) return false;
 
-    // 1. Kiểm tra Emoji
-    // Đếm số lượng emoji thay vì chỉ check có/không
-    // Regex này bắt hầu hết các emoji phổ biến
     const emojiMatches = textContent.match(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu);
     const emojiCount = emojiMatches ? emojiMatches.length : 0;
-
-    // 2. Kiểm tra cấu trúc dòng (Line breaks)
     const newLines = (textContent.match(/\n/g) || []).length;
-
-    // 3. [TỐI ƯU MỚI] Tính "Mật độ ký tự trên mỗi dòng" (Character Density per Line)
-    // Nếu trung bình mỗi dòng quá dài (> 200 ký tự) -> Dấu hiệu của việc thiếu ngắt đoạn (Wall of text)
     const density = textContent.length / (newLines + 1);
 
-    // HIỆN NÚT KHI:
-    // - Mật độ quá dày (Wall of text) -> Cần chia đoạn
-    // - HOẶC: Rất ít emoji (< 2) và văn bản đủ dài -> Cần thêm icon cho sinh động
-    if (density > 150) return true; // Đoạn văn quá dài không ngắt dòng
-    if (emojiCount < 2 && textContent.length > 100) return true; // Văn bản dài mà khô khan (ít hơn 2 emoji)
+    if (density > 150) return true;
+    if (emojiCount < 2 && textContent.length > 100) return true;
 
     return false;
   };
 
   return (
-    <div className="sticky bottom-0 left-0 right-0 bg-muted">
-      {/* Use 15px top padding for buttons and 0 bottom to tighten bottom spacing */}
-      <div className="relative border-t border-border pt-[15px] pb-0 flex items-center justify-between opacity-100">
-        {/* Character and Credit count aligned to the right, above line */}
-        {/* Place count above divider with a 15px gap below it. Approx height ~16px => offset 16 + 15 = 31px */}
-        <div className="absolute -top-[31px] right-0 flex items-center gap-3 pr-[10px]">
-          <span className="flex items-center gap-1.5 text-xs font-medium text-brand-yellow bg-brand-yellow/10 px-2 py-0.5 rounded-full" title="Tín dụng AI còn lại">
-            <Coins className="w-3.5 h-3.5" />
-            {creditsRemaining}
-          </span>
-          <span className="text-xs text-muted-foreground">
-            {(postContents[selectedPostId] ?? "").length}/{getCharLimit()} {t('characterCount')}
-          </span>
-        </div>
-
+    <>
+    {/* FIX S-003: 2-row flex layout — Row 1=char count, Row 2=buttons */}
+    <div className="sticky bottom-0 left-0 right-0 bg-muted flex flex-col">
+      {/* Row 1: Character count — compact, right-aligned */}
+      <div className="flex items-center justify-end px-4 py-1.5 border-b border-border/30">
+        <span className="text-xs text-muted-foreground tabular-nums">
+          {(postContents[selectedPostId] ?? "").length}/{getCharLimit()} {t('characterCount')}
+        </span>
+      </div>
+      {/* Row 2: All action buttons */}
+      <div className="flex items-center justify-between px-4 py-3">
         {/* Left: Add Image, Generate, Format */}
         <div className="flex items-center gap-2 pl-[10px] pb-[10px]">
           <input
@@ -242,17 +219,17 @@ export default function ActionBar() {
               onClick={() => handleFormatPost(selectedPostId)}
               disabled={isFormatting}
               className={`h-9 px-3 lg:px-4 border-purple-500/30 text-purple-600 dark:text-purple-400 hover:bg-purple-500/10 hover:border-purple-500 transition-all ${isFormatting ? 'animate-pulse' : ''}`}
-              title="Tự động định dạng lại bài viết cho đẹp mắt"
+              title={t('formatTitle')}
             >
               {isFormatting ? (
                 <span className="flex items-center gap-2">
                   <SparklesIcon className="w-4 h-4 animate-spin" />
-                  <span className="hidden lg:inline text-xs font-medium whitespace-nowrap">Đang sửa...</span>
+                  <span className="hidden lg:inline text-xs font-medium whitespace-nowrap">{t('formatting')}</span>
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
                   <Wand2 className="w-4 h-4" />
-                  <span className="hidden lg:inline text-xs font-medium whitespace-nowrap">Format</span>
+                  <span className="hidden lg:inline text-xs font-medium whitespace-nowrap">{t('format')}</span>
                 </span>
               )}
             </Button>
@@ -266,17 +243,17 @@ export default function ActionBar() {
               onClick={() => setIsTranslateDialogOpen(true)}
               disabled={isTranslating}
               className={`h-9 px-3 lg:px-4 border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10 hover:border-blue-500 transition-all ${isTranslating ? 'animate-pulse' : ''}`}
-              title="Dịch bài viết"
+              title={t('translateTitle')}
             >
               {isTranslating ? (
                 <span className="flex items-center gap-2">
                   <SparklesIcon className="w-4 h-4 animate-spin" />
-                  <span className="hidden lg:inline text-xs font-medium whitespace-nowrap">Đang dịch...</span>
+                  <span className="hidden lg:inline text-xs font-medium whitespace-nowrap">{t('translating')}</span>
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
                   <Languages className="w-4 h-4" />
-                  <span className="hidden lg:inline text-xs font-medium whitespace-nowrap">Translate</span>
+                  <span className="hidden lg:inline text-xs font-medium whitespace-nowrap">{t('translate')}</span>
                 </span>
               )}
             </Button>
@@ -309,7 +286,7 @@ export default function ActionBar() {
           <Button
             size="sm"
             variant="outline"
-            className="h-9 px-3 lg:px-4 lg:w-16 border-primary text-foreground hover:bg-primary/10 transition-all"
+            className="h-9 px-3 lg:px-4 border-primary text-foreground hover:bg-primary/10 transition-all"
             onClick={() => {
               if (!selectedPostId || !currentPost) return;
               const content = postContents[selectedPostId] || '';
@@ -336,7 +313,6 @@ export default function ActionBar() {
           >
             <span className="flex items-center gap-2">
               <span className="hidden lg:inline text-sm font-bold">{t('publish')}</span>
-              {/* Corrected Send Icon Direction using Lucide Send (or rotated SVG) */}
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="22" y1="2" x2="11" y2="13"></line>
                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -350,22 +326,19 @@ export default function ActionBar() {
       <Dialog open={isTranslateDialogOpen} onOpenChange={setIsTranslateDialogOpen}>
         <DialogContent className="bg-card border-border text-foreground sm:max-w-md p-2 sm:p-4 shadow-2xl rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">Chọn ngôn ngữ đích</DialogTitle>
+            <DialogTitle className="text-xl font-semibold">{t('selectTargetLanguage')}</DialogTitle>
             <DialogDescription className="text-muted-foreground mt-1.5 flex flex-col gap-1">
-              <span>Bạn muốn dịch bài viết sang ngôn ngữ nào?</span>
-              <span className="flex items-center gap-1 text-primary font-medium text-xs bg-primary/10 w-fit px-2 py-0.5 rounded-md mt-1">
-                <SparklesIcon className="w-3 h-3" /> Chi phí: 1 Credit
-              </span>
+              <span>{t('translatePrompt')}</span>
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="py-4">
-            <select 
+            <select
               value={targetLanguage}
               onChange={(e) => setTargetLanguage(e.target.value)}
               className="w-full bg-background border border-border rounded-xl p-3.5 text-sm text-foreground focus:outline-none focus:border-blue-500/50 shadow-inner"
             >
-              <option value="vi">Tiếng Việt</option>
+              <option value="vi">{t('vietnamese')}</option>
               <option value="en">Tiếng Anh (English)</option>
               <option value="ja">Tiếng Nhật (日本語)</option>
               <option value="ko">Tiếng Hàn (한국어)</option>
@@ -376,25 +349,26 @@ export default function ActionBar() {
           </div>
 
           <DialogFooter className="mt-2 sm:mt-4">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => setIsTranslateDialogOpen(false)}
               className="border-border text-muted-foreground hover:text-foreground hover:bg-muted/50 bg-transparent rounded-lg"
             >
-              Hủy
+              {t('cancel')}
             </Button>
-            <Button 
+            <Button
               onClick={() => {
                 setIsTranslateDialogOpen(false);
                 handleTranslatePost(selectedPostId, targetLanguage);
               }}
               className="bg-blue-600 hover:bg-blue-700 text-white border-0 shadow-lg shadow-blue-500/20 rounded-lg"
             >
-              Dịch ngay
+              {t('translateNow')}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
+    </>
   )
 }

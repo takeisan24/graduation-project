@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useCreatePostsStore, useCalendarStore, useNavigationStore } from "@/store";
 import { useShallow } from 'zustand/react/shallow';
-import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { CalendarEvent } from "@/lib/types/calendar";
 import { getCalendarEventsForDay as getEventsFromStore } from "@/lib/utils/calendarUtils";
 import { formatTime24h } from "@/lib/utils/date";
@@ -19,7 +19,7 @@ import { CalendarToolbar } from "./CalendarToolbar";
 import { MonthlyViewGrid } from "./MonthlyViewGrid";
 import { WeeklyViewGrid } from "./WeeklyViewGrid";
 import { CalendarPopups } from "./CalendarPopups";
-import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
+import ConfirmModal from "@/components/shared/ConfirmModal";
 
 // --- HELPER FUNCTIONS (Tách ra từ file backup) ---
 
@@ -48,7 +48,6 @@ type DeleteModalState = { event: CalendarEvent; date: Date } | null;
 export default function CalendarSection() {
     const t = useTranslations('CreatePage.calendarSection');
     const tHeaders = useTranslations('CreatePage.sectionHeaders');
-    const router = useRouter();
     // Lấy các action cần thiết từ Zustand store
     const { calendarEvents, addEvent, updateEvent, deleteEvent } = useCalendarStore(
         useShallow((state) => ({
@@ -251,8 +250,7 @@ export default function CalendarSection() {
         const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
         const firstDayIndex = (firstDayOfMonth.getDay() + 6) % 7;
         const gridDays = [];
-        let currentDay = new Date(currentYear, currentMonth, 1);
-        currentDay.setDate(currentDay.getDate() - firstDayIndex);
+        const currentDay = new Date(currentYear, currentMonth, 1 - firstDayIndex);
 
         for (let i = 0; i < 42; i++) {
             const cellDate = new Date(currentDay);
@@ -340,9 +338,15 @@ export default function CalendarSection() {
             />
             
             {eventToDelete && (
-                <ConfirmDeleteModal
+                <ConfirmModal
+                    isOpen={true}
                     onClose={() => setEventToDelete(null)}
                     onConfirm={handleDeleteConfirm}
+                    title={t('deleteModal.title')}
+                    description={t('deleteModal.message')}
+                    confirmText={t('deleteModal.yes')}
+                    cancelText={t('deleteModal.no')}
+                    variant="danger"
                 />
             )}
         </div>

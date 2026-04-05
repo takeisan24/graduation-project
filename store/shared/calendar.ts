@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import { supabaseClient } from '@/lib/supabaseClient';
 import type { LateLifecycleStatus, PendingScheduledPost } from './types';
 import { normalizeLateLifecycleStatus, isFinalLateStatus } from './utils';
-import { statusToNoteTypeMap } from './constants';
+import { statusToNoteTypeMap, CALENDAR_STATUS } from './constants';
 import { AUTH_ERRORS, CALENDAR_ERRORS, GENERIC_ERRORS } from '@/lib/messages/errors';
 
 export interface CalendarState {
@@ -47,7 +47,7 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
       id: eventId,
       platform,
       time: time,
-      status: 'Trống',
+      status: CALENDAR_STATUS.EMPTY,
       noteType: 'yellow'
     };
     set(state => {

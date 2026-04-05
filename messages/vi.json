@@ -1,4 +1,4 @@
-﻿{
+{
   "Onboarding": {
     "of": "của",
     "steps": {
@@ -203,10 +203,26 @@
       }
     },
     "stats": {
-      "platforms": { "value": "8", "label": "Nền tảng MXH", "trend": "TikTok, IG, YT..." },
-      "aiModels": { "value": "2", "label": "AI Providers", "trend": "Gemini, OpenAI GPT" },
-      "scheduling": { "value": "Auto", "label": "Lên lịch đăng", "trend": "Calendar tích hợp" },
-      "multiplier": { "value": "1→N", "label": "Nguồn → Bài viết", "trend": "Đa phiên bản" }
+      "platforms": {
+        "value": "8",
+        "label": "Nền tảng MXH",
+        "trend": "TikTok, IG, YT..."
+      },
+      "aiModels": {
+        "value": "2",
+        "label": "AI Providers",
+        "trend": "Gemini, OpenAI GPT"
+      },
+      "scheduling": {
+        "value": "Auto",
+        "label": "Lên lịch đăng",
+        "trend": "Calendar tích hợp"
+      },
+      "multiplier": {
+        "value": "1→N",
+        "label": "Nguồn → Bài viết",
+        "trend": "Đa phiên bản"
+      }
     },
     "sectionLabels": {
       "features": "Tính năng",
@@ -763,13 +779,34 @@
       "published": "Đã đăng"
     },
     "sectionHeaders": {
-      "create": { "title": "Tạo bài viết", "description": "Soạn và tạo nội dung cho mạng xã hội" },
-      "calendar": { "title": "Lịch", "description": "Lên lịch và quản lý thời gian đăng bài" },
-      "drafts": { "title": "Bản nháp", "description": "Tiếp tục chỉnh sửa các bài viết đã lưu" },
-      "published": { "title": "Đã đăng", "description": "Theo dõi các bài viết đã xuất bản" },
-      "failed": { "title": "Thất bại", "description": "Xem lại và thử lại các bài đăng lỗi" },
-      "api-dashboard": { "title": "Dashboard", "description": "Theo dõi sử dụng API và phân tích" },
-      "settings": { "title": "Tài khoản MXH", "description": "Kết nối và quản lý tài khoản mạng xã hội" }
+      "create": {
+        "title": "Tạo bài viết",
+        "description": "Soạn và tạo nội dung cho mạng xã hội"
+      },
+      "calendar": {
+        "title": "Lịch",
+        "description": "Lên lịch và quản lý thời gian đăng bài"
+      },
+      "drafts": {
+        "title": "Bản nháp",
+        "description": "Tiếp tục chỉnh sửa các bài viết đã lưu"
+      },
+      "published": {
+        "title": "Đã đăng",
+        "description": "Theo dõi các bài viết đã xuất bản"
+      },
+      "failed": {
+        "title": "Thất bại",
+        "description": "Xem lại và thử lại các bài đăng lỗi"
+      },
+      "api-dashboard": {
+        "title": "Dashboard",
+        "description": "Theo dõi sử dụng API và phân tích"
+      },
+      "settings": {
+        "title": "Tài khoản MXH",
+        "description": "Kết nối và quản lý tài khoản mạng xã hội"
+      }
     },
     "topBar": {
       "toggleTheme": "Chuyển giao diện",
@@ -1027,7 +1064,10 @@
           "uploadPdfFailed": "Upload file PDF thất bại.",
           "pleaseProvideData": "Vui lòng cung cấp dữ liệu cho nguồn đã chọn.",
           "errorOccurred": "Đã xảy ra lỗi."
-        }
+        },
+        "editSource": "Chỉnh sửa nguồn",
+        "textSource": "Văn bản",
+        "saveCheckbox": "Lưu nguồn?"
       },
       "strategySelector": {
         "title": "Chọn Chiến lược Nội dung",
@@ -1289,7 +1329,20 @@
           "save": "Lưu bài đăng này làm nháp để sử dụng sau",
           "publish": "Đăng bài lên các kênh mạng xã hội của bạn"
         },
-        "mediaLibrary": "Media Library"
+        "mediaLibrary": "Media Library",
+        "formatTitle": "Tự động định dạng lại bài viết cho đẹp mắt",
+        "formatting": "Đang sửa...",
+        "format": "Format",
+        "translateTitle": "Dịch bài viết",
+        "translating": "Đang dịch...",
+        "translate": "Dịch",
+        "selectTargetLanguage": "Chọn ngôn ngữ đích",
+        "translatePrompt": "Bạn muốn dịch bài viết sang ngôn ngữ nào?",
+        "vietnamese": "Tiếng Việt",
+        "cancel": "Hủy",
+        "translateNow": "Dịch ngay",
+        "postsToCreate": "Bài viết sẽ tạo",
+        "postsUnit": "bài"
       },
       "imageGenModal": {
         "title": "Tạo ảnh với AI",
@@ -1358,7 +1411,10 @@
         "cancel": "Hủy",
         "publishNowButton": "Đăng ngay",
         "confirmSchedule": "Xác nhận lên lịch",
-        "closeModal": "Đóng"
+        "closeModal": "Đóng",
+        "shortsLabel": "Đăng dưới hình thức Shorts",
+        "dateLabel": "Ngày",
+        "timeLabel": "Giờ"
       },
       "mediaLibraryModal": {
         "selectPostFirst": "Vui lòng chọn bài viết trước khi thêm media.",
@@ -1414,14 +1470,8 @@
         "title": "Xác nhận xóa?",
         "message": "Bạn có chắc chắn muốn xóa sự kiện này khỏi lịch không?",
         "no": "Không",
-        "delete": "Xóa"
+        "yes": "Xóa"
       }
-    },
-    "draftsSection": {
-      "title": "Bản nháp"
-    },
-    "publishedSection": {
-      "title": "Bài đã đăng"
     },
     "failedSection": {
       "title": "Bài đăng thất bại",
@@ -1438,6 +1488,12 @@
         "cancel": "Hủy",
         "scheduleAgain": "Lên lịch lại"
       }
+    },
+    "draftsSection": {
+      "title": "Bản nháp"
+    },
+    "publishedSection": {
+      "title": "Bài đã đăng"
     },
     "videosSection": {
       "title": "Dự án Video",

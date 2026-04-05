@@ -4,13 +4,24 @@ import { CalendarEvent } from "@/lib/types/calendar";
 import { PlatformIcon } from "@/components/shared/PlatformIcon";
 import { useTranslations } from 'next-intl';
 
+/** Calendar cell data type */
+export interface CalendarCell {
+  dayNum: number;
+  inCurrentMonth: boolean;
+  isToday: boolean;
+  clickedKey: string;
+  dayEvents: CalendarEvent[];
+  cellDate: Date;
+  isClicked: boolean;
+}
+
 interface MonthlyViewGridProps {
-  calendarGrid: any[]; // Bạn có thể định nghĩa kiểu chi tiết hơn sau
+  calendarGrid: CalendarCell[];
   getNoteText: (event: CalendarEvent) => string;
-  onDayClick: (cell: any) => void;
+  onDayClick: (cell: CalendarCell) => void;
   onDragOver: (e: React.DragEvent) => void;
-  onDrop: (e: React.DragEvent, cell: any) => void;
-  onNoteDragStart: (e: React.DragEvent, cell: any, event: CalendarEvent) => void;
+  onDrop: (e: React.DragEvent, cell: CalendarCell) => void;
+  onNoteDragStart: (e: React.DragEvent, cell: CalendarCell, event: CalendarEvent) => void;
   onNoteClick: (e: React.MouseEvent, event: CalendarEvent, date: Date) => void;
 }
 
@@ -82,7 +93,7 @@ export function MonthlyViewGrid({
               
               {/* Events list */}
               <div className="mt-0.5 lg:mt-1 space-y-0.5 lg:space-y-1 flex-1 overflow-y-auto scrollbar-hide pr-0.5 lg:pr-1">
-                {cell.dayEvents.map((event: CalendarEvent, eventIdx: number) => {
+                {cell.dayEvents.map((event: CalendarEvent) => {
                   const label = getNoteText(event);
                   const baseColor = event.noteType === 'green' ? 'bg-[#8AE177]/20 border-[#8AE177]/40 text-[#8AE177]'
                     : event.noteType === 'yellow' ? 'bg-[#FACD5B]/20 border-[#FACD5B]/40 text-[#FACD5B]'

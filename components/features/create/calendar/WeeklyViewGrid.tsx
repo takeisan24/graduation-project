@@ -46,7 +46,6 @@ export function WeeklyViewGrid({
         </div>
         <div className="grid grid-cols-7 flex-1">
           {weekDays.map((date) =>{
-            const isCurrentDay = date.toDateString() === todayDateString;
             return(
             <div key={date.toISOString()} className="text-center py-2 border-r border-border last:border-r-0">
               <span className="text-xs font-medium text-muted-foreground uppercase">
@@ -117,7 +116,7 @@ export function WeeklyViewGrid({
                   )})}
 
                   {/* Render Events */}
-                  {dayEvents.map((event, eventIdx) => {
+                  {dayEvents.map((event) => {
                     const timeParts = event.time?.split(':');
                     if (!timeParts || timeParts.length < 2) return null; // Bỏ qua nếu không có thời gian hợp lệ
 

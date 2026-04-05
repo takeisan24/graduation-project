@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { SOCIAL_PLATFORMS } from "@/lib/constants/platforms";
 import { needsInversion } from "@/lib/utils/platform";
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface CalendarToolbarProps {
   calendarView: 'monthly' | 'weekly';
@@ -28,15 +28,25 @@ export function CalendarToolbar({
 }: CalendarToolbarProps) {
   const t = useTranslations('CreatePage.calendarSection');
   const tCommon = useTranslations('Common');
+  const locale = useLocale();
   const months = tCommon.raw('months') as string[];
 
   const getWeekRangeLabel = () => {
     const startOfWeek = new Date(currentWeekStart);
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 6);
-    
-    const formatDate = (date: Date) => `${date.getDate()}/${date.getMonth() + 1}`;
-    
+
+    const formatDate = (date: Date) => {
+      try {
+        return new Intl.DateTimeFormat(locale, {
+          day: 'numeric',
+          month: 'numeric',
+        }).format(date);
+      } catch {
+        return `${date.getDate()}/${date.getMonth() + 1}`;
+      }
+    };
+
     return `${formatDate(startOfWeek)} - ${formatDate(endOfWeek)}`;
   };
 
