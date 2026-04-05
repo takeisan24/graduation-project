@@ -57,7 +57,7 @@ export function CalendarToolbar({
             src={platform.icon}
             alt={platform.name}
             className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 flex-shrink-0 cursor-grab hover:opacity-80 transition-all ${
-              needsInversion(platform.name) ? 'filter brightness-0 invert' : ''
+              needsInversion(platform.name) ? 'dark:filter dark:brightness-0 dark:invert' : ''
             }`}
             draggable
             onDragStart={(e) => onIconDragStart(e, platform.name)}

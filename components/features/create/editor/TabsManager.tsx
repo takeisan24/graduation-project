@@ -131,7 +131,7 @@ export default function TabsManager() {
                             <img 
                                 src={platformIcon} 
                                 alt={post.type}
-                                className={`w-4 h-4 flex-shrink-0 ${["Twitter", "Threads"].includes(post.type) ? "filter brightness-0 invert" : ""}`}
+                                className={`w-4 h-4 flex-shrink-0 ${["Twitter", "Threads"].includes(post.type) ? "dark:filter dark:brightness-0 dark:invert" : ""}`}
                             />
                             {/* Platform Name - hidden completely when collapsed */}
                             {!isTabsCollapsed && (
@@ -205,7 +205,7 @@ export default function TabsManager() {
                                     }}
                                     className="w-full text-left px-4 py-3 rounded-md hover:bg-secondary text-base text-muted-foreground flex items-center gap-4"
                                 >
-                                    <img src={option.icon} alt={option.name} className={`w-7 h-7 ${["Twitter", "Threads"].includes(option.name) ? "filter brightness-0 invert" : ""}`} />
+                                    <img src={option.icon} alt={option.name} className={`w-7 h-7 ${["Twitter", "Threads"].includes(option.name) ? "dark:filter dark:brightness-0 dark:invert" : ""}`} />
                                     <span>{option.name}</span>
                                 </button>
                             ))}

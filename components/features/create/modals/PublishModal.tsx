@@ -265,7 +265,7 @@ export default function PublishModal() {
                 </div>
                 <div className="flex items-center gap-3 mb-5">
                     <div className="w-10 h-10 rounded-lg bg-background border border-border flex items-center justify-center flex-shrink-0">
-                        <img src={platformOptions.find(p => p.name === selectedPlatform)?.icon || '/placeholder.svg'} alt={selectedPlatform} className={`w-6 h-6 ${['Twitter','Threads'].includes(selectedPlatform) ? 'filter brightness-0 invert' : ''}`} />
+                        <img src={platformOptions.find(p => p.name === selectedPlatform)?.icon || '/placeholder.svg'} alt={selectedPlatform} className={`w-6 h-6 ${['Twitter','Threads'].includes(selectedPlatform) ? 'dark:filter dark:brightness-0 dark:invert' : ''}`} />
                     </div>
                     <div className="flex-1 relative">
                         
