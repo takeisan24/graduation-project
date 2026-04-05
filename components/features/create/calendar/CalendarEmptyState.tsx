@@ -58,14 +58,9 @@ export function CalendarEmptyState({
 
   // Compute total events in last 30 days
   const totalEventsLast30Days = useMemo(() => {
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     let count = 0;
     for (const [, events] of Object.entries(calendarEvents)) {
-      for (const event of events) {
-        // Simple heuristic: event exists → count it. No date parsing needed since key IS the date.
-        count += events.length;
-      }
+      count += events.length;
     }
     return count;
   }, [calendarEvents]);

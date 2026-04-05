@@ -106,11 +106,13 @@ export default function CalendarSection() {
     // Visibility-aware polling (15s interval + event-driven)
     useEffect(() => {
         let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+        let isMounted = true;
 
         const doSync = async () => {
-            if (document.hidden) return;
+            if (document.hidden || !isMounted) return;
             setIsSyncing(true);
             await autoUpdatePublishingStatus();
+            if (!isMounted) return;
             setLastSyncedAt(new Date());
             setIsSyncing(false);
         };
@@ -142,6 +144,7 @@ export default function CalendarSection() {
         }, 15_000);
 
         return () => {
+            isMounted = false;
             clearInterval(intervalId);
             if (debounceTimer) clearTimeout(debounceTimer);
             document.removeEventListener("visibilitychange", handleVisibilityChange);
