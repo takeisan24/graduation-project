@@ -35,7 +35,7 @@ function CreateLayout({
         />
 
         {/* Main content */}
-        <div className="flex-1 min-w-0 h-full">
+        <div className="flex-1 min-w-0 h-full flex flex-col">
           {children}
         </div>
       </div>
