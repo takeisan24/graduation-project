@@ -52,7 +52,8 @@ PROMPT.md
 # AI tools config
 .claude/
 CLAUDE.md
-CLAUDE.local.md.playwright-mcp/
+.omc/
+.playwright-mcp/
 
 #Specs file
 specs/*
