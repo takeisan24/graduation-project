@@ -141,17 +141,18 @@ function extractErrorMessage(
     || null;
 
   let baseMessage = platformErrorMessage
-    || payload?.error_message 
-    || (payload?.error_details && typeof payload.error_details === 'object' && payload.error_details.message ? payload.error_details.message : null)
+    || payload?.error_message
+    || (payload?.error_details && typeof payload.error_details === 'object' && 'message' in payload.error_details && (payload.error_details as Record<string, unknown>).message ? (payload.error_details as Record<string, unknown>).message : null)
     || (payload?.error_details && typeof payload.error_details === 'string' ? payload.error_details : null)
-    || payload?.webhook_data?.error_message 
+    || payload?.webhook_data?.error_message
     || payload?.webhook_data?.error
     || payload?.error
     || defaultMessage;
   
   // If error_message is an object, try to extract meaningful message
-  if (typeof baseMessage === 'object') {
-    baseMessage = baseMessage.message || baseMessage.error || JSON.stringify(baseMessage);
+  if (typeof baseMessage === 'object' && baseMessage !== null) {
+    const obj = baseMessage as Record<string, unknown>;
+    baseMessage = obj.message || obj.error || JSON.stringify(baseMessage);
   }
   
   return {
@@ -171,8 +172,8 @@ function transformPostToFailed(
   const payload = post.payload || {};
   const connectedAccountId = payload.connected_account_id;
   const connectedAccount = connectedAccountId ? accountsMap[connectedAccountId] : null;
-  const profileMetadata = connectedAccount?.profile_metadata || payload.connected_account_metadata || {};
-  
+  const profileMetadata: ProfileInfo = connectedAccount?.profile_metadata || payload.connected_account_metadata || {};
+
   const lateDevResponse = payload.late_dev_response || {};
   const lateDevPost = lateDevResponse.post || {};
   const lateDevPlatforms = Array.isArray(lateDevPost.platforms) ? lateDevPost.platforms : [];

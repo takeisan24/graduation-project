@@ -3,6 +3,7 @@
 import { LucideIcon } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { getAppUrl } from '@/lib/utils/urlConfig';
+import { supabaseClient } from '@/lib/supabaseClient';
 
 // --- Types (Giữ nguyên) ---
 export interface ContentGoal { id: string; label: string; slug: string; description: string; }
@@ -71,7 +72,13 @@ async function fetchStrategyConfig(): Promise<StrategyConfig> {
     try {
       // GỌI 1 API DUY NHẤT
       const appUrl = getAppUrl();
-      const res = await fetch(`${appUrl}/api/v1/strategy-config`, { cache: 'no-store' });
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      const res = await fetch(`${appUrl}/api/v1/strategy-config`, {
+        cache: 'no-store',
+        headers: session?.access_token
+          ? { 'authorization': `Bearer ${session.access_token}` }
+          : {},
+      });
       if (!res.ok) throw new Error("Failed to fetch strategy config");
       const json = await res.json();
 

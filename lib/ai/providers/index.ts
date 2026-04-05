@@ -3,7 +3,7 @@
  * Centralized configuration for different AI providers and models
  */
 
-export type AIProvider = 'openai' | 'gemini' | 'anthropic';
+export type AIProvider = 'openai' | 'gemini' | 'anthropic' | 'fal';
 
 export type ModelType = 'text' | 'image' | 'video' | 'extraction';
 
@@ -169,6 +169,12 @@ export const PROVIDER_CONFIGS: Record<AIProvider, AIProviderConfig> = {
     baseUrl: 'https://api.anthropic.com/v1',
     timeout: 30000,
     retries: 3
+  },
+  fal: {
+    apiKey: process.env.FAL_KEY || '',
+    baseUrl: 'https://fal.run',
+    timeout: 60000,
+    retries: 2
   }
 };
 

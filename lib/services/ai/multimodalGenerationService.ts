@@ -235,7 +235,7 @@ Trả về dưới dạng văn bản súc tích (tối đa 500 từ) để làm 
                 .join('\n\n');
 
               // Format metadata for AI (this will be used directly in Step 2)
-              extractedContent = formatYouTubeMetadataForAI(metadata, instructions);
+              extractedContent = formatYouTubeMetadataForAI(metadata);
             } else {
               // Last resort: use URL with instructions
               const instructions = promptParts
@@ -656,7 +656,7 @@ Chỉ trả về văn bản.`;
                 .join('\n\n');
 
               // Format metadata for AI
-              const formattedPrompt = formatYouTubeMetadataForAI(metadata, instructions);
+              const formattedPrompt = formatYouTubeMetadataForAI(metadata);
 
               // Lưu extractedContent (chỉ metadata, không có instructions) để trả về cho FE
               // Truncate để giảm token usage: description 1500 chars, transcript 3000 chars

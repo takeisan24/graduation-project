@@ -120,8 +120,8 @@ function extractPostUrl(
     || payload?.webhook_data?.url
     || payload?.webhook_data?.data?.url
     || payload?.webhook_data?.data?.post_url
-    || lateDevPost?.url
-    || lateDevPost?.post_url
+    || (lateDevPost?.url as string | undefined)
+    || (lateDevPost?.post_url as string | undefined)
     || `https://${(platform || '').toLowerCase()}.com/post/${payload?.id || 'unknown'}`;
 }
 
@@ -135,13 +135,12 @@ function transformPostToPublished(
   const payload = post.payload || {};
   const connectedAccountId = payload.connected_account_id;
   const connectedAccount = connectedAccountId ? accountsMap[connectedAccountId] : null;
-  const profileMetadata = connectedAccount?.profile_metadata || payload.connected_account_metadata || {};
-  
+  const profileMetadata: ProfileInfo = connectedAccount?.profile_metadata || payload.connected_account_metadata || {};
+
   const lateDevResponse = payload.late_dev_response || {};
   const lateDevPost = lateDevResponse.post || {};
   const lateDevPlatforms = Array.isArray(lateDevPost.platforms) ? lateDevPost.platforms : [];
-  
-  // Also check status_check_response for TikTok (when post is published, platformPostId is in status_check_response)
+
   const statusCheckResponse = payload.status_check_response || {};
   const statusCheckPost = statusCheckResponse.post || statusCheckResponse;
   const statusCheckPlatforms = Array.isArray(statusCheckPost?.platforms) ? statusCheckPost.platforms : [];

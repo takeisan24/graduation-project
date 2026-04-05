@@ -17,16 +17,67 @@ import { supabase } from "@/lib/supabase";
  * Post payload stored in scheduled_posts.payload JSONB column
  * Contains post content, media URLs, and metadata
  */
-export interface PostPayload {
-  /** Connected account ID (from connected_accounts table) */
-  connected_account_id?: string;
-  /** Platform name (e.g., 'twitter', 'facebook') */
+interface PostPayloadPlatformEntry {
   platform?: string;
-  /** Post text content */
+  platformPostUrl?: string;
+  url?: string;
+  post_url?: string;
+  [key: string]: unknown;
+}
+
+interface PostPayloadWebhookData {
+  platforms?: PostPayloadPlatformEntry[];
+  post_url?: string;
+  url?: string;
+  data?: { url?: string; post_url?: string; [key: string]: unknown };
+  error_message?: string;
+  error?: string;
+  engagement?: { likes: number; comments: number; shares: number };
+  [key: string]: unknown;
+}
+
+interface PostPayloadAccountMetadata {
+  username?: string;
+  avatar_url?: string;
+  profilePicture?: string;
+  [key: string]: unknown;
+}
+
+interface PostPayloadLateDevResponse {
+  post?: {
+    platforms?: PostPayloadPlatformEntry[];
+    url?: string;
+    post_url?: string;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}
+
+interface PostPayloadStatusCheckResponse {
+  post?: {
+    platforms?: PostPayloadPlatformEntry[];
+    [key: string]: unknown;
+  };
+  platforms?: PostPayloadPlatformEntry[];
+  [key: string]: unknown;
+}
+
+export interface PostPayload {
+  connected_account_id?: string;
+  platform?: string;
   text?: string;
-  /** Array of media URLs */
+  text_content?: string;
   mediaUrls?: string[];
-  /** Additional metadata fields */
+  media_urls?: string[];
+  id?: string;
+  connected_account_metadata?: PostPayloadAccountMetadata;
+  webhook_data?: PostPayloadWebhookData;
+  late_dev_response?: PostPayloadLateDevResponse;
+  status_check_response?: PostPayloadStatusCheckResponse;
+  error_message?: string;
+  error?: string;
+  error_details?: Record<string, unknown> | string;
+  engagement?: { likes: number; comments: number; shares: number };
   [key: string]: unknown; // eslint-disable-line @typescript-eslint/no-explicit-any -- JSONB column with dynamic webhook/API response data
 }
 
