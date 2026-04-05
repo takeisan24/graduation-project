@@ -62,7 +62,7 @@ export default function DraftsSection() {
             {filteredPosts.map((post) => (
               <PostCard
                 key={post.id}
-                post={{ id: post.id, platform: post.platform, content: post.content, created_at: post.time }}
+                post={{ id: String(post.id), platform: post.platform, content: post.content, created_at: post.time }}
                 variant="draft"
                 onClick={() =>
                   onEditDraft(post, (platform, content, mediaUrls) => {

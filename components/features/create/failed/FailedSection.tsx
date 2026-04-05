@@ -125,7 +125,7 @@ export default function FailedSection() {
               {filteredPosts.map((post) => (
                 <PostCard
                   key={post.id}
-                  post={{ id: post.id, platform: post.platform, content: post.content, created_at: post.created_at, error_message: post.error_message }}
+                  post={{ id: post.id, platform: post.platform, content: post.content, created_at: post.date, error_message: post.errorMessage ?? undefined }}
                   variant="failed"
                   onRetry={() => handleRetryClick(post)}
                   onDelete={() => handleDeleteClick(post.id)}

@@ -16,6 +16,7 @@ import { Info, RotateCcw, Settings } from "lucide-react"
 import SectionHeader from '../layout/SectionHeader'
 import { toast } from "sonner"
 import { useLocale, useTranslations } from "next-intl"
+import { useDashboardUsage } from "@/hooks/useDashboardUsage"
 import { handleErrorWithModal } from "@/lib/utils/errorHandler"
 import { LIMIT_ERRORS, GENERIC_ERRORS } from "@/lib/messages/errors"
 import { handleUnauthorizedOnClient } from "@/lib/utils/authClient"
@@ -72,7 +73,7 @@ export default function SettingsSection() {
     loadConnectedAccounts: state.loadConnectedAccounts,
     refreshConnectedAccounts: state.refreshConnectedAccounts,
   })))
-  // Credits and limit stores removed - validation handled server-side
+  const { refreshCredits, profileLimits } = useDashboardUsage()
 
   const [actionId, setActionId] = useState<string | null>(null)
   const hasFetchedRef = useRef(false) // Track if initial fetch has completed
@@ -95,9 +96,9 @@ export default function SettingsSection() {
       // Dùng store's loadConnectedAccounts (đã có cache mechanism)
       await loadConnectedAccounts(force)
       setLocalError(null) // Clear local error on success
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('[Settings] Failed to load connections:', err)
-      setLocalError(err?.message || 'Failed to load connections')
+      setLocalError(err instanceof Error ? err.message : 'Failed to load connections')
     } finally {
       setActionId(null)
       hasFetchedRef.current = true
@@ -265,9 +266,9 @@ export default function SettingsSection() {
           throw new Error("Link đăng nhập không hợp lệ");
         }
 
-      } catch (e: any) {
+      } catch (e: unknown) {
         console.error(e);
-        toast.error("Lỗi kết nối YouTube: " + e.message);
+        toast.error("Lỗi kết nối YouTube: " + (e instanceof Error ? e.message : String(e)));
       }
       return;
     }
@@ -459,10 +460,9 @@ export default function SettingsSection() {
       // Show success message
       // NOTE: Connection has been removed from local database
       // If it still appears in getlate.dev dashboard, user may need to disconnect manually there
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('[Settings] Failed to disconnect:', err)
-      // Check if error is about getlate.dev API failure
-      const errorMessage = err?.message || 'Failed to disconnect account'
+      const errorMessage = err instanceof Error ? err.message : 'Failed to disconnect account'
       if (errorMessage.includes('getlate.dev') || errorMessage.includes('405') || errorMessage.includes('Method Not Allowed')) {
         // Connection removed from local DB but may still appear in getlate.dev dashboard
         setLocalError('Connection removed from system. If it still appears in getlate.dev dashboard, please disconnect manually there.')

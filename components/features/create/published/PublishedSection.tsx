@@ -83,7 +83,7 @@ export default function PublishedSection() {
             {filteredPosts.map((post) => (
               <PostCard
                 key={post.id}
-                post={{ id: post.id, platform: post.platform, content: post.content, created_at: post.time, status: post.status }}
+                post={{ id: String(post.id), platform: post.platform, content: post.content, created_at: post.time, status: post.status }}
                 variant="published"
                 onClick={() => post.url && handleViewPost(post.url)}
               />
