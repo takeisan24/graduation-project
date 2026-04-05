@@ -7,14 +7,11 @@
 import { create } from 'zustand';
 import { saveToLocalStorage, loadFromLocalStorage } from '@/lib/utils/storage';
 import { supabaseClient } from '@/lib/supabaseClient';
-import { toast } from 'sonner';
 import { handleErrorWithModal } from '@/lib/utils/errorHandler';
 import { SOURCE_ERRORS, GENERIC_ERRORS } from '@/lib/messages/errors';
 import type { SavedSource, SourceToGenerate, ChatMessage } from '../shared/types';
 import {
   buildPromptParts,
-  selectInstructions,
-  type GenerateFromSourceContext,
 } from '@/lib/ai/prompts/generate-from-source';
 
 interface CreateSourcesState {
@@ -94,7 +91,7 @@ export const useCreateSourcesStore = create<CreateSourcesState>((set) => ({
     }
 
     const ctx = { selectedPlatforms, sourceType, idea, resourceUrl };
-    const instructions = selectInstructions(ctx, selectedModel);
+
     const promptParts = buildPromptParts(ctx);
     const platforms = selectedPlatforms.flatMap((p) => Array(p.count).fill(p.platform.toLowerCase()));
 
@@ -143,7 +140,7 @@ export const useCreateSourcesStore = create<CreateSourcesState>((set) => ({
         return false;
       }
 
-      let cleanJson = jsonMatch[1].trim().replace(/,(\s*[}\]])/g, '$1');
+      const cleanJson = jsonMatch[1].trim().replace(/,(\s*[}\]])/g, '$1');
       let posts;
       try {
         posts = JSON.parse(cleanJson);
