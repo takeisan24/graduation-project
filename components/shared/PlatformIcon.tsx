@@ -41,7 +41,7 @@ export function PlatformIcon({
   const shouldInvert = needsInversion(platform)
   
   const imgClassName = `w-full h-full object-contain ${
-    shouldInvert ? 'filter brightness-0 invert' : ''
+    shouldInvert ? 'dark:filter dark:brightness-0 dark:invert' : ''
   } ${className}`
 
   if (variant === 'inline') {
@@ -49,7 +49,7 @@ export function PlatformIcon({
       <img
         src={iconSrc}
         alt={platform}
-        className={`flex-shrink-0 ${shouldInvert ? 'filter brightness-0 invert' : ''} ${className}`}
+        className={`flex-shrink-0 ${shouldInvert ? 'dark:filter dark:brightness-0 dark:invert' : ''} ${className}`}
         style={{ width: size, height: size }}
       />
     )

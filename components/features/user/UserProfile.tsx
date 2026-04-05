@@ -24,7 +24,7 @@ interface Order {
 export default function UserProfile() {
     const { user, refreshSession } = useAuth();
     // Credits store removed - using default values
-    const billingCycle = 'monthly';
+    const billingCycle = 'monthly' as 'monthly' | 'yearly';
     const nextCreditGrantAt: string | null = null;
     const unreceivedAnnualCredits = 0;
     const creditsPerPeriod = 0;

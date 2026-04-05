@@ -81,7 +81,7 @@ export function PlatformFilter({
                 <img 
                   src={option.icon} 
                   alt={option.label} 
-                  className={`w-5 h-5 ${needsInversion(option.label.split(' ')[0]) ? 'filter brightness-0 invert' : ''}`} 
+                  className={`w-5 h-5 ${needsInversion(option.label.split(' ')[0]) ? 'dark:filter dark:brightness-0 dark:invert' : ''}`} 
                 />
               )}
               <span>{option.label}</span>
