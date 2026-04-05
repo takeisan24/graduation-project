@@ -26,6 +26,7 @@ export function WeeklyViewGrid({
   onNoteClick,
 }: WeeklyViewGridProps) {
   const tCommon = useTranslations('Common');
+  const t = useTranslations('CreatePage.calendarSection');
   const weekdays = tCommon.raw('weekdays') as string[];
   const tHour = tCommon('hour');
 
@@ -109,10 +110,12 @@ export function WeeklyViewGrid({
                   {Array.from({ length: 24 }, (_, hour) => {
                     const isPastHour = isCurrentDay && hour < currentHour;
                     return(
-                    <div 
-                      key={hour} 
-                      className={`h-20 border-t border-border first:border-t-0 group hover:bg-secondary transition-colors 
-                        ${isPastHour ? 'bg-muted/50 cursor-not-allowed' : 'group-hover:bg-secondary/30'}`} />
+                    <div
+                      key={hour}
+                      aria-disabled={isPastHour || undefined}
+                      title={isPastHour ? t('pastDate') : undefined}
+                      className={`h-20 border-t border-border first:border-t-0 group ${isPastHour ? 'bg-muted/50 cursor-not-allowed' : 'hover:bg-secondary/30'}`}
+                    />
                   )})}
 
                   {/* Render Events */}

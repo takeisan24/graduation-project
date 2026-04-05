@@ -10,7 +10,6 @@ import { formatTime24h } from "@/lib/utils/date";
 import { toast } from "sonner";
 import { autoUpdatePublishingStatus as autoUpdatePublishingStatusFn } from "@/store/shared/statusCheck";
 import { CALENDAR_ERRORS } from "@/lib/messages/errors";
-import { useTranslations } from "next-intl";
 import { Calendar } from "lucide-react";
 import SectionHeader from '../layout/SectionHeader';
 
@@ -76,6 +75,29 @@ export default function CalendarSection() {
     // State cho popup chính và modal xác nhận xóa
     const [popup, setPopup] = useState<{ x: number; y: number; event: CalendarEvent; date: Date } | null>(null);
     const [eventToDelete, setEventToDelete] = useState<DeleteModalState>(null);
+
+    // Keyboard navigation state
+    const [selectedCellKey, setSelectedCellKey] = useState<string | null>(null);
+    const [liveAnnouncement, setLiveAnnouncement] = useState<string | null>(null);
+
+    // Keyboard cell selection handlers
+    const handleSelectCell = useCallback((cellKey: string) => {
+        setSelectedCellKey(cellKey);
+    }, []);
+
+    const handleCloseCell = useCallback(() => {
+        setSelectedCellKey(null);
+    }, []);
+
+    const handleAddToCell = useCallback((cellKey: string, cellDate: Date, platform: string) => {
+        addEvent(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate(), platform);
+        const dateStr = new Intl.DateTimeFormat('vi-VN', { day: 'numeric', month: 'long' }).format(cellDate);
+        setLiveAnnouncement(t('addedScheduleFromCell', { platform, date: dateStr }));
+        toast.success(t('addedSchedule', { platform }));
+        setSelectedCellKey(null);
+        // Clear announcement after 3s
+        setTimeout(() => setLiveAnnouncement(null), 3000);
+    }, [addEvent, t]);
 
     const getMondayOfCurrentWeek = useCallback(() => {
         const today = new Date();
@@ -304,6 +326,16 @@ export default function CalendarSection() {
                 onIconDragStart={handleIconDragStart}
             />
 
+            {/* ARIA live region for screen reader announcements */}
+            <div
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                className="sr-only"
+            >
+                {liveAnnouncement}
+            </div>
+
             <div className="flex-1 min-h-0">
                 {calendarView === 'monthly' ? (
                     <MonthlyViewGrid
@@ -314,6 +346,10 @@ export default function CalendarSection() {
                         onDrop={(e, cell) => handleDrop(e, cell.cellDate, undefined)}
                         onNoteDragStart={(e, cell, event) => handleNoteDragStart(e, cell.cellDate, event)}
                         onNoteClick={handleNoteClick}
+                        selectedCellKey={selectedCellKey}
+                        onSelectCell={handleSelectCell}
+                        onCloseCell={handleCloseCell}
+                        onAddToCell={(cell, platform) => handleAddToCell(cell.clickedKey, cell.cellDate, platform)}
                     />
                 ) : (
                     <WeeklyViewGrid

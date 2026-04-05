@@ -1450,6 +1450,18 @@
         "downloadError": "Cannot download file.",
         "download": "Download",
         "close": "Close"
+      },
+      "topBarActions": {
+        "sources": "Sources",
+        "aiChat": "AI Chat",
+        "wizard": {
+          "step1": "Add Source",
+          "step2": "Configure",
+          "step3": "Create",
+          "exit": "Exit",
+          "next": "Next",
+          "back": "Back"
+        }
       }
     },
     "calendarSection": {
@@ -1465,6 +1477,31 @@
       "empty": "Empty",
       "eventMoved": "Event position updated.",
       "addedSchedule": "Added schedule for {platform}.",
+      "addedScheduleAnnounce": "Added schedule for {platform}",
+      "addedScheduleFromCell": "Added schedule for {platform} on {date}",
+      "postStatusPosted": "{platform} posted successfully",
+      "postStatusFailed": "{platform} posting failed",
+      "syncing": "Syncing...",
+      "synced": "Synced",
+      "syncFailed": "Sync failed",
+      "syncedJustNow": "Just synced",
+      "syncedMinutesAgo": "Synced {n} min ago",
+      "offline": "Offline",
+      "platformIconTooltip": "Drag icon to day or press + on day to add",
+      "addToDay": "Add to this day",
+      "selectPlatform": "Select platform to add to calendar",
+      "pastDate": "Past date. Cannot add events.",
+      "noEventsOnDay": "No posts scheduled. Press Enter to add.",
+      "eventCountOnDay": "{count} posts: {platforms}.",
+      "ariaEventLabel": "{status} {platform} at {time}. Press Enter to view/edit, drag to move.",
+      "ariaDayWithEvents": "{date}. {count} posts: {platforms}.",
+      "ariaDayEmpty": "{date}. No posts scheduled. Press Enter to add.",
+      "ariaDayPast": "{date}. Past date. Cannot add events.",
+      "ariaToday": "{date}. Today. {count} posts.",
+      "ariaCalendarSection": "Calendar section. Use arrow keys to navigate between days.",
+      "ariaAddEvent": "Add scheduled post to this day",
+      "ariaSyncStatus": "Sync status: {status}",
+      "ariaPopup": "Event options. {platform} {time}. Actions: View or edit post, Delete event.",
       "addedMedia": "Added {count} media to post.",
       "eventStatus": {
         "published": "Published",

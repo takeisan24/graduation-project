@@ -4,6 +4,12 @@ import { Button } from "@/components/ui/button";
 import { SOCIAL_PLATFORMS } from "@/lib/constants/platforms";
 import { needsInversion } from "@/lib/utils/platform";
 import { useTranslations, useLocale } from 'next-intl';
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 
 interface CalendarToolbarProps {
   calendarView: 'monthly' | 'weekly';
@@ -51,6 +57,7 @@ export function CalendarToolbar({
   };
 
   return (
+    <TooltipProvider delayDuration={300}>
     <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-4 mb-2 mt-1 mr-2 lg:mr-8 px-2 lg:px-0">
       <div className="flex items-center gap-2">
         <Button size="icon" variant="ghost" className="w-8 h-8 text-muted-foreground hover:text-foreground" onClick={onPrev}>‹</Button>
@@ -59,19 +66,26 @@ export function CalendarToolbar({
         </div>
         <Button size="icon" variant="ghost" className="w-8 h-8 text-muted-foreground hover:text-foreground" onClick={onNext}>›</Button>
       </div>
-      
+
       <div className="flex-grow flex justify-start lg:justify-center items-center gap-3 sm:gap-4 md:gap-6 lg:gap-10 order-last md:order-none w-full md:w-auto mt-4 md:mt-0 overflow-x-auto scrollbar-thin scrollbar-thumb-muted-foreground/30 pb-2">
         {SOCIAL_PLATFORMS.map((platform) => (
-          <img
-            key={platform.name}
-            src={platform.icon}
-            alt={platform.name}
-            className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 flex-shrink-0 cursor-grab hover:opacity-80 transition-all ${
-              needsInversion(platform.name) ? 'dark:filter dark:brightness-0 dark:invert' : ''
-            }`}
-            draggable
-            onDragStart={(e) => onIconDragStart(e, platform.name)}
-          />
+          <Tooltip key={platform.name}>
+            <TooltipTrigger asChild>
+              <img
+                src={platform.icon}
+                alt={platform.name}
+                aria-label={`${platform.name}: ${t('platformIconTooltip')}`}
+                className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 flex-shrink-0 cursor-grab hover:opacity-80 transition-all ${
+                  needsInversion(platform.name) ? 'dark:filter dark:brightness-0 dark:invert' : ''
+                }`}
+                draggable
+                onDragStart={(e) => onIconDragStart(e, platform.name)}
+              />
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <p className="text-xs max-w-[200px]">{t('platformIconTooltip')}</p>
+            </TooltipContent>
+          </Tooltip>
         ))}
       </div>
 
@@ -80,5 +94,6 @@ export function CalendarToolbar({
         <Button variant={calendarView === 'weekly' ? 'secondary' : 'ghost'} size="sm" onClick={() => onSetView('weekly')} className={`text-xs lg:text-sm ${calendarView === 'weekly' ? 'bg-gradient-to-r from-utc-royal to-utc-sky text-white border-0' : ''}`}>{t('week')}</Button>
       </div>
     </div>
+    </TooltipProvider>
   );
 }

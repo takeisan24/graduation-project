@@ -1437,6 +1437,18 @@
         "downloadError": "Không thể tải xuống tệp tin.",
         "download": "Tải về",
         "close": "Đóng"
+      },
+      "topBarActions": {
+        "sources": "Nguồn",
+        "aiChat": "AI Chat",
+        "wizard": {
+          "step1": "Thêm nguồn",
+          "step2": "Cấu hình",
+          "step3": "Tạo bài",
+          "exit": "Thoát",
+          "next": "Tiếp",
+          "back": "Quay lại"
+        }
       }
     },
     "calendarSection": {
@@ -1452,6 +1464,31 @@
       "empty": "Trống",
       "eventMoved": "Đã cập nhật vị trí sự kiện.",
       "addedSchedule": "Đã thêm lịch cho {platform}.",
+      "addedScheduleAnnounce": "Đã thêm lịch cho {platform}",
+      "addedScheduleFromCell": "Đã thêm lịch cho {platform} vào ngày {date}",
+      "postStatusPosted": "{platform} đăng bài thành công",
+      "postStatusFailed": "{platform} đăng bài thất bại",
+      "syncing": "Đang đồng bộ...",
+      "synced": "Đã đồng bộ",
+      "syncFailed": "Đồng bộ thất bại",
+      "syncedJustNow": "Đã đồng bộ vừa xong",
+      "syncedMinutesAgo": "Đã đồng bộ {n} phút trước",
+      "offline": "Đang offline",
+      "platformIconTooltip": "Kéo biểu tượng vào ngày hoặc nhấn + trên ngày để thêm",
+      "addToDay": "Thêm vào ngày này",
+      "selectPlatform": "Chọn nền tượng để thêm vào lịch",
+      "pastDate": "Ngày đã qua. Không thể thêm sự kiện.",
+      "noEventsOnDay": "Không có bài đăng. Nhấn Enter để thêm.",
+      "eventCountOnDay": "{count} bài đăng. {platforms}.",
+      "ariaEventLabel": "{status} {platform} lúc {time}. Nhấn Enter để xem/soạn, kéo để di chuyển.",
+      "ariaDayWithEvents": "{date}. {count} bài đăng: {platforms}.",
+      "ariaDayEmpty": "{date}. Không có bài đăng. Nhấn Enter để thêm.",
+      "ariaDayPast": "{date}. Ngày đã qua. Không thể thêm sự kiện.",
+      "ariaToday": "{date}. Hôm nay. {count} bài đăng.",
+      "ariaCalendarSection": "Lịch đăng bài. Dùng phím mũi tên để di chuyển giữa các ngày.",
+      "ariaAddEvent": "Thêm lịch đăng bài vào ngày này",
+      "ariaSyncStatus": "Trạng thái đồng bộ: {status}",
+      "ariaPopup": "Tùy chọn sự kiện. {platform} {time}. Các hành động: Xem hoặc chỉnh sửa bài đăng, Xóa sự kiện.",
       "addedMedia": "Đã thêm {count} media vào bài viết.",
       "eventStatus": {
         "published": "Đã đăng",
