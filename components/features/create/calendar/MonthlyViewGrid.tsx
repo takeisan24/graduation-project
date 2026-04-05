@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { CalendarEvent } from "@/lib/types/calendar";
 import { PlatformIcon } from "@/components/shared/PlatformIcon";
 import { useTranslations } from 'next-intl';
@@ -52,11 +53,15 @@ export function MonthlyViewGrid({
   today.setHours(0, 0, 0, 0);
   const todayTime = today.getTime();
 
-  // Check for prefers-reduced-motion
-  const prefersReducedMotion =
-    typeof window !== 'undefined'
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false;
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mq.matches);
+    const handler = () => setPrefersReducedMotion(mq.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   // Format date for ARIA
   const formatDateForAria = (date: Date) => {

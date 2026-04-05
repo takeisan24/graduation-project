@@ -264,11 +264,11 @@ export default function CalendarSection() {
 
     const handleOpenInEditor = async (event: CalendarEvent, date: Date) => {
         if (event.noteType === "green" && event.url) {
-            window.open(event.url, "_blank");
+            window.open(event.url, "_blank", "noopener,noreferrer");
         } else {
             const dateKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
             setActiveSection("create");
-            openPostFromUrl(event.platform, event.content || "", { eventId: event.id, dateKey });
+            openPostFromUrl(event.platform, "", { eventId: event.id, dateKey });
         }
         setPopup(null);
     };
