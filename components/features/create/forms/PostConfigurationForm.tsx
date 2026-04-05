@@ -167,7 +167,7 @@ export default function PostConfigurationForm({
                     src={option.icon}
                     alt={option.name}
                     className={`w-6 h-6 ${["Twitter", "Threads"].includes(option.name)
-                        ? "filter brightness-0 invert"
+                        ? "dark:filter dark:brightness-0 dark:invert"
                         : ""
                       }`}
                   />

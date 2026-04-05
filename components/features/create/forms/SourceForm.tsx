@@ -6,8 +6,37 @@ import { ArrowLeft, ArrowRight, Plus, X, RefreshCcw, Link as LinkIcon } from 'lu
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import StrategySelector from '../sources/StrategySelector';
-import { type Framework } from '@/lib/constants/content-strategy';
+import GoalTabs from '../sources/StrategySelector/GoalTabs';
+import NicheChips from '../sources/StrategySelector/NicheChips';
+import TemplateGallery from '../sources/StrategySelector/TemplateGallery';
+import GallerySkeleton from '../sources/StrategySelector/GallerySkeleton';
+import { type Framework, fetchFrameworks } from '@/lib/constants/content-strategy';
 import { SourceMetadata } from '@/store/shared/types';
+
+/** Inline template gallery with its own data fetching */
+function StrategyTemplatesInline({ selectedGoal, selectedNiche, selectedFramework, onSelectFramework }: {
+  selectedGoal: string; selectedNiche: string; selectedFramework: Framework | null; onSelectFramework: (fw: Framework) => void;
+}) {
+  const [isFiltering, setIsFiltering] = useState(false);
+  const [frameworks, setFrameworks] = useState<Framework[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      setIsFiltering(true);
+      try {
+        const data = await fetchFrameworks(selectedGoal, selectedNiche);
+        if (mounted) setFrameworks(data);
+      } catch { /* handled */ } finally {
+        if (mounted) setIsFiltering(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, [selectedGoal, selectedNiche]);
+
+  if (isFiltering) return <GallerySkeleton />;
+  return <TemplateGallery frameworks={frameworks} selectedId={selectedFramework?.id || null} onSelect={onSelectFramework} />;
+}
 
 interface SourceFormProps {
   initialData?: {
@@ -316,36 +345,57 @@ export default function SourceForm({ onComplete, onCancel, initialData, isReadOn
     return `💡 Nhập ý tưởng của bạn...`;
   };
 
-  // UI Step 1: Strategy Selection
+  // UI Step 1: Strategy Selection — Dropdown panel layout
   if (step === 1) {
     return (
-      <div className="h-full flex flex-col bg-background">
-        <div className="px-6 py-4 border-b border-border flex-shrink-0">
-          <h2 className="text-lg font-semibold text-foreground">{tStrategy('title')}</h2>
-          <p className="text-sm text-muted-foreground mt-1">{tStrategy('subtitle')}</p>
-        </div>
-        <div className="flex-1 overflow-y-auto px-6 py-6 pb-4 scrollbar-thin scrollbar-thumb-primary/60 scrollbar-track-secondary/50">
-          <div className={isReadOnly ? "pointer-events-none opacity-90" : ""}>
-            <StrategySelector
-              selectedFramework={selectedFramework}
-              onSelectFramework={setSelectedFramework}
-              selectedGoal={selectedGoal}
-              onSelectGoal={setSelectedGoal}
-              selectedNiche={selectedNiche}
-              onSelectNiche={setSelectedNiche}
-            />
+      <div className={`flex flex-col ${isReadOnly ? "pointer-events-none opacity-90" : ""}`}>
+        {/* ── Row 1: Goal + Niche (side by side) ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:divide-x divide-border">
+          {/* Goal */}
+          <div className="px-4 py-3">
+            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold mr-1.5">1</span>
+              {tStrategy('goalTitle')}
+            </h3>
+            <GoalTabs value={selectedGoal} onChange={setSelectedGoal} />
+          </div>
+          {/* Niche */}
+          <div className="px-4 py-3 border-t md:border-t-0 border-border">
+            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold mr-1.5">2</span>
+              {tStrategy('nicheTitle')}
+            </h3>
+            <NicheChips value={selectedNiche} onChange={setSelectedNiche} />
           </div>
         </div>
-        <div className="px-6 py-4 border-t border-border flex-shrink-0 bg-background">
-          {!canProceedToStep2 ? (
-            <div className="mb-3 p-2.5 rounded-lg bg-yellow-500/10 border border-yellow-500/30 text-xs text-yellow-300 text-center">⚠️ {tStrategy('selectTemplateHint')}</div>
-          ) : (
-            <div className="mb-3 p-2.5 rounded-lg bg-green-500/10 border border-green-500/30 text-xs text-green-300 text-center">✓ {tStrategy('templateSelected', { template: tStrategy(`frameworks.${selectedFramework.slug}.title`, { defaultValue: selectedFramework.title }) })}</div>
-          )}
-          <div className="flex gap-3">
-            {onCancel && <button onClick={onCancel} className="flex-1 bg-secondary hover:bg-muted text-foreground py-3 rounded-lg font-medium">{t('cancelButton')}</button>}
-            <button onClick={handleNextStep} disabled={!canProceedToStep2} className="flex-1 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground py-3 rounded-lg font-medium disabled:opacity-50 shadow-lg shadow-primary/30 flex items-center justify-center gap-2">
-              {tStrategy('nextButton')} <ArrowRight className="w-4 h-4" />
+
+        {/* ── Row 2: Template Gallery ── */}
+        <div className="px-4 py-3 border-t border-border">
+          <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
+            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold mr-1.5">3</span>
+            {tStrategy('templateTitle')}
+          </h3>
+          <StrategyTemplatesInline
+            selectedGoal={selectedGoal}
+            selectedNiche={selectedNiche}
+            selectedFramework={selectedFramework}
+            onSelectFramework={setSelectedFramework}
+          />
+        </div>
+
+        {/* ── Footer: Status + Actions ── */}
+        <div className="px-4 py-3 border-t border-border bg-secondary/30 flex items-center gap-3">
+          <div className="flex-1 min-w-0">
+            {!canProceedToStep2 ? (
+              <p className="text-xs text-amber-700 dark:text-yellow-400 font-medium truncate">{tStrategy('selectTemplateHint')}</p>
+            ) : (
+              <p className="text-xs text-emerald-700 dark:text-green-400 font-medium truncate">{tStrategy('templateSelected', { template: tStrategy(`frameworks.${selectedFramework.slug}.title`, { defaultValue: selectedFramework.title }) })}</p>
+            )}
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {onCancel && <button onClick={onCancel} className="px-4 py-2 bg-secondary hover:bg-muted text-foreground rounded-lg font-medium text-xs border border-border">{t('cancelButton')}</button>}
+            <button onClick={handleNextStep} disabled={!canProceedToStep2} className="px-5 py-2 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-lg font-medium text-xs disabled:opacity-40 shadow-sm flex items-center gap-1.5">
+              {tStrategy('nextButton')} <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -494,7 +544,7 @@ export default function SourceForm({ onComplete, onCancel, initialData, isReadOn
 
       {/* Footer */}
       <div className="px-6 py-4 border-t border-border flex-shrink-0 bg-background">
-        {validationError && <div className="mb-3 p-2.5 rounded-lg bg-red-500/10 border border-red-500/30 text-xs text-red-300 text-center">⚠️ {validationError}</div>}
+        {validationError && <div className="mb-3 p-2.5 rounded-lg bg-red-100 dark:bg-red-500/10 border border-red-300 dark:border-red-500/30 text-xs text-red-700 dark:text-red-300 text-center font-medium">{validationError}</div>}
         <div className="flex gap-3">
           {isReadOnly ? (
             <button
