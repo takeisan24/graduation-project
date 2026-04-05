@@ -1259,6 +1259,9 @@
           "text-source": "Văn bản và nguồn"
         },
         "subtitle": "Chọn nền tảng và số lượng bài đăng cần tạo:",
+        "selectAll": "Chọn tất cả",
+        "clearAll": "Bỏ chọn tất cả",
+        "selected": "đã chọn",
         "post": "bài",
         "isCreating": "Đang tạo...",
         "createButton": "Tạo bài đăng",
@@ -1320,7 +1323,8 @@
         "clearChatTitle": "Xóa cuộc trò chuyện?",
         "clearChatDescription": "Toàn bộ lịch sử chat với AI sẽ bị xóa. Hành động này không thể hoàn tác.",
         "clearChatConfirm": "Xóa",
-        "clearChatCancel": "Hủy"
+        "clearChatCancel": "Hủy",
+        "toSend": "để gửi"
       },
       "actionBar": {
         "addImage": "Thêm ảnh",
@@ -1442,10 +1446,20 @@
         "addToPost": "Thêm vào bài viết"
       },
       "lightboxModal": {
-        "downloadSuccess": "Đã tải xuống thành công!",
-        "downloadError": "Không thể tải xuống tệp tin.",
-        "download": "Tải về",
+        "downloadSuccess": "Tải xuống thành công!",
+        "downloadError": "Không thể tải xuống tệp.",
+        "download": "Tải xuống",
         "close": "Đóng"
+      },
+      "errorState": {
+        "defaultTitle": "Đã xảy ra lỗi",
+        "defaultMessage": "Rất tiếc, đã có lỗi xảy ra trong quá trình xử lý. Vui lòng thử lại sau.",
+        "retryButton": "Thử lại",
+        "reportButton": "Báo lỗi",
+        "networkErrorTitle": "Lỗi kết nối",
+        "networkErrorMessage": "Vui lòng kiểm tra lại kết nối mạng của bạn và thử lại.",
+        "serverErrorTitle": "Máy chủ đang bận",
+        "serverErrorMessage": "Máy chủ đang bận. Vui lòng thử lại sau."
       },
       "topBarActions": {
         "sources": "Nguồn",

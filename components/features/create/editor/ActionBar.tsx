@@ -6,6 +6,7 @@ import { ChevronDownIcon, ImageIcon, SparklesIcon, Wand2, Languages } from 'luci
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 
 import { useCreatePostsStore, useCreateMediaStore, usePublishModalStore, useImageGenModalStore, useVideoGenModalStore, useMediaLibraryModalStore, useDraftsStore } from '@/store';
+import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { useLocale, useTranslations } from 'next-intl';
 
@@ -113,11 +114,19 @@ export default function ActionBar() {
     <>
     {/* FIX S-003: 2-row flex layout — Row 1=char count, Row 2=buttons */}
     <div className="sticky bottom-0 left-0 right-0 bg-muted flex flex-col">
-      {/* Row 1: Character count — compact, right-aligned */}
+      {/* Row 1: Character count — C-5: color by threshold, E-4: exceeded */}
       <div className="flex items-center justify-end px-4 py-1.5 border-b border-border/30">
-        <span className="text-xs text-muted-foreground tabular-nums">
-          {(postContents[selectedPostId] ?? "").length}/{getCharLimit()} {t('characterCount')}
-        </span>
+        {(() => {
+          const charCount = (postContents[selectedPostId] ?? "").length;
+          const limit = getCharLimit();
+          const pct = limit > 0 ? charCount / limit : 0;
+          const color = pct > 1 ? 'text-red-500' : pct > 0.95 ? 'text-red-500' : pct > 0.8 ? 'text-yellow-500' : 'text-green-500';
+          return (
+            <span className={`text-xs tabular-nums ${color}`}>
+              {charCount}/{limit} {t('characterCount')}
+            </span>
+          );
+        })()}
       </div>
       {/* Row 2: All action buttons */}
       <div className="flex items-center justify-between px-4 py-3">
@@ -260,6 +269,9 @@ export default function ActionBar() {
           )}
         </div>
 
+        {/* C-1: Separator */}
+        <div className="w-px h-6 bg-border mx-1 flex-shrink-0" />
+
         {/* Right: Clone, Save, Publish */}
         <div className="flex items-center gap-2 pr-[10px] pb-[10px]">
           {/* Clone Button */}
@@ -290,6 +302,8 @@ export default function ActionBar() {
             onClick={() => {
               if (!selectedPostId || !currentPost) return;
               const content = postContents[selectedPostId] || '';
+              // E-3: Empty content warning
+              if (!content.trim()) { toast.warning(t('emptyContentWarning')); return; }
               const media = postMedia[selectedPostId] || [];
               handleSaveDraft(selectedPostId, content, media, currentPost.type);
             }}

@@ -4,26 +4,21 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { PlusIcon, X as CloseIcon, ChevronDown, ChevronUp } from 'lucide-react';
+import { memo, useCallback } from 'react';
+import { SOCIAL_PLATFORMS } from '@/lib/constants/platforms';
 import { useCreatePostsStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslations } from 'next-intl';
 import { getPlatformColors } from '@/lib/constants/platformColors';
 
 // Dữ liệu này có thể chuyển ra file constants để dùng chung
-const platformOptions = [
-    { name: "TikTok", icon: "/icons/platforms/tiktok.png" }, { name: "Instagram", icon: "/icons/platforms/instagram.png" },
-    { name: "YouTube", icon: "/icons/platforms/ytube.png" }, { name: "Facebook", icon: "/icons/platforms/fb.svg" },
-    { name: "Twitter", icon: "/icons/platforms/x.png" }, { name: "Threads", icon: "/icons/platforms/threads.png" },
-    { name: "LinkedIn", icon: "/icons/platforms/link.svg" }, { name: "Pinterest", icon: "/icons/platforms/pinterest.svg" }
-];
-
-// Helper to get platform icon
+// Helper to get platform icon — uses SOCIAL_PLATFORMS from lib/constants/platforms
 const getPlatformIcon = (platformName: string) => {
-    const platform = platformOptions.find(p => p.name === platformName);
+    const platform = SOCIAL_PLATFORMS.find(p => p.name === platformName);
     return platform?.icon || "/default.png";
 };
 
-export default function TabsManager() {
+export default memo(function TabsManager() {
     const t = useTranslations('CreatePage.createSection.postPanel');
     // Component này chỉ cần các state và action liên quan đến việc quản lý tab
     const {
@@ -85,7 +80,7 @@ export default function TabsManager() {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     // Xử lý scroll ngang bằng chuột (convert vertical scroll -> horizontal scroll)
-    const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
         if (scrollContainerRef.current) {
             // Nếu user lăn lên/xuống (deltaY), chuyển thành sang trái/phải
             if (e.deltaY !== 0) {
@@ -95,7 +90,7 @@ export default function TabsManager() {
                 scrollContainerRef.current.scrollLeft += e.deltaY * 1.5;
             }
         }
-    };
+    }, []);
 
     return (
         <div className="flex items-center gap-2 mb-4">
@@ -116,22 +111,26 @@ export default function TabsManager() {
                     return (
                         <div
                             key={post.id}
-                            className={`group relative flex items-center gap-1.5 px-2 lg:px-2.5 py-1.5 cursor-pointer rounded-t-lg transition-all flex-shrink-0 ${
+                            className={`group relative flex items-center gap-1.5 px-2 lg:px-2.5 py-1.5 cursor-pointer rounded-t-lg transition-all shrink-0 ${
                                 selectedPostId === post.id
                                     ? "text-foreground bg-card"
                                     : "text-muted-foreground hover:text-foreground hover:bg-card/50"
                             }`}
                             onClick={() => handlePostSelect(post.id)}
                         >
-                            {/* Platform color indicator */}
+                            {/* D-1: Hybrid — gradient brand (collapsed) / platform color (expanded) */}
                             {selectedPostId === post.id && (
-                              <div className={`absolute bottom-0 left-1 right-1 h-[2px] rounded-full ${pColors.dot}`} />
+                              isTabsCollapsed ? (
+                                <div className="absolute bottom-0 left-0 right-0 h-[2px] rounded-full bg-linear-to-r from-utc-royal to-utc-sky" />
+                              ) : (
+                                <div className={`absolute bottom-0 left-1 right-1 h-[2px] rounded-full ${pColors.dot}`} />
+                              )
                             )}
                             {/* Platform Icon */}
                             <img 
                                 src={platformIcon} 
                                 alt={post.type}
-                                className={`w-4 h-4 flex-shrink-0 ${["Twitter", "Threads"].includes(post.type) ? "dark:filter dark:brightness-0 dark:invert" : ""}`}
+                                className={`w-4 h-4 shrink-0 ${["Twitter", "Threads"].includes(post.type) ? "dark:filter dark:brightness-0 dark:invert" : ""}`}
                             />
                             {/* Platform Name - hidden completely when collapsed */}
                             {!isTabsCollapsed && (
@@ -146,7 +145,7 @@ export default function TabsManager() {
                                     e.stopPropagation();
                                     handlePostDelete(post.id);
                                 }}
-                                className="h-5 w-5 p-0 rounded-full hover:bg-destructive/20 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0"
+                                className="h-5 w-5 p-0 rounded-full hover:bg-destructive/20 opacity-0 group-hover:opacity-100 transition-all shrink-0"
                             >
                                 <CloseIcon className="w-3 h-3" />
                             </Button>
@@ -158,7 +157,7 @@ export default function TabsManager() {
                 {posts.length > 4 && (
                     <button
                         onClick={() => setIsTabsCollapsed(!isTabsCollapsed)}
-                        className="flex-shrink-0 px-1.5 py-1 text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-0.5 rounded-lg hover:bg-card/50"
+                        className="shrink-0 px-1.5 py-1 text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-0.5 rounded-lg hover:bg-card/50"
                     >
                         {isTabsCollapsed ? (
                             <>
@@ -176,11 +175,11 @@ export default function TabsManager() {
             </div>
 
             {/* Nút "Thêm bài" - Rút ngắn khi đã có posts */}
-            <div className="relative flex-shrink-0" ref={postPickerRef} data-tour="create-post">
-                <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="border-2 border-accent text-foreground bg-accent/10 hover:bg-accent/20 hover:border-accent hover:shadow-lg hover:shadow-accent/30 transition-all duration-300 relative group"
+            <div className="relative shrink-0" ref={postPickerRef} data-tour="create-post">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-2 border-dashed border-primary/40 text-muted-foreground hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-300 relative group"
                     onClick={() => setShowPostPicker(prev => !prev)}
                 >
                     {/* Pulse animation when: haven't seen tour AND no posts yet */}
@@ -194,9 +193,9 @@ export default function TabsManager() {
                     {posts.length === 0 && <span>{t('addPost')}</span>}
                 </Button>
                 {showPostPicker && (
-                    <div className="absolute right-0 top-full z-20 mt-2 w-[13.75rem] bg-card border border-border rounded-lg shadow-lg p-3">
+                    <div className="absolute right-0 top-full z-20 mt-2 w-55 bg-card border border-border rounded-lg shadow-lg p-3">
                         <div className="space-y-1">
-                            {platformOptions.map((option) => (
+                            {SOCIAL_PLATFORMS.map((option) => (
                                 <button
                                     key={option.name}
                                     onClick={() => {
@@ -215,4 +214,4 @@ export default function TabsManager() {
             </div>
         </div>
     );
-}
+});

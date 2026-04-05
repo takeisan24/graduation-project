@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from '@/components/ui/button';
-import { FileTextIcon, Eye, Pencil, NewspaperIcon, YoutubeIcon, MusicIcon, FileIcon, HeadphonesIcon, LinkIcon, X as CloseIcon, Sparkles as SparklesIcon, Trash2, AlertTriangle } from 'lucide-react';
+import { FileTextIcon, Eye, Pencil, NewspaperIcon, YoutubeIcon, MusicIcon, FileIcon, HeadphonesIcon, LinkIcon, X as CloseIcon, Trash2, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 // Import store để lấy dữ liệu sources và các action liên quan
 import { useCreateSourcesStore, useNavigationStore, useImageGenModalStore, useCreateLightboxStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
+import { SavedSource } from '@/store/shared/types';
 
 // Import SourceForm for wizard mode
 import SourceForm from '../forms/SourceForm';
@@ -41,7 +42,7 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
     const [hasSeenTour, setHasSeenTour] = useState(true);
     const [newSourceId, setNewSourceId] = useState<string | null>(null);
     const [isReadOnly, setIsReadOnly] = useState(false);
-    const [editingSource, setEditingSource] = useState<any>(null);
+    const [editingSource, setEditingSource] = useState<SavedSource | null>(null);
     const [isConfirmClearOpen, setIsConfirmClearOpen] = useState(false);
 
     const {
@@ -77,21 +78,21 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
         return t(`sourceTypes.${type}`, { defaultValue: type });
     };
 
-    const handleSourceClick = (source: any) => {
+    const handleSourceClick = (source: SavedSource) => {
         useCreateChatStore.getState().clearChat();
         setIsReadOnly(false);
         setWizardStep('configuringPosts');
         openCreateFromSourceModal({ type: source.type, value: source.value, label: source.label || source.value });
     };
 
-    const handleEditSource = (e: React.MouseEvent, source: any) => {
+    const handleEditSource = (e: React.MouseEvent, source: SavedSource) => {
         e.stopPropagation();
         setEditingSource(source);
         setIsReadOnly(false);
         setWizardStep('addingSource');
     };
 
-    const handleViewSource = (e: React.MouseEvent, source: any) => {
+    const handleViewSource = (e: React.MouseEvent, source: SavedSource) => {
         e.stopPropagation();
         setEditingSource(source);
         setIsReadOnly(true);
@@ -118,7 +119,7 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
     if (mode === 'form') {
         return (
             <div className="w-full h-full border-r border-border bg-card">
-                <SourceForm onComplete={handleFormComplete} onCancel={handleFormCancel} isReadOnly={isReadOnly} initialData={editingSource} />
+                <SourceForm onComplete={handleFormComplete} onCancel={handleFormCancel} isReadOnly={isReadOnly} initialData={editingSource || undefined} />
             </div>
         );
     }
@@ -126,10 +127,10 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
     return (
         <div className="w-full h-full md:border-r border-border p-3 md:p-4 md:pt-[30px] flex flex-col overflow-hidden" data-tour="source-list">
 
-            <div className="flex flex-col gap-2 mb-2 flex-shrink-0" data-tour="add-source">
+            <div className="flex flex-col gap-2 mb-2 shrink-0" data-tour="add-source">
                 <Button
                     size="sm"
-                    className="text-base md:text-sm bg-gradient-to-r from-primary to-primary/80 hover:from-primary/80 hover:to-primary/70 text-primary-foreground px-4 py-3 md:py-2 transition-all duration-300 border-0 relative group shadow-lg shadow-primary/30 hover:shadow-primary/50 w-full md:w-auto"
+                    className="text-base md:text-sm bg-linear-to-r from-primary to-primary/80 hover:from-primary/80 hover:to-primary/70 text-primary-foreground px-4 py-3 md:py-2 transition-all duration-300 border-0 relative group shadow-lg shadow-primary/30 hover:shadow-primary/50 w-full md:w-auto"
                     onClick={() => {
                         setEditingSource(null);
                         setIsReadOnly(false);
@@ -159,7 +160,7 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
                     </div>
                 ) : (
                     <div className="mt-2 md:mt-4 flex-1 min-h-0 flex flex-col overflow-hidden" data-tour="source-list">
-                        <div className="flex items-center justify-between mb-2 flex-shrink-0">
+                        <div className="flex items-center justify-between mb-2 shrink-0">
                             <h3 className="text-sm font-semibold text-muted-foreground">
                                 {t('sourcesTitle')} ({savedSources.length})
                             </h3>
@@ -175,7 +176,7 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
                                         onClick={() => handleSourceClick(source)}
                                     >
                                         <div className="flex items-start gap-3">
-                                            <div className="flex-shrink-0 mt-1">
+                                            <div className="shrink-0 mt-1">
                                                 <SourceIcon type={source.type} isSelected={false} />
                                             </div>
                                             <div className="flex-1 min-w-0 pr-16 md:pr-0">
@@ -227,7 +228,7 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
 
             {/* Phần hiển thị ảnh đã tạo từ Sidebar */}
             {sidebarImages.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-border flex flex-col min-h-0 flex-shrink-0" style={{ maxHeight: '250px' }}>
+                <div className="mt-4 pt-4 border-t border-border flex flex-col min-h-0 shrink-0" style={{ maxHeight: '250px' }}>
                     <div className="flex items-center justify-between mb-3 px-1">
                         <div className="flex items-center gap-2">
                             <h3 className="text-xs font-bold text-accent uppercase tracking-widest">{t('generatedImages')}</h3>

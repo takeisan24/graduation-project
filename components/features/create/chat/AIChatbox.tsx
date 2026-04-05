@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
-import { SparklesIcon, ChevronDownIcon, SendIcon, MessageCircle, Wand2, Lightbulb, Zap, Plus, Copy, Check } from 'lucide-react';
+
+import { SparklesIcon, ChevronDownIcon, SendIcon, MessageCircle, Wand2, Lightbulb, Zap, Plus, Copy, Check, AlertCircle, RefreshCw } from 'lucide-react';
 
 import { useCreateChatStore, useCreatePostsStore, useNavigationStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
+import { MODEL_OPTIONS } from '@/lib/constants/platforms';
 import ConfirmModal from '@/components/shared/ConfirmModal';
 
 // Logic gọi API Gemini có thể được trừu tượng hóa ra service (Giai đoạn 3)
@@ -29,17 +30,19 @@ export default function AIChatbox() {
 
   // Hàm xử lý copy
   const handleCopyMessage = (content: string, index: number) => {
-    navigator.clipboard.writeText(content);
-    setCopiedIndex(index);
-    toast.success(t('copiedToClipboard'));
-
-    // Reset icon sau 2 giây
-    setTimeout(() => setCopiedIndex(null), 2000);
+    try {
+      navigator.clipboard.writeText(content);
+      setCopiedIndex(index);
+      toast.success(t('copiedToClipboard'));
+      setTimeout(() => setCopiedIndex(null), 2000);
+    } catch {
+      toast.error(t('copyFailed'));
+    }
   };
 
   // Hàm kiểm tra xem có nên hiện nút Copy không
   // Logic: Chỉ hiện cho văn bản bình thường, ẩn với JSON và thông báo hệ thống
-  const shouldShowCopyButton = (message: any) => {
+  const shouldShowCopyButton = (message: { role: string; content?: string; isError?: boolean }) => {
     // 1. Chỉ áp dụng cho tin nhắn của AI
     if (message.role !== 'assistant') return false;
 
@@ -101,12 +104,11 @@ export default function AIChatbox() {
   }, [chatInput]);
 
   const handleSend = () => {
+    if (!navigator.onLine) { toast.error(t('offlineError')); return; }
     if (chatInput.trim() && !isTyping) {
       const postsStore = useCreatePostsStore.getState();
       const navigationStore = useNavigationStore.getState();
 
-      // Truyền kèm model đang được chọn trong UI để BE quyết định dùng OpenAI (ChatGPT) hay Gemini
-      // Thêm activePostId để AI biết đang sửa bài nào
       const activePostId = postsStore.selectedPostId;
 
       submitChat(chatInput, selectedChatModel, {
@@ -117,10 +119,29 @@ export default function AIChatbox() {
         },
         onPostContentChange: postsStore.handlePostContentChange,
         onSetActiveSection: navigationStore.setActiveSection,
-        activePostId: activePostId, // <-- Pass ID here
+        activePostId: activePostId,
       });
       setChatInput("");
     };
+  }
+
+  // E-1: Retry failed message
+  const handleRetry = (content: string) => {
+    if (isTyping) return;
+    const postsStore = useCreatePostsStore.getState();
+    const navigationStore = useNavigationStore.getState();
+    const activePostId = postsStore.selectedPostId;
+
+    submitChat(content, selectedChatModel, {
+      onPostCreate: (platform, text) => {
+        const newPostId = postsStore.handlePostCreate(platform);
+        postsStore.handlePostContentChange(newPostId, text);
+        return newPostId;
+      },
+      onPostContentChange: postsStore.handlePostContentChange,
+      onSetActiveSection: navigationStore.setActiveSection,
+      activePostId: activePostId,
+    });
   }
 
   const handleClearChat = () => {
@@ -134,21 +155,14 @@ export default function AIChatbox() {
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
+    if (e.key === "Enter") {
+      // S-014: Allow Ctrl+Enter or Cmd+Enter to send as well as regular Enter (unless Shift is used)
+      if (e.ctrlKey || e.metaKey || !e.shiftKey) {
+        e.preventDefault();
+        handleSend();
+      }
     }
   };
-
-  const modelOptions = [ // Mặc định là CHatGPT
-    "ChatGPT",
-    "Gemini Pro",
-    "Claude Sonnet 4",
-    "gpt-4.1",
-    "o4-mini",
-    "o3",
-    "gpt-4o"
-  ];
 
   //Đóng dropdown khi click ra ngoài
   useEffect(() => {
@@ -163,7 +177,7 @@ export default function AIChatbox() {
   }, [showModelMenu]);
 
   return (
-    <div className="w-full h-full relative z-0 flex flex-col" data-tour="ai-chat">
+    <div className="w-full h-full relative z-0 flex flex-col scroll-smooth" style={{ scrollPaddingBottom: 'env(keyboard-inset-height, 16px)' }} data-tour="ai-chat">
       <div className="flex-1 min-h-0 flex flex-col">
         {/* Model Selector Header */}
         <div className="flex items-center justify-between px-3 py-2 border-b border-border/50 bg-card/50 flex-shrink-0">
@@ -171,7 +185,7 @@ export default function AIChatbox() {
             <button
               type="button"
               onClick={() => setShowModelMenu((v) => !v)}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-foreground/90 hover:text-foreground"
+              className={`inline-flex items-center gap-1.5 text-xs font-semibold transition-all ${showModelMenu ? 'text-foreground bg-gradient-to-r from-utc-royal/10 to-utc-sky/10 border border-utc-royal/30 rounded-md px-2.5 py-1.5' : 'text-foreground/90 hover:text-foreground'}`}
             >
               <SparklesIcon className="w-3.5 h-3.5" />
               {selectedChatModel}
@@ -179,7 +193,7 @@ export default function AIChatbox() {
             </button>
             {showModelMenu && (
               <div className="absolute mt-1 w-48 bg-card border border-border rounded-md shadow-lg py-1 z-20">
-                {modelOptions.map((model) => (
+                {MODEL_OPTIONS.map((model) => (
                   <button
                     key={model}
                     onClick={() => {
@@ -287,15 +301,31 @@ export default function AIChatbox() {
                 <div key={index} className={`flex flex-col ${message.role === "user" ? "items-end" : "items-start"}`}>
                   <div className={`relative group max-w-[85%] p-3 break-words ${message.role === "user"
                       ? "ml-auto bg-utc-royal/10 border border-utc-royal/20 rounded-2xl rounded-br-sm text-foreground"
-                      : "mr-auto bg-muted border border-border rounded-2xl rounded-bl-sm text-foreground"
+                      : message.isError
+                        ? "mr-auto bg-red-500/10 border border-red-500/20 rounded-2xl rounded-bl-sm text-foreground"
+                        : "mr-auto bg-muted border border-border rounded-2xl rounded-bl-sm text-foreground"
                     }`}>
-                    {/* Nút Copy Thông Minh - Góc trên bên phải */}
-                    {shouldShowCopyButton(message) && (
+                    {/* E-1: Error bubble — Alert icon + message + retry */}
+                    {message.role === 'assistant' && message.isError && (
+                      <div className="flex items-start gap-2 mb-1.5">
+                        <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+                        <button
+                          onClick={() => handleRetry(message.content)}
+                          className="ml-auto text-xs text-red-400 hover:text-red-300 flex items-center gap-1 hover:underline"
+                        >
+                          <RefreshCw className="w-3 h-3" />
+                          {t('retry')}
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Nút Copy Thông Minh - Góc trên bên phải (chỉ cho non-error AI messages) */}
+                    {!message.isError && shouldShowCopyButton(message) && (
                       <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <button
                           onClick={() => handleCopyMessage(message.content, index)}
                           className="p-1.5 rounded-full bg-background border border-border hover:bg-muted text-muted-foreground hover:text-foreground shadow-sm transition-all"
-                          title="Sao chép nội dung này để Format"
+                          title={t('copyToFormat')}
                         >
                           {copiedIndex === index ? (
                             <Check className="w-3.5 h-3.5 text-green-400" />
@@ -303,6 +333,13 @@ export default function AIChatbox() {
                             <Copy className="w-3.5 h-3.5" />
                           )}
                         </button>
+                      </div>
+                    )}
+
+                    {/* B-1: AI icon for non-error assistant messages */}
+                    {message.role === 'assistant' && !message.isError && (
+                      <div className="mb-1.5">
+                        <SparklesIcon className="w-3.5 h-3.5 text-primary" />
                       </div>
                     )}
 
@@ -318,8 +355,8 @@ export default function AIChatbox() {
               {isTyping && (
                 <div className="text-sm text-left">
                   <div className="bg-card text-card-foreground inline-block rounded-lg p-3 border border-border">
-                    <div className="flex items-center space-x-1">
-                      <span>{t('aiTyping')}</span>
+                    {/* B-4: Typing indicator — dots only */}
+                    <div className="flex items-center gap-2">
                       <div className="flex space-x-1">
                         <div className="w-2 h-2 bg-card-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
                         <div className="w-2 h-2 bg-card-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
@@ -339,6 +376,12 @@ export default function AIChatbox() {
             <textarea
               ref={textareaRef}
               placeholder={t('aiChatPlaceholder')}
+              onFocus={(e) => {
+                // S-013: Prevent mobile keyboard from covering the input
+                setTimeout(() => {
+                  e.target.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }, 300);
+              }}
               className="w-full bg-card border border-border rounded-lg outline-none focus:border-utc-royal/50 focus:ring-1 focus:ring-utc-royal/20 resize-none text-foreground placeholder-muted-foreground text-xs p-2.5 pr-10 transition-all overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/30 scrollbar-track-secondary"
               style={{ minHeight: '44px', maxHeight: '120px' }}
               value={chatInput}
@@ -359,10 +402,16 @@ export default function AIChatbox() {
           <div className="mt-1 flex items-center justify-between gap-2 overflow-hidden">
             {openPosts.length > 0 ? (
               <div className="text-[10px] text-muted-foreground flex items-center gap-1.5 flex-1 min-w-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse flex-shrink-0"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shrink-0"></span>
                 <span className="truncate">Bài viết: <span className="text-muted-foreground font-medium">{openPosts.find(p => p.id === useCreatePostsStore.getState().selectedPostId)?.type || "Tất cả"}</span></span>
               </div>
             ) : <div className="flex-1" />}
+            {/* S-014: Shortcut hint */}
+            {!chatInput.trim() && (
+              <p className="text-[10px] text-muted-foreground shrink-0">
+                <kbd className="px-1 py-0.5 rounded bg-muted text-[10px] font-mono">Enter</kbd> {t('toSend')}
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -372,10 +421,10 @@ export default function AIChatbox() {
         isOpen={showClearConfirm}
         onClose={() => setShowClearConfirm(false)}
         onConfirm={confirmClearChat}
-        title="Xóa cuộc trò chuyện?"
-        description="Toàn bộ lịch sử chat với AI sẽ bị xóa. Hành động này không thể hoàn tác."
-        confirmText="Xóa"
-        cancelText="Hủy"
+        title={t('clearChatTitle')}
+        description={t('clearChatDescription')}
+        confirmText={t('clearChatConfirm')}
+        cancelText={t('clearChatCancel')}
         variant="warning"
       />
     </div>

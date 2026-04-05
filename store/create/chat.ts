@@ -375,12 +375,12 @@ ${VIDEO_SCRIPT_TEMPLATES}
             // Show the provider-specific error message directly (already localized from backend)
             toast.error(errorMessage, { duration: 8000 });
             set(state => ({
-              chatMessages: [...state.chatMessages, { role: 'assistant', content: errorMessage }]
+              chatMessages: [...state.chatMessages, { role: 'assistant', content: errorMessage, isError: true }]
             }));
           } else {
             await handleErrorWithModal(errorData, errorMessage);
             set(state => ({
-              chatMessages: [...state.chatMessages, { role: 'assistant', content: `Xin lỗi, đã có lỗi xảy ra: ${errorMessage}` }]
+              chatMessages: [...state.chatMessages, { role: 'assistant', content: `Xin lỗi, đã có lỗi xảy ra: ${errorMessage}`, isError: true }]
             }));
           }
           return;
@@ -391,7 +391,7 @@ ${VIDEO_SCRIPT_TEMPLATES}
         const errorMessage = err.message || "Lỗi kết nối hoặc định dạng phản hồi không hợp lệ.";
         toast.error(errorMessage);
         set(state => ({
-          chatMessages: [...state.chatMessages, { role: 'assistant', content: `Xin lỗi, đã có lỗi xảy ra: ${errorMessage}` }]
+          chatMessages: [...state.chatMessages, { role: 'assistant', content: `Xin lỗi, đã có lỗi xảy ra: ${errorMessage}`, isError: true }]
         }));
         return;
       }
@@ -561,7 +561,7 @@ ${VIDEO_SCRIPT_TEMPLATES}
       } else {
         await handleErrorWithModal(error, finalMessage);
         set(state => ({
-          chatMessages: [...state.chatMessages, { role: 'assistant', content: `Xin lỗi, đã có lỗi xảy ra: ${finalMessage}` }]
+          chatMessages: [...state.chatMessages, { role: 'assistant', content: `Xin lỗi, đã có lỗi xảy ra: ${finalMessage}`, isError: true }]
         }));
       }
     } finally {

@@ -10,9 +10,12 @@ import SourcePanel from './sources/SourcePanel';
 import PostEditorWrapper from './editor/PostEditorWrapper';
 import OnboardingTour from './layout/OnboardingTour';
 import TopBarActions from './layout/TopBarActions';
+import CreateSectionErrorBoundary from './shared/CreateSectionErrorBoundary';
 
-import { useNavigationStore, useCreateSourcesStore, useCreatePostsStore } from '@/store';
+import { useNavigationStore, useCreateSourcesStore, useCreatePostsStore, useDraftsStore, useCreateMediaStore, usePublishModalStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { toast } from 'sonner';
 
 /**
  * CreateSection — Hybrid Typefully + Gemini layout
@@ -46,6 +49,46 @@ export default function CreateSection() {
   const openPosts = useCreatePostsStore(state => state.openPosts);
   const sourceToGenerate = useCreateSourcesStore(state => state.sourceToGenerate);
   const isSourceModalOpen = useCreateSourcesStore(state => state.isSourceModalOpen);
+
+  const postContents = useCreatePostsStore(state => state.postContents);
+  const selectedPostId = useCreatePostsStore(state => state.selectedPostId);
+  const handleSaveDraft = useDraftsStore(state => state.handleSaveDraft);
+  const isSavingDraft = useDraftsStore(state => state.isSavingDraft);
+  const postMedia = useCreateMediaStore(state => state.postMedia);
+  const currentPost = openPosts.find(p => p.id === selectedPostId);
+
+  const tChat = useTranslations('CreatePage.createSection.chatPanel');
+
+  // S-014: Keyboard Shortcuts
+  useKeyboardShortcuts('k', () => {
+    if (!isAIChatOpen) {
+      toggleChat();
+    }
+  }, { ctrl: true });
+
+  useKeyboardShortcuts('s', () => {
+    if (!selectedPostId || !currentPost || isSavingDraft) return;
+    const content = postContents[selectedPostId] || '';
+    if (!content.trim()) {
+      toast.warning(tChat('emptyContentWarning'));
+      return;
+    }
+    const media = postMedia[selectedPostId] || [];
+    handleSaveDraft(selectedPostId, content, media, currentPost.type);
+  }, { ctrl: true, ignoreInputFields: true });
+
+  const setIsPublishModalOpen = usePublishModalStore(state => state.setIsPublishModalOpen);
+
+  useKeyboardShortcuts('p', () => {
+    if (!selectedPostId) return;
+    setIsPublishModalOpen(true);
+  }, { ctrl: true, shift: true });
+
+  useKeyboardShortcuts('Escape', () => {
+    if (wizardStep !== 'idle') {
+      setWizardStep('idle');
+    }
+  }, {});
 
   // Reset wizardStep on mount if stuck
   useEffect(() => {
@@ -83,7 +126,6 @@ export default function CreateSection() {
 
   const isAddingSource = wizardStep === 'addingSource';
   const isConfiguringPosts = wizardStep === 'configuringPosts';
-  const isInWizard = wizardStep !== 'idle';
 
   const [activeMobilePanel, setActiveMobilePanel] = useState<'sources' | 'editor' | 'chat'>('editor');
 
@@ -93,7 +135,7 @@ export default function CreateSection() {
   };
 
   return (
-    <>
+    <CreateSectionErrorBoundary>
       {/* ═══ MOBILE: Tab navigation ═══ */}
       <div className="lg:hidden flex border-b border-border bg-background">
         {(['sources', 'editor', 'chat'] as const).map((panel) => (
@@ -153,11 +195,11 @@ export default function CreateSection() {
         </div>
 
         {/* ─── AI Chat slide-in panel (desktop) ─── */}
-        <div className={`hidden lg:flex flex-col transition-all duration-300 ease-in-out border-l border-border/50 bg-background flex-shrink-0 ${
-          isAIChatOpen ? 'w-[min(380px,30vw)]' : 'w-0'
-        } overflow-hidden`}>
+        <div className={`hidden lg:flex flex-col transition-all duration-300 ease-in-out border-l border-border/50 bg-background shrink-0 w-[min(380px,30vw)] overflow-hidden ${
+          isAIChatOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'
+        }`}>
           {/* Chat header — compact, just close button */}
-          <div className="flex items-center justify-between px-3 py-1.5 border-b border-border/50 bg-card/50 flex-shrink-0">
+          <div className="flex items-center justify-between px-3 py-1.5 border-b border-border/50 bg-card/50 shrink-0">
             <div className="flex items-center gap-1.5">
               <MessageSquare className="h-3.5 w-3.5 text-primary" />
               <span className="text-xs font-semibold text-foreground">AI</span>
@@ -182,6 +224,6 @@ export default function CreateSection() {
       </div>
 
       <OnboardingTour />
-    </>
+    </CreateSectionErrorBoundary>
   )
 }

@@ -1273,6 +1273,9 @@
           "text-source": "Text and source"
         },
         "subtitle": "Select platforms and number of posts to create:",
+        "selectAll": "Select all",
+        "clearAll": "Deselect all",
+        "selected": "selected",
         "post": "post",
         "isCreating": "Creating...",
         "createButton": "Create Posts",
@@ -1334,7 +1337,8 @@
         "clearChatTitle": "Clear conversation?",
         "clearChatDescription": "All chat history with AI will be deleted. This action cannot be undone.",
         "clearChatConfirm": "Delete",
-        "clearChatCancel": "Cancel"
+        "clearChatCancel": "Cancel",
+        "toSend": "to send"
       },
       "actionBar": {
         "addImage": "Add image",
@@ -1459,6 +1463,16 @@
         "downloadError": "Cannot download file.",
         "download": "Download",
         "close": "Close"
+      },
+      "errorState": {
+        "defaultTitle": "An Error Occurred",
+        "defaultMessage": "Oops, something went wrong during processing. Please try again later.",
+        "retryButton": "Retry",
+        "reportButton": "Report Issue",
+        "networkErrorTitle": "Network Error",
+        "networkErrorMessage": "Please check your network connection and try again.",
+        "serverErrorTitle": "Server Busy",
+        "serverErrorMessage": "The server is busy. Please try again later."
       },
       "topBarActions": {
         "sources": "Sources",

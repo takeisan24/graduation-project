@@ -4,17 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
 import { SparklesIcon, ChevronDownIcon } from 'lucide-react';
-
-const platformOptions = [
-  { name: "TikTok", icon: "/icons/platforms/tiktok.png" },
-  { name: "Instagram", icon: "/icons/platforms/instagram.png" },
-  { name: "YouTube", icon: "/icons/platforms/ytube.png" },
-  { name: "Facebook", icon: "/icons/platforms/fb.svg" },
-  { name: "Twitter", icon: "/icons/platforms/x.png" },
-  { name: "Threads", icon: "/icons/platforms/threads.png" },
-  { name: "LinkedIn", icon: "/icons/platforms/link.svg" },
-  { name: "Pinterest", icon: "/icons/platforms/pinterest.svg" }
-];
+import { SOCIAL_PLATFORMS, MODEL_OPTIONS } from '@/lib/constants/platforms';
 
 interface PostConfigurationFormProps {
   source?: { type: string; value: string; label: string };
@@ -33,15 +23,6 @@ export default function PostConfigurationForm({
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Model selector state (giống phần Chat AI)
-  const modelOptions = [
-    "ChatGPT",
-    "Gemini Pro",
-    "Claude Sonnet 4",
-    "gpt-4.1",
-    "o4-mini",
-    "o3",
-    "gpt-4o"
-  ];
   const [selectedModel, setSelectedModel] = useState<string>("ChatGPT");
   const [showModelMenu, setShowModelMenu] = useState<boolean>(false);
   const modelMenuRef = useRef<HTMLDivElement | null>(null);
@@ -55,8 +36,28 @@ export default function PostConfigurationForm({
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showModelMenu]);
+
+  const isAllSelected = selectedPlatforms.length === SOCIAL_PLATFORMS.length;
+  const isPartiallySelected = selectedPlatforms.length > 0 && !isAllSelected;
+  const selectAllRef = useRef<HTMLInputElement>(null);
+
+  // S-012: Set indeterminate state on the native checkbox
+  useEffect(() => {
+    if (selectAllRef.current) {
+      selectAllRef.current.indeterminate = isPartiallySelected;
+    }
+  }, [isPartiallySelected]);
+
+  const handleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedPlatforms([]);
+    } else {
+      setSelectedPlatforms(
+        SOCIAL_PLATFORMS.map((p) => ({ platform: p.name, count: 1 }))
+      );
+    }
+  };
 
   const handlePlatformToggle = (platformName: string) => {
     setSelectedPlatforms((prev) => {
@@ -129,7 +130,7 @@ export default function PostConfigurationForm({
             </button>
             {showModelMenu && (
               <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-md shadow-[0_0_0_1px_rgba(255,255,255,0.08)] py-1.5 z-20">
-                {modelOptions.map((model) => (
+                {MODEL_OPTIONS.map((model) => (
                   <button
                     key={model}
                     onClick={() => {
@@ -147,7 +148,28 @@ export default function PostConfigurationForm({
           </div>
         </div>
         <div className="space-y-3">
-          {platformOptions.map((option) => {
+          {/* Select All */}
+          <div className="flex items-center gap-3 py-2 px-3 mb-1 border-b border-border/30">
+            <input
+              ref={selectAllRef}
+              type="checkbox"
+              id="select-all"
+              checked={isAllSelected}
+              onChange={handleSelectAll}
+              className="accent-primary w-4 h-4 cursor-pointer"
+            />
+            <label
+              htmlFor="select-all"
+              className="text-sm font-medium cursor-pointer select-none text-foreground"
+            >
+              {t('selectAll')}
+            </label>
+            <span className="text-xs text-muted-foreground ml-auto">
+              {selectedPlatforms.length}/{SOCIAL_PLATFORMS.length} {t('selected')}
+            </span>
+          </div>
+
+          {SOCIAL_PLATFORMS.map((option) => {
             const platformEntry = selectedPlatforms.find(p => p.platform === option.name);
             const isSelected = !!platformEntry;
 
@@ -156,7 +178,7 @@ export default function PostConfigurationForm({
                 key={option.name}
                 className="flex items-center justify-between py-2 px-3 bg-background rounded-lg border border-border"
               >
-                <label className="flex items-center gap-3 cursor-pointer flex-grow">
+                <label className="flex items-center gap-3 cursor-pointer grow">
                   <input
                     type="checkbox"
                     checked={isSelected}
@@ -166,10 +188,7 @@ export default function PostConfigurationForm({
                   <img
                     src={option.icon}
                     alt={option.name}
-                    className={`w-6 h-6 ${["Twitter", "Threads"].includes(option.name)
-                        ? "dark:filter dark:brightness-0 dark:invert"
-                        : ""
-                      }`}
+                    className={`w-6 h-6 dark:filter dark:brightness-0 dark:invert`}
                   />
                   <span className="text-foreground">{option.name}</span>
                 </label>

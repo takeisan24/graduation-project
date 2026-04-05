@@ -1,11 +1,23 @@
 /**
  * Shared Types
- * 
+ *
  * All TypeScript interfaces and types used across multiple stores
  */
 
-import { CalendarEventType } from '@/lib/types/calendar';
 import { Framework } from '@/lib/constants/content-strategy';
+
+/**
+ * Platform keys (lowercase — canonical, matches DB)
+ * Add new platforms here only. Do NOT use title case in code.
+ */
+export type PlatformKey =
+  | 'tiktok' | 'instagram' | 'youtube' | 'facebook'
+  | 'x' | 'threads' | 'linkedin' | 'pinterest';
+
+/**
+ * AI model display names (matches provider API labels)
+ */
+export type AIModel = 'ChatGPT' | 'Gemini Pro' | 'Claude Sonnet 4' | 'gpt-4.1' | 'o4-mini' | 'o3' | 'gpt-4o';
 
 /**
  * Post lifecycle status from Late.dev
@@ -115,7 +127,7 @@ export interface MediaAsset {
   public_url: string;
   thumbnail_url?: string | null;
   duration?: number | null;
-  metadata?: any;
+  metadata?: Record<string, unknown> | null;
   created_at?: string;
 }
 
@@ -125,6 +137,7 @@ export interface MediaAsset {
 export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
+  isError?: boolean;
 }
 
 export interface SourceMetadata {
@@ -159,8 +172,7 @@ export interface ConnectedAccount {
   profile_name?: string | null;
   late_profile_id?: string | null;
   social_media_account_id?: string | null;
-  profile_metadata?: Record<string, any> | null;
-  [key: string]: any;
+  profile_metadata?: Record<string, unknown> | null;
 }
 
 /**

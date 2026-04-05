@@ -5,10 +5,11 @@ import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 
 import { Button } from '@/components/ui/button';
-import { useCreatePostsStore, useCreateSourcesStore } from '@/store';
+import { useCreatePostsStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslations } from 'next-intl';
-import { Trash2, ChevronLeft, ChevronRight, History, FolderPlus, PenLine } from 'lucide-react';
+import { Trash2, ChevronLeft, ChevronRight, History, FolderPlus } from 'lucide-react';
+import { memo } from 'react';
 import CreatorHubIcon from '@/components/shared/CreatorHubIcon';
 import { PlatformIcon } from '@/components/shared/PlatformIcon';
 import { getPlatformColors } from '@/lib/constants/platformColors';
@@ -26,7 +27,7 @@ const QUICK_PLATFORMS = [
   { id: 'LinkedIn', label: 'LinkedIn' },
 ]
 
-function EmptyStateInteractive({ onOpenSources }: { onOpenSources?: () => void }) {
+const EmptyStateInteractive = memo(function EmptyStateInteractive({ onOpenSources }: { onOpenSources?: () => void }) {
   const t = useTranslations('CreatePage.createSection.postPanel');
   const handlePostCreate = useCreatePostsStore(state => state.handlePostCreate);
 
@@ -79,9 +80,9 @@ function EmptyStateInteractive({ onOpenSources }: { onOpenSources?: () => void }
       </Button>
     </div>
   );
-}
+});
 
-export default function PostEditor({ onOpenSources }: { onOpenSources?: () => void } = {}) {
+export default memo(function PostEditor({ onOpenSources }: { onOpenSources?: () => void } = {}) {
     const t = useTranslations('CreatePage.createSection.postPanel');
     
 
@@ -102,7 +103,6 @@ export default function PostEditor({ onOpenSources }: { onOpenSources?: () => vo
         deletePostVersion: state.deletePostVersion
     })));
     
-    const savedSources = useCreateSourcesStore(state => state.savedSources);
 
     const currentPost = posts.find(p => p.id === selectedPostId);
     
@@ -118,7 +118,7 @@ export default function PostEditor({ onOpenSources }: { onOpenSources?: () => vo
             <TabsManager />
 
             {/* Editor Card */}
-            <Card className="bg-card border-border p-0 gap-0 rounded-[5px] flex-1 flex flex-col w-full overflow-hidden">
+            <Card className="bg-card border-border p-0 gap-0 rounded-xl flex-1 flex flex-col w-full overflow-hidden">
                 {selectedPostId === 0 || posts.length === 0 ? (
                     <EmptyStateInteractive onOpenSources={onOpenSources} />
 
@@ -126,7 +126,7 @@ export default function PostEditor({ onOpenSources }: { onOpenSources?: () => vo
                     <div className="flex-1 flex flex-col min-h-0 relative">
                         {/* --- UI VERSION CONTROL: HIỂN THỊ KHI CÓ > 1 VERSION --- */}
                         {hasVersions && (
-                            <div className="flex-shrink-0 flex items-center justify-between px-3 py-1.5 bg-background border-b border-border animate-in fade-in slide-in-from-top-1">
+                            <div className="shrink-0 flex items-center justify-between px-3 py-1.5 bg-background border-b border-border animate-in fade-in slide-in-from-top-1">
                                 <div className="flex items-center gap-2 text-xs text-primary">
                                     <History className="w-3.5 h-3.5" />
                                     <span>{t('versionHistory', { defaultMessage: 'Lịch sử chỉnh sửa AI' })}</span>
@@ -181,7 +181,7 @@ export default function PostEditor({ onOpenSources }: { onOpenSources?: () => vo
                         />
 
                         {/* MediaPreview + ActionBar - Fixed ở bottom, luôn visible */}
-                        <div className="flex-shrink-0 flex flex-col">
+                        <div className="shrink-0 flex flex-col">
                             <MediaPreview />
                             <ActionBar />
                         </div>
@@ -190,4 +190,4 @@ export default function PostEditor({ onOpenSources }: { onOpenSources?: () => vo
             </Card>
         </div>
     );
-}
+});
