@@ -84,17 +84,17 @@ export default function NicheChips({ value, onChange }: NicheChipsProps) {
     <div className="relative">
       {/* Left fade indicator */}
       {showLeftFade && (
-        <div className="absolute left-0 top-0 bottom-3 w-8 bg-gradient-to-r from-[#1E1E23] to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-3 w-8 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
       )}
       
       {/* Right fade indicator */}
       {showRightFade && (
-        <div className="absolute right-0 top-0 bottom-3 w-8 bg-gradient-to-l from-[#1E1E23] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-3 w-8 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
       )}
 
       <div
         ref={containerRef}
-        className="flex gap-2 overflow-x-auto pb-3 pr-2 relative scrollbar-thin scrollbar-thumb-primary/60 scrollbar-track-gray-800/50"
+        className="flex gap-2 overflow-x-auto pb-3 pr-2 relative scrollbar-thin scrollbar-thumb-primary/60 scrollbar-track-secondary/50"
       >
         {niches.map((niche) => {
           const isActive = value === niche.id;
@@ -108,7 +108,7 @@ export default function NicheChips({ value, onChange }: NicheChipsProps) {
                 flex-shrink-0 transition-all duration-200 whitespace-nowrap
                 ${isActive
                   ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20'
-                  : 'border-border text-muted-foreground hover:text-foreground hover:border-primary/30 hover:bg-white/5'
+                  : 'border-input bg-secondary/50 text-muted-foreground hover:text-foreground hover:border-primary/30 hover:bg-secondary'
                 }
               `}
             >

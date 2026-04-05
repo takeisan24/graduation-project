@@ -124,10 +124,10 @@ export default function StrategySelector({ onSelectFramework, selectedFramework,
 
   return (
     <>
-      <div ref={containerRef} className="space-y-6">
+      <div ref={containerRef} className="space-y-4">
         {/* Goal Selection */}
         <div>
-          <h3 className="text-sm font-semibold text-foreground mb-3">
+          <h3 className="text-sm font-semibold text-foreground mb-2">
             {t('goalTitle')}
           </h3>
           <GoalTabs value={selectedGoal} onChange={onSelectGoal} />
@@ -135,7 +135,7 @@ export default function StrategySelector({ onSelectFramework, selectedFramework,
 
         {/* Niche Selection */}
         <div>
-          <h3 className="text-sm font-semibold text-foreground mb-3">
+          <h3 className="text-sm font-semibold text-foreground mb-2">
             {t('nicheTitle')}
           </h3>
           <NicheChips value={selectedNiche} onChange={onSelectNiche} />
@@ -143,7 +143,7 @@ export default function StrategySelector({ onSelectFramework, selectedFramework,
 
         {/* Template Gallery */}
         <div>
-          <h3 className="text-sm font-semibold text-foreground mb-3">
+          <h3 className="text-sm font-semibold text-foreground mb-2">
             {t('templateTitle')}
           </h3>
           {isFiltering ? (

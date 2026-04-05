@@ -32,7 +32,7 @@ export default function TemplateCard({ framework, isSelected, onClick, onHover }
           hover:border-primary/50 hover:shadow-md hover:-translate-y-0.5
           ${isSelected 
             ? 'border-primary bg-primary/5 ring-1 ring-primary shadow-lg shadow-primary/20' 
-            : 'border-border bg-card hover:bg-card/80'
+            : 'border-input bg-secondary/30 hover:bg-secondary/60'
           }
         `}
       >

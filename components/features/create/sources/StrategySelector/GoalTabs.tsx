@@ -122,7 +122,7 @@ export default function GoalTabs({ value, onChange }: GoalTabsProps) {
             className="w-full overflow-x-auto scroll-smooth snap-x snap-mandatory py-1"
             style={{ 
               scrollbarWidth: 'thin',  // Firefox: thin scrollbar
-              scrollbarColor: 'var(--primary) rgba(42, 42, 48, 0.5)', // Firefox: thumb và track color
+              scrollbarColor: 'var(--primary) hsl(var(--secondary))', // Firefox: thumb và track color
             }}
         >
           {/* TabsList: inline-flex để content không bị co lại */}
@@ -141,12 +141,12 @@ export default function GoalTabs({ value, onChange }: GoalTabsProps) {
                   data-[state=active]:shadow-[0_0_15px_hsl(var(--primary)/0.2)]
                   
                   /* Inactive State */
-                  data-[state=inactive]:border-border
-                  data-[state=inactive]:bg-card
+                  data-[state=inactive]:border-input
+                  data-[state=inactive]:bg-secondary/50
                   data-[state=inactive]:text-muted-foreground
                   data-[state=inactive]:hover:bg-secondary
                   data-[state=inactive]:hover:text-foreground
-                  data-[state=inactive]:hover:border-border
+                  data-[state=inactive]:hover:border-primary/30
                 `}
               >
                 {t(`goals.${goal.slug}.label`, { defaultValue: goal.label })}
