@@ -96,11 +96,11 @@ export const useCreateSourcesStore = create<CreateSourcesState>((set) => ({
     const ctx = { selectedPlatforms, sourceType, idea, resourceUrl };
     const instructions = selectInstructions(ctx, selectedModel);
     const promptParts = buildPromptParts(ctx);
-    const platforms = selectedPlatforms.flatMap((p) => Array(p.count).fill(p.platform.toLowerCase());
+    const platforms = selectedPlatforms.flatMap((p) => Array(p.count).fill(p.platform.toLowerCase()));
 
     try {
       const { data: sessionData } = await supabaseClient.auth.getSession();
-      const accessToken = sessionData?.access_token;
+      const accessToken = sessionData?.session?.access_token;
 
       const response = await fetch('/api/ai/generate-from-source', {
         method: 'POST',
