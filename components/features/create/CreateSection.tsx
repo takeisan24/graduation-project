@@ -2,13 +2,14 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
-import { MessageSquare, X, ChevronDown, FolderOpen } from 'lucide-react';
+import { MessageSquare, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 import AIChatbox from './chat/AIChatbox';
 import SourcePanel from './sources/SourcePanel';
 import PostEditorWrapper from './editor/PostEditorWrapper';
 import OnboardingTour from './layout/OnboardingTour';
+import TopBarActions from './layout/TopBarActions';
 
 import { useNavigationStore, useCreateSourcesStore, useCreatePostsStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
@@ -117,47 +118,24 @@ export default function CreateSection() {
         {/* ─── Main content area ─── */}
         <div className="flex-1 min-w-0 flex flex-col h-full relative">
 
-          {/* Top bar: Sources dropdown toggle */}
-          <div className="hidden lg:flex items-center gap-2 px-4 py-2 border-b border-border/50 bg-card/30">
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2 text-xs"
-              onClick={() => setIsSourcesOpen(!isSourcesOpen)}
-            >
-              <FolderOpen className="h-3.5 w-3.5" />
-              {t('sources')}
-              {savedSources.length > 0 && (
-                <span className="ml-1 px-1.5 py-0.5 rounded-full bg-utc-royal/10 text-utc-royal text-[10px] font-semibold">
-                  {savedSources.length}
-                </span>
-              )}
-              <ChevronDown className={`h-3 w-3 transition-transform ${isSourcesOpen ? 'rotate-180' : ''}`} />
-            </Button>
+          {/* FIX S-004: Combined top bar with wizard breadcrumb (S-005: md: breakpoint) */}
+          <TopBarActions
+            isSourcesOpen={isSourcesOpen}
+            onToggleSources={() => setIsSourcesOpen(!isSourcesOpen)}
+            isAIChatOpen={isAIChatOpen}
+            onToggleChat={toggleChat}
+          />
 
-            {/* AI Chat toggle (desktop) */}
-            <div className="flex-1" />
-            <Button
-              variant={isAIChatOpen ? "default" : "outline"}
-              size="sm"
-              className={`gap-2 text-xs ${isAIChatOpen ? 'bg-gradient-to-r from-utc-royal to-utc-sky text-white' : ''}`}
-              onClick={toggleChat}
-            >
-              <MessageSquare className="h-3.5 w-3.5" />
-              {t('aiChat')}
-            </Button>
-          </div>
-
-          {/* Sources dropdown panel (within main content area) */}
+          {/* Sources dropdown panel */}
           {isSourcesOpen && (
             <>
               {!isAddingSource && (
                 <div
-                  className="hidden lg:block fixed inset-0 z-20"
+                  className="hidden md:block fixed inset-0 z-20"
                   onClick={() => setIsSourcesOpen(false)}
                 />
               )}
-              <div className={`hidden lg:block absolute left-0 right-0 top-[41px] z-30 border-b border-border/50 bg-card shadow-lg overflow-y-auto ${
+              <div className={`hidden md:block absolute left-0 right-0 top-[41px] z-30 border-b border-border/50 bg-card shadow-lg overflow-y-auto ${
                 isAddingSource ? 'max-h-[calc(100vh-120px)]' : 'max-h-[220px]'
               }`}>
                 <SourcePanel mode={isAddingSource ? 'form' : 'list'} />

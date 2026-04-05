@@ -39,3 +39,14 @@ export const PENDING_CHECK_INTERVAL_MS_OTHER = 10 * 1000; // 10 seconds for othe
  */
 export const PENDING_CHECK_INTERVAL_MS = PENDING_CHECK_INTERVAL_MS_OTHER; // Use faster interval for global checks
 
+/**
+ * Calendar status constants
+ */
+export const CALENDAR_STATUS = {
+  EMPTY: 'Trống',
+  SCHEDULED: 'scheduled',
+  POSTED: 'posted',
+  FAILED: 'failed',
+  PUBLISHING: 'publishing',
+} as const;
+

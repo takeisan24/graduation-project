@@ -67,10 +67,10 @@ export default function SourceModal() {
         else if (sourceType === 'text') {
             sourceValue = sourceTextInput.trim();
             if (!sourceValue) throw new Error(SOURCE_ERRORS.TEXT_REQUIRED);
-            sourceLabel = `Văn bản: ${sourceValue.substring(0, 50)}...`;
+            sourceLabel = `${t('textSource')}: ${sourceValue.substring(0, 50)}...`;
         }
         else if (sourceType === 'pdf' && selectedFile) {
-            setStatusMessage(`Đang tải lên file ${selectedFile.name}...`);
+            setStatusMessage(t('errors.uploadingFile', { fileName: selectedFile.name }));
             const formData = new FormData();
             formData.append('file', selectedFile);
             const { data: { session } } = await supabaseClient.auth.getSession();
@@ -80,7 +80,7 @@ export default function SourceModal() {
                 body: formData 
             });
             const result = await response.json();
-            if (!response.ok) throw new Error(result.details || result.error || 'Upload file PDF thất bại.');
+            if (!response.ok) throw new Error(result.details || result.error || t('errors.uploadPdfFailed'));
             
             sourceValue = result.fileUri;
             sourceLabel = result.fileName;
@@ -105,7 +105,7 @@ export default function SourceModal() {
         // 3. Hiển thị thông báo thành công
         // Note: SourcePanel.tsx cũng show toast khi add source, nhưng đây là 2 flow khác nhau
         // (SourceModal là modal riêng, SourcePanel là wizard flow), nên không duplicate
-        toast.success(`Đã thêm nguồn "${sourceType}" thành công!`);
+        toast.success(t('sourceAddSuccess', { type: sourceType }));
         
         // 4. XÓA BỎ LỆNH GỌI openCreateFromSourceModal(...)
 
@@ -136,7 +136,7 @@ export default function SourceModal() {
             <div className="bg-card border border-border rounded-2xl w-[1000px] max-w-[95vw]">
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-                    <h2 className="text-lg font-semibold text-foreground">Chỉnh sửa nguồn</h2>
+                    <h2 className="text-lg font-semibold text-foreground">{t('editSource')}</h2>
                     <button onClick={() => setIsSourceModalOpen(false)}>
                         <CloseIcon className="w-5 h-5" />
                     </button>
@@ -165,30 +165,30 @@ export default function SourceModal() {
                     {!isFileUpload ? (
                         <>
                             <div className="text-foreground">
-                                {selectedSourceType === 'text' ? 'Văn bản' : 'URL'}
+                                {selectedSourceType === 'text' ? t('sourceTypeLabel.fromText') : 'URL'}
                             </div>
                             {selectedSourceType === 'text' ? (
-                                <Textarea 
-                                placeholder={t('sourceInputPlaceholder.fromText')} 
-                                className="bg-card border-border h-40" 
+                                <Textarea
+                                placeholder={t('sourceInputPlaceholder.fromText')}
+                                className="bg-card border-border h-40"
                                 value={sourceTextInput} onChange={(e) => setSourceTextInput(e.target.value)} />
                             ) : (
-                                <Input 
+                                <Input
                                 placeholder={
-                                selectedSourceType === 'article' ? 'Dán URL bài viết...' :
-                                selectedSourceType === 'youtube' ? 'Dán URL YouTube...' :
-                                selectedSourceType === 'tiktok' ? 'Dán URL TikTok...'
-                                : 'Dán URL nguồn...'
-                              }
-                              className="bg-card border-border"
-                                value={sourceUrlInput} 
+                                  selectedSourceType === 'article' ? t('sourceInputPlaceholder.fromArticle') :
+                                  selectedSourceType === 'youtube' ? t('sourceInputPlaceholder.fromYoutube') :
+                                  selectedSourceType === 'tiktok' ? t('sourceInputPlaceholder.fromTiktok')
+                                  : t('sourceInputPlaceholder.fromSource')
+                                }
+                                className="bg-card border-border"
+                                value={sourceUrlInput}
                                 onChange={(e) => setSourceUrlInput(e.target.value)} />
                             )}
                         </>
                     ) : (
                         <>
-                            <div className="text-foreground">Tải lên tệp tin</div>
-                            <div 
+                            <div className="text-foreground">{t('fileLabel')}</div>
+                            <div
                                 className="border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-border"
                                 onClick={() => fileInputRef.current?.click()}
                             >
@@ -215,19 +215,18 @@ export default function SourceModal() {
                               checked={shouldSaveSource}
                               onChange={(e) => setShouldSaveSource(e.target.checked)}
                             />
-                            <span>Lưu nguồn?</span>
+                            <span>{t('saveCheckbox')}</span>
                           </label>
                           <details className="text-foreground/90">
-                            <summary className="cursor-pointer select-none">Cài đặt nâng cao</summary>
-                            <div className="mt-2 text-sm text-muted-foreground">Chưa có cài đặt bổ sung.</div>
-            
+                            <summary className="cursor-pointer select-none">{t('advancedOptions')}</summary>
+                            <div className="mt-2 text-sm text-muted-foreground">{t('mockOptionsText')}</div>
                           </details>
                           <label htmlFor="advanced-instructions" className="block text-foreground mb-2">
-                        Chi tiết yêu cầu cho AI:
+                        {t('chatRequestLabel')}
                       </label>
                       <Textarea
                         id="advanced-instructions"
-                        placeholder="Ví dụ: 'Tạo bài đăng với giọng văn vui vẻ, tập trung vào lợi ích X, và kêu gọi hành động 'Tìm hiểu thêm'...' hoặc 'Phân tích điểm mạnh, điểm yếu của nguồn.'..."
+                        placeholder={t('chatPlaceholder')}
                         className="bg-card border-border h-32 mb-4 placeholder:text-muted-foreground"
                         value={advancedInstructions}
                         onChange={(e) => setAdvancedInstructions(e.target.value)}

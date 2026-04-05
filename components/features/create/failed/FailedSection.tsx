@@ -9,7 +9,7 @@ import { usePostFilters } from "@/hooks/usePostFilters"
 import { useFilteredPosts } from "@/hooks/useFilteredPosts"
 import { FilterBar } from "@/components/shared/filters/FilterBar"
 import { RetryDetailModal } from "./RetryDetailModal"
-import { ConfirmDeleteFailedPostModal } from "./ConfirmDeleteFailedPostModal"
+import ConfirmModal from "@/components/shared/ConfirmModal"
 import { LoadingModal, SuccessModal } from "./GenericStatusModals"
 import { FailedPost } from "@/store/shared/types"
 import { FileX, XCircle } from "lucide-react"
@@ -18,6 +18,7 @@ import PostCard from '../shared/PostCard'
 
 export default function FailedSection() {
   const t = useTranslations('CreatePage.failed')
+  const tFailed = useTranslations('CreatePage.failedSection')
   const tHeaders = useTranslations('CreatePage.sectionHeaders')
   const tCard = useTranslations('CreatePage.postCard')
   
@@ -164,10 +165,15 @@ export default function FailedSection() {
         onClose={() => setRetryModalState(null)} 
       />
       
-      <ConfirmDeleteFailedPostModal
+      <ConfirmModal
         isOpen={!!deleteModalId}
         onClose={() => setDeleteModalId(null)}
         onConfirm={handleConfirmDelete}
+        title={tFailed('deleteModal.title')}
+        description={tFailed('deleteModal.message')}
+        confirmText={tFailed('deleteModal.yes')}
+        cancelText={tFailed('deleteModal.no')}
+        variant="danger"
       />
     </>
   )

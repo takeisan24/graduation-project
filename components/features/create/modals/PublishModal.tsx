@@ -319,7 +319,7 @@ export default function PublishModal() {
                               className="w-4 h-4 rounded border-border bg-background text-primary focus:ring-primary/50"
                             />
                             <label htmlFor="isShorts" className="text-sm text-muted-foreground cursor-pointer select-none">
-                              Đăng dưới hình thức Shorts
+                              {t('shortsLabel')}
                             </label>
                           </div>
                         )}
@@ -348,11 +348,11 @@ export default function PublishModal() {
                 </div>
                 {publishTime === 'pick a time' && (
                   <div className="mb-4">
-                    <div className="text-foreground mb-2">Chọn thời gian</div>
+                    <div className="text-foreground mb-2">{t('selectTime')}</div>
 
                     {/* Date picker */}
                     <div className="mb-3">
-                      <div className="text-muted-foreground text-sm mb-1">Ngày</div>
+                      <div className="text-muted-foreground text-sm mb-1">{t('dateLabel')}</div>
                       <div
                         className={`w-full bg-background text-foreground rounded-lg p-3 cursor-pointer border border-border ${showCalendar ? 'ring-2 ring-primary' : ''}`}
                         onClick={() => setShowCalendar(true)}
@@ -363,7 +363,7 @@ export default function PublishModal() {
                     
                     {/* Time picker - có thể edit trực tiếp */}
                     <div>
-                      <div className="text-muted-foreground text-sm mb-1">Giờ</div>
+                      <div className="text-muted-foreground text-sm mb-1">{t('timeLabel')}</div>
                       <div className="flex items-center gap-2 bg-background rounded-lg p-3 border border-border">
                         <select 
                           value={timeHour} 

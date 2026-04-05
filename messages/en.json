@@ -1,4 +1,4 @@
-﻿{
+{
   "Onboarding": {
     "of": "of",
     "steps": {
@@ -203,10 +203,26 @@
       }
     },
     "stats": {
-      "platforms": { "value": "8", "label": "Social Platforms", "trend": "TikTok, IG, YT..." },
-      "aiModels": { "value": "2", "label": "AI Providers", "trend": "Gemini, OpenAI GPT" },
-      "scheduling": { "value": "Auto", "label": "Post Scheduling", "trend": "Built-in Calendar" },
-      "multiplier": { "value": "1→N", "label": "Source → Posts", "trend": "Multi-version" }
+      "platforms": {
+        "value": "8",
+        "label": "Social Platforms",
+        "trend": "TikTok, IG, YT..."
+      },
+      "aiModels": {
+        "value": "2",
+        "label": "AI Providers",
+        "trend": "Gemini, OpenAI GPT"
+      },
+      "scheduling": {
+        "value": "Auto",
+        "label": "Post Scheduling",
+        "trend": "Built-in Calendar"
+      },
+      "multiplier": {
+        "value": "1→N",
+        "label": "Source → Posts",
+        "trend": "Multi-version"
+      }
     },
     "sectionLabels": {
       "features": "Features",
@@ -763,13 +779,34 @@
       "published": "Published"
     },
     "sectionHeaders": {
-      "create": { "title": "Create Post", "description": "Compose and generate content for social media" },
-      "calendar": { "title": "Calendar", "description": "Schedule and manage your posting timeline" },
-      "drafts": { "title": "Drafts", "description": "Continue working on your saved drafts" },
-      "published": { "title": "Published", "description": "Track your published content" },
-      "failed": { "title": "Failed", "description": "Review and retry failed posts" },
-      "api-dashboard": { "title": "Dashboard", "description": "Monitor API usage and analytics" },
-      "settings": { "title": "Social Accounts", "description": "Connect and manage your social media accounts" }
+      "create": {
+        "title": "Create Post",
+        "description": "Compose and generate content for social media"
+      },
+      "calendar": {
+        "title": "Calendar",
+        "description": "Schedule and manage your posting timeline"
+      },
+      "drafts": {
+        "title": "Drafts",
+        "description": "Continue working on your saved drafts"
+      },
+      "published": {
+        "title": "Published",
+        "description": "Track your published content"
+      },
+      "failed": {
+        "title": "Failed",
+        "description": "Review and retry failed posts"
+      },
+      "api-dashboard": {
+        "title": "Dashboard",
+        "description": "Monitor API usage and analytics"
+      },
+      "settings": {
+        "title": "Social Accounts",
+        "description": "Connect and manage your social media accounts"
+      }
     },
     "topBar": {
       "toggleTheme": "Toggle theme",
@@ -1041,7 +1078,10 @@
           "uploadPdfFailed": "Failed to upload PDF file.",
           "pleaseProvideData": "Please provide data for selected source.",
           "errorOccurred": "An error occurred."
-        }
+        },
+        "editSource": "Edit Source",
+        "textSource": "Text",
+        "saveCheckbox": "Save source?"
       },
       "strategySelector": {
         "title": "Choose Content Strategy",
@@ -1285,7 +1325,16 @@
           "example2": "Rewrite with more professional tone",
           "example3": "Generate 5 relevant hashtags for this post",
           "hint": "💡 Note: AI Chat will automatically close when you close all post tabs."
-        }
+        },
+        "offlineError": "No internet connection. Please try again.",
+        "copyFailed": "Unable to copy. Please try again.",
+        "charLimitExceeded": "Character limit exceeded.",
+        "emptyContentWarning": "Content is empty. Please enter content first.",
+        "retry": "Retry",
+        "clearChatTitle": "Clear conversation?",
+        "clearChatDescription": "All chat history with AI will be deleted. This action cannot be undone.",
+        "clearChatConfirm": "Delete",
+        "clearChatCancel": "Cancel"
       },
       "actionBar": {
         "addImage": "Add image",
@@ -1303,7 +1352,20 @@
           "save": "Save this post as draft for later use",
           "publish": "Publish to your social media channels"
         },
-        "mediaLibrary": "Media Library"
+        "mediaLibrary": "Media Library",
+        "formatTitle": "Automatically format your post to look better",
+        "formatting": "Formatting...",
+        "format": "Format",
+        "translateTitle": "Translate post",
+        "translating": "Translating...",
+        "translate": "Translate",
+        "selectTargetLanguage": "Select target language",
+        "translatePrompt": "Which language do you want to translate the post to?",
+        "vietnamese": "Vietnamese",
+        "cancel": "Cancel",
+        "translateNow": "Translate now",
+        "postsToCreate": "Posts to create",
+        "postsUnit": "posts"
       },
       "imageGenModal": {
         "title": "Generate Images with AI",
@@ -1371,7 +1433,10 @@
         "cancel": "Cancel",
         "publishNowButton": "Publish Now",
         "confirmSchedule": "Confirm Schedule",
-        "closeModal": "Close"
+        "closeModal": "Close",
+        "shortsLabel": "Post as Shorts",
+        "dateLabel": "Date",
+        "timeLabel": "Hour"
       },
       "mediaLibraryModal": {
         "selectPostFirst": "Please select a post before adding media.",
@@ -1394,6 +1459,18 @@
         "downloadError": "Cannot download file.",
         "download": "Download",
         "close": "Close"
+      },
+      "topBarActions": {
+        "sources": "Sources",
+        "aiChat": "AI Chat",
+        "wizard": {
+          "step1": "Add Source",
+          "step2": "Configure",
+          "step3": "Create",
+          "exit": "Exit",
+          "next": "Next",
+          "back": "Back"
+        }
       }
     },
     "calendarSection": {
@@ -1402,6 +1479,14 @@
       "week": "Week",
       "clearAll": "Clear all",
       "confirmClearAll": "Are you sure you want to delete all events on the calendar? This action cannot be undone.",
+      "zeroStateTitle": "Your calendar, canvas for your next creation",
+      "zeroStateDescription": "Drag platform icons (TikTok, Instagram, YouTube...) onto the day you want to schedule a post.",
+      "zeroStateCtaSchedule": "Schedule a new post",
+      "zeroStateCtaConnect": "Connect social accounts",
+      "zeroStateCtaConnectMore": "Connect more accounts",
+      "zeroStateAria": "Empty calendar. You have no events yet. Drag platform icons to start scheduling.",
+      "periodicEmpty": "This week has {count} open days — room for more content",
+      "periodicEmptyCta": "Schedule a post ↓",
       "posted": "Posted",
       "publishing": "Publishing...",
       "scheduled": "Scheduled",
@@ -1409,6 +1494,31 @@
       "empty": "Empty",
       "eventMoved": "Event position updated.",
       "addedSchedule": "Added schedule for {platform}.",
+      "addedScheduleAnnounce": "Added schedule for {platform}",
+      "addedScheduleFromCell": "Added schedule for {platform} on {date}",
+      "postStatusPosted": "{platform} posted successfully",
+      "postStatusFailed": "{platform} posting failed",
+      "syncing": "Syncing...",
+      "synced": "Synced",
+      "syncFailed": "Sync failed",
+      "syncedJustNow": "Just synced",
+      "syncedMinutesAgo": "Synced {n} min ago",
+      "offline": "Offline",
+      "platformIconTooltip": "Drag icon to day or press + on day to add",
+      "addToDay": "Add to this day",
+      "selectPlatform": "Select platform to add to calendar",
+      "pastDate": "Past date. Cannot add events.",
+      "noEventsOnDay": "No posts scheduled. Press Enter to add.",
+      "eventCountOnDay": "{count} posts: {platforms}.",
+      "ariaEventLabel": "{status} {platform} at {time}. Press Enter to view/edit, drag to move.",
+      "ariaDayWithEvents": "{date}. {count} posts: {platforms}.",
+      "ariaDayEmpty": "{date}. No posts scheduled. Press Enter to add.",
+      "ariaDayPast": "{date}. Past date. Cannot add events.",
+      "ariaToday": "{date}. Today. {count} posts.",
+      "ariaCalendarSection": "Calendar section. Use arrow keys to navigate between days.",
+      "ariaAddEvent": "Add scheduled post to this day",
+      "ariaSyncStatus": "Sync status: {status}",
+      "ariaPopup": "Event options. {platform} {time}. Actions: View or edit post, Delete event.",
       "addedMedia": "Added {count} media to post.",
       "eventStatus": {
         "published": "Published",
@@ -1427,14 +1537,8 @@
         "title": "Confirm Delete?",
         "message": "Are you sure you want to delete this event from the calendar?",
         "no": "No",
-        "delete": "Delete"
+        "yes": "Delete"
       }
-    },
-    "draftsSection": {
-      "title": "Drafts"
-    },
-    "publishedSection": {
-      "title": "Published Posts"
     },
     "failedSection": {
       "title": "Failed Posts",
@@ -1451,6 +1555,12 @@
         "cancel": "Cancel",
         "scheduleAgain": "Reschedule"
       }
+    },
+    "draftsSection": {
+      "title": "Drafts"
+    },
+    "publishedSection": {
+      "title": "Published Posts"
     },
     "videosSection": {
       "title": "Video Projects",
