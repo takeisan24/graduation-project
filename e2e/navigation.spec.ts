@@ -1,43 +1,44 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Navigation & Routing", () => {
-  test("should redirect root / to locale-prefixed page", async ({ page }) => {
+test.describe("Locale Routing", () => {
+  test("should redirect root / to a locale-prefixed page", async ({
+    page,
+  }) => {
     await page.goto("/");
-    await page.waitForTimeout(2000);
-
-    const url = page.url();
-    // Should be redirected to /en or /vi (locale prefix)
-    expect(url).toMatch(/\/(en|vi)(\/|$)/);
+    await page.waitForURL(/\/(en|vi)(\/|$)/);
+    expect(page.url()).toMatch(/\/(en|vi)(\/|$)/);
   });
 
-  test("should load /en locale correctly", async ({ page }) => {
+  test("should load /en locale with header", async ({ page }) => {
     await page.goto("/en");
-    await expect(page.locator("body")).toBeVisible();
-    const header = page.locator("header");
-    await expect(header).toBeVisible();
+    await page.waitForLoadState("networkidle");
+    await expect(page.locator("header")).toBeVisible();
   });
 
-  test("should load /vi locale correctly", async ({ page }) => {
+  test("should load /vi locale with header", async ({ page }) => {
     await page.goto("/vi");
-    await expect(page.locator("body")).toBeVisible();
-    const header = page.locator("header");
-    await expect(header).toBeVisible();
+    await page.waitForLoadState("networkidle");
+    await expect(page.locator("header")).toBeVisible();
   });
+});
 
-  test("should navigate from landing to sign in", async ({ page }) => {
+test.describe("Public Page Navigation", () => {
+  test("should navigate from landing to sign in via header link", async ({
+    page,
+  }) => {
     await page.goto("/en");
+    await page.waitForLoadState("networkidle");
 
     const signInLink = page.locator('header a[href*="signin"]').first();
-
-    if (await signInLink.isVisible()) {
-      await signInLink.click();
-      await page.waitForURL(/signin/);
-      expect(page.url()).toContain("signin");
-    }
+    await expect(signInLink).toBeVisible();
+    await signInLink.click();
+    await page.waitForURL(/signin/);
+    expect(page.url()).toContain("signin");
   });
 
   test("should navigate from sign in to sign up", async ({ page }) => {
     await page.goto("/en/signin");
+    await page.waitForLoadState("networkidle");
 
     const signUpLink = page.locator('a[href*="signup"]');
     await expect(signUpLink).toBeVisible();
@@ -48,6 +49,7 @@ test.describe("Navigation & Routing", () => {
 
   test("should navigate from sign up to sign in", async ({ page }) => {
     await page.goto("/en/signup");
+    await page.waitForLoadState("networkidle");
 
     const signInLink = page.locator('a[href*="signin"]');
     await expect(signInLink).toBeVisible();
@@ -56,54 +58,47 @@ test.describe("Navigation & Routing", () => {
     expect(page.url()).toContain("signin");
   });
 
-  test("should load pricing page from direct URL", async ({ page }) => {
+  test("should load pricing page with heading", async ({ page }) => {
     await page.goto("/en/pricing");
+    await page.waitForLoadState("networkidle");
     await expect(page.locator("h1")).toBeVisible();
   });
 
-  test("should load FAQ page", async ({ page }) => {
-    await page.goto("/en/faq");
-    await expect(page.locator("body")).toBeVisible();
-  });
-
-  test("should load terms page", async ({ page }) => {
+  test("should load terms page with content", async ({ page }) => {
     await page.goto("/en/terms");
-    await expect(page.locator("body")).toBeVisible();
+    await page.waitForLoadState("networkidle");
+    await expect(page.locator("h1")).toBeVisible();
   });
 
-  test("should load privacy page", async ({ page }) => {
+  test("should load privacy page with content", async ({ page }) => {
     await page.goto("/en/privacy");
-    await expect(page.locator("body")).toBeVisible();
-  });
-
-  test("should load buy-plan page", async ({ page }) => {
-    await page.goto("/en/buy-plan");
-    await expect(page.locator("body")).toBeVisible();
-  });
-
-  test("should load checkout page", async ({ page }) => {
-    await page.goto("/en/checkout");
-    await expect(page.locator("body")).toBeVisible();
-  });
-
-  test("should handle unknown section route", async ({ page }) => {
-    // Unknown routes go to [section] catch-all which requires auth
-    // Use domcontentloaded to avoid timeout from SSR auth checks
-    test.setTimeout(60000);
-    await page.goto("/en/this-page-does-not-exist", {
-      waitUntil: "domcontentloaded",
-      timeout: 45000,
-    });
-    // Page should load (either auth redirect or page render)
-    await expect(page.locator("body")).toBeVisible();
+    await page.waitForLoadState("networkidle");
+    await expect(page.locator("h1")).toBeVisible();
   });
 });
 
-test.describe("Language Switching", () => {
-  test("should have language switcher in header", async ({ page }) => {
-    await page.goto("/en");
+test.describe("Protected Route Redirects (unauthenticated)", () => {
+  const protectedRoutes = [
+    "create",
+    "settings",
+    "calendar",
+    "drafts",
+    "published",
+    "failed",
+    "videos",
+    "api-dashboard",
+    "profile",
+  ];
 
-    const header = page.locator("header");
-    await expect(header).toBeVisible();
-  });
+  for (const route of protectedRoutes) {
+    test(`/${route} should redirect unauthenticated user to signin`, async ({
+      page,
+    }) => {
+      await page.goto(`/en/${route}`, { waitUntil: "domcontentloaded" });
+
+      // Wait for the redirect to signin to happen
+      await page.waitForURL(/signin/, { timeout: 15000 });
+      expect(page.url()).toContain("signin");
+    });
+  }
 });

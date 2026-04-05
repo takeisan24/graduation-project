@@ -1,30 +1,20 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Social Connections - API Protection", () => {
-  test("GET /api/connections should require authentication", async ({
+test.describe("Connections - API Protection", () => {
+  test("GET /api/connections should return 401 without authentication", async ({
     request,
   }) => {
     const response = await request.get("/api/connections");
-    expect([401, 403, 500]).toContain(response.status());
+    expect(response.status()).toBe(401);
   });
 });
 
-test.describe("Social Connections - Settings Page", () => {
-  test.setTimeout(60000);
-
-  test("should handle unauthenticated access to /settings", async ({
+test.describe("Connections - Settings Page Unauthenticated", () => {
+  test("should redirect /settings to signin when not authenticated", async ({
     page,
   }) => {
-    await page.goto("/en/settings", {
-      waitUntil: "domcontentloaded",
-      timeout: 45000,
-    });
-
-    await page.waitForTimeout(5000);
-
-    const url = page.url();
-    // Should either redirect to signin or stay on settings page with auth state
-    const isValidState = url.includes("signin") || url.includes("settings");
-    expect(isValidState).toBe(true);
+    await page.goto("/en/settings", { waitUntil: "domcontentloaded" });
+    await page.waitForURL(/signin/, { timeout: 15000 });
+    expect(page.url()).toContain("signin");
   });
 });

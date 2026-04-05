@@ -1,11 +1,7 @@
 import { test, expect } from "@playwright/test";
 
-// Protected routes may take a while due to SSR + auth checks
-test.describe("Protected Dashboard Routes", () => {
-  // Increase timeout for dashboard tests since they involve auth redirects
-  test.setTimeout(60000);
-
-  const protectedRoutes = [
+test.describe("Dashboard - Unauthenticated Access", () => {
+  const dashboardRoutes = [
     "create",
     "settings",
     "calendar",
@@ -16,38 +12,23 @@ test.describe("Protected Dashboard Routes", () => {
     "api-dashboard",
   ];
 
-  for (const route of protectedRoutes) {
-    test(`should handle unauthenticated access to /${route}`, async ({
+  for (const route of dashboardRoutes) {
+    test(`/en/${route} should redirect to signin when not authenticated`, async ({
       page,
     }) => {
-      // Use domcontentloaded to avoid waiting for all resources
-      await page.goto(`/en/${route}`, { waitUntil: "domcontentloaded", timeout: 45000 });
-
-      // Wait for client-side auth check and potential redirect
-      await page.waitForTimeout(5000);
-
-      const url = page.url();
-      // Should either redirect to signin or stay on the page (with loading/auth state)
-      const isValidState =
-        url.includes("signin") ||
-        url.includes(route) ||
-        url.includes("create"); // some routes may redirect to /create first
-
-      expect(isValidState).toBe(true);
+      await page.goto(`/en/${route}`, { waitUntil: "domcontentloaded" });
+      await page.waitForURL(/signin/, { timeout: 15000 });
+      expect(page.url()).toContain("signin");
     });
   }
 });
 
-test.describe("Profile Page", () => {
-  test.setTimeout(60000);
-
-  test("should handle unauthenticated access to profile", async ({
+test.describe("Profile Page - Unauthenticated Access", () => {
+  test("should redirect to signin when not authenticated", async ({
     page,
   }) => {
-    await page.goto("/en/profile", { waitUntil: "domcontentloaded", timeout: 45000 });
-    await page.waitForTimeout(5000);
-
-    const url = page.url();
-    expect(url.includes("signin") || url.includes("profile")).toBe(true);
+    await page.goto("/en/profile", { waitUntil: "domcontentloaded" });
+    await page.waitForURL(/signin/, { timeout: 15000 });
+    expect(page.url()).toContain("signin");
   });
 });

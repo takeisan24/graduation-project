@@ -3,66 +3,60 @@ import { test, expect } from "@playwright/test";
 test.describe("Landing Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/en");
+    await page.waitForLoadState("networkidle");
   });
 
-  test("should load the landing page successfully", async ({ page }) => {
+  test("should have correct page title", async ({ page }) => {
     await expect(page).toHaveTitle(/CreatorHub/i);
   });
 
-  test("should display the header with logo and navigation", async ({
-    page,
-  }) => {
-    // Logo
+  test("should display header with logo", async ({ page }) => {
     const logo = page.locator("header").getByText("CreatorHub");
     await expect(logo).toBeVisible();
+  });
 
-    // Sign In and Get Started buttons visible on desktop
-    const header = page.locator("header");
-    await expect(header).toBeVisible();
+  test("should have sign in link in header", async ({ page }) => {
+    const signInLink = page.locator('header a[href*="signin"]').first();
+    await expect(signInLink).toBeVisible();
   });
 
   test("should display hero section", async ({ page }) => {
-    // Hero section should be present
     const heroSection = page.locator(".min-h-screen").first();
     await expect(heroSection).toBeVisible();
   });
 
-  test("should display How It Works section", async ({ page }) => {
-    // Scroll down to find content sections
-    await page.evaluate(() => window.scrollTo(0, 500));
-    // The page should have multiple sections
-    const sections = page.locator("section, [class*='py-']");
-    const count = await sections.count();
+  test("should display CTA buttons in hero", async ({ page }) => {
+    // There should be at least one call-to-action button/link in the hero area
+    const ctaButtons = page
+      .locator(".min-h-screen")
+      .first()
+      .locator('a, button')
+      .filter({ hasText: /.+/ });
+    const count = await ctaButtons.count();
     expect(count).toBeGreaterThan(0);
   });
 
-  test("should display Footer", async ({ page }) => {
+  test("should display footer", async ({ page }) => {
     const footer = page.locator("footer");
     await expect(footer).toBeVisible();
   });
 
-  test("should have working navigation links in header", async ({ page }) => {
-    // Check that Sign In link exists (desktop)
-    const signInLink = page.locator('header a[href*="signin"]').first();
-    // May be hidden on mobile, check it exists in DOM
-    await expect(signInLink).toHaveCount(1);
+  test("should have footer with CreatorHub branding", async ({ page }) => {
+    const footer = page.locator("footer");
+    await expect(footer).toContainText(/CreatorHub/i);
   });
 
-  test("should be responsive - mobile menu toggle", async ({ page }) => {
-    // Set mobile viewport
+  test("should be responsive - hamburger menu on mobile", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/en");
+    await page.waitForLoadState("networkidle");
 
-    // Hamburger button should be visible on mobile
-    const hamburgerButton = page.locator(
-      'button[aria-label="Toggle menu"]'
-    );
+    const hamburgerButton = page.locator('button[aria-label="Toggle menu"]');
     await expect(hamburgerButton).toBeVisible();
 
-    // Click to open mobile menu
     await hamburgerButton.click();
 
-    // Mobile menu panel should appear
+    // Mobile menu should appear after clicking hamburger
     const mobileMenu = page.locator(".md\\:hidden").last();
     await expect(mobileMenu).toBeVisible();
   });

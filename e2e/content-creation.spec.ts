@@ -1,114 +1,40 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Content Creation - Unauthenticated Access", () => {
-  test.setTimeout(60000);
-
-  test("should handle unauthenticated access to /create", async ({ page }) => {
-    await page.goto("/en/create", {
-      waitUntil: "domcontentloaded",
-      timeout: 45000,
-    });
-
-    await page.waitForTimeout(5000);
-
-    const url = page.url();
-    // Should either redirect to signin or stay on create page with auth state
-    const isValidState = url.includes("signin") || url.includes("create");
-    expect(isValidState).toBe(true);
-  });
-
-  test("should display create page UI elements when accessible", async ({
+  test("should redirect /create to signin when not authenticated", async ({
     page,
   }) => {
-    await page.goto("/en/create", {
-      waitUntil: "domcontentloaded",
-      timeout: 45000,
+    await page.goto("/en/create", { waitUntil: "domcontentloaded" });
+    await page.waitForURL(/signin/, { timeout: 15000 });
+    expect(page.url()).toContain("signin");
+  });
+});
+
+test.describe("Content Creation - API Protection", () => {
+  test("POST /api/ai/generate-text should return 401 without auth", async ({
+    request,
+  }) => {
+    const response = await request.post("/api/ai/generate-text", {
+      data: { prompt: "test" },
     });
-
-    await page.waitForTimeout(5000);
-
-    const url = page.url();
-
-    if (url.includes("create")) {
-      // Page loaded — verify body is visible at minimum
-      await expect(page.locator("body")).toBeVisible();
-    } else {
-      // Redirected to signin — that is expected for unauthenticated users
-      expect(url).toContain("signin");
-    }
+    expect(response.status()).toBe(401);
   });
 
-  test("should display source input options when page is accessible", async ({
-    page,
+  test("POST /api/ai/generate-image should return 401 without auth", async ({
+    request,
   }) => {
-    await page.goto("/en/create", {
-      waitUntil: "domcontentloaded",
-      timeout: 45000,
+    const response = await request.post("/api/ai/generate-image", {
+      data: { prompt: "test" },
     });
-
-    await page.waitForTimeout(5000);
-
-    const url = page.url();
-
-    if (url.includes("create")) {
-      // Look for source input tabs (URL, text, PDF)
-      const body = page.locator("body");
-      await expect(body).toBeVisible();
-
-      // Check for tab-like elements or input options
-      const hasUrlOption =
-        (await page.getByRole("tab", { name: /url/i }).isVisible().catch(() => false)) ||
-        (await page.getByText(/url/i).first().isVisible().catch(() => false));
-      const hasTextOption =
-        (await page.getByRole("tab", { name: /text/i }).isVisible().catch(() => false)) ||
-        (await page.getByText(/text/i).first().isVisible().catch(() => false));
-
-      // At least one input option should be visible
-      expect(hasUrlOption || hasTextOption).toBe(true);
-    } else {
-      expect(url).toContain("signin");
-    }
+    expect(response.status()).toBe(401);
   });
 
-  test("should display AI generation buttons when page is accessible", async ({
-    page,
+  test("POST /api/ai/generate-from-source should return 401 without auth", async ({
+    request,
   }) => {
-    await page.goto("/en/create", {
-      waitUntil: "domcontentloaded",
-      timeout: 45000,
+    const response = await request.post("/api/ai/generate-from-source", {
+      data: { source: "test" },
     });
-
-    await page.waitForTimeout(5000);
-
-    const url = page.url();
-
-    if (url.includes("create")) {
-      // Look for generate/AI buttons
-      const buttons = page.locator("button");
-      const count = await buttons.count();
-      expect(count).toBeGreaterThan(0);
-    } else {
-      expect(url).toContain("signin");
-    }
-  });
-
-  test("should display platform selection UI when page is accessible", async ({
-    page,
-  }) => {
-    await page.goto("/en/create", {
-      waitUntil: "domcontentloaded",
-      timeout: 45000,
-    });
-
-    await page.waitForTimeout(5000);
-
-    const url = page.url();
-
-    if (url.includes("create")) {
-      // Page should have some interactive elements for platform selection
-      await expect(page.locator("body")).toBeVisible();
-    } else {
-      expect(url).toContain("signin");
-    }
+    expect(response.status()).toBe(401);
   });
 });
