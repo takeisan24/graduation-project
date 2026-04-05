@@ -112,9 +112,9 @@ export default function CreateSection() {
       </div>
 
       {/* ═══ DESKTOP: Hybrid layout ═══ */}
-      <div className="flex h-full w-full relative">
+      <div className="flex h-full w-full relative overflow-hidden">
 
-        {/* ─── Main content area (editor + sources dropdown) ─── */}
+        {/* ─── Main content area ─── */}
         <div className="flex-1 min-w-0 flex flex-col h-full relative">
 
           {/* Top bar: Sources dropdown toggle */}
@@ -148,63 +148,50 @@ export default function CreateSection() {
             </Button>
           </div>
 
-          {/* Sources dropdown panel (overlay, not pushing content) */}
-          {isSourcesOpen && !isInWizard && (
-            <div
-              className="hidden lg:block fixed inset-0 z-20"
-              onClick={() => setIsSourcesOpen(false)}
-            />
-          )}
+          {/* Sources dropdown panel (within main content area) */}
           {isSourcesOpen && (
-            <div className={`hidden lg:block absolute left-0 right-0 top-[41px] z-30 border-b border-border/50 bg-card shadow-lg ${
-              isAddingSource ? 'max-h-[500px]' : 'max-h-[220px]'
-            } overflow-y-auto`}>
-              <div className="max-w-3xl mx-auto">
+            <>
+              {!isAddingSource && (
+                <div
+                  className="hidden lg:block fixed inset-0 z-20"
+                  onClick={() => setIsSourcesOpen(false)}
+                />
+              )}
+              <div className={`hidden lg:block absolute left-0 right-0 top-[41px] z-30 border-b border-border/50 bg-card shadow-lg overflow-y-auto ${
+                isAddingSource ? 'max-h-[calc(100vh-120px)]' : 'max-h-[220px]'
+              }`}>
                 <SourcePanel mode={isAddingSource ? 'form' : 'list'} />
               </div>
-            </div>
+            </>
           )}
 
-          {/* Editor area (spacious, takes remaining space) */}
-          <div className={`flex-1 min-h-0 relative ${isConfiguringPosts ? 'z-30' : 'z-10'}
+          {/* Editor area */}
+          <div className={`flex-1 min-h-0 relative z-10
             ${activeMobilePanel === 'editor' ? 'block' : 'hidden lg:block'}`}>
-            <div className={`relative ${isConfiguringPosts ? 'z-30' : 'z-0'} h-full w-full`}>
+            <div className="relative z-0 h-full w-full">
               <PostEditorWrapper mode={isConfiguringPosts ? 'configure' : 'normal'} onOpenSources={() => setIsSourcesOpen(true)} />
             </div>
-            {/* Wizard overlay */}
-            {isInWizard && !isConfiguringPosts && (
-              <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto select-none cursor-not-allowed animate-in fade-in duration-300" />
-            )}
           </div>
         </div>
 
         {/* ─── AI Chat slide-in panel (desktop) ─── */}
-        <div className={`hidden lg:flex flex-col transition-all duration-300 ease-in-out border-l border-border/50 bg-background ${
-          isAIChatOpen ? 'w-[380px]' : 'w-0'
+        <div className={`hidden lg:flex flex-col transition-all duration-300 ease-in-out border-l border-border/50 bg-background flex-shrink-0 ${
+          isAIChatOpen ? 'w-[min(380px,30vw)]' : 'w-0'
         } overflow-hidden`}>
-          {/* Chat header */}
-          <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/50 bg-card/50 flex-shrink-0">
-            <div className="flex items-center gap-2">
-              <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-utc-royal to-utc-sky flex items-center justify-center">
-                <MessageSquare className="h-3.5 w-3.5 text-white" />
-              </div>
-              <div>
-                <span className="text-sm font-semibold">AI Assistant</span>
-              </div>
+          {/* Chat header — compact, just close button */}
+          <div className="flex items-center justify-between px-3 py-1.5 border-b border-border/50 bg-card/50 flex-shrink-0">
+            <div className="flex items-center gap-1.5">
+              <MessageSquare className="h-3.5 w-3.5 text-primary" />
+              <span className="text-xs font-semibold text-foreground">AI</span>
             </div>
-            <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground" onClick={toggleChat}>
-              <X className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground" onClick={toggleChat}>
+              <X className="h-3.5 w-3.5" />
             </Button>
           </div>
           {/* Chat content */}
-          <div className="flex-1 min-h-0 w-[380px]">
+          <div className="flex-1 min-h-0 w-full overflow-hidden">
             <AIChatbox />
           </div>
-
-          {/* Wizard overlay */}
-          {isInWizard && (
-            <div className="absolute inset-0 bg-black/70 z-40 pointer-events-auto select-none cursor-not-allowed animate-in fade-in duration-300" />
-          )}
         </div>
 
         {/* ─── Mobile panels ─── */}
