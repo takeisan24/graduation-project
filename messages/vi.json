@@ -1311,7 +1311,16 @@
           "example2": "Viết lại với giọng văn chuyên nghiệp hơn",
           "example3": "Tạo 5 hashtag phù hợp cho bài này",
           "hint": "💡 Lưu ý: AI Chat sẽ tự động đóng khi bạn đóng hết các tab bài đăng."
-        }
+        },
+        "offlineError": "Không có kết nối mạng. Vui lòng thử lại.",
+        "copyFailed": "Không thể sao chép. Vui lòng thử lại.",
+        "charLimitExceeded": "Đã vượt quá giới hạn ký tự.",
+        "emptyContentWarning": "Nội dung trống. Vui lòng nhập nội dung trước.",
+        "retry": "Thử lại",
+        "clearChatTitle": "Xóa cuộc trò chuyện?",
+        "clearChatDescription": "Toàn bộ lịch sử chat với AI sẽ bị xóa. Hành động này không thể hoàn tác.",
+        "clearChatConfirm": "Xóa",
+        "clearChatCancel": "Hủy"
       },
       "actionBar": {
         "addImage": "Thêm ảnh",
@@ -1457,6 +1466,14 @@
       "week": "Tuần",
       "clearAll": "Xóa tất cả",
       "confirmClearAll": "Bạn có chắc muốn xóa tất cả sự kiện trên lịch không? Hành động này không thể hoàn tác.",
+      "zeroStateTitle": "Lịch của bạn, canvas sáng tạo tiếp theo",
+      "zeroStateDescription": "Kéo biểu tượng nền tảng (TikTok, Instagram, YouTube...) vào ngày bạn muốn đăng bài để lên lịch.",
+      "zeroStateCtaSchedule": "Lên lịch bài viết mới",
+      "zeroStateCtaConnect": "Kết nối tài khoản MXH",
+      "zeroStateCtaConnectMore": "Kết nối thêm tài khoản",
+      "zeroStateAria": "Lịch trống. Bạn chưa có sự kiện nào. Kéo biểu tượng nền tảng để bắt đầu lên lịch.",
+      "periodicEmpty": "Tuần này có {count} ngày trống — cơ hội để plan thêm content mới",
+      "periodicEmptyCta": "Lên lịch ↓",
       "posted": "Đã đăng",
       "publishing": "Đang đăng bài...",
       "scheduled": "Lên lịch",

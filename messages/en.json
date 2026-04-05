@@ -1325,7 +1325,16 @@
           "example2": "Rewrite with more professional tone",
           "example3": "Generate 5 relevant hashtags for this post",
           "hint": "💡 Note: AI Chat will automatically close when you close all post tabs."
-        }
+        },
+        "offlineError": "No internet connection. Please try again.",
+        "copyFailed": "Unable to copy. Please try again.",
+        "charLimitExceeded": "Character limit exceeded.",
+        "emptyContentWarning": "Content is empty. Please enter content first.",
+        "retry": "Retry",
+        "clearChatTitle": "Clear conversation?",
+        "clearChatDescription": "All chat history with AI will be deleted. This action cannot be undone.",
+        "clearChatConfirm": "Delete",
+        "clearChatCancel": "Cancel"
       },
       "actionBar": {
         "addImage": "Add image",
@@ -1470,6 +1479,14 @@
       "week": "Week",
       "clearAll": "Clear all",
       "confirmClearAll": "Are you sure you want to delete all events on the calendar? This action cannot be undone.",
+      "zeroStateTitle": "Your calendar, canvas for your next creation",
+      "zeroStateDescription": "Drag platform icons (TikTok, Instagram, YouTube...) onto the day you want to schedule a post.",
+      "zeroStateCtaSchedule": "Schedule a new post",
+      "zeroStateCtaConnect": "Connect social accounts",
+      "zeroStateCtaConnectMore": "Connect more accounts",
+      "zeroStateAria": "Empty calendar. You have no events yet. Drag platform icons to start scheduling.",
+      "periodicEmpty": "This week has {count} open days — room for more content",
+      "periodicEmptyCta": "Schedule a post ↓",
       "posted": "Posted",
       "publishing": "Publishing...",
       "scheduled": "Scheduled",
