@@ -53,3 +53,6 @@ PROMPT.md
 .claude/
 CLAUDE.md
 CLAUDE.local.md.playwright-mcp/
+
+#Specs file
+specs/*
