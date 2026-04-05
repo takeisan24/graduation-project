@@ -65,7 +65,7 @@ export default function CalendarSection() {
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [calendarView, setCalendarView] = useState<"monthly" | "weekly">("monthly");
-    const [clickedDays, setClickedDays] = useState<Set<string>>(new Set());
+    const [, setClickedDays] = useState<Set<string>>(new Set());
     const [popup, setPopup] = useState<{ x: number; y: number; event: CalendarEvent; date: Date } | null>(null);
     const [eventToDelete, setEventToDelete] = useState<DeleteModalState>(null);
 
@@ -298,7 +298,7 @@ export default function CalendarSection() {
         const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
         const firstDayIndex = (firstDayOfMonth.getDay() + 6) % 7;
         const currentDay = new Date(currentYear, currentMonth, 1 - firstDayIndex);
-        return Array.from({ length: 42 }, (_, i) => {
+        return Array.from({ length: 42 }, () => {
             const cellDate = new Date(currentDay);
             currentDay.setDate(currentDay.getDate() + 1);
             return cellDate;
