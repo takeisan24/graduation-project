@@ -1,0 +1,89 @@
+# System Architecture
+
+## Objective
+
+CreatorHub is a thesis project that supports multi-platform content planning and
+ AI-assisted content creation inside a single web application.
+
+## Core Stack
+
+- Frontend: Next.js App Router, React, TypeScript, Tailwind CSS
+- State management: Zustand
+- Backend services: Next.js API routes
+- Persistence: Supabase PostgreSQL, Auth, Storage
+- AI integration: Google Gemini and OpenAI
+- Internationalization: next-intl
+
+## Main Layers
+
+### 1. Presentation layer
+
+- `app/[locale]`: routed pages for landing, auth, workspace, and profile flows
+- `components/features`: feature-specific UI modules
+- `components/shared` and `components/ui`: shared primitives and reusable UI
+
+### 2. Application state layer
+
+- `store/`: Zustand stores split by domain
+- Local UI state is handled inside feature components where persistence is not
+  required
+
+### 3. API layer
+
+- `app/api/**`: route handlers for auth, AI generation, draft management,
+  scheduling, file handling, usage tracking, and connected accounts
+- API routes validate inputs, enforce access control, and delegate business
+  logic to services
+
+### 4. Domain service layer
+
+- `lib/services/ai`: AI orchestration, generation, extraction, assistant logic
+- `lib/services/db`: data access for projects, drafts, profiles, accounts, chat
+- `lib/services/posts`: scheduling and post lifecycle helpers
+- `lib/services/storage`: upload and storage helpers
+
+### 5. Integration layer
+
+- `lib/ai/providers`: provider abstraction for Gemini and OpenAI
+- `lib/auth`, `lib/supabase*`: authentication and client setup
+- `lib/cache`, `lib/middleware`: infrastructure helpers
+
+## Feature Modules
+
+### Create workspace
+
+Handles source input, strategy selection, content generation, draft editing,
+modal flows, and media preview.
+
+### Calendar planning
+
+Provides a visual schedule surface for content planning, status display,
+re-scheduling, and drag-and-drop interactions.
+
+### Draft lifecycle
+
+Manages draft lists, editing access, published states, and failed post views.
+
+### AI assistant
+
+Supports iterative content refinement through chat and generation actions tied
+to project and draft context.
+
+## Data Flow
+
+1. User provides source input such as topic, URL, text, or PDF
+2. API routes normalize and validate the request
+3. Service layer extracts context and builds AI prompts
+4. AI provider returns generated output
+5. Drafts, chat history, files, and schedule data are persisted in Supabase
+6. UI modules read and update the state through stores and API responses
+
+## Thesis Scope Emphasis
+
+The project centers on two main thesis objectives:
+
+- AI-assisted content ideation and generation
+- Visual planning and organization of multi-platform content
+
+Commercial SaaS concerns such as billing or monetization are intentionally kept
+outside the thesis-facing narrative.

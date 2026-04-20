@@ -1,0 +1,66 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (keep .env.example for documentation)
+.env.local
+.env.product
+.env.production
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+#vscode_log
+debug.log
+
+#vscode_settings
+settings.json
+.vscode/
+
+#md_file
+*.md
+!README.md
+!docs/
+!docs/**
+!specs/**/*.md
+*.rar
+VuTuanAnh_CNTT4_DeCuongDATN.docx
+landing-page.png
+
+#Copilot insturctions
+.github
+
+# Prompt files
+PROMPT.md
+/prompt_images
+
+# Agent files
+.agent
+
+# AI tools config
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.omc/
+.playwright-mcp/
+
+#Specs file
+specs/*
