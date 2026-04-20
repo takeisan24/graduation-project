@@ -19,7 +19,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
-import { Sun, Moon, LogOut, ChevronRight, CheckCircle2, Menu } from "lucide-react"
+import { Sun, Moon, LogOut, ChevronRight, CheckCircle2, Link2, Menu, Settings, UserCircle2 } from "lucide-react"
 import { useRouter } from "@/i18n/navigation"
 
 interface TopBarProps {
@@ -117,6 +117,19 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
                 <p className="text-sm font-medium">{user?.user_metadata?.name || user?.email}</p>
                 <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
               </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => router.push("/profile")}>
+                <UserCircle2 className="mr-2 h-4 w-4" />
+                {t("breadcrumb.profile" as any)}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/connections")}>
+                <Link2 className="mr-2 h-4 w-4" />
+                {t("breadcrumb.connections" as any)}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/settings")}>
+                <Settings className="mr-2 h-4 w-4" />
+                {t("breadcrumb.settings" as any)}
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive">
                 <LogOut className="h-4 w-4 mr-2" />

@@ -748,8 +748,9 @@
       "published": "Bài đã đăng",
       "failed": "Bài đăng thất bại",
       "account": "TÀI KHOẢN",
-      "apiDashboard": "Phân tích hệ thống",
-      "settings": "Trung tâm tích hợp",
+      "apiDashboard": "Trung tâm vận hành",
+      "connections": "Kết nối nền tảng",
+      "settings": "Cài đặt hệ thống",
       "logout": "Đăng xuất",
       "signOutSuccess": "Đăng xuất thành công!",
       "signOutRedirect": "Đang chuyển đến trang đăng nhập...",
@@ -764,9 +765,16 @@
       "language": "Ngôn ngữ"
     },
     "postCard": {
+      "draft": "Bản nháp",
       "edit": "Chỉnh sửa",
       "delete": "Xóa",
       "retry": "Thử lại",
+      "failed": "Lỗi đăng",
+      "viewDetails": "Xem chi tiết",
+      "openLink": "Mở liên kết",
+      "deleteTitle": "Xóa bài đăng này?",
+      "deleteDescription": "Bài sẽ bị xóa khỏi danh sách hiện tại sau khi bạn xác nhận.",
+      "cancel": "Hủy",
       "noContent": "Chưa có nội dung",
       "loadMore": "Tải thêm",
       "emptyDrafts": "Chưa có bản nháp nào",
@@ -799,13 +807,21 @@
         "title": "Thất bại",
         "description": "Xem lại và thử lại các bài đăng lỗi"
       },
-      "api-dashboard": {
-        "title": "Phân tích hệ thống",
+      "operations": {
+        "title": "Trung tâm vận hành",
         "description": "Theo dõi vận hành nội dung, kết nối nền tảng và trạng thái pipeline"
       },
-      "settings": {
-        "title": "Trung tâm tích hợp MXH",
+      "connections": {
+        "title": "Kết nối nền tảng",
         "description": "Kết nối, theo dõi và quản lý các tài khoản mạng xã hội phục vụ pipeline nội dung"
+      },
+      "settings": {
+        "title": "Cài đặt hệ thống",
+        "description": "Quản lý tuỳ chọn trải nghiệm, hành vi ứng dụng và các thiết lập hệ thống cốt lõi"
+      },
+      "profile": {
+        "title": "Hồ sơ người dùng",
+        "description": "Cập nhật thông tin cá nhân, email đăng nhập và các phương thức xác thực"
       }
     },
     "topBar": {
@@ -819,12 +835,14 @@
         "drafts": "Bản nháp",
         "published": "Đã đăng",
         "failed": "Thất bại",
-        "api-dashboard": "Phân tích hệ thống",
-        "settings": "Trung tâm tích hợp"
+        "operations": "Trung tâm vận hành",
+        "connections": "Kết nối nền tảng",
+        "settings": "Cài đặt hệ thống",
+        "profile": "Hồ sơ người dùng"
       }
     },
     "apiDashboard": {
-      "title": "Phân tích hệ thống",
+      "title": "Trung tâm vận hành",
       "subtitle": "Tổng quan vận hành của quy trình tạo nội dung và xuất bản đa nền tảng",
       "overview": "Tổng quan",
       "analytics": "Phân tích",
@@ -903,8 +921,8 @@
       "retry": "Thử lại",
       "delete": "Xóa"
     },
-    "settings": {
-      "title": "Trung tâm tích hợp MXH",
+    "connections": {
+      "title": "Kết nối nền tảng",
       "description": "Theo dõi các kết nối mạng xã hội và trạng thái đồng bộ của hệ thống.",
       "loading": "Đang tải danh sách kết nối...",
       "connecting": "Đang kết nối tài khoản mạng xã hội, vui lòng đợi...",
@@ -933,6 +951,8 @@
       },
       "disconnect": "Ngắt kết nối",
       "disconnecting": "Đang ngắt...",
+      "previewConnectSuccess": "Đã mô phỏng kết nối {platform}.",
+      "previewDisconnectSuccess": "Đã gỡ kết nối demo khỏi danh sách.",
       "socialConnections": "Danh mục tích hợp",
       "socialConnectionsDesc": "Kết nối thêm các nền tảng để mở rộng phạm vi xuất bản và demo hệ thống.",
       "connected": "Đã kết nối",
@@ -950,19 +970,57 @@
       "connect": "Kết nối",
       "connectingBtn": "Đang kết nối..."
     },
+    "systemSettings": {
+      "appearanceTitle": "Giao diện hiển thị",
+      "appearanceDesc": "Điều chỉnh theme hệ thống để phù hợp với môi trường trình diễn và thao tác hằng ngày.",
+      "workspaceTitle": "Không gian làm việc",
+      "workspaceDesc": "Các tùy chọn liên quan đến trải nghiệm sử dụng và trạng thái onboarding của người dùng.",
+      "accountTitle": "Điều hướng tài khoản",
+      "accountDesc": "Các thông tin nhạy cảm như email, avatar và phương thức đăng nhập được quản lý ở Profile và Connections.",
+      "light": "Sáng",
+      "dark": "Tối",
+      "resetTour": "Chạy lại onboarding",
+      "openProfile": "Mở hồ sơ",
+      "openConnections": "Mở kết nối",
+      "statusTitle": "Trạng thái hệ thống hiện tại",
+      "currentTheme": "Theme đang dùng",
+      "currentLocale": "Ngôn ngữ hiện tại",
+      "modeLabel": "Chế độ",
+      "modeValue": "Vận hành nội dung",
+      "tourResetSuccess": "Đã đặt lại onboarding để người dùng có thể xem lại từ đầu"
+    },
     "userProfile": {
       "title": "Hồ sơ người dùng",
-      "tabs": {
-        "profile": "Thông tin cá nhân",
-        "history": "Lịch sử giao dịch"
-      },
       "basicInfo": {
         "title": "Thông tin cơ bản",
         "description": "Quản lý thông tin hiển thị của bạn",
         "email": "Email",
         "displayName": "Tên hiển thị",
         "avatarUrl": "Avatar URL",
-        "save": "Lưu thay đổi"
+        "save": "Lưu thay đổi",
+        "noDisplayName": "Chưa đặt tên hiển thị"
+      },
+      "status": {
+        "title": "Trạng thái tài khoản",
+        "description": "Tài khoản đã xác thực và sẵn sàng sử dụng các tính năng quản lý nội dung."
+      },
+      "emailSection": {
+        "title": "Email đăng nhập",
+        "description": "Đổi email đang sử dụng để đăng nhập vào hệ thống.",
+        "newEmail": "Email mới",
+        "hint": "Khi thay đổi email, hệ thống sẽ gửi một bước xác nhận tới địa chỉ mới trước khi cập nhật hoàn tất.",
+        "save": "Cập nhật email"
+      },
+      "loginMethods": {
+        "title": "Phương thức đăng nhập",
+        "description": "Liên kết thêm nhà cung cấp đăng nhập để người dùng có thể vào hệ thống linh hoạt hơn.",
+        "currentProviders": "Các phương thức hiện có",
+        "loading": "Đang tải danh sách phương thức...",
+        "connected": "Đã liên kết",
+        "notConnected": "Chưa liên kết",
+        "link": "Liên kết",
+        "unlink": "Gỡ liên kết",
+        "unlinkHint": "Bạn cần giữ lại ít nhất một phương thức đăng nhập hoạt động."
       },
       "appSettings": {
         "title": "Cài đặt ứng dụng",
@@ -971,15 +1029,24 @@
         "resetTourDesc": "Xem lại hướng dẫn sử dụng tính năng từ đầu",
         "resetTourBtn": "Reset Tour"
       },
-      "history": {
-        "title": "Lịch sử thanh toán",
-        "noOrders": "Chưa có giao dịch nào"
+      "systemProfile": {
+        "title": "Hồ sơ hệ thống",
+        "description": "Tóm tắt nhanh vai trò và phạm vi sử dụng của tài khoản trong hệ thống.",
+        "roleLabel": "Vai trò",
+        "roleValue": "Quản trị nội dung",
+        "focusLabel": "Trọng tâm sử dụng",
+        "focusValue": "Tạo nội dung, điều phối lịch đăng và quản lý tài khoản mạng xã hội."
       },
       "toast": {
-        "loadOrdersError": "Không thể tải lịch sử giao dịch",
         "updateSuccess": "Cập nhật thông tin thành công",
         "updateError": "Lỗi cập nhật",
-        "resetTourSuccess": "Đã đặt lại trạng thái Onboarding"
+        "resetTourSuccess": "Đã đặt lại trạng thái Onboarding",
+        "emailUpdateRequested": "Yêu cầu đổi email đã được gửi. Vui lòng kiểm tra hộp thư để xác nhận.",
+        "loadIdentitiesError": "Không thể tải danh sách phương thức đăng nhập",
+        "identityLinkStarted": "Đang kết nối phương thức {provider}",
+        "identityLinkError": "Không thể liên kết phương thức đăng nhập",
+        "identityUnlinked": "Đã gỡ liên kết phương thức đăng nhập",
+        "identityUnlinkError": "Không thể gỡ liên kết phương thức đăng nhập"
       }
     },
     "createSection": {
@@ -1658,7 +1725,16 @@
       "title": "Bản nháp"
     },
     "publishedSection": {
-      "title": "Bài đã đăng"
+      "title": "Bài đã đăng",
+      "detailDescription": "Xem lại nội dung đã xuất bản trước khi mở bài đăng thật trên nền tảng.",
+      "platformLabel": "Nền tảng",
+      "publishedAtLabel": "Thời điểm đăng",
+      "accountLabel": "Tài khoản",
+      "contentLabel": "Nội dung bài đăng",
+      "linkLabel": "Liên kết bài đăng",
+      "noLink": "Chưa có liên kết bài đăng.",
+      "openPost": "Mở bài đăng",
+      "close": "Đóng"
     },
     "videosSection": {
       "title": "Dự án Video",

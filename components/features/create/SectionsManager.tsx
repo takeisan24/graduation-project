@@ -11,15 +11,21 @@ const CalendarSection = dynamic(() => import("./calendar/CalendarSection"), { lo
 const DraftsSection = dynamic(() => import("./drafts/DraftsSection"), { loading: () => <SectionLoader /> })
 const PublishedSection = dynamic(() => import("./published/PublishedSection"), { loading: () => <SectionLoader /> })
 const FailedSection = dynamic(() => import("./failed/FailedSection"), { loading: () => <SectionLoader /> })
-const SettingsSection = dynamic(() => import("./settings/SettingsSection"), { loading: () => <SectionLoader /> })
-const ApiDashboardSection = dynamic(() => import("./api-dashboard/ApiDashboard"), { loading: () => <SectionLoader /> })
+const ConnectionsSection = dynamic(() => import("./connections/SettingsSection"), { loading: () => <SectionLoader /> })
+const SystemSettingsSection = dynamic(() => import("./settings/SystemSettingsSection"), { loading: () => <SectionLoader /> })
+const ProfileSection = dynamic(() => import("./profile/ProfileSection"), { loading: () => <SectionLoader /> })
+const OperationsSection = dynamic(() => import("./operations/ApiDashboard"), { loading: () => <SectionLoader /> })
 
 function SectionsManager() {
   const activeSection = useNavigationStore((state) => state.activeSection);
 
   switch (activeSection) {
+    case "connections":
+      return <ConnectionsSection />
     case "settings":
-      return <SettingsSection />
+      return <SystemSettingsSection />
+    case "profile":
+      return <ProfileSection />
     case "calendar":
       return <CalendarSection />
     case "drafts":
@@ -28,8 +34,8 @@ function SectionsManager() {
       return <PublishedSection />
     case "failed":
       return <FailedSection />
-    case "api-dashboard":
-      return <ApiDashboardSection />
+    case "operations":
+      return <OperationsSection />
     case "create":
     default:
       return <CreateSection />

@@ -748,8 +748,9 @@
       "published": "Published",
       "failed": "Failed",
       "account": "ACCOUNT",
-      "apiDashboard": "System Analytics",
-      "settings": "Integration Center",
+      "apiDashboard": "Operations Hub",
+      "connections": "Platform Connections",
+      "settings": "System Settings",
       "logout": "Log Out",
       "signOutSuccess": "Signed out successfully!",
       "signOutRedirect": "Redirecting to sign in...",
@@ -764,9 +765,16 @@
       "language": "Language"
     },
     "postCard": {
+      "draft": "Draft",
       "edit": "Edit",
       "delete": "Delete",
       "retry": "Retry",
+      "failed": "Failed",
+      "viewDetails": "View details",
+      "openLink": "Open link",
+      "deleteTitle": "Delete this post?",
+      "deleteDescription": "The post will be removed from the current list after you confirm.",
+      "cancel": "Cancel",
       "noContent": "No content yet",
       "loadMore": "Load more",
       "emptyDrafts": "No drafts yet",
@@ -799,13 +807,21 @@
         "title": "Failed",
         "description": "Review and retry failed posts"
       },
-      "api-dashboard": {
-        "title": "System Analytics",
+      "operations": {
+        "title": "Operations Hub",
         "description": "Monitor content operations, platform connections, and pipeline health"
       },
-      "settings": {
-        "title": "Social Integration Center",
+      "connections": {
+        "title": "Platform Connections",
         "description": "Connect, monitor, and manage social accounts that power the content pipeline"
+      },
+      "settings": {
+        "title": "System Settings",
+        "description": "Manage experience preferences, app behavior, and core system-level settings"
+      },
+      "profile": {
+        "title": "User Profile",
+        "description": "Update personal details, login email, and authentication methods"
       }
     },
     "topBar": {
@@ -819,12 +835,14 @@
         "drafts": "Drafts",
         "published": "Published",
         "failed": "Failed",
-        "api-dashboard": "System Analytics",
-        "settings": "Integration Center"
+        "operations": "Operations Hub",
+        "connections": "Platform Connections",
+        "settings": "System Settings",
+        "profile": "User Profile"
       }
     },
     "apiDashboard": {
-      "title": "System Analytics",
+      "title": "Operations Hub",
       "subtitle": "Operational overview of the multi-platform content workflow",
       "overview": "Overview",
       "analytics": "Analytics",
@@ -903,8 +921,8 @@
       "retry": "Retry",
       "delete": "Delete"
     },
-    "settings": {
-      "title": "Social Integration Center",
+    "connections": {
+      "title": "Platform Connections",
       "description": "Monitor social connections and integration readiness across the system.",
       "loading": "Loading connections...",
       "connecting": "Connecting social account, please wait...",
@@ -933,6 +951,8 @@
       },
       "disconnect": "Disconnect",
       "disconnecting": "Disconnecting...",
+      "previewConnectSuccess": "Mock-connected {platform}.",
+      "previewDisconnectSuccess": "Removed the demo connection from the list.",
       "socialConnections": "Integration catalog",
       "socialConnectionsDesc": "Connect more platforms to broaden publishing coverage and strengthen the demo.",
       "connected": "Connected",
@@ -950,19 +970,57 @@
       "connect": "Connect",
       "connectingBtn": "Connecting..."
     },
+    "systemSettings": {
+      "appearanceTitle": "Appearance",
+      "appearanceDesc": "Adjust the system theme so the workspace fits both demos and day-to-day usage.",
+      "workspaceTitle": "Workspace behavior",
+      "workspaceDesc": "Controls related to onboarding state and how the user experiences the app shell.",
+      "accountTitle": "Account navigation",
+      "accountDesc": "Sensitive account details such as email, avatar, and login methods are managed in Profile and Connections.",
+      "light": "Light",
+      "dark": "Dark",
+      "resetTour": "Restart onboarding",
+      "openProfile": "Open profile",
+      "openConnections": "Open connections",
+      "statusTitle": "Current system state",
+      "currentTheme": "Current theme",
+      "currentLocale": "Current locale",
+      "modeLabel": "Mode",
+      "modeValue": "Content operations",
+      "tourResetSuccess": "Onboarding was reset so the user can walk through it again"
+    },
     "userProfile": {
       "title": "User Profile",
-      "tabs": {
-        "profile": "Personal Information",
-        "history": "Transaction History"
-      },
       "basicInfo": {
         "title": "Basic Information",
         "description": "Manage your display information",
         "email": "Email",
         "displayName": "Display Name",
         "avatarUrl": "Avatar URL",
-        "save": "Save Changes"
+        "save": "Save Changes",
+        "noDisplayName": "No display name yet"
+      },
+      "status": {
+        "title": "Account status",
+        "description": "The account is verified and ready to use the content management workflow."
+      },
+      "emailSection": {
+        "title": "Login email",
+        "description": "Change the email currently used to sign in to the system.",
+        "newEmail": "New email",
+        "hint": "When you change your email, the system will send a confirmation step to the new address before finalizing the update.",
+        "save": "Update email"
+      },
+      "loginMethods": {
+        "title": "Login methods",
+        "description": "Link additional authentication providers so users can access the system more flexibly.",
+        "currentProviders": "Current providers",
+        "loading": "Loading providers...",
+        "connected": "Connected",
+        "notConnected": "Not connected",
+        "link": "Link account",
+        "unlink": "Unlink",
+        "unlinkHint": "You must keep at least one active sign-in method."
       },
       "appSettings": {
         "title": "App Settings",
@@ -971,15 +1029,24 @@
         "resetTourDesc": "Restart the feature walkthrough",
         "resetTourBtn": "Reset Tour"
       },
-      "history": {
-        "title": "Payment History",
-        "noOrders": "No transactions found"
+      "systemProfile": {
+        "title": "System profile",
+        "description": "A quick snapshot of the user's role and usage focus inside the system.",
+        "roleLabel": "Role",
+        "roleValue": "Content operator",
+        "focusLabel": "Usage focus",
+        "focusValue": "Content creation, schedule coordination, and social account management."
       },
       "toast": {
-        "loadOrdersError": "Failed to load transaction history",
         "updateSuccess": "Profile updated successfully",
         "updateError": "Update failed",
-        "resetTourSuccess": "Onboarding status reset"
+        "resetTourSuccess": "Onboarding status reset",
+        "emailUpdateRequested": "The email change request was sent. Please check your inbox to confirm it.",
+        "loadIdentitiesError": "Failed to load login methods",
+        "identityLinkStarted": "Starting {provider} account linking",
+        "identityLinkError": "Failed to link the login method",
+        "identityUnlinked": "Login method unlinked",
+        "identityUnlinkError": "Failed to unlink the login method"
       }
     },
     "createSection": {
@@ -1673,7 +1740,16 @@
       "title": "Drafts"
     },
     "publishedSection": {
-      "title": "Published Posts"
+      "title": "Published Posts",
+      "detailDescription": "Review the published content before opening the real post on the platform.",
+      "platformLabel": "Platform",
+      "publishedAtLabel": "Published at",
+      "accountLabel": "Account",
+      "contentLabel": "Post content",
+      "linkLabel": "Post link",
+      "noLink": "No published link available yet.",
+      "openPost": "Open post",
+      "close": "Close"
     },
     "videosSection": {
       "title": "Video Projects",

@@ -23,7 +23,7 @@ const QUICK_PLATFORMS = [
   { id: 'Instagram', label: 'Instagram' },
   { id: 'YouTube', label: 'YouTube' },
   { id: 'Facebook', label: 'Facebook' },
-  { id: 'Twitter', label: 'X (Twitter)' },
+  { id: 'X', label: 'X' },
   { id: 'LinkedIn', label: 'LinkedIn' },
 ]
 

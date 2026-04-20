@@ -10,11 +10,21 @@ import { BarChart3, CheckCircle2, FileText, Layers3, Link2, RadioTower, ShieldAl
 import { usePublishedPostsStore } from "@/store/published/publishedPageStore";
 import { useFailedPostsStore } from "@/store/failed/failedPageStore";
 import { useDraftsStore } from "@/store/drafts/draftsPageStore";
+import { useConnectionsStore } from "@/store";
 import { useConnectedAccounts } from "@/hooks/useConnectedAccounts";
 import { useShallow } from "zustand/react/shallow";
 import { format, formatDistanceToNow } from "date-fns";
 import { enUS, vi } from "date-fns/locale";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell, BarChart, Bar } from "recharts";
+import PreviewNotice from "../shared/PreviewNotice";
+import {
+  getCreatePreviewCopy,
+  getPreviewConnectedAccounts,
+  getPreviewDraftPosts,
+  getPreviewFailedPosts,
+  getPreviewPublishedPosts,
+  isCreatePreviewEnabled,
+} from "@/lib/mocks/createSectionPreview";
 
 type ActivityItem = {
   id: string;
@@ -24,6 +34,12 @@ type ActivityItem = {
   status: "success" | "warning" | "neutral";
 };
 
+type TimeResolvablePost = {
+  time?: string | null;
+  date?: string | null;
+  scheduledAt?: string | null;
+};
+
 const STATUS_COLORS = {
   drafts: "#f59e0b",
   published: "#10b981",
@@ -31,6 +47,25 @@ const STATUS_COLORS = {
 };
 
 const PLATFORM_COLORS = ["#2563eb", "#10b981", "#f59e0b", "#7c3aed", "#ef4444", "#06b6d4", "#0f766e", "#fb7185"];
+
+function getResolvedPostDate(post: TimeResolvablePost): Date | null {
+  const candidates = [
+    post.scheduledAt,
+    post.date && post.time ? `${post.date}T${post.time}` : null,
+    post.time,
+    post.date,
+  ];
+
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    const resolved = new Date(candidate);
+    if (!Number.isNaN(resolved.getTime())) {
+      return resolved;
+    }
+  }
+
+  return null;
+}
 
 export default function ApiDashboardSection() {
   const t = useTranslations("CreatePage.apiDashboard");
@@ -62,6 +97,7 @@ export default function ApiDashboardSection() {
     }))
   );
   const { accounts, loading: connectionsLoading } = useConnectedAccounts();
+  const hasLoadedConnectedAccounts = useConnectionsStore((state) => state.hasLoadedConnectedAccounts);
 
   useEffect(() => {
     if (!hasLoadedPublishedPosts) loadPublishedPosts();
@@ -70,6 +106,27 @@ export default function ApiDashboardSection() {
   }, [hasLoadedPublishedPosts, hasLoadedFailedPosts, hasLoadedDrafts, loadPublishedPosts, loadFailedPosts, loadDrafts]);
 
   const localeConfig = locale === "vi" ? vi : enUS;
+  const previewCopy = useMemo(() => getCreatePreviewCopy(locale), [locale]);
+  const previewDraftPosts = useMemo(() => getPreviewDraftPosts(), []);
+  const previewPublishedPosts = useMemo(() => getPreviewPublishedPosts(), []);
+  const previewFailedPosts = useMemo(() => getPreviewFailedPosts(), []);
+  const previewAccounts = useMemo(() => getPreviewConnectedAccounts(), []);
+  const showPreviewNotice =
+    isCreatePreviewEnabled() &&
+    hasLoadedDrafts &&
+    hasLoadedPublishedPosts &&
+    hasLoadedFailedPosts &&
+    hasLoadedConnectedAccounts &&
+    !connectionsLoading &&
+    draftPosts.length === 0 &&
+    publishedPosts.length === 0 &&
+    failedPosts.length === 0 &&
+    accounts.length === 0;
+
+  const displayDraftPosts = showPreviewNotice ? previewDraftPosts : draftPosts;
+  const displayPublishedPosts = showPreviewNotice ? previewPublishedPosts : publishedPosts;
+  const displayFailedPosts = showPreviewNotice ? previewFailedPosts : failedPosts;
+  const displayAccounts = showPreviewNotice ? previewAccounts : accounts;
 
   const {
     successRate,
@@ -81,9 +138,9 @@ export default function ApiDashboardSection() {
     recentActivity,
     connectedPlatforms,
   } = useMemo(() => {
-    const allOperationalPosts = [...draftPosts, ...publishedPosts, ...failedPosts];
-    const totalResolved = publishedPosts.length + failedPosts.length;
-    const successRatio = totalResolved > 0 ? Math.round((publishedPosts.length / totalResolved) * 100) : 100;
+    const allOperationalPosts = [...displayDraftPosts, ...displayPublishedPosts, ...displayFailedPosts];
+    const totalResolved = displayPublishedPosts.length + displayFailedPosts.length;
+    const successRatio = totalResolved > 0 ? Math.round((displayPublishedPosts.length / totalResolved) * 100) : 100;
 
     const platformCounts = new Map<string, number>();
     const platformSet = new Set<string>();
@@ -104,10 +161,10 @@ export default function ApiDashboardSection() {
 
     const dominant = distribution[0]?.name || t("noData");
     const readinessRaw =
-      Math.min(accounts.length * 16, 32) +
-      Math.min(draftPosts.length * 6, 24) +
-      Math.min(publishedPosts.length * 4, 24) +
-      (failedPosts.length === 0 ? 20 : Math.max(0, 20 - failedPosts.length * 5));
+      Math.min(displayAccounts.length * 16, 32) +
+      Math.min(displayDraftPosts.length * 6, 24) +
+      Math.min(displayPublishedPosts.length * 4, 24) +
+      (displayFailedPosts.length === 0 ? 20 : Math.max(0, 20 - displayFailedPosts.length * 5));
     const readiness = Math.max(0, Math.min(100, readinessRaw));
 
     const timeline = Array.from({ length: 7 }, (_, offset) => {
@@ -116,9 +173,18 @@ export default function ApiDashboardSection() {
       day.setDate(day.getDate() - (6 - offset));
       const key = format(day, "yyyy-MM-dd");
 
-      const drafts = draftPosts.filter((post) => post.time && format(new Date(post.time), "yyyy-MM-dd") === key).length;
-      const published = publishedPosts.filter((post) => post.time && format(new Date(post.time), "yyyy-MM-dd") === key).length;
-      const failed = failedPosts.filter((post) => post.time && format(new Date(post.time), "yyyy-MM-dd") === key).length;
+      const drafts = displayDraftPosts.filter((post) => {
+        const resolvedDate = getResolvedPostDate(post);
+        return resolvedDate ? format(resolvedDate, "yyyy-MM-dd") === key : false;
+      }).length;
+      const published = displayPublishedPosts.filter((post) => {
+        const resolvedDate = getResolvedPostDate(post);
+        return resolvedDate ? format(resolvedDate, "yyyy-MM-dd") === key : false;
+      }).length;
+      const failed = displayFailedPosts.filter((post) => {
+        const resolvedDate = getResolvedPostDate(post);
+        return resolvedDate ? format(resolvedDate, "yyyy-MM-dd") === key : false;
+      }).length;
 
       return {
         date: key,
@@ -130,21 +196,21 @@ export default function ApiDashboardSection() {
     });
 
     const activity: ActivityItem[] = [
-      ...publishedPosts.slice(0, 8).map((post) => ({
+      ...displayPublishedPosts.slice(0, 8).map((post) => ({
         id: `published-${post.id}`,
         title: t("activityPublished"),
         detail: `${post.platform} • ${post.content?.slice(0, 80) || t("activityNoContent")}`,
-        date: post.time ? new Date(post.time) : new Date(),
+        date: getResolvedPostDate(post) || new Date(),
         status: "success" as const,
       })),
-      ...failedPosts.slice(0, 8).map((post) => ({
+      ...displayFailedPosts.slice(0, 8).map((post) => ({
         id: `failed-${post.id}`,
         title: t("activityFailed"),
         detail: `${post.platform} • ${post.content?.slice(0, 80) || t("activityNoContent")}`,
-        date: post.time ? new Date(post.time) : new Date(),
+        date: getResolvedPostDate(post) || new Date(),
         status: "warning" as const,
       })),
-      ...accounts.slice(0, 4).map((account) => ({
+      ...displayAccounts.slice(0, 4).map((account) => ({
         id: `account-${account.id}`,
         title: t("activityConnected"),
         detail: `${account.platform || "Social"} • ${account.profile_name || account.profile_metadata?.username || "N/A"}`,
@@ -159,9 +225,9 @@ export default function ApiDashboardSection() {
       successRate: successRatio,
       platformDistribution: distribution,
       statusDistribution: [
-        { name: t("drafts"), value: draftPosts.length, color: STATUS_COLORS.drafts },
-        { name: t("published"), value: publishedPosts.length, color: STATUS_COLORS.published },
-        { name: t("failed"), value: failedPosts.length, color: STATUS_COLORS.failed },
+        { name: t("drafts"), value: displayDraftPosts.length, color: STATUS_COLORS.drafts },
+        { name: t("published"), value: displayPublishedPosts.length, color: STATUS_COLORS.published },
+        { name: t("failed"), value: displayFailedPosts.length, color: STATUS_COLORS.failed },
       ],
       activityTimeline: timeline,
       readinessScore: readiness,
@@ -169,18 +235,23 @@ export default function ApiDashboardSection() {
       recentActivity: activity,
       connectedPlatforms: platformSet.size,
     };
-  }, [accounts, draftPosts, failedPosts, publishedPosts, t]);
+  }, [displayAccounts, displayDraftPosts, displayFailedPosts, displayPublishedPosts, t]);
 
   const weeklyVolume = useMemo(() => activityTimeline.reduce((sum, day) => sum + day.total, 0), [activityTimeline]);
-  const totalManagedPosts = draftPosts.length + publishedPosts.length + failedPosts.length;
+  const totalManagedPosts = displayDraftPosts.length + displayPublishedPosts.length + displayFailedPosts.length;
 
   return (
     <div className="h-full w-full max-w-none overflow-y-auto py-2 lg:py-3">
       <SectionHeader
         icon={BarChart3}
-        title={tHeaders("api-dashboard.title")}
-        description={tHeaders("api-dashboard.description")}
+        title={tHeaders("operations.title")}
+        description={tHeaders("operations.description")}
       />
+
+      <div className="mx-auto w-full max-w-[1440px] px-4 pb-8 pt-4 sm:px-6 xl:px-8">
+      {showPreviewNotice ? (
+        <PreviewNotice badge={previewCopy.badge} description={previewCopy.emptyDescription} className="mb-4" />
+      ) : null}
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="mb-4 grid h-auto w-full grid-cols-3 gap-1 bg-card p-1 text-xs lg:mb-6 lg:text-sm">
@@ -196,7 +267,7 @@ export default function ApiDashboardSection() {
                 <CardDescription>{t("totalDrafts")}</CardDescription>
                 <CardTitle className="flex items-center gap-2 text-3xl">
                   <FileText className="h-5 w-5 text-amber-500" />
-                  {draftPosts.length}
+                  {displayDraftPosts.length}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -209,7 +280,7 @@ export default function ApiDashboardSection() {
                 <CardDescription>{t("published")}</CardDescription>
                 <CardTitle className="flex items-center gap-2 text-3xl">
                   <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-                  {publishedPosts.length}
+                  {displayPublishedPosts.length}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -222,7 +293,7 @@ export default function ApiDashboardSection() {
                 <CardDescription>{t("failed")}</CardDescription>
                 <CardTitle className="flex items-center gap-2 text-3xl">
                   <XCircle className="h-5 w-5 text-rose-500" />
-                  {failedPosts.length}
+                  {displayFailedPosts.length}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -235,12 +306,12 @@ export default function ApiDashboardSection() {
                 <CardDescription>{t("connectedAccounts")}</CardDescription>
                 <CardTitle className="flex items-center gap-2 text-3xl">
                   <Link2 className="h-5 w-5 text-sky-500" />
-                  {accounts.length}
+                  {displayAccounts.length}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  {connectionsLoading ? t("loading") : t("connectedPlatformsCount", { count: connectedPlatforms })}
+                  {connectionsLoading && !showPreviewNotice ? t("loading") : t("connectedPlatformsCount", { count: connectedPlatforms })}
                 </p>
               </CardContent>
             </Card>
@@ -294,7 +365,7 @@ export default function ApiDashboardSection() {
                       {t("pipelineHealth")}
                     </div>
                     <p className="mt-3 text-lg font-semibold text-foreground">
-                      {failedPosts.length === 0 ? t("pipelineStable") : t("pipelineNeedsAttention")}
+                      {displayFailedPosts.length === 0 ? t("pipelineStable") : t("pipelineNeedsAttention")}
                     </p>
                     <p className="mt-1 text-sm text-muted-foreground">{t("pipelineHealthHint")}</p>
                   </div>
@@ -313,15 +384,15 @@ export default function ApiDashboardSection() {
               <CardContent className="space-y-3">
                 <div className="rounded-2xl border border-border/70 bg-secondary/25 p-4">
                   <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t("focusDrafts")}</p>
-                  <p className="mt-2 text-sm leading-6 text-foreground">{t("focusDraftsDesc", { count: draftPosts.length })}</p>
+                  <p className="mt-2 text-sm leading-6 text-foreground">{t("focusDraftsDesc", { count: displayDraftPosts.length })}</p>
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-secondary/25 p-4">
                   <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t("focusConnections")}</p>
-                  <p className="mt-2 text-sm leading-6 text-foreground">{t("focusConnectionsDesc", { count: accounts.length })}</p>
+                  <p className="mt-2 text-sm leading-6 text-foreground">{t("focusConnectionsDesc", { count: displayAccounts.length })}</p>
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-secondary/25 p-4">
                   <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t("focusFailures")}</p>
-                  <p className="mt-2 text-sm leading-6 text-foreground">{t("focusFailuresDesc", { count: failedPosts.length })}</p>
+                  <p className="mt-2 text-sm leading-6 text-foreground">{t("focusFailuresDesc", { count: displayFailedPosts.length })}</p>
                 </div>
               </CardContent>
             </Card>
@@ -497,7 +568,7 @@ export default function ApiDashboardSection() {
                 <div className="rounded-2xl border border-border/70 bg-secondary/25 p-4">
                   <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t("nextFocus")}</p>
                   <p className="mt-2 text-sm leading-6 text-foreground">
-                    {failedPosts.length > 0 ? t("nextFocusFailed") : draftPosts.length > 0 ? t("nextFocusDrafts") : t("nextFocusHealthy")}
+                    {displayFailedPosts.length > 0 ? t("nextFocusFailed") : displayDraftPosts.length > 0 ? t("nextFocusDrafts") : t("nextFocusHealthy")}
                   </p>
                 </div>
                 <div className="rounded-2xl border border-border/70 bg-secondary/25 p-4">
@@ -509,6 +580,7 @@ export default function ApiDashboardSection() {
           </div>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }

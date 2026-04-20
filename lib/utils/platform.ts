@@ -5,14 +5,24 @@
 
 import { PLATFORM_ICON_MAP, PLATFORM_COLOR_MAP, SOCIAL_PLATFORMS } from '../constants/platforms'
 
+export function normalizePlatformKey(platform: string): string {
+  const raw = (platform || '').trim().toLowerCase()
+
+  if (raw === 'x' || raw === 'twitter' || raw === 'x (twitter)' || raw === 'twitter (x)') {
+    return 'x'
+  }
+
+  return raw
+}
+
 /**
  * Get platform icon path (case-insensitive)
  * @param platform - Platform name
  * @returns Icon path
  */
 export function getPlatformIcon(platform: string): string {
-  const key = platform.toLowerCase()
-  return PLATFORM_ICON_MAP[key] || platform
+  const key = normalizePlatformKey(platform)
+  return PLATFORM_ICON_MAP[key] || '/placeholder.svg'
 }
 
 /**
@@ -22,8 +32,9 @@ export function getPlatformIcon(platform: string): string {
  * @returns True if icon needs inversion
  */
 export function needsInversion(platform: string): boolean {
+  const normalizedPlatform = normalizePlatformKey(platform)
   const platformConfig = SOCIAL_PLATFORMS.find(
-    p => p.name.toLowerCase() === platform.toLowerCase()
+    p => normalizePlatformKey(p.name) === normalizedPlatform
   )
   if (!platformConfig) return false
   return 'invert' in platformConfig && platformConfig.invert === true
@@ -35,7 +46,7 @@ export function needsInversion(platform: string): boolean {
  * @returns Tailwind color class
  */
 export function getPlatformColor(platform: string): string {
-  const key = platform.toLowerCase()
+  const key = normalizePlatformKey(platform)
   return PLATFORM_COLOR_MAP[key] || 'bg-gray-500'
 }
 
@@ -50,13 +61,13 @@ export function getPlatformName(platform: string): string {
     'instagram': 'Instagram',
     'youtube': 'YouTube',
     'facebook': 'Facebook',
-    'x': 'Twitter',
-    'twitter': 'Twitter',
+    'x': 'X',
+    'twitter': 'X',
     'threads': 'Threads',
     'linkedin': 'LinkedIn',
     'pinterest': 'Pinterest'
   }
-  return nameMap[platform.toLowerCase()] || platform
+  return nameMap[normalizePlatformKey(platform)] || platform
 }
 
 /**
@@ -65,7 +76,7 @@ export function getPlatformName(platform: string): string {
  * @returns Lowercase platform identifier
  */
 export function getPlatformValue(platform: string): string {
-  return platform.toLowerCase()
+  return normalizePlatformKey(platform)
 }
 
 /**
@@ -74,5 +85,5 @@ export function getPlatformValue(platform: string): string {
  * @returns True if platform is supported
  */
 export function isPlatformSupported(platform: string): boolean {
-  return platform.toLowerCase() in PLATFORM_ICON_MAP
+  return normalizePlatformKey(platform) in PLATFORM_ICON_MAP
 }

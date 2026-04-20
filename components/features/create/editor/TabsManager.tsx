@@ -11,13 +11,7 @@ import { useCreatePostsStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslations } from 'next-intl';
 import { getPlatformColors } from '@/lib/constants/platformColors';
-
-// Dữ liệu này có thể chuyển ra file constants để dùng chung
-// Helper to get platform icon — uses SOCIAL_PLATFORMS from lib/constants/platforms
-const getPlatformIcon = (platformName: string) => {
-    const platform = SOCIAL_PLATFORMS.find(p => p.name === platformName);
-    return platform?.icon || "/default.png";
-};
+import { getPlatformIcon, getPlatformName, needsInversion } from '@/lib/utils/platform';
 
 export default memo(function TabsManager() {
     const t = useTranslations('CreatePage.createSection.postPanel');
@@ -107,6 +101,7 @@ export default memo(function TabsManager() {
                     if (isTabsCollapsed && index >= 4) return null;
                     
                     const platformIcon = getPlatformIcon(post.type);
+                    const platformLabel = getPlatformName(post.type);
                     const pColors = getPlatformColors(post.type);
 
                     return (
@@ -131,15 +126,15 @@ export default memo(function TabsManager() {
                             <Image
                                 unoptimized
                                 src={platformIcon} 
-                                alt={post.type}
+                                alt={platformLabel}
                                 width={16}
                                 height={16}
-                                className={`w-4 h-4 shrink-0 ${["Twitter", "Threads"].includes(post.type) ? "dark:filter dark:brightness-0 dark:invert" : ""}`}
+                                className={`w-4 h-4 shrink-0 ${needsInversion(post.type) ? "dark:filter dark:brightness-0 dark:invert" : ""}`}
                             />
                             {/* Platform Name - hidden completely when collapsed */}
                             {!isTabsCollapsed && (
                                 <span className="text-sm whitespace-nowrap">
-                                    {post.type}
+                                    {platformLabel}
                                 </span>
                             )}
                             <Button
@@ -197,8 +192,8 @@ export default memo(function TabsManager() {
                     {posts.length === 0 && <span>{t('addPost')}</span>}
                 </Button>
                 {showPostPicker && (
-                    <div className="absolute right-0 top-full z-20 mt-2 w-55 bg-card border border-border rounded-lg shadow-lg p-3">
-                        <div className="space-y-1">
+                    <div className="absolute right-0 top-full z-20 mt-2 w-55 rounded-lg border border-border bg-card p-3 shadow-lg">
+                        <div className="max-h-80 space-y-1 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-muted-foreground/30 scrollbar-track-transparent">
                             {SOCIAL_PLATFORMS.map((option) => (
                                 <button
                                     key={option.name}
@@ -208,7 +203,7 @@ export default memo(function TabsManager() {
                                     }}
                                     className="w-full text-left px-4 py-3 rounded-md hover:bg-secondary text-base text-muted-foreground flex items-center gap-4"
                                 >
-                                    <Image unoptimized src={option.icon} alt={option.name} width={28} height={28} className={`w-7 h-7 ${["Twitter", "Threads"].includes(option.name) ? "dark:filter dark:brightness-0 dark:invert" : ""}`} />
+                                    <Image unoptimized src={option.icon} alt={option.name} width={28} height={28} className={`w-7 h-7 ${needsInversion(option.name) ? "dark:filter dark:brightness-0 dark:invert" : ""}`} />
                                     <span>{option.name}</span>
                                 </button>
                             ))}

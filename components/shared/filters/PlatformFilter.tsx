@@ -47,7 +47,7 @@ export function PlatformFilter({
     { value: "instagram", label: "Instagram", icon: "/icons/platforms/instagram.png" },
     { value: "youtube", label: "YouTube", icon: "/icons/platforms/ytube.png" },
     { value: "facebook", label: "Facebook", icon: "/icons/platforms/fb.svg" },
-    { value: "twitter", label: "Twitter (X)", icon: "/icons/platforms/x.png" },
+    { value: "x", label: "X", icon: "/icons/platforms/x.png" },
     { value: "threads", label: "Threads", icon: "/icons/platforms/threads.png" },
     { value: "linkedin", label: "LinkedIn", icon: "/icons/platforms/link.svg" },
     { value: "pinterest", label: "Pinterest", icon: "/icons/platforms/pinterest.svg" }
@@ -72,7 +72,7 @@ export function PlatformFilter({
       </button>
       
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-50">
+        <div className="absolute top-full left-0 mt-1 max-h-72 w-48 overflow-y-auto rounded-lg border border-border bg-card shadow-lg z-50 scrollbar-thin scrollbar-thumb-muted-foreground/30 scrollbar-track-transparent">
           {platformOptions.map((option) => (
             <button
               key={option.value}
@@ -86,7 +86,7 @@ export function PlatformFilter({
                   alt={option.label} 
                   width={20}
                   height={20}
-                  className={`w-5 h-5 ${needsInversion(option.label.split(' ')[0]) ? 'dark:filter dark:brightness-0 dark:invert' : ''}`} 
+                  className={`w-5 h-5 ${needsInversion(option.value) ? 'dark:filter dark:brightness-0 dark:invert' : ''}`} 
                 />
               )}
               <span>{option.label}</span>

@@ -319,12 +319,14 @@ export const useCreatePostsStore = create<CreatePostsState>((set, get) => ({
   },
 
   openPostFromUrl: (platform, content = '', eventMapping, mediaUrls, postMedia, onLoadMedia, options) => {
-    // Chuẩn hoá tên nền tảng về dạng hiển thị thống nhất với TabsManager (Twitter, Facebook, YouTube, ...)
+    // Chuẩn hoá tên nền tảng về dạng hiển thị thống nhất với UI (X, Facebook, YouTube, ...)
     const normalizePlatformType = (name: string): string => {
       const lower = (name || '').toLowerCase();
       const map: Record<string, string> = {
-        twitter: 'Twitter',
-        x: 'Twitter',
+        twitter: 'X',
+        x: 'X',
+        'x (twitter)': 'X',
+        'twitter (x)': 'X',
         instagram: 'Instagram',
         linkedin: 'LinkedIn',
         facebook: 'Facebook',

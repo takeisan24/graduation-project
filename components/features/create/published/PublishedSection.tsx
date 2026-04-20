@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect } from "react"
-import { useTranslations } from "next-intl"
+import { useEffect, useMemo, useState } from "react"
+import { useLocale, useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import { useShallow } from "zustand/react/shallow"
 import { usePublishedPostsStore } from "@/store/published/publishedPageStore"
@@ -11,17 +11,23 @@ import { FilterBar } from "@/components/shared/filters/FilterBar"
 import { CheckCircle, ExternalLink, FileX, Layers3 } from "lucide-react"
 import SectionHeader from '../layout/SectionHeader'
 import PostCard from '../shared/PostCard'
+import PreviewNotice from "../shared/PreviewNotice"
+import { getCreatePreviewCopy, getPreviewPublishedPosts, isCreatePreviewEnabled } from "@/lib/mocks/createSectionPreview"
+import { PublishedDetailModal } from "./PublishedDetailModal"
+import type { PublishedPost } from "@/store/shared/types"
 
 export default function PublishedSection() {
   const t = useTranslations('CreatePage.published')
   const tHeaders = useTranslations('CreatePage.sectionHeaders')
   const tCard = useTranslations('CreatePage.postCard')
+  const locale = useLocale()
   
   const { 
     publishedPosts, 
     isLoadingPublishedPosts, 
     publishedPostsHasMore, 
     isLoadingMorePublishedPosts,
+    hasLoadedPublishedPosts,
     loadPublishedPosts, 
     loadMorePublishedPosts,
     handleViewPost
@@ -30,15 +36,21 @@ export default function PublishedSection() {
     isLoadingPublishedPosts: state.isLoadingPublishedPosts,
     publishedPostsHasMore: state.publishedPostsHasMore,
     isLoadingMorePublishedPosts: state.isLoadingMorePublishedPosts,
+    hasLoadedPublishedPosts: state.hasLoadedPublishedPosts,
     loadPublishedPosts: state.loadPublishedPosts,
     loadMorePublishedPosts: state.loadMorePublishedPosts,
     handleViewPost: state.handleViewPost,
   })))
 
   const { platformFilter, dateFilter, searchTerm, setPlatformFilter, setDateFilter, setSearchTerm } = usePostFilters()
-  const filteredPosts = useFilteredPosts(publishedPosts, searchTerm, platformFilter, dateFilter)
-  const linkedPostCount = publishedPosts.filter((post) => Boolean(post.url)).length
-  const publishedPlatforms = new Set(publishedPosts.map((post) => post.platform).filter(Boolean)).size
+  const previewPosts = useMemo(() => getPreviewPublishedPosts(), [])
+  const isPreviewMode = isCreatePreviewEnabled() && hasLoadedPublishedPosts && publishedPosts.length === 0
+  const previewCopy = useMemo(() => getCreatePreviewCopy(locale), [locale])
+  const displayPosts = isPreviewMode ? previewPosts : publishedPosts
+  const filteredPosts = useFilteredPosts(displayPosts, searchTerm, platformFilter, dateFilter)
+  const linkedPostCount = displayPosts.filter((post) => Boolean(post.url)).length
+  const publishedPlatforms = new Set(displayPosts.map((post) => post.platform).filter(Boolean)).size
+  const [selectedPost, setSelectedPost] = useState<PublishedPost | null>(null)
 
   useEffect(() => {
     loadPublishedPosts()
@@ -62,7 +74,7 @@ export default function PublishedSection() {
         <div className="mb-3 grid gap-3 md:grid-cols-3">
           <div className="rounded-2xl border border-border/70 bg-card/60 px-4 py-3">
             <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Published output</p>
-            <p className="mt-2 text-2xl font-semibold text-foreground">{publishedPosts.length}</p>
+            <p className="mt-2 text-2xl font-semibold text-foreground">{displayPosts.length}</p>
           </div>
           <div className="rounded-2xl border border-border/70 bg-card/60 px-4 py-3">
             <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Linked posts</p>
@@ -79,6 +91,9 @@ export default function PublishedSection() {
             </p>
           </div>
         </div>
+        {isPreviewMode ? (
+          <PreviewNotice badge={previewCopy.badge} description={previewCopy.emptyDescription} className="mb-3" />
+        ) : null}
         <FilterBar
           platformFilter={platformFilter}
           dateFilter={dateFilter}
@@ -100,16 +115,25 @@ export default function PublishedSection() {
             {filteredPosts.map((post) => (
               <PostCard
                 key={post.id}
-                post={{ id: String(post.id), platform: post.platform, content: post.content, created_at: post.time, status: post.status }}
+                post={{
+                  id: String(post.id),
+                  platform: post.platform,
+                  content: post.content,
+                  created_at: post.time,
+                  status: post.status,
+                  url: post.url
+                }}
                 variant="published"
-                onClick={() => post.url && handleViewPost(post.url)}
+                onClick={() => setSelectedPost(post)}
+                onViewDetails={() => setSelectedPost(post)}
+                onOpenExternal={() => post.url && handleViewPost(post.url)}
               />
             ))}
           </div>
         )}
 
         {/* Load More Button */}
-        {publishedPostsHasMore && (
+        {publishedPostsHasMore && !isPreviewMode && (
           <div className="flex justify-center py-4">
             <Button
               onClick={() => loadMorePublishedPosts()}
@@ -121,6 +145,17 @@ export default function PublishedSection() {
           </div>
         )}
       </div>
+
+      <PublishedDetailModal
+        open={!!selectedPost}
+        post={selectedPost}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedPost(null)
+          }
+        }}
+        onOpenExternal={handleViewPost}
+      />
     </div>
   )
 }

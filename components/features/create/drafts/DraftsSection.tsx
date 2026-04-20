@@ -1,17 +1,21 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { usePostFilters } from "@/hooks/usePostFilters"
 import { useFilteredPosts } from "@/hooks/useFilteredPosts"
 import { FilterBar } from "@/components/shared/filters/FilterBar"
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { FileText, FileX } from 'lucide-react'
 import SectionHeader from '../layout/SectionHeader'
 import PostCard from '../shared/PostCard'
+import PreviewNotice from "../shared/PreviewNotice"
+import ConfirmModal from "@/components/shared/ConfirmModal"
 
 import { useDraftsStore, useCreatePostsStore } from "@/store"
 import { useShallow } from 'zustand/react/shallow'
 import { useSectionNavigation } from "@/hooks/useSectionNavigation"
+import { getCreatePreviewCopy, getPreviewDraftPosts, isCreatePreviewEnabled } from "@/lib/mocks/createSectionPreview"
+import type { DraftPost } from "@/store/shared/types"
 
 
 /**
@@ -19,19 +23,25 @@ import { useSectionNavigation } from "@/hooks/useSectionNavigation"
  * Displays a list of draft posts with filtering, searching, and management options
  */
 export default function DraftsSection() {
-  const { draftPosts, onEditDraft, onDeleteDraft, loadDrafts } = useDraftsStore(
+  const { draftPosts, onEditDraft, onDeleteDraft, loadDrafts, hasLoadedDrafts } = useDraftsStore(
     useShallow((state) => ({
       draftPosts: state.draftPosts,
       onEditDraft: state.handleEditDraft,
       onDeleteDraft: state.handleDeleteDraft,
       loadDrafts: state.loadDrafts,
+      hasLoadedDrafts: state.hasLoadedDrafts,
     }))
   )
-  // Lấy hàm mở post trong editor và hàm đổi section để khi click bản nháp sẽ nhảy sang trang tạo bài viết
+  const locale = useLocale()
   const openPostFromUrl = useCreatePostsStore(state => state.openPostFromUrl)
   const navigateToSection = useSectionNavigation()
   const { platformFilter, dateFilter, searchTerm, setPlatformFilter, setDateFilter, setSearchTerm } = usePostFilters()
-  const filteredPosts = useFilteredPosts(draftPosts, searchTerm, platformFilter, dateFilter)
+  const [previewPosts, setPreviewPosts] = useState(() => getPreviewDraftPosts())
+  const [pendingDeleteDraft, setPendingDeleteDraft] = useState<DraftPost | null>(null)
+  const isPreviewMode = isCreatePreviewEnabled() && hasLoadedDrafts && draftPosts.length === 0
+  const previewCopy = useMemo(() => getCreatePreviewCopy(locale), [locale])
+  const displayPosts = isPreviewMode ? previewPosts : draftPosts
+  const filteredPosts = useFilteredPosts(displayPosts, searchTerm, platformFilter, dateFilter)
 
   const tHeaders = useTranslations('CreatePage.sectionHeaders');
   const tCard = useTranslations('CreatePage.postCard');
@@ -45,6 +55,9 @@ export default function DraftsSection() {
       <SectionHeader icon={FileText} title={tHeaders('drafts.title')} description={tHeaders('drafts.description')} />
       
       <div className="px-4 lg:px-6 py-3">
+      {isPreviewMode ? (
+        <PreviewNotice badge={previewCopy.badge} description={previewCopy.emptyDescription} className="mb-3" />
+      ) : null}
       <FilterBar
         platformFilter={platformFilter}
         dateFilter={dateFilter}
@@ -95,12 +108,32 @@ export default function DraftsSection() {
                     })
                   })
                 }
-                onDelete={() => onDeleteDraft(post.id)}
+                onDelete={() => {
+                  setPendingDeleteDraft(post)
+                }}
               />
             ))}
           </div>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={!!pendingDeleteDraft}
+        onClose={() => setPendingDeleteDraft(null)}
+        onConfirm={() => {
+          if (!pendingDeleteDraft) return
+          if (isPreviewMode) {
+            setPreviewPosts((current) => current.filter((item) => String(item.id) !== String(pendingDeleteDraft.id)))
+            return
+          }
+          void onDeleteDraft(pendingDeleteDraft.id)
+        }}
+        title={tCard('deleteTitle')}
+        description={tCard('deleteDescription')}
+        confirmText={tCard('delete')}
+        cancelText={tCard('cancel')}
+        variant="danger"
+      />
     </div>
   )
 }

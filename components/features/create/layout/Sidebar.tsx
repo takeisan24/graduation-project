@@ -6,7 +6,7 @@ import LanguageSwitcher from "@/components/shared/LanguageSwitcher"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { useNavigationStore } from "@/store"
-import { CheckCircle2, LogOut, Settings, Sparkles, UserCircle2 } from "lucide-react"
+import { CheckCircle2, Link2, LogOut, Settings, Sparkles, UserCircle2 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 import { useTranslations } from "next-intl"
 import { useSectionNavigation } from "@/hooks/useSectionNavigation"
@@ -95,14 +95,24 @@ export default function Sidebar({
       title: t("account"),
       items: [
         {
-          id: "api-dashboard",
+          id: "operations",
           label: t("apiDashboard"),
           icon: "/icons/sidebar/API.svg",
+        },
+        {
+          id: "connections",
+          label: t("connections"),
+          iconComponent: Link2,
         },
         {
           id: "settings",
           label: t("settings"),
           icon: "/icons/sidebar/Settings.svg",
+        },
+        {
+          id: "profile",
+          label: t("profile"),
+          iconComponent: UserCircle2,
         },
       ],
     },
@@ -216,6 +226,8 @@ export default function Sidebar({
                 <div className="space-y-1">
                   {category.items.map((item) => {
                     const isActive = activeSection === item.id || (item.id === "create" && activeSection === "create")
+                    const IconComponent = "iconComponent" in item ? item.iconComponent : null
+                    const iconSrc = "icon" in item ? item.icon : null
                     return (
                       <Button
                         key={item.id}
@@ -234,14 +246,18 @@ export default function Sidebar({
                             isSidebarOpen ? "mr-2" : "flex items-center justify-center px-2"
                           }`}
                         >
-                          <Image
-                            unoptimized
-                            src={item.icon}
-                            alt={item.label}
-                            width={16}
-                            height={16}
-                            className="h-6 w-6 flex-none opacity-90 group-hover/item:opacity-100"
-                          />
+                          {IconComponent ? (
+                            <IconComponent className="h-5 w-5 flex-none opacity-90 group-hover/item:opacity-100" />
+                          ) : iconSrc ? (
+                            <Image
+                              unoptimized
+                              src={iconSrc}
+                              alt={item.label}
+                              width={16}
+                              height={16}
+                              className="h-6 w-6 flex-none opacity-90 group-hover/item:opacity-100"
+                            />
+                          ) : null}
                         </div>
                         {isSidebarOpen && <span className="text-base tracking-wide lg:text-xs">{item.label}</span>}
                       </Button>
@@ -293,9 +309,9 @@ export default function Sidebar({
                       <Sparkles className="h-4 w-4" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold text-foreground">{t("settings")}</p>
+                      <p className="text-sm font-semibold text-foreground">{t("connections")}</p>
                       <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                        Kết nối tài khoản MXH và quản lý khu vực làm việc của bạn.
+                        Kết nối tài khoản nền tảng và quản lý vùng xuất bản của bạn.
                       </p>
                     </div>
                   </div>
@@ -319,9 +335,9 @@ export default function Sidebar({
                         <Sparkles className="h-4 w-4" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-foreground">{t("settings")}</p>
+                        <p className="text-sm font-semibold text-foreground">{t("connections")}</p>
                         <p className="text-xs text-muted-foreground">
-                          Kết nối tài khoản MXH và tiếp tục điều phối nội dung tại đây.
+                          Kết nối tài khoản nền tảng và tiếp tục điều phối nội dung tại đây.
                         </p>
                       </div>
                     </div>

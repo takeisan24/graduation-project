@@ -3,6 +3,8 @@
  * Business logic for filtering and sorting posts
  */
 
+import { normalizePlatformKey } from '@/lib/utils/platform'
+
 interface FilterablePost {
   platform: string
   platformIcon?: string
@@ -26,6 +28,10 @@ export function filterAndSortPosts<T extends FilterablePost>(
   dateFilter: 'newest' | 'oldest'
 ): T[] {
   const filtered = posts.filter(post => {
+    const normalizedPostPlatform = normalizePlatformKey(post.platform)
+    const normalizedPostIcon = post.platformIcon ? normalizePlatformKey(post.platformIcon) : null
+    const normalizedFilter = normalizePlatformKey(platformFilter)
+
     // Search filter
     const matchesSearch = searchTerm === "" ||
       post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -33,8 +39,8 @@ export function filterAndSortPosts<T extends FilterablePost>(
 
     // Platform filter
     const matchesPlatform = platformFilter === "all" ||
-      post.platform.toLowerCase() === platformFilter.toLowerCase() ||
-      post.platformIcon?.toLowerCase() === platformFilter.toLowerCase()
+      normalizedPostPlatform === normalizedFilter ||
+      normalizedPostIcon === normalizedFilter
 
     return matchesSearch && matchesPlatform
   })
@@ -81,8 +87,8 @@ export function filterByPlatform<T extends FilterablePost>(
   if (platform === 'all') return posts
   
   return posts.filter(post =>
-    post.platform.toLowerCase() === platform.toLowerCase() ||
-    post.platformIcon?.toLowerCase() === platform.toLowerCase()
+    normalizePlatformKey(post.platform) === normalizePlatformKey(platform) ||
+    (post.platformIcon ? normalizePlatformKey(post.platformIcon) === normalizePlatformKey(platform) : false)
   )
 }
 

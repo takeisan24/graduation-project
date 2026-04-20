@@ -1,44 +1,111 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import type { UserIdentity } from "@supabase/supabase-js"
+import { useLocale, useTranslations } from "next-intl"
+import { Loader2, Mail, RotateCcw, Save, ShieldCheck, User, UserRoundPlus } from "lucide-react"
+import { toast } from "sonner"
 import { supabaseClient } from "@/lib/supabaseClient"
+import { getAppUrl } from "@/lib/utils/urlConfig"
 import { useAuth } from "@/hooks/useAuth"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { toast } from "sonner"
-import { Loader2, RotateCcw, Save, User, Mail, ShieldCheck } from "lucide-react"
-import { useTranslations } from "next-intl"
 import { useRouter } from "@/i18n/navigation"
+import PreviewNotice from "@/components/features/create/shared/PreviewNotice"
+import { getCreatePreviewCopy, getPreviewUserProfile, isCreatePreviewEnabled } from "@/lib/mocks/createSectionPreview"
+
+const AUTH_PROVIDERS = [
+  { id: "google", label: "Google" },
+  { id: "facebook", label: "Facebook" },
+] as const
 
 export default function UserProfile() {
   const router = useRouter()
-  const { user, refreshSession } = useAuth()
+  const locale = useLocale()
+  const { user, loading, refreshSession } = useAuth()
   const t = useTranslations("CreatePage.userProfile")
+  const previewCopy = useMemo(() => getCreatePreviewCopy(locale), [locale])
+  const [previewProfile, setPreviewProfile] = useState(() => getPreviewUserProfile())
+  const [previewProviders, setPreviewProviders] = useState(() => getPreviewUserProfile().linkedProviders)
+  const isPreviewMode = isCreatePreviewEnabled() && !loading && !user
 
-  const [isSaving, setIsSaving] = useState(false)
+  const [isSavingProfile, setIsSavingProfile] = useState(false)
+  const [isSavingEmail, setIsSavingEmail] = useState(false)
+  const [loadingIdentities, setLoadingIdentities] = useState(false)
+  const [providerAction, setProviderAction] = useState<string | null>(null)
   const [name, setName] = useState("")
   const [avatarUrl, setAvatarUrl] = useState("")
+  const [email, setEmail] = useState("")
+  const [identities, setIdentities] = useState<UserIdentity[]>([])
+  const previewIdentities = useMemo(
+    () => previewProviders.map((provider) => ({ identity_id: `preview-${provider}`, provider } as UserIdentity)),
+    [previewProviders]
+  )
 
   useEffect(() => {
-    if (user) {
-      setName(user.user_metadata?.name || user.user_metadata?.full_name || "")
-      setAvatarUrl(user.user_metadata?.avatar_url || "")
+    if (isPreviewMode) {
+      setName(previewProfile.name)
+      setAvatarUrl(previewProfile.avatarUrl)
+      setEmail(previewProfile.email)
+      return
     }
-  }, [user])
+
+    if (!user) return
+    setName(user.user_metadata?.name || user.user_metadata?.full_name || "")
+    setAvatarUrl(user.user_metadata?.avatar_url || "")
+    setEmail(user.email || "")
+  }, [isPreviewMode, previewProfile.avatarUrl, previewProfile.email, previewProfile.name, user])
+
+  const loadIdentities = useCallback(async () => {
+    if (isPreviewMode) {
+      setIdentities(previewIdentities)
+      return
+    }
+
+    if (!user) return
+    setLoadingIdentities(true)
+    try {
+      const { data, error } = await supabaseClient.auth.getUserIdentities()
+      if (error) throw error
+      setIdentities(data.identities || [])
+    } catch (error) {
+      console.error(error)
+      toast.error(t("toast.loadIdentitiesError"))
+    } finally {
+      setLoadingIdentities(false)
+    }
+  }, [isPreviewMode, previewIdentities, t, user])
+
+  useEffect(() => {
+    void loadIdentities()
+  }, [loadIdentities])
 
   const handleUpdateProfile = async () => {
-    if (!user) return
-    setIsSaving(true)
+    if (!user && !isPreviewMode) return
+    setIsSavingProfile(true)
     try {
+      if (isPreviewMode) {
+        setPreviewProfile((current) => ({ ...current, name, avatarUrl }))
+        toast.success(t("toast.updateSuccess"))
+        return
+      }
+
+      if (!user) return
+
       const { error } = await supabaseClient.auth.updateUser({
         data: { name, avatar_url: avatarUrl },
       })
 
       if (error) throw error
 
-      await supabaseClient.from("users").update({ name, avatar_url: avatarUrl }).eq("id", user.id)
+      await supabaseClient
+        .from("users")
+        .update({ name, avatar_url: avatarUrl })
+        .eq("id", user.id)
+
       await refreshSession()
       toast.success(t("toast.updateSuccess"))
     } catch (error: unknown) {
@@ -46,7 +113,34 @@ export default function UserProfile() {
       const message = error instanceof Error ? error.message : "Unknown error"
       toast.error(`${t("toast.updateError")}: ${message}`)
     } finally {
-      setIsSaving(false)
+      setIsSavingProfile(false)
+    }
+  }
+
+  const handleUpdateEmail = async () => {
+    const currentEmail = isPreviewMode ? previewProfile.email : user?.email
+    if ((!user && !isPreviewMode) || !email || email === currentEmail) return
+    setIsSavingEmail(true)
+    try {
+      if (isPreviewMode) {
+        setPreviewProfile((current) => ({ ...current, email }))
+        toast.success(t("toast.emailUpdateRequested"))
+        return
+      }
+
+      const redirectTo = `${getAppUrl()}/${locale}/profile`
+      const { error } = await supabaseClient.auth.updateUser(
+        { email },
+        { emailRedirectTo: redirectTo }
+      )
+      if (error) throw error
+      toast.success(t("toast.emailUpdateRequested"))
+    } catch (error: unknown) {
+      console.error(error)
+      const message = error instanceof Error ? error.message : "Unknown error"
+      toast.error(`${t("toast.updateError")}: ${message}`)
+    } finally {
+      setIsSavingEmail(false)
     }
   }
 
@@ -62,83 +156,238 @@ export default function UserProfile() {
     }
   }
 
+  const handleLinkProvider = async (provider: "google" | "facebook") => {
+    setProviderAction(provider)
+    try {
+      if (isPreviewMode) {
+        await new Promise((resolve) => window.setTimeout(resolve, 300))
+        setPreviewProviders((current) => (current.includes(provider) ? current : [...current, provider]))
+        setProviderAction(null)
+        toast.success(t("toast.identityLinkStarted", { provider: provider === "google" ? "Google" : "Facebook" }))
+        return
+      }
+
+      const { data, error } = await supabaseClient.auth.linkIdentity({
+        provider,
+        options: {
+          redirectTo: `${getAppUrl()}/${locale}/profile`,
+          scopes: provider === "google" ? "openid email profile" : "public_profile email",
+        },
+      })
+
+      if (error) throw error
+      if (data?.url) {
+        window.location.href = data.url
+        return
+      }
+      toast.success(t("toast.identityLinkStarted", { provider: provider === "google" ? "Google" : "Facebook" }))
+    } catch (error: unknown) {
+      console.error(error)
+      const message = error instanceof Error ? error.message : "Unknown error"
+      toast.error(`${t("toast.identityLinkError")}: ${message}`)
+    }
+    setProviderAction(null)
+  }
+
+  const handleUnlinkIdentity = async (identity: UserIdentity) => {
+    setProviderAction(identity.provider)
+    try {
+      if (isPreviewMode) {
+        await new Promise((resolve) => window.setTimeout(resolve, 200))
+        setPreviewProviders((current) => current.filter((provider) => provider !== identity.provider))
+        toast.success(t("toast.identityUnlinked"))
+        return
+      }
+
+      const { error } = await supabaseClient.auth.unlinkIdentity(identity)
+      if (error) throw error
+      await loadIdentities()
+      toast.success(t("toast.identityUnlinked"))
+    } catch (error: unknown) {
+      console.error(error)
+      const message = error instanceof Error ? error.message : "Unknown error"
+      toast.error(`${t("toast.identityUnlinkError")}: ${message}`)
+    } finally {
+      setProviderAction(null)
+    }
+  }
+
+  const providerState = useMemo(() => {
+    const providers = new Set(identities.map((identity) => identity.provider))
+    return AUTH_PROVIDERS.map((provider) => ({
+      ...provider,
+      connected: providers.has(provider.id),
+      identity: identities.find((identity) => identity.provider === provider.id) || null,
+    }))
+  }, [identities])
+
+  const displayEmail = isPreviewMode ? previewProfile.email : user?.email || ""
+  const userInitial = (name || displayEmail || "U").trim().charAt(0).toUpperCase() || "U"
+
   return (
-    <div className="container mx-auto max-w-4xl p-4 pb-20 text-foreground md:p-6 md:pb-6">
+    <div className="container mx-auto max-w-6xl p-4 pb-20 text-foreground md:p-6 md:pb-6">
       <h1 className="mb-6 text-2xl font-bold md:mb-8 md:text-3xl">{t("title")}</h1>
+      {isPreviewMode ? (
+        <div className="mb-6">
+          <PreviewNotice badge={previewCopy.badge} description={previewCopy.emptyDescription} />
+        </div>
+      ) : null}
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <Card className="border-border bg-card text-foreground lg:col-span-2">
-          <CardHeader>
-            <CardTitle>{t("basicInfo.title")}</CardTitle>
-            <CardDescription className="text-muted-foreground">{t("basicInfo.description")}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-5">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl border border-border/70 bg-secondary/35 p-4">
-                <div className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                  <Mail className="h-4 w-4" />
-                  {t("basicInfo.email")}
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.25fr_0.95fr]">
+        <div className="space-y-6">
+          <Card className="border-border bg-card text-foreground">
+            <CardHeader>
+              <CardTitle>{t("basicInfo.title")}</CardTitle>
+              <CardDescription className="text-muted-foreground">{t("basicInfo.description")}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex flex-col gap-4 rounded-3xl border border-border/70 bg-secondary/25 p-5 sm:flex-row sm:items-center">
+                <Avatar className="h-20 w-20 border border-border/70">
+                  <AvatarImage src={avatarUrl || undefined} alt={name || displayEmail || "User"} />
+                  <AvatarFallback className="bg-gradient-to-br from-utc-royal to-utc-sky text-xl font-semibold text-white">
+                    {userInitial}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="space-y-1">
+                  <p className="text-lg font-semibold text-foreground">{name || t("basicInfo.noDisplayName")}</p>
+                  <p className="text-sm text-muted-foreground">{displayEmail || "N/A"}</p>
                 </div>
-                <p className="break-all text-sm font-medium text-foreground">{user?.email || "N/A"}</p>
               </div>
 
-              <div className="rounded-2xl border border-border/70 bg-secondary/35 p-4">
-                <div className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                  <ShieldCheck className="h-4 w-4" />
-                  Trạng thái tài khoản
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="rounded-2xl border border-border/70 bg-secondary/35 p-4">
+                  <div className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                    <Mail className="h-4 w-4" />
+                    {t("basicInfo.email")}
+                  </div>
+                  <p className="break-all text-sm font-medium text-foreground">{displayEmail || "N/A"}</p>
                 </div>
-                <p className="text-sm font-medium text-foreground">Đã xác thực và sẵn sàng sử dụng các tính năng quản lý nội dung.</p>
+
+                <div className="rounded-2xl border border-border/70 bg-secondary/35 p-4">
+                  <div className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                    <ShieldCheck className="h-4 w-4" />
+                    {t("status.title")}
+                  </div>
+                  <p className="text-sm font-medium text-foreground">{t("status.description")}</p>
+                </div>
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <Label>{t("basicInfo.displayName")}</Label>
-              <Input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="border-border bg-secondary text-foreground focus:border-primary"
-              />
-            </div>
+              <div className="space-y-2">
+                <Label>{t("basicInfo.displayName")}</Label>
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="border-border bg-secondary text-foreground focus:border-primary"
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label>{t("basicInfo.avatarUrl")}</Label>
-              <Input
-                value={avatarUrl}
-                onChange={(e) => setAvatarUrl(e.target.value)}
-                className="border-border bg-secondary text-foreground focus:border-primary"
-                placeholder="https://example.com/avatar.jpg"
-              />
-            </div>
+              <div className="space-y-2">
+                <Label>{t("basicInfo.avatarUrl")}</Label>
+                <Input
+                  value={avatarUrl}
+                  onChange={(e) => setAvatarUrl(e.target.value)}
+                  className="border-border bg-secondary text-foreground focus:border-primary"
+                  placeholder="https://example.com/avatar.jpg"
+                />
+              </div>
 
-            <div className="pt-2">
-              <Button onClick={handleUpdateProfile} disabled={isSaving} className="bg-primary hover:bg-primary/90">
-                {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                <Save className="mr-2 h-4 w-4" /> {t("basicInfo.save")}
+              <div className="pt-2">
+                <Button onClick={handleUpdateProfile} disabled={isSavingProfile} className="bg-primary hover:bg-primary/90">
+                  {isSavingProfile && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  <Save className="mr-2 h-4 w-4" /> {t("basicInfo.save")}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border bg-card text-foreground">
+            <CardHeader>
+              <CardTitle>{t("emailSection.title")}</CardTitle>
+              <CardDescription className="text-muted-foreground">{t("emailSection.description")}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>{t("emailSection.newEmail")}</Label>
+                <Input
+                  value={email}
+                  type="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="border-border bg-secondary text-foreground focus:border-primary"
+                />
+              </div>
+              <p className="text-sm leading-6 text-muted-foreground">{t("emailSection.hint")}</p>
+              <Button onClick={handleUpdateEmail} disabled={isSavingEmail || email === displayEmail}>
+                {isSavingEmail && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {t("emailSection.save")}
               </Button>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
-        <div className="flex flex-col gap-6">
+        <div className="space-y-6">
           <Card className="border-border bg-card text-foreground">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5 text-primary" />
-                Hồ sơ hệ thống
+                <UserRoundPlus className="h-5 w-5 text-primary" />
+                {t("loginMethods.title")}
               </CardTitle>
               <CardDescription className="text-muted-foreground">
-                Tóm tắt nhanh thông tin tài khoản phục vụ cho đồ án và phần demo sản phẩm.
+                {t("loginMethods.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="rounded-2xl border border-border/70 bg-secondary/30 p-4">
-                <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">Vai trò</p>
-                <p className="mt-2 text-sm font-semibold text-foreground">Quản trị nội dung</p>
+              <div className="rounded-2xl border border-border/70 bg-secondary/25 p-4">
+                <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                  {t("loginMethods.currentProviders")}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {loadingIdentities ? (
+                    <span className="text-sm text-muted-foreground">{t("loginMethods.loading")}</span>
+                  ) : (
+                    identities.map((identity) => (
+                      <span key={identity.identity_id} className="rounded-full border border-border/70 bg-background px-3 py-1 text-sm text-foreground">
+                        {identity.provider}
+                      </span>
+                    ))
+                  )}
+                </div>
               </div>
-              <div className="rounded-2xl border border-border/70 bg-secondary/30 p-4">
-                <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">Trọng tâm sử dụng</p>
-                <p className="mt-2 text-sm text-foreground">Tạo nội dung, điều phối lịch đăng và quản lý tài khoản mạng xã hội.</p>
-              </div>
+
+              {providerState.map((provider) => {
+                const canUnlink = Boolean(provider.identity) && identities.length > 1
+                const isLoading = providerAction === provider.id
+                return (
+                  <div key={provider.id} className="rounded-2xl border border-border/70 bg-secondary/25 p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-base font-semibold text-foreground">{provider.label}</p>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {provider.connected ? t("loginMethods.connected") : t("loginMethods.notConnected")}
+                        </p>
+                      </div>
+                      {provider.connected ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={!canUnlink || isLoading}
+                          onClick={() => provider.identity && handleUnlinkIdentity(provider.identity)}
+                        >
+                          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                          {t("loginMethods.unlink")}
+                        </Button>
+                      ) : (
+                        <Button size="sm" disabled={isLoading} onClick={() => handleLinkProvider(provider.id)}>
+                          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                          {t("loginMethods.link")}
+                        </Button>
+                      )}
+                    </div>
+                    {provider.connected && !canUnlink ? (
+                      <p className="mt-3 text-xs leading-5 text-muted-foreground">{t("loginMethods.unlinkHint")}</p>
+                    ) : null}
+                  </div>
+                )
+              })}
             </CardContent>
           </Card>
 
@@ -154,6 +403,26 @@ export default function UserProfile() {
                 <Button variant="outline" size="sm" onClick={handleResetTour} className="w-full border-border text-foreground hover:bg-secondary">
                   <RotateCcw className="mr-2 h-3 w-3" /> {t("appSettings.resetTourBtn")}
                 </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border bg-card text-foreground">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <User className="h-5 w-5 text-primary" />
+                {t("systemProfile.title")}
+              </CardTitle>
+              <CardDescription className="text-muted-foreground">{t("systemProfile.description")}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="rounded-2xl border border-border/70 bg-secondary/30 p-4">
+                <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t("systemProfile.roleLabel")}</p>
+                <p className="mt-2 text-sm font-semibold text-foreground">{t("systemProfile.roleValue")}</p>
+              </div>
+              <div className="rounded-2xl border border-border/70 bg-secondary/30 p-4">
+                <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t("systemProfile.focusLabel")}</p>
+                <p className="mt-2 text-sm text-foreground">{t("systemProfile.focusValue")}</p>
               </div>
             </CardContent>
           </Card>

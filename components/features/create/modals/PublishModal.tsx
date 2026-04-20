@@ -14,14 +14,7 @@ import { toast } from 'sonner';
 import { useConnectedAccounts } from '@/hooks/useConnectedAccounts';
 import { useTranslations } from 'next-intl';
 import { GENERIC_ERRORS } from '@/lib/messages/errors';
-
-// Platform options
-const platformOptions = [
-    { name: "TikTok", icon: "/icons/platforms/tiktok.png" }, { name: "Instagram", icon: "/icons/platforms/instagram.png" },
-    { name: "YouTube", icon: "/icons/platforms/ytube.png" }, { name: "Facebook", icon: "/icons/platforms/fb.svg" },
-    { name: "Twitter", icon: "/icons/platforms/x.png" }, { name: "Threads", icon: "/icons/platforms/threads.png" },
-    { name: "LinkedIn", icon: "/icons/platforms/link.svg" }, { name: "Pinterest", icon: "/icons/platforms/pinterest.svg" }
-];
+import { getPlatformIcon, getPlatformName, needsInversion } from '@/lib/utils/platform';
 
 // Map platform names to provider slugs (for API)
 const PLATFORM_TO_PROVIDER: Record<string, string> = {
@@ -29,7 +22,9 @@ const PLATFORM_TO_PROVIDER: Record<string, string> = {
   "Instagram": "instagram",
   "YouTube": "youtube",
   "Facebook": "facebook",
+  "X": "twitter",
   "Twitter": "twitter",
+  "X (Twitter)": "twitter",
   "Threads": "threads",
   "LinkedIn": "linkedin",
   "Pinterest": "pinterest"
@@ -166,6 +161,8 @@ export default function PublishModal() {
     if (!isOpen) {
         return null;
     }
+
+    const selectedPlatformLabel = getPlatformName(selectedPlatform);
     
     const handleConfirm = async () => {
         // Prevent double click
@@ -266,7 +263,7 @@ export default function PublishModal() {
                 </div>
                 <div className="flex items-center gap-3 mb-5">
                     <div className="w-10 h-10 rounded-lg bg-background border border-border flex items-center justify-center flex-shrink-0">
-                        <Image unoptimized src={platformOptions.find(p => p.name === selectedPlatform)?.icon || '/placeholder.svg'} alt={selectedPlatform} width={24} height={24} className={`w-6 h-6 ${['Twitter','Threads'].includes(selectedPlatform) ? 'dark:filter dark:brightness-0 dark:invert' : ''}`} />
+                        <Image unoptimized src={getPlatformIcon(selectedPlatform)} alt={selectedPlatformLabel} width={24} height={24} className={`w-6 h-6 ${needsInversion(selectedPlatform) ? 'dark:filter dark:brightness-0 dark:invert' : ''}`} />
                     </div>
                     <div className="flex-1 relative">
                         
@@ -284,7 +281,7 @@ export default function PublishModal() {
                             <div className="w-8 h-8 rounded-full overflow-hidden border border-border"><Image unoptimized src={selectedAccountPic} alt="Profile" width={32} height={32} className="w-full h-full object-cover" /></div>
                             <div className="flex-1">
                                 <div className="text-foreground text-sm font-medium">{selectedAccount || t('selectAccount')}</div>
-                                <div className="text-xs text-muted-foreground">{selectedPlatform}</div>
+                                <div className="text-xs text-muted-foreground">{selectedPlatformLabel}</div>
                             </div>
                             <ChevronDownIcon className={`w-4 h-4 text-muted-foreground transition-transform ${showAccountDropdown ? 'rotate-180' : ''}`} />
                         </div>

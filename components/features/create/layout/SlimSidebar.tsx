@@ -11,7 +11,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Separator } from "@/components/ui/separator"
 import CreatorHubIcon from "@/components/shared/CreatorHubIcon"
-import { PenSquare, Calendar, FileText, CheckCircle, XCircle, BarChart3, Settings } from "lucide-react"
+import { PenSquare, Calendar, FileText, CheckCircle, XCircle, BarChart3, Link2, Settings, UserCircle2 } from "lucide-react"
 
 interface SlimSidebarProps {
   activeSection: string
@@ -26,8 +26,10 @@ const navItems = [
   { id: "drafts", icon: FileText, group: "management" },
   { id: "published", icon: CheckCircle, group: "management" },
   { id: "failed", icon: XCircle, group: "management" },
-  { id: "api-dashboard", icon: BarChart3, group: "account" },
+  { id: "operations", icon: BarChart3, group: "account" },
+  { id: "connections", icon: Link2, group: "account" },
   { id: "settings", icon: Settings, group: "account" },
+  { id: "profile", icon: UserCircle2, group: "account" },
 ] as const
 
 export default function SlimSidebar({
@@ -56,8 +58,10 @@ export default function SlimSidebar({
     drafts: t("drafts"),
     published: t("published"),
     failed: t("failed"),
-    "api-dashboard": t("apiDashboard"),
+    operations: t("apiDashboard"),
+    connections: t("connections"),
     settings: t("settings"),
+    profile: t("profile"),
   }
 
   // Group nav items

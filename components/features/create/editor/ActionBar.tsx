@@ -9,6 +9,7 @@ import { useCreatePostsStore, useCreateMediaStore, usePublishModalStore, useImag
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { useLocale, useTranslations } from 'next-intl';
+import { normalizePlatformKey } from '@/lib/utils/platform';
 
 export default function ActionBar() {
   const t = useTranslations('CreatePage.createSection.actionBar');
@@ -77,8 +78,8 @@ export default function ActionBar() {
   };
 
   const getCharLimit = () => {
-    const platform = currentPost?.type || 'default';
-    const limits: Record<string, number> = { Twitter: 280, Instagram: 2200, LinkedIn: 3000, Facebook: 63206, Pinterest: 500, TikTok: 2200, Threads: 500, YouTube: 5000, default: 5000 };
+    const platform = normalizePlatformKey(currentPost?.type || 'default');
+    const limits: Record<string, number> = { x: 280, instagram: 2200, linkedin: 3000, facebook: 63206, pinterest: 500, tiktok: 2200, threads: 500, youtube: 5000, default: 5000 };
     return limits[platform] ?? limits.default;
   };
 
@@ -160,7 +161,7 @@ export default function ActionBar() {
           {showGenerateMenu && (
             <div
               ref={generateMenuRef}
-              className="absolute left-0 bottom-full mb-2 w-48 bg-card border border-border rounded-md shadow-2xl py-2 z-[9999]"
+              className="absolute left-0 bottom-full z-[9999] mb-2 max-h-72 w-48 overflow-y-auto rounded-md border border-border bg-card py-2 shadow-2xl scrollbar-thin scrollbar-thumb-muted-foreground/30 scrollbar-track-transparent"
             >
               <Button
                 variant="ghost"

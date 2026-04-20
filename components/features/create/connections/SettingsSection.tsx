@@ -14,11 +14,14 @@ import { getAppUrl } from "@/lib/utils/urlConfig";
 import { useConnectionsStore } from "@/store"
 import { Settings } from "lucide-react"
 import SectionHeader from '../layout/SectionHeader'
+import PreviewNotice from "../shared/PreviewNotice"
 import { toast } from "sonner"
 import { useLocale, useTranslations } from "next-intl"
 import { handleErrorWithModal } from "@/lib/utils/errorHandler"
 import { handleUnauthorizedOnClient } from "@/lib/utils/authClient"
 import { getPlatformColors } from '@/lib/constants/platformColors'
+import { createPreviewConnectedAccount, getCreatePreviewCopy, getPreviewConnectedAccounts, isCreatePreviewEnabled } from "@/lib/mocks/createSectionPreview"
+import { getPlatformName } from "@/lib/utils/platform"
 
 type LateConnection = {
   id: string
@@ -44,7 +47,9 @@ const PROVIDER_SLUGS: Record<string, string | null> = {
   Instagram: "instagram",
   YouTube: "youtube",
   Facebook: "facebook",
+  X: "twitter",
   Twitter: "twitter",
+  "X (Twitter)": "twitter",
   Threads: "threads",
   LinkedIn: "linkedin",
   Pinterest: "pinterest"
@@ -58,18 +63,20 @@ const PROVIDER_SLUGS: Record<string, string | null> = {
  * Displays a grid of social media platforms with connection status
  */
 export default function SettingsSection() {
-  const t = useTranslations('CreatePage.settings')
+  const t = useTranslations('CreatePage.connections')
   const tHeaders = useTranslations('CreatePage.sectionHeaders')
   const locale = useLocale(); // Lấy ngôn ngữ hiện tại ('vi' hoặc 'en')
   // Tối ưu: Dùng trực tiếp từ store thay vì local state để tránh duplicate state
   const {
     connectedAccounts,
+    hasLoadedConnectedAccounts,
     connectedAccountsLoading,
     connectedAccountsError,
     loadConnectedAccounts,
     refreshConnectedAccounts,
   } = useConnectionsStore(useShallow((state) => ({
     connectedAccounts: state.connectedAccounts,
+    hasLoadedConnectedAccounts: state.hasLoadedConnectedAccounts,
     connectedAccountsLoading: state.connectedAccountsLoading,
     connectedAccountsError: state.connectedAccountsError,
     loadConnectedAccounts: state.loadConnectedAccounts,
@@ -86,6 +93,10 @@ export default function SettingsSection() {
   // Giữ local error state để hiển thị lỗi từ các actions (connect, disconnect, etc.)
   const [localError, setLocalError] = useState<string | null>(null)
   const error = localError || connectedAccountsError
+  const previewCopy = useMemo(() => getCreatePreviewCopy(locale), [locale])
+  const [previewConnections, setPreviewConnections] = useState(() => getPreviewConnectedAccounts())
+  const isPreviewMode = isCreatePreviewEnabled() && hasLoadedConnectedAccounts && !loading && connections.length === 0
+  const displayConnections = isPreviewMode ? previewConnections : connections
 
   /**
    * Fetches connections using store's loadConnectedAccounts (có cache 30s)
@@ -199,7 +210,7 @@ export default function SettingsSection() {
 
   const connectionsByPlatform = useMemo(() => {
     const map: Record<string, LateConnection> = {}
-    connections.forEach((conn) => {
+    displayConnections.forEach((conn) => {
       if (conn.platform) {
         // Map ConnectedAccount to LateConnection format (handle undefined profile_name)
         map[conn.platform.toLowerCase()] = {
@@ -209,7 +220,7 @@ export default function SettingsSection() {
       }
     })
     return map
-  }, [connections])
+  }, [displayConnections])
 
   // Filter state for connected accounts table
   const { platformFilter, setPlatformFilter } = usePostFilters()
@@ -217,12 +228,12 @@ export default function SettingsSection() {
   // Filter connections based on platform filter
   const filteredConnections = useMemo(() => {
     if (platformFilter === 'all') {
-      return connections
+      return displayConnections
     }
-    return connections.filter(conn =>
+    return displayConnections.filter(conn =>
       conn.platform?.toLowerCase() === platformFilter.toLowerCase()
     )
-  }, [connections, platformFilter])
+  }, [displayConnections, platformFilter])
 
   const [blockedPopup, setBlockedPopup] = useState<{ provider: string; url: string } | null>(null)
 
@@ -230,6 +241,22 @@ export default function SettingsSection() {
     const provider = PROVIDER_SLUGS[platformName]
     if (!provider) {
       console.warn(`[Settings] Provider for ${platformName} is not supported yet.`)
+      return
+    }
+
+    if (isPreviewMode) {
+      if (displayConnections.some((connection) => connection.platform?.toLowerCase() === provider)) {
+        return
+      }
+
+      setActionId(provider)
+      setLocalError(null)
+
+      await new Promise((resolve) => window.setTimeout(resolve, 450))
+
+      setPreviewConnections((current) => [...current, createPreviewConnectedAccount(platformName)])
+      setActionId(null)
+      toast.success(t('previewConnectSuccess', { platform: platformName }))
       return
     }
 
@@ -378,13 +405,22 @@ export default function SettingsSection() {
       setLocalError(err instanceof Error ? err.message : 'Failed to start connection')
       setActionId(null)
     }
-  }, [fetchConnections])
+  }, [displayConnections, fetchConnections, isPreviewMode, t])
 
   /**
    * Handles disconnecting a social media account
    * After successful disconnect, forces a fresh fetch to update the UI
    */
   const handleDisconnect = useCallback(async (connectionId: string) => {
+    if (isPreviewMode) {
+      setActionId(connectionId)
+      await new Promise((resolve) => window.setTimeout(resolve, 250))
+      setPreviewConnections((current) => current.filter((connection) => connection.id !== connectionId))
+      setActionId(null)
+      toast.success(t('previewDisconnectSuccess'))
+      return
+    }
+
     try {
       setActionId(connectionId)
       const { data: { session } } = await supabaseClient.auth.getSession()
@@ -423,7 +459,7 @@ export default function SettingsSection() {
       }
       setActionId(null)
     }
-  }, [refreshConnectedAccounts])
+  }, [isPreviewMode, refreshConnectedAccounts, t])
 
   // Use a set of provider slugs to detect when we are in "connecting" state
   // This lets us show a global loading overlay + disable the whole settings UI
@@ -439,19 +475,19 @@ export default function SettingsSection() {
    */
   const connectedPlatformCount = useMemo(() => {
     return new Set(
-      connections
+      displayConnections
         .map(connection => connection.platform?.toLowerCase())
         .filter(Boolean)
     ).size
-  }, [connections])
+  }, [displayConnections])
 
   const latestConnectionDate = useMemo(() => {
-    if (connections.length === 0) return null
-    const latest = [...connections]
+    if (displayConnections.length === 0) return null
+    const latest = [...displayConnections]
       .filter(connection => connection.created_at)
       .sort((a, b) => new Date(b.created_at || '').getTime() - new Date(a.created_at || '').getTime())[0]
     return latest?.created_at ? formatDate(latest.created_at, locale) : null
-  }, [connections, locale])
+  }, [displayConnections, locale])
 
   return (
     <div className="relative w-full max-w-none py-2 lg:py-3 h-full overflow-y-auto">
@@ -538,14 +574,19 @@ export default function SettingsSection() {
       <div className={
         `space-y-6 ${isConnectingInProgress ? 'pointer-events-none select-none opacity-60' : ''}`
       }>
-        <SectionHeader icon={Settings} title={tHeaders('settings.title')} description={tHeaders('settings.description')} />
+        <SectionHeader icon={Settings} title={tHeaders('connections.title')} description={tHeaders('connections.description')} />
+        <div className="mx-auto w-full max-w-[1440px] px-4 pb-8 sm:px-6 xl:px-8">
+        <div className="space-y-8">
+        {isPreviewMode ? (
+          <PreviewNotice badge={previewCopy.badge} description={previewCopy.emptyDescription} />
+        ) : null}
 
         {/* Onboarding Tour Card Removed - Moved to User Profile */}
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div className="rounded-2xl border border-border/70 bg-card/95 p-5 shadow-sm">
             <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t('connectionsTableTitle')}</p>
-            <p className="mt-3 text-3xl font-bold text-foreground">{connections.length}</p>
+            <p className="mt-3 text-3xl font-bold text-foreground">{displayConnections.length}</p>
             <p className="mt-2 text-sm text-muted-foreground">{t('summaryConnectedDesc')}</p>
           </div>
           <div className="rounded-2xl border border-border/70 bg-card/95 p-5 shadow-sm">
@@ -571,7 +612,7 @@ export default function SettingsSection() {
             </div>
             <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card px-3 py-2 text-sm text-muted-foreground">
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-              {t('summaryCountBadge', { count: connections.length })}
+              {t('summaryCountBadge', { count: displayConnections.length })}
             </div>
             <div className="w-full sm:w-auto">
               <PlatformFilter value={platformFilter} onChange={setPlatformFilter} />
@@ -583,7 +624,7 @@ export default function SettingsSection() {
               <div className="text-center py-12 text-muted-foreground">{t('loading')}</div>
             ) : filteredConnections.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
-                {connections.length === 0 ? t('noConnections') : t('noConnectionsFiltered')}
+                {displayConnections.length === 0 ? t('noConnections') : t('noConnectionsFiltered')}
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -614,6 +655,7 @@ export default function SettingsSection() {
                       const connectionDate = connection?.created_at ? formatDate(connection.created_at, locale) : 'N/A'
                       const connectionTime = connection?.created_at ? formatTime(connection.created_at, locale, { hour: "2-digit", minute: "2-digit" }) : ''
                       const platformName = connection.platform || 'unknown'
+                      const platformLabel = getPlatformName(platformName)
                       const rowPlatColors = getPlatformColors(platformName);
                       return (
                         <tr key={connection.id} className={`border-b border-border last:border-0 group hover:bg-secondary/30 transition-colors ${rowPlatColors.border}`}>
@@ -621,7 +663,7 @@ export default function SettingsSection() {
                             <div className="flex items-center gap-3">
                               <PlatformIcon platform={platformName} size={32} variant="inline" />
                               <span className="text-sm text-foreground font-medium capitalize">
-                                {platformName}
+                                {platformLabel}
                               </span>
                             </div>
                           </td>
@@ -711,9 +753,14 @@ export default function SettingsSection() {
               return (
                 <button
                   key={idx}
-                  onClick={() => provider && handleConnect(platform.name)}
+                  type="button"
+                  onClick={() => {
+                    if (!provider || isDisabled || connection) return
+                    handleConnect(platform.name)
+                  }}
                   disabled={isDisabled}
-                  className={`group flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 rounded-xl border transition-all duration-200 disabled:opacity-50 ${
+                  aria-disabled={isDisabled}
+                  className={`group flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 rounded-xl border transition-all duration-200 ${isDisabled ? "opacity-50 cursor-not-allowed" : connection ? "cursor-default" : "cursor-pointer"} ${
                     connection
                       ? `${platColors.tint} ${platColors.darkTint} ${platColors.border} hover:border-primary/50`
                       : 'bg-muted border-border hover:border-primary/50 hover:bg-muted/80'
@@ -731,6 +778,8 @@ export default function SettingsSection() {
               )
             })}
           </div>
+        </div>
+        </div>
         </div>
       </div>
     </div>

@@ -94,7 +94,7 @@ export default function SectionPage({ params }: { params: { section: string } })
   }, [sectionFromUrl, setActiveSection, setIsSidebarOpen, isInitialLoad, isMounted]);
 
   /**
-   * Hydrate limits/credits for "create" and "api-dashboard" sections
+   * Hydrate limits/credits for "create" and "operations" sections
    * Only refreshes once per section change to prevent duplicate API calls
    */
   // Credits refresh removed (credits store deleted)

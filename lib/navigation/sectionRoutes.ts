@@ -1,7 +1,9 @@
 export const SECTION_ROUTE_ALIASES: Record<string, string> = {
-  account: "settings",
-  accounts: "settings",
-  api: "api-dashboard",
+  account: "connections",
+  accounts: "connections",
+  api: "operations",
+  "api-dashboard": "operations",
+  connection: "connections",
 };
 
 export const SECTION_ROUTE_IDS = [
@@ -10,8 +12,10 @@ export const SECTION_ROUTE_IDS = [
   "drafts",
   "published",
   "failed",
-  "api-dashboard",
+  "operations",
+  "connections",
   "settings",
+  "profile",
 ] as const;
 
 export type SectionRoute = (typeof SECTION_ROUTE_IDS)[number];

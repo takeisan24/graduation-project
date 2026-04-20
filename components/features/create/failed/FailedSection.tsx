@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
-import { useTranslations } from "next-intl"
+import { useEffect, useState, useCallback, useMemo } from "react"
+import { useLocale, useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import { useShallow } from "zustand/react/shallow"
 import { useFailedPostsStore } from "@/store/failed/failedPageStore"
@@ -9,7 +9,6 @@ import { usePostFilters } from "@/hooks/usePostFilters"
 import { useFilteredPosts } from "@/hooks/useFilteredPosts"
 import { FilterBar } from "@/components/shared/filters/FilterBar"
 import { RetryDetailModal } from "./RetryDetailModal"
-import ConfirmModal from "@/components/shared/ConfirmModal"
 import { LoadingModal, SuccessModal } from "./GenericStatusModals"
 import { FailedPost } from "@/store/shared/types"
 import { FileX, RotateCcw, TriangleAlert, XCircle } from "lucide-react"
@@ -17,48 +16,54 @@ import SectionHeader from '../layout/SectionHeader'
 import PostCard from '../shared/PostCard'
 import { useCreatePostsStore } from "@/store"
 import { useSectionNavigation } from "@/hooks/useSectionNavigation"
+import PreviewNotice from "../shared/PreviewNotice"
+import { getCreatePreviewCopy, getPreviewFailedPosts, isCreatePreviewEnabled } from "@/lib/mocks/createSectionPreview"
+import { getFailedRecoveryPresentation } from "./failedPostRecovery"
 
 export default function FailedSection() {
   const t = useTranslations('CreatePage.failed')
-  const tFailed = useTranslations('CreatePage.failedSection')
   const tHeaders = useTranslations('CreatePage.sectionHeaders')
   const tCard = useTranslations('CreatePage.postCard')
+  const locale = useLocale()
   
   const { 
     failedPosts, 
     isLoadingFailedPosts, 
     failedPostsHasMore, 
     isLoadingMoreFailedPosts,
+    hasLoadedFailedPosts,
     loadFailedPosts, 
     loadMoreFailedPosts,
-    handleRetryPost,
-    handleDeleteFailedPost
+    handleRetryPost
   } = useFailedPostsStore(useShallow((state) => ({
     failedPosts: state.failedPosts,
     isLoadingFailedPosts: state.isLoadingFailedPosts,
     failedPostsHasMore: state.failedPostsHasMore,
     isLoadingMoreFailedPosts: state.isLoadingMoreFailedPosts,
+    hasLoadedFailedPosts: state.hasLoadedFailedPosts,
     loadFailedPosts: state.loadFailedPosts,
     loadMoreFailedPosts: state.loadMoreFailedPosts,
     handleRetryPost: state.handleRetryPost,
-    handleDeleteFailedPost: state.handleDeleteFailedPost,
   })))
 
   const { platformFilter, dateFilter, searchTerm, setPlatformFilter, setDateFilter, setSearchTerm } = usePostFilters()
   const navigateToSection = useSectionNavigation()
   const openPostFromUrl = useCreatePostsStore((state) => state.openPostFromUrl)
 
-  const filterableFailedPosts = failedPosts.map((post) => ({
+  const previewPosts = useMemo(() => getPreviewFailedPosts(), [])
+  const isPreviewMode = isCreatePreviewEnabled() && hasLoadedFailedPosts && failedPosts.length === 0
+  const previewCopy = useMemo(() => getCreatePreviewCopy(locale), [locale])
+  const displayPosts = isPreviewMode ? previewPosts : failedPosts
+  const filterableFailedPosts = displayPosts.map((post) => ({
     ...post,
     time: post.scheduledAt || `${post.date}T${post.time || "00:00"}`,
   }))
   const filteredPosts = useFilteredPosts(filterableFailedPosts, searchTerm, platformFilter, dateFilter)
-  const retryReadyCount = failedPosts.filter((post) => Boolean(post.lateJobId)).length
-  const failedPlatforms = new Set(failedPosts.map((post) => post.platform).filter(Boolean)).size
+  const retryReadyCount = displayPosts.filter((post) => Boolean(post.lateJobId)).length
+  const failedPlatforms = new Set(displayPosts.map((post) => post.platform).filter(Boolean)).size
 
   // Modal States
   const [retryModalState, setRetryModalState] = useState<{ type: 'detail' | 'loading' | 'success', post: FailedPost | null } | null>(null)
-  const [deleteModalId, setDeleteModalId] = useState<string | null>(null)
 
   useEffect(() => {
     loadFailedPosts()
@@ -66,10 +71,6 @@ export default function FailedSection() {
 
   const handleRetryClick = useCallback((post: FailedPost) => {
     setRetryModalState({ type: 'detail', post })
-  }, [])
-
-  const handleDeleteClick = useCallback((id: string | number) => {
-    setDeleteModalId(String(id))
   }, [])
 
   const handleConfirmReschedule = useCallback(async (post: FailedPost, date: string, time: string) => {
@@ -98,12 +99,6 @@ export default function FailedSection() {
     })
   }, [navigateToSection, openPostFromUrl])
 
-  const handleConfirmDelete = useCallback(async () => {
-    if (!deleteModalId) return
-    await handleDeleteFailedPost(deleteModalId)
-    setDeleteModalId(null)
-  }, [deleteModalId, handleDeleteFailedPost])
-
   // Initial loading state
   if (isLoadingFailedPosts && failedPosts.length === 0) {
     return (
@@ -123,7 +118,7 @@ export default function FailedSection() {
           <div className="mb-3 grid gap-3 md:grid-cols-3">
             <div className="rounded-2xl border border-border/70 bg-card/60 px-4 py-3">
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Pipeline errors</p>
-              <p className="mt-2 text-2xl font-semibold text-foreground">{failedPosts.length}</p>
+              <p className="mt-2 text-2xl font-semibold text-foreground">{displayPosts.length}</p>
             </div>
             <div className="rounded-2xl border border-border/70 bg-card/60 px-4 py-3">
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Retry ready</p>
@@ -140,6 +135,9 @@ export default function FailedSection() {
               </p>
             </div>
           </div>
+          {isPreviewMode ? (
+            <PreviewNotice badge={previewCopy.badge} description={previewCopy.emptyDescription} className="mb-3" />
+          ) : null}
           <FilterBar
             platformFilter={platformFilter}
             dateFilter={dateFilter}
@@ -158,20 +156,30 @@ export default function FailedSection() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-              {filteredPosts.map((post) => (
+              {filteredPosts.map((post) => {
+                const recovery = getFailedRecoveryPresentation(post, locale)
+                return (
                 <PostCard
                   key={post.id}
-                  post={{ id: post.id, platform: post.platform, content: post.content, created_at: post.date, error_message: post.errorMessage ?? undefined }}
+                  post={{
+                    id: post.id,
+                    platform: post.platform,
+                    content: post.content,
+                    created_at: post.date,
+                    error_message: recovery.title
+                  }}
                   variant="failed"
-                  onRetry={() => handleRetryClick(post)}
-                  onDelete={() => handleDeleteClick(post.id)}
+                  onClick={() => handleRetryClick(post)}
+                  onEdit={() => handleEditInEditor(post)}
+                  onViewDetails={() => handleRetryClick(post)}
                 />
-              ))}
+                )
+              })}
             </div>
           )}
 
           {/* Load More Button */}
-          {failedPostsHasMore && (
+          {failedPostsHasMore && !isPreviewMode && (
             <div className="flex justify-center py-4">
               <Button
                 onClick={() => loadMoreFailedPosts()}
@@ -191,6 +199,7 @@ export default function FailedSection() {
         onClose={() => setRetryModalState(null)}
         onConfirmReschedule={handleConfirmReschedule}
         onEdit={() => retryModalState?.post && handleEditInEditor(retryModalState.post)}
+        isPreview={isPreviewMode}
       />
       
       <LoadingModal isOpen={retryModalState?.type === 'loading'} />
@@ -198,17 +207,6 @@ export default function FailedSection() {
       <SuccessModal 
         isOpen={retryModalState?.type === 'success'} 
         onClose={() => setRetryModalState(null)} 
-      />
-      
-      <ConfirmModal
-        isOpen={!!deleteModalId}
-        onClose={() => setDeleteModalId(null)}
-        onConfirm={handleConfirmDelete}
-        title={tFailed('deleteModal.title')}
-        description={tFailed('deleteModal.message')}
-        confirmText={tFailed('deleteModal.yes')}
-        cancelText={tFailed('deleteModal.no')}
-        variant="danger"
       />
     </>
   )
