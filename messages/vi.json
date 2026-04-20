@@ -1,0 +1,1920 @@
+{
+  "Onboarding": {
+    "of": "của",
+    "steps": {
+      "addSource": {
+        "title": "Thêm Nguồn Đầu Tiên",
+        "description": "Bắt đầu bằng cách thêm nguồn nội dung như bài viết, video, hoặc tài liệu. Đây sẽ là nền tảng cho nội dung AI của bạn. Nhấp vào nút để bắt đầu!"
+      },
+      "sourceList": {
+        "title": "Thư Viện Nguồn Của Bạn",
+        "description": "Tất cả nguồn đã lưu sẽ hiện ở đây. Chỉ cần nhấp vào bất kỳ nguồn nào để tạo nội dung hấp dẫn trên nhiều nền tảng."
+      },
+      "aiChat": {
+        "title": "Trò Chuyện với AI",
+        "description": "Cần trợ giúp? Hỏi AI về nội dung, yêu cầu cải thiện hoặc gợi ý sáng tạo. Giống như có một chuyên gia nội dung bên cạnh bạn!"
+      },
+      "createPost": {
+        "title": "Tạo Bài Đăng",
+        "description": "Đây là nơi phép màu xảy ra! Sử dụng AI để tạo nội dung tối ưu với chú thích, hình ảnh và video—tất cả phù hợp với khán giả của bạn."
+      }
+    },
+    "buttons": {
+      "next": "Tiếp theo",
+      "previous": "Quay lại",
+      "finish": "Bắt Đầu",
+      "skip": "Bỏ qua"
+    }
+  },
+  "Common": {
+    "searchPlaceholder": "Tìm kiếm...",
+    "allPlatforms": "Tất cả nền tảng",
+    "newest": "Mới nhất",
+    "oldest": "Cũ nhất",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "retry": "Thử lại",
+    "publish": "Đăng bài",
+    "close": "Đóng",
+    "generate": "Tạo",
+    "yes": "Có",
+    "no": "Không",
+    "confirm": "Xác nhận",
+    "loading": "Đang tải không gian làm việc của bạn...",
+    "filterByPlatform": "Lọc theo nền tảng",
+    "months": [
+      "Tháng 1",
+      "Tháng 2",
+      "Tháng 3",
+      "Tháng 4",
+      "Tháng 5",
+      "Tháng 6",
+      "Tháng 7",
+      "Tháng 8",
+      "Tháng 9",
+      "Tháng 10",
+      "Tháng 11",
+      "Tháng 12"
+    ],
+    "weekdays": [
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7",
+      "CN"
+    ],
+    "weekdaysFull": [
+      "Thứ Hai",
+      "Thứ Ba",
+      "Thứ Tư",
+      "Thứ Năm",
+      "Thứ Sáu",
+      "Thứ Bảy",
+      "Chủ Nhật"
+    ],
+    "hour": "Giờ",
+    "auth": {
+      "email": "Email",
+      "emailPlaceholder": "example@mail.com",
+      "password": "Mật khẩu",
+      "passwordPlaceholder": "Nhập mật khẩu của bạn",
+      "google": "Google",
+      "facebook": "Facebook"
+    },
+    "toast": {
+      "pastTimeError": "Không thể thêm hoặc di chuyển sự kiện vào thời gian đã qua.",
+      "eventAdded": "Đã thêm lịch cho {platform}.",
+      "eventMoved": "Đã cập nhật vị trí sự kiện.",
+      "dropFailed": "Thao tác kéo thả thất bại.",
+      "timeUpdated": "Đã cập nhật thời gian.",
+      "eventDeleted": "Đã xóa sự kiện khỏi lịch.",
+      "invalidDateTime": "Vui lòng chọn ngày và giờ hợp lệ.",
+      "pastScheduleError": "Không thể lên lịch vào một thời điểm trong quá khứ.",
+      "pastTimeScheduleError": "Không thể lên lịch cho thời gian đã qua. Vui lòng chọn thời gian trong tương lai.",
+      "failedPostOpened": "Mở bài viết trong trình soạn thảo để bạn chỉnh sửa.",
+      "postNotFound": "Không tìm thấy bài đăng.",
+      "cannotClone": "Không tìm thấy bài đăng để nhân bản.",
+      "postCloned": "Đã nhân bản bài viết \"{platform}\".",
+      "cannotSaveEmptyDraft": "Không thể lưu bản nháp rỗng.",
+      "draftSavedSuccess": "Đã lưu bản nháp thành công!",
+      "draftSaveFailed": "Lưu bản nháp thất bại: {error}",
+      "cannotPublishEmpty": "Không thể đăng một bài viết rỗng.",
+      "publishSuccess": "Bài viết \"{platform}\" đã được đăng thành công!",
+      "cannotPublishNotFound": "Không tìm thấy bài đăng để xuất bản.",
+      "draftDeletedSuccess": "Đã xóa bản nháp thành công.",
+      "draftNotFoundToDelete": "Không tìm thấy bản nháp để xóa.",
+      "postNotFoundToRetry": "Không tìm thấy bài viết thất bại để thử lại.",
+      "retrying": "Đang thử đăng lại...",
+      "retryingModal": "Đang thử lại...",
+      "pleaseWait": "Vui lòng chờ trong giây lát",
+      "successTitle": "Thành công!",
+      "successMessage": "Bài viết đã được lên lịch/đăng lại thành công!",
+      "retrySuccess": "Đăng lại bài viết thành công!",
+      "retryFailed": "Đăng lại thất bại. Vui lòng thử lại sau.",
+      "postDeletedSuccess": "Đã xóa bài viết thành công.",
+      "postNotFoundToDelete": "Không tìm thấy bài viết để xóa.",
+      "videoProcessingStarted": "Bắt đầu xử lý video: \"{title}\"...",
+      "videoProcessingCompleted": "Đã xử lý xong video: \"{title}\"!",
+      "videoEditorOpened": "Mở trình chỉnh sửa cho video \"{title}\".",
+      "videoProjectNotFound": "Không tìm thấy dự án video.",
+      "videoProjectNotFoundToDelete": "Không tìm thấy dự án video để xóa.",
+      "deletingProject": "Đang xóa dự án...",
+      "projectDeleted": "Đã xóa dự án \"{title}\".",
+      "projectDeleteFailed": "Xóa dự án thất bại.",
+      "postScheduledSuccess": "Đã lên lịch bài viết \"{platform}\" vào {time} ngày {date}.",
+      "cannotScheduleEmpty": "Không thể lên lịch một bài viết rỗng.",
+      "sendingImageRequest": "Đang gửi yêu cầu tạo {count} ảnh...",
+      "imageGenerationSuccess": "Đã tạo và thêm {count} ảnh vào bài viết!",
+      "imageGenerationFailed": "Tạo ảnh thất bại: {error}",
+      "cannotProcessImageData": "Không thể xử lý dữ liệu hình ảnh nhận được từ API.",
+      "sendingVideoRequest": "Đang gửi yêu cầu tạo video đến AI...",
+      "videoGenerating": "AI đang tạo video. Việc này có thể mất vài phút...",
+      "videoGenerationSuccess": "Video đã được tạo và thêm vào bài viết!",
+      "videoGenerationFailed": "Tạo video thất bại: {error}",
+      "emptyVideoResponse": "API đã trả về một file video rỗng.",
+      "videoFactorySuccess": "Đã xử lý video thành công!",
+      "videoFactoryFailed": "Xử lý video thất bại. Vui lòng thử lại.",
+      "creatingTextToVideo": "Đang tạo video từ mô tả...",
+      "textToVideoSuccess": "Đã tạo video AI thành công!",
+      "textToVideoFailed": "Tạo video thất bại. Vui lòng thử lại."
+    }
+  },
+  "Header": {
+    "nav": {
+      "features": "Tính năng",
+      "useCases": "Trường hợp sử dụng",
+      "pricing": "Bảng giá",
+      "faq": "Câu hỏi thường gặp"
+    },
+    "buttons": {
+      "signIn": "Đăng nhập",
+      "getStarted": "Bắt đầu dùng thử",
+      "signOut": "Đăng xuất",
+      "dashboard": "Bảng điều khiển",
+      "loading": "Đang tải...",
+      "toggleMenu": "Mở menu"
+    },
+    "signOutDialog": {
+      "title": "Đăng xuất thành công!",
+      "description": "Đang chuyển về trang chủ..."
+    }
+  },
+  "Footer": {
+    "copyright": "© 2025 CreatorHub, Inc. Mọi quyền được bảo lưu.",
+    "description": "Tự động hóa nội dung bằng AI cho mạng xã hội",
+    "title": {
+      "product": "Sản phẩm",
+      "resources": "Tài nguyên",
+      "company": "Công ty"
+    },
+    "links": {
+      "features": "Tính năng",
+      "pricing": "Bảng giá",
+      "templates": "Khuôn mẫu",
+      "blog": "Blog",
+      "tutorials": "Hướng dẫn",
+      "support": "Hỗ trợ",
+      "about": "Về chúng tôi",
+      "contact": "Liên hệ",
+      "privacy": "Chính sách bảo mật"
+    }
+  },
+  "HomePage": {
+    "hero": {
+      "badge": "Đồ án tốt nghiệp",
+      "titlePre": "Hỗ trợ Lập kế hoạch & ",
+      "titleHighlight": "Sáng tạo Nội dung",
+      "titlePost": " đa nền tảng bằng AI",
+      "subtitle": "Biến một nguồn nội dung duy nhất thành bài đăng tối ưu cho nhiều nền tảng mạng xã hội, sử dụng Generative AI để tự động hóa quy trình sáng tạo.",
+      "ctaPrimary": "Trải nghiệm ngay",
+      "ctaSecondary": "Xem tính năng",
+      "platformsLabel": "Hỗ trợ:",
+      "floatingCards": {
+        "aiTitle": "AI Generate",
+        "aiDesc": "Tự động tạo nội dung",
+        "platformTitle": "Multi-platform",
+        "platformDesc": "8 nền tảng MXH",
+        "scheduleTitle": "Lên lịch",
+        "scheduleDesc": "Đăng bài tự động"
+      }
+    },
+    "stats": {
+      "platforms": {
+        "value": "8",
+        "label": "Nền tảng MXH",
+        "trend": "TikTok, IG, YT..."
+      },
+      "aiModels": {
+        "value": "2",
+        "label": "AI Providers",
+        "trend": "Gemini, OpenAI GPT"
+      },
+      "scheduling": {
+        "value": "Auto",
+        "label": "Lên lịch đăng",
+        "trend": "Calendar tích hợp"
+      },
+      "multiplier": {
+        "value": "1→N",
+        "label": "Nguồn → Bài viết",
+        "trend": "Đa phiên bản"
+      }
+    },
+    "sectionLabels": {
+      "features": "Tính năng",
+      "howItWorks": "Quy trình",
+      "useCases": "Ứng dụng",
+      "techStack": "Công nghệ",
+      "cta": "Bắt đầu",
+      "learnMore": "Tìm hiểu thêm"
+    },
+    "socialProof": "Nền tảng được hỗ trợ",
+    "howItWorks": {
+      "title": "Hoạt động chỉ trong 3 bước đơn giản",
+      "subtitle": "Quy trình tự động hóa của CreatorHub giúp bạn tiết kiệm thời gian và công sức tối đa.",
+      "step1": {
+        "title": "Kết nối nguồn",
+        "description": "Cung cấp bất kỳ thứ gì – một URL bài viết, video YouTube, tệp âm thanh, hoặc chỉ một ý tưởng."
+      },
+      "step2": {
+        "title": "AI tự động tạo",
+        "description": "CreatorHub phân tích nguồn và tự động tạo ra một bộ nội dung đa phương tiện hoàn chỉnh cho nhiều nền tảng."
+      },
+      "step3": {
+        "title": "Lên lịch & Xuất bản",
+        "description": "Xem lại, tinh chỉnh nếu cần, và lên lịch đăng bài trên tất cả các kênh chỉ với vài cú nhấp chuột."
+      }
+    },
+    "testimonial": {
+      "quote": "CreatorHub đã thay đổi hoàn toàn cách chúng tôi làm marketing. Chúng tôi tiết kiệm được hơn 20 giờ mỗi tuần và sự hiện diện trên mạng xã hội chưa bao giờ tốt hơn thế.",
+      "author": {
+        "name": "Alex Trần",
+        "title": "Trưởng phòng Tăng trưởng, Momentum Labs"
+      },
+      "results": {
+        "title": "Kết quả thực tế",
+        "metric1": {
+          "value": "20+",
+          "label": "Giờ tiết kiệm mỗi tuần",
+          "description": "Tự động hóa các công việc lặp đi lặp lại từ khâu lên ý tưởng đến xuất bản."
+        },
+        "metric2": {
+          "value": "5x",
+          "label": "Sản lượng nội dung",
+          "description": "Tạo ra nhiều nội dung hơn cho nhiều kênh hơn mà không cần tốn thêm công sức."
+        },
+        "metric3": {
+          "value": "300%",
+          "label": "Tăng trưởng tương tác",
+          "description": "Duy trì sự hiện diện nhất quán trên các nền tảng giúp tăng vọt lượt tương tác."
+        }
+      }
+    },
+    "featuresTitle": "Tính năng chính của hệ thống",
+    "featureSubtitle": "Các công cụ AI hỗ trợ chuyển đổi nội dung thành bài đăng tối ưu cho từng nền tảng",
+    "features": {
+      "feature1": {
+        "title": "Nhập liệu từ nhiều nguồn",
+        "description": "Dễ dàng tạo nội dung từ bài viết, video, âm thanh hoặc lời nhắc văn bản."
+      },
+      "feature2": {
+        "title": "Tạo nội dung đa nền tảng",
+        "description": "Tự động tạo bản nháp nội dung được tối ưu hóa cho Instagram, TikTok, X và LinkedIn từ một nguồn."
+      },
+      "feature3": {
+        "title": "Phương tiện do AI tạo ra",
+        "description": "Nhận bài đăng hoàn chỉnh với chú thích, hình ảnh và video do AI tạo ra được điều chỉnh cho từng nền tảng."
+      },
+      "feature4": {
+        "title": "Trợ lý trò chuyện AI",
+        "description": "Tinh chỉnh nội dung của bạn bằng các lệnh ngôn ngữ tự nhiên như `làm cho nội dung này hài hước hơn` hoặc `tạo một hình ảnh khác`."
+      },
+      "feature5": {
+        "title": "Lên lịch thông minh",
+        "description": "Lên lịch bài đăng trên tất cả các nền tảng với lịch trực quan và tự động đề xuất thời gian tối ưu."
+      },
+      "feature6": {
+        "title": "Xuất bản & Tích hợp",
+        "description": "Xuất bản bài đăng lên các nền tảng MXH thông qua tích hợp API, quản lý trạng thái đăng bài ngay trong hệ thống."
+      }
+    },
+    "useCasesTitle": "Các tình huống ứng dụng thực tế",
+    "useCasesSubtitle": "Xem cách CreatorHub hỗ trợ sáng tạo nội dung cho nhiều nền tảng từ các nguồn khác nhau.",
+    "card": [
+      {
+        "title": "Tạo nội dung từ Video YouTube/TikTok",
+        "description": [
+          "Nhập URL video YouTube hoặc TikTok, AI tự động phân tích nội dung.",
+          "Tạo bài đăng tối ưu cho từng nền tảng: X, LinkedIn, Facebook, Instagram.",
+          "Tự động trích xuất ý chính và viết caption phù hợp từng kênh."
+        ]
+      },
+      {
+        "title": "Chuyển đổi Bài viết & Tài liệu",
+        "description": [
+          "Nhập URL bài blog hoặc upload file PDF/Word làm nguồn nội dung.",
+          "Tạo chuỗi bài đăng LinkedIn chuyên sâu từ một bài viết gốc.",
+          "Tạo slide carousel cho Instagram từ các luận điểm chính."
+        ]
+      },
+      {
+        "title": "Sáng tạo từ Ý tưởng",
+        "description": [
+          "Bắt đầu chỉ với một ý tưởng văn bản, AI phát triển thành kịch bản video.",
+          "Tạo nhiều phiên bản nội dung cho 8 nền tảng cùng lúc.",
+          "Sử dụng AI Chat để tinh chỉnh nội dung bằng ngôn ngữ tự nhiên."
+        ]
+      },
+      {
+        "title": "Tạo media bằng AI & Lên lịch đăng",
+        "description": [
+          "Tạo hình ảnh minh họa bằng Gemini AI với nhiều kích thước và độ phân giải.",
+          "Tạo video từ mô tả văn bản bằng Veo 3.0 (Google AI).",
+          "Lên lịch đăng bài tự động với Calendar tích hợp và đăng trực tiếp."
+        ]
+      }
+    ],
+    "ctaSection": {
+      "title": "Sẵn sàng trải nghiệm CreatorHub?",
+      "subtitle": "Khám phá hệ thống hỗ trợ sáng tạo nội dung đa nền tảng được xây dựng như một phần của đồ án tốt nghiệp ngành CNTT.",
+      "cta": "Trải nghiệm ngay"
+    },
+    "techStack": {
+      "title": "Kiến trúc & Công nghệ",
+      "subtitle": "Kiến trúc hiện đại, bảo mật, và có khả năng mở rộng"
+    },
+    "footer": {
+      "thesis": "Đồ án tốt nghiệp — Ngành Công nghệ Thông tin",
+      "university": "Trường Đại học Giao thông Vận tải (UTC)",
+      "student": "Sinh viên: Vũ Tuấn Anh — CNTT4",
+      "builtWith": "Xây dựng với Next.js, Supabase, và Generative AI",
+      "systemStatus": "Hệ thống đang hoạt động"
+    }
+  },
+  "AuthPanel": {
+    "badge": "Đồ án tốt nghiệp — UTC",
+    "university": "Trường Đại học Giao thông Vận tải",
+    "pills": {
+      "aiGenerate": "AI Generate",
+      "platforms": "8 Nền tảng",
+      "autoSchedule": "Lên lịch tự động"
+    },
+    "signin": {
+      "heading1": "Sáng tạo nội dung",
+      "heading2": "đa nền tảng",
+      "heading3": "bằng AI",
+      "description": "Biến một nguồn nội dung thành bài đăng tối ưu cho 8 nền tảng mạng xã hội."
+    },
+    "signup": {
+      "heading1": "Bắt đầu hành trình",
+      "heading2": "sáng tạo",
+      "heading3": "của bạn",
+      "description": "Tạo tài khoản để trải nghiệm hệ thống hỗ trợ sáng tạo nội dung đa nền tảng bằng AI."
+    },
+    "forgotPassword": {
+      "heading1": "Khôi phục",
+      "heading2": "tài khoản",
+      "heading3": "của bạn",
+      "description": "Đừng lo lắng, chúng tôi sẽ gửi link đặt lại mật khẩu qua email cho bạn."
+    },
+    "updatePassword": {
+      "heading1": "Bảo mật",
+      "heading2": "tài khoản",
+      "heading3": "của bạn",
+      "description": "Đặt mật khẩu mới để bảo vệ tài khoản CreatorHub của bạn."
+    }
+  },
+  "SignInPage": {
+    "title": "Chào mừng trở lại!",
+    "subtitle": "Nhập thông tin đăng nhập của bạn",
+    "rememberMe": "Ghi nhớ đăng nhập",
+    "forgotPassword": "Quên mật khẩu?",
+    "signIn": "Đăng nhập",
+    "signingIn": "Đang đăng nhập...",
+    "oauthRedirecting": "Đang chuyển hướng...",
+    "orContinueWith": "Hoặc tiếp tục với",
+    "noAccount": "Chưa có tài khoản?",
+    "createAccount": "Tạo tài khoản",
+    "termsText": "Bằng cách đăng nhập, bạn đồng ý với",
+    "termsOfService": "Điều khoản dịch vụ",
+    "and": "và",
+    "privacyPolicy": "Chính sách bảo mật",
+    "successDialog": {
+      "title": "Đăng nhập thành công!",
+      "description": "Đang chuyển hướng đến trang làm việc...",
+      "redirect": "Đi ngay"
+    }
+  },
+  "SignUpPage": {
+    "title": "Tạo tài khoản mới",
+    "subtitle": "Bắt đầu hành trình của bạn với CreatorHub ngay hôm nay!",
+    "form": {
+      "firstNameLabel": "Tên",
+      "firstNamePlaceholder": "Văn",
+      "lastNameLabel": "Họ",
+      "lastNamePlaceholder": "Nguyễn",
+      "confirmPasswordLabel": "Xác nhận mật khẩu",
+      "confirmPasswordPlaceholder": "Nhập lại mật khẩu",
+      "signUpButton": "Đăng ký",
+      "signingUp": "Đang tạo tài khoản...",
+      "passwordMismatch": "Mật khẩu không khớp"
+    },
+    "oauthRedirecting": "Đang chuyển hướng...",
+    "divider": "Hoặc đăng ký với",
+    "hasAccount": "Đã có tài khoản? ",
+    "signInLink": "Đăng nhập",
+    "successModal": {
+      "title": "Đăng ký thành công!",
+      "description": "Tài khoản của bạn đã được tạo thành công. Vui lòng đăng nhập để tiếp tục.",
+      "signInButton": "Đến trang Đăng nhập"
+    }
+  },
+  "ForgotPasswordPage": {
+    "title": "Quên mật khẩu?",
+    "subtitle": "Đừng lo lắng! Nhập email của bạn để nhận liên kết đặt lại mật khẩu.",
+    "form": {
+      "submitButton": "Gửi liên kết đặt lại",
+      "sending": "Đang gửi..."
+    },
+    "backToSignIn": "Quay lại trang Đăng nhập",
+    "successDialog": {
+      "title": "Đã gửi email!",
+      "description": "Chúng tôi đã gửi liên kết đặt lại mật khẩu đến",
+      "checkInbox": "Vui lòng kiểm tra hộp thư (bao gồm cả thư rác).",
+      "backToSignIn": "Quay lại Đăng nhập"
+    }
+  },
+  "UpdatePasswordPage": {
+    "title": "Đặt mật khẩu mới",
+    "subtitle": "Nhập mật khẩu mới cho tài khoản của bạn.",
+    "form": {
+      "newPassword": "Mật khẩu mới",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "submit": "Cập nhật mật khẩu",
+      "updating": "Đang cập nhật...",
+      "passwordMismatch": "Mật khẩu không khớp",
+      "passwordTooShort": "Mật khẩu phải có ít nhất 6 ký tự"
+    },
+    "successDialog": {
+      "title": "Đặt lại mật khẩu thành công!",
+      "description": "Mật khẩu của bạn đã được cập nhật. Vui lòng đăng nhập bằng mật khẩu mới.",
+      "signInButton": "Đến trang Đăng nhập"
+    },
+    "invalidLink": "Liên kết không hợp lệ. Vui lòng yêu cầu đặt lại mật khẩu mới.",
+    "expiredLink": "Liên kết đã hết hạn hoặc không hợp lệ. Vui lòng thử lại."
+  },
+  "AuthSuccessPage": {
+    "title": "Xác thực thành công!",
+    "settingUp": "Đang thiết lập tài khoản...",
+    "redirecting": "Đang chuyển hướng...",
+    "goToCreate": "Đi đến trang tạo nội dung",
+    "errorTitle": "Xác thực thất bại",
+    "backToSignIn": "Quay lại Đăng nhập"
+  },
+  "PricingPage": {
+    "headerTitle": "Chọn Gói Phù hợp với Sức sáng tạo của bạn",
+    "headerSubtitle": "Dù bạn mới bắt đầu hay đã là một agency chuyên nghiệp, CreatorHub luôn có một gói được thiết kế riêng cho bạn. Bắt đầu miễn phí ngay hôm nay!",
+    "perMonth": "/ tháng",
+    "featureOrder": [
+      "credits",
+      "accounts",
+      "scheduling",
+      "aiContent",
+      "aiAssistant",
+      "logoUpload",
+      "teamMembers"
+    ],
+    "features": {
+      "credits": "Tín dụng",
+      "accounts": "Số tài khoản MXH",
+      "scheduling": "Lên lịch bài đăng",
+      "aiContent": "Tạo nội dung từ AI",
+      "aiAssistant": "Trợ lý AI Tinh chỉnh",
+      "logoUpload": "Upload Logo (Branding)",
+      "teamMembers": "Thành viên"
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "price": "$0",
+        "cta": "Bắt đầu Miễn phí",
+        "featureValues": {
+          "credits": "10 Credits",
+          "accounts": "2 Profiles",
+          "scheduling": "Tối đa 10 bài/tháng",
+          "aiContent": true,
+          "aiAssistant": "Giới hạn",
+          "logoUpload": false,
+          "teamMembers": "1 người dùng"
+        }
+      },
+      "creator": {
+        "name": "Creator",
+        "price": "$29",
+        "subtitle": "Phổ biến nhất",
+        "cta": "Chọn gói Creator",
+        "featureValues": {
+          "credits": "200 Credits",
+          "accounts": "10 Profiles",
+          "scheduling": "Không giới hạn",
+          "aiContent": true,
+          "aiAssistant": true,
+          "logoUpload": true,
+          "teamMembers": "1 người dùng"
+        }
+      },
+      "creatorPro": {
+        "name": "Creator Pro",
+        "price": "$49",
+        "cta": "Chọn gói Creator Pro",
+        "featureValues": {
+          "credits": "450 Credits",
+          "accounts": "20 Profiles",
+          "scheduling": "Không giới hạn",
+          "aiContent": true,
+          "aiAssistant": true,
+          "logoUpload": true,
+          "teamMembers": "Sắp ra mắt (Lên tới 3)"
+        }
+      },
+      "agency": {
+        "name": "Agency",
+        "price": "$99",
+        "cta": "Liên hệ Sales",
+        "featureValues": {
+          "credits": "1000 Credits",
+          "accounts": "50 Profiles",
+          "scheduling": "Không giới hạn",
+          "aiContent": true,
+          "aiAssistant": true,
+          "logoUpload": true,
+          "teamMembers": "Sắp ra mắt (Lên tới 10)"
+        }
+      }
+    },
+    "creditSystemTitle": "Hệ thống Tín dụng của chúng tôi Hoạt động như thế nào?",
+    "creditSystemSubtitle": "Một loại Tín dụng duy nhất, linh hoạt cho mọi nhu-cầu sáng tạo của bạn.",
+    "creditSystemTable": {
+      "headerAction": "Hành động",
+      "headerCost": "Chi phí (Credits)",
+      "headerNote": "Ghi chú"
+    },
+    "creditSystem": [
+      {
+        "action": "Tạo bộ nội dung (chỉ Text)",
+        "cost": "1 Credit",
+        "note": "Áp dụng khi nguồn là prompt/text và chỉ tạo ra caption."
+      },
+      {
+        "action": "Tạo bộ nội dung (có Ảnh AI)",
+        "cost": "5 Credits",
+        "note": "Chi phí bao gồm việc tạo caption và 1 ảnh AI."
+      },
+      {
+        "action": "Tạo bộ nội dung (có Video AI)",
+        "cost": "20 Credits",
+        "note": "Luồng Text-to-Video: Tạo một video ngắn hoàn toàn mới từ text (bao gồm kịch bản, giọng nói, video, caption)."
+      },
+      {
+        "action": "Tinh chỉnh bằng Trợ lý AI",
+        "cost": "1 Credit / 3 yêu cầu",
+        "note": "Mỗi dự án được 3 lần yêu cầu tinh chỉnh miễn phí, các lần sau sẽ tính phí."
+      },
+      {
+        "action": "Xử lý Video (Video Factory)",
+        "cost": "5 Credits / mỗi phút",
+        "note": "Luồng Video-to-Video: Chi phí được tính trên mỗi phút thời lượng của video gốc bạn upload. Bao gồm: phiên âm, tự động tìm và ghép B-roll, thêm nhạc nền, logo và phụ đề động."
+      }
+    ],
+    "topUpTitle": "Cần thêm \"nhiên liệu\"?",
+    "topUpSubtitle": "Bạn có thể dễ dàng mua thêm các gói Tín dụng để tiếp tục công việc mà không cần nâng cấp gói thuê bao ngay. Tín dụng mua thêm sẽ không bao giờ hết hạn.",
+    "topUpPacks": {
+      "test": "Thử nghiệm",
+      "creative": "Sáng tạo",
+      "professional": "Chuyên nghiệp"
+    },
+    "buyButton": "Mua với giá {price}",
+    "faqTitle": "Câu hỏi Thường gặp",
+    "faqs": [
+      {
+        "question": "Tín dụng có được chuyển sang tháng sau không?",
+        "answer": "Tín dụng từ gói thuê bao tháng sẽ được làm mới vào mỗi chu kỳ thanh toán và không được cộng dồn. Tín dụng được mua thêm (Top-up) sẽ không hết hạn."
+      },
+      {
+        "question": "Tôi có thể hủy gói cước bất cứ lúc nào không?",
+        "answer": "Có, bạn có thể hủy gói cước của mình bất cứ lúc nào từ trang quản lý thanh toán. Bạn sẽ vẫn được sử dụng các tính năng của gói đã trả cho đến khi kết thúc chu kỳ thanh toán."
+      },
+      {
+        "question": "Sự khác biệt giữa \"Tạo Video AI\" và \"Xử lý Video\" là gì?",
+        "answer": "Tạo Video AI (20 Credits/lần): Bạn chỉ cần đưa ra ý tưởng (text), CreatorHub sẽ tự viết kịch bản và tạo ra một video hoàn toàn mới cho bạn.\nXử lý Video (5 Credits/phút): Bạn đã có sẵn một video (tự quay, phỏng vấn...), CreatorHub sẽ tự động thêm phụ đề, chèn cảnh minh họa, và biến nó thành một clip chuyên nghiệp."
+      }
+    ],
+    "topUpTable": {
+      "headerPackage": "Gói tín dụng",
+      "headerPrice": "Giá"
+    }
+  },
+  "BuyPlan": {
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Gói miễn phí trải nghiệm"
+      },
+      "creator": {
+        "name": "Creator",
+        "description": "Dành cho cá nhân"
+      },
+      "creator_pro": {
+        "name": "Creator Pro",
+        "description": "Dành cho người sáng tạo chuyên nghiệp"
+      },
+      "agency": {
+        "name": "Agency",
+        "description": "Dành cho doanh nghiệp"
+      },
+      "test_10k": {
+        "name": "Test 10k",
+        "description": "Gói test 10k"
+      },
+      "test_20k": {
+        "name": "Test 20k",
+        "description": "Gói test 20k"
+      },
+      "test_50k": {
+        "name": "Test 50k",
+        "description": "Gói test 50k"
+      }
+    },
+    "title": "Nâng cấp gói của bạn",
+    "subtitle": "Chọn gói phù hợp nhất với nhu cầu sáng tạo của bạn",
+    "loading": "Đang tải danh sách gói...",
+    "noPlans": {
+      "title": "Không có gói nào",
+      "description": "Chúng tôi không thể tải danh sách gói ngay lúc này.",
+      "retry": "Thử lại"
+    },
+    "billing": {
+      "monthly": "Hàng tháng",
+      "yearly": "Hàng năm",
+      "save": "Tiết kiệm {percent}%",
+      "billedYearly": "Thanh toán {price} mỗi năm"
+    },
+    "planStatus": {
+      "higherTier": "Gói cao cấp hơn",
+      "current": "Gói hiện tại",
+      "renewAgency": "Gia hạn/Mở rộng"
+    },
+    "coupon": {
+      "title": "Mã giảm giá",
+      "placeholder": "Nhập mã giảm giá",
+      "validating": "Đang kiểm tra...",
+      "apply": "Áp dụng",
+      "success": "Áp dụng mã giảm giá thành công!",
+      "invalid": "Mã giảm giá không hợp lệ",
+      "error": "Lỗi khi kiểm tra mã",
+      "removed": "Đã xóa mã giảm giá",
+      "discount": "Giảm giá: {value}"
+    },
+    "summary": {
+      "title": "Tóm tắt đơn hàng",
+      "noPlanSelected": "Vui lòng chọn gói",
+      "originalPrice": "Giá gốc",
+      "yearlySavings": "Tiết kiệm năm",
+      "dealPrice": "Giá ưu đãi",
+      "subtotal": "Tạm tính",
+      "plan": "Gói",
+      "voucherDiscount": "Giảm giá Voucher",
+      "totalAmount": "Tổng tiền",
+      "proceed": "Tiến hành thanh toán"
+    },
+    "successModal": {
+      "title": "Thanh toán thành công!",
+      "description": "Gói của bạn đã được nâng cấp thành công.",
+      "amountPaid": "Số tiền đã trả",
+      "totalCredits": "Tổng tín dụng",
+      "close": "Đóng"
+    },
+    "paymentModal": {
+      "title": "Quét mã thanh toán",
+      "subtitle": "Ứng dụng Ngân hàng / Ví điện tử",
+      "instruction": "Sử dụng app ngân hàng bất kỳ để quét",
+      "mockLabel": "Mã QR Giả lập",
+      "mockWarningTitle": "Môi Trường Giả Lập",
+      "mockWarningText": "Đây là hệ thống demo. Vui lòng KHÔNG chuyển tiền thật.",
+      "orderId": "Mã đơn hàng",
+      "content": "Nội dung",
+      "confirm": "Xác nhận chuyển khoản thành công",
+      "processing": "Đang xử lý...",
+      "failed": "Thanh toán thất bại",
+      "close": "Đóng & Thử lại",
+      "reason": "Lý do",
+      "support": "Hỗ trợ",
+      "defaultError": "Giao dịch không thành công. Vui lòng kiểm tra lại thông tin.",
+      "generalError": "Lỗi giao dịch hoặc người dùng hủy bỏ"
+    },
+    "paymentReturn": {
+      "verifying": "Đang xác minh thanh toán...",
+      "waitSecurely": "Vui lòng chờ trong giây lát...",
+      "securityAlert": "Cảnh báo bảo mật",
+      "invalidData": "Dữ liệu thanh toán không hợp lệ",
+      "returnShop": "Quay lại cửa hàng",
+      "successTitle": "Thanh toán thành công!",
+      "failedTitle": "Thanh toán thất bại",
+      "successMessage": "Tín dụng đã được cộng vào tài khoản của bạn",
+      "failedMessage": "Có vấn đề xảy ra khi xử lý thanh toán của bạn",
+      "refId": "Mã tham chiếu",
+      "amount": "Số tiền",
+      "transNo": "Mã giao dịch",
+      "dashboard": "Về trang chủ",
+      "tryAgain": "Thử lại",
+      "success": "Thanh toán thành công!",
+      "creditsAdded": "Tín dụng đã được cộng vào tài khoản của bạn",
+      "backToHome": "Về trang chủ",
+      "failed": "Thanh toán thất bại"
+    }
+  },
+  "CreatePage": {
+    "sidebar": {
+      "menu": "MENU",
+      "createPost": "Tạo bài viết",
+      "videos": "Tạo Videos",
+      "calendar": "Lịch",
+      "management": "QUẢN LÝ",
+      "drafts": "Bản nháp",
+      "published": "Bài đã đăng",
+      "failed": "Bài đăng thất bại",
+      "account": "TÀI KHOẢN",
+      "apiDashboard": "Phân tích hệ thống",
+      "settings": "Trung tâm tích hợp",
+      "logout": "Đăng xuất",
+      "signOutSuccess": "Đăng xuất thành công!",
+      "signOutRedirect": "Đang chuyển đến trang đăng nhập...",
+      "profile": "Hồ sơ",
+      "credits": "Tín dụng",
+      "storage": "Dung lượng",
+      "profiles": "Profiles",
+      "currentPlan": "Gói hiện tại",
+      "buyCredits": "Mua tín dụng",
+      "lowCreditsWarning": "Sắp hết tín dụng",
+      "accountSettings": "Cài đặt tài khoản",
+      "language": "Ngôn ngữ"
+    },
+    "postCard": {
+      "edit": "Chỉnh sửa",
+      "delete": "Xóa",
+      "retry": "Thử lại",
+      "noContent": "Chưa có nội dung",
+      "loadMore": "Tải thêm",
+      "emptyDrafts": "Chưa có bản nháp nào",
+      "emptyDraftsAction": "Tạo bài viết đầu tiên",
+      "emptyPublished": "Chưa có bài đăng nào",
+      "emptyPublishedAction": "Tạo và xuất bản bài viết",
+      "emptyFailed": "Không có bài đăng thất bại",
+      "emptyFailedDesc": "Tuyệt vời! Tất cả bài đăng đều thành công.",
+      "confirmDelete": "Bạn có chắc muốn xóa bài viết này?",
+      "published": "Đã đăng"
+    },
+    "sectionHeaders": {
+      "create": {
+        "title": "Tạo bài viết",
+        "description": "Soạn và tạo nội dung cho mạng xã hội"
+      },
+      "calendar": {
+        "title": "Lịch",
+        "description": "Lên lịch và quản lý thời gian đăng bài"
+      },
+      "drafts": {
+        "title": "Bản nháp",
+        "description": "Tiếp tục chỉnh sửa các bài viết đã lưu"
+      },
+      "published": {
+        "title": "Đã đăng",
+        "description": "Theo dõi các bài viết đã xuất bản"
+      },
+      "failed": {
+        "title": "Thất bại",
+        "description": "Xem lại và thử lại các bài đăng lỗi"
+      },
+      "api-dashboard": {
+        "title": "Phân tích hệ thống",
+        "description": "Theo dõi vận hành nội dung, kết nối nền tảng và trạng thái pipeline"
+      },
+      "settings": {
+        "title": "Trung tâm tích hợp MXH",
+        "description": "Kết nối, theo dõi và quản lý các tài khoản mạng xã hội phục vụ pipeline nội dung"
+      }
+    },
+    "topBar": {
+      "toggleTheme": "Chuyển giao diện",
+      "signOut": "Đăng xuất",
+      "signOutSuccess": "Đăng xuất thành công!",
+      "signOutRedirect": "Đang chuyển đến trang đăng nhập...",
+      "breadcrumb": {
+        "create": "Tạo bài viết",
+        "calendar": "Lịch",
+        "drafts": "Bản nháp",
+        "published": "Đã đăng",
+        "failed": "Thất bại",
+        "api-dashboard": "Phân tích hệ thống",
+        "settings": "Trung tâm tích hợp"
+      }
+    },
+    "apiDashboard": {
+      "title": "Phân tích hệ thống",
+      "subtitle": "Tổng quan vận hành của quy trình tạo nội dung và xuất bản đa nền tảng",
+      "overview": "Tổng quan",
+      "analytics": "Phân tích",
+      "activity": "Hoạt động",
+      "drafts": "Bản nháp",
+      "published": "Đã xuất bản",
+      "failed": "Thất bại",
+      "connectedAccounts": "Tài khoản kết nối",
+      "successRate": "Tỷ lệ thành công",
+      "loading": "Đang tải dữ liệu...",
+      "noData": "Chưa có dữ liệu",
+      "totalDrafts": "Bản nháp đang chuẩn bị",
+      "draftsHint": "Nguồn nội dung chờ hoàn thiện trước khi lên lịch hoặc đăng.",
+      "publishedHint": "Những bài đã đi qua pipeline và xuất bản thành công.",
+      "failedHint": "Các bài cần kiểm tra lại lịch đăng hoặc nội dung.",
+      "connectedPlatformsCount": "{count} nền tảng đang có dữ liệu",
+      "operationalSnapshot": "Bức tranh vận hành",
+      "operationalSnapshotDesc": "Các chỉ số chính cho biết hệ thống đang sẵn sàng ở mức nào để chạy demo và vận hành thử nghiệm.",
+      "readinessScore": "Điểm sẵn sàng",
+      "weeklyVolume": "Khối lượng 7 ngày",
+      "weeklyVolumeHint": "Tổng số bài được tạo, xử lý hoặc xuất bản trong 7 ngày gần nhất.",
+      "successRateHint": "Tính trên các bài đã đi đến trạng thái cuối cùng.",
+      "dominantPlatform": "Nền tảng nổi bật",
+      "dominantPlatformHint": "Nơi có nhiều nội dung đang được xử lý nhất trong hệ thống.",
+      "pipelineHealth": "Sức khỏe pipeline",
+      "pipelineStable": "Pipeline đang ổn định",
+      "pipelineNeedsAttention": "Pipeline cần theo dõi",
+      "pipelineHealthHint": "Theo dõi nhanh tình trạng luồng đăng bài và các điểm nghẽn cần xử lý.",
+      "systemFocus": "Trọng tâm hiện tại",
+      "systemFocusDesc": "Những việc cần ưu tiên tiếp theo để trình diễn hệ thống mạch lạc hơn.",
+      "focusDrafts": "Kho nội dung chờ xử lý",
+      "focusDraftsDesc": "Hiện có {count} bản nháp. Đây là nguồn nguyên liệu để tiếp tục lên lịch hoặc hoàn thiện nội dung.",
+      "focusConnections": "Độ phủ kết nối",
+      "focusConnectionsDesc": "Đã kết nối {count} tài khoản. Càng nhiều kết nối thật, phần demo đa nền tảng càng thuyết phục.",
+      "focusFailures": "Xử lý lỗi",
+      "focusFailuresDesc": "Có {count} mục lỗi cần theo dõi để chứng minh khả năng giám sát và phục hồi của hệ thống.",
+      "dailyOperations": "Nhịp vận hành theo ngày",
+      "dailyOperationsDesc": "Khối lượng nội dung đi qua hệ thống trong 7 ngày gần nhất.",
+      "platformDist": "Phân bổ theo nền tảng",
+      "platformDistDesc": "Nơi nội dung đang tập trung nhiều nhất trong toàn bộ pipeline.",
+      "statusDistribution": "Phân bổ trạng thái nội dung",
+      "statusDistributionDesc": "So sánh nhanh giữa nội dung đang soạn, đã đăng và lỗi cần xử lý.",
+      "activityPublished": "Đã xuất bản bài viết",
+      "activityFailed": "Phát hiện lỗi đăng bài",
+      "activityConnected": "Kết nối tài khoản thành công",
+      "activityNoContent": "Chưa có mô tả nội dung",
+      "activityFeed": "Dòng hoạt động gần đây",
+      "activityFeedDesc": "Các sự kiện mới nhất liên quan đến nội dung, lỗi và kết nối tài khoản.",
+      "noRecentActivity": "Chưa có hoạt động gần đây.",
+      "insightSummary": "Tóm tắt nhanh",
+      "insightSummaryDesc": "Các chỉ dấu giúp người xem hiểu ngay trạng thái hiện tại của hệ thống.",
+      "totalPosts": "Tổng mục đang quản lý",
+      "connectedPlatformsLabel": "Nền tảng đang hoạt động",
+      "nextFocus": "Hướng xử lý tiếp theo",
+      "nextFocusFailed": "Ưu tiên xử lý các mục lỗi để chứng minh khả năng phục hồi của pipeline.",
+      "nextFocusDrafts": "Ưu tiên chuyển các bản nháp thành lịch đăng để tăng độ phủ demo.",
+      "nextFocusHealthy": "Hệ thống đang ổn định. Có thể mở rộng demo sang nhiều nền tảng hơn.",
+      "latestWindow": "Ngữ cảnh theo dõi",
+      "latestWindowDesc": "Tất cả số liệu trong màn này lấy từ dữ liệu local hiện có: drafts, published, failed và tài khoản đã kết nối."
+    },
+    "published": {
+      "title": "Bài đã đăng",
+      "loading": "Đang tải danh sách bài đã đăng...",
+      "loadMore": "Xem thêm",
+      "loadingMore": "Đang tải...",
+      "open": "Mở",
+      "deleteFromList": "Xóa khỏi danh sách",
+      "confirmDelete": "Bạn có chắc chắn muốn xóa bài viết này không?",
+      "noPublishedPosts": "Không tìm thấy bài đăng đã xuất bản"
+    },
+    "failed": {
+      "title": "Thất bại",
+      "loading": "Đang tải danh sách bài đăng thất bại...",
+      "loadMore": "Xem thêm",
+      "loadingMore": "Đang tải...",
+      "retry": "Thử lại",
+      "delete": "Xóa"
+    },
+    "settings": {
+      "title": "Trung tâm tích hợp MXH",
+      "description": "Theo dõi các kết nối mạng xã hội và trạng thái đồng bộ của hệ thống.",
+      "loading": "Đang tải danh sách kết nối...",
+      "connecting": "Đang kết nối tài khoản mạng xã hội, vui lòng đợi...",
+      "popupBlocked": "Popup bị chặn",
+      "popupBlockedMessage": "Trình duyệt đang chặn cửa sổ popup cho kết nối {provider}.",
+      "popupBlockedDesc": "Bạn có thể cho phép popup cho trang web này rồi thử mở lại popup, hoặc tiếp tục đăng nhập trên chính tab hiện tại (full-page redirect).",
+      "continueHere": "Tiếp tục trên trang này",
+      "retryPopup": "Thử mở lại popup",
+      "connectionsTableTitle": "Tài khoản đang kết nối",
+      "connectionsTableDesc": "Quản lý các kết nối mạng xã hội của bạn tại đây.",
+      "summaryConnectedDesc": "Tổng số tài khoản đã được liên kết và sẵn sàng cho việc đồng bộ nội dung.",
+      "summaryPlatforms": "Nền tảng hoạt động",
+      "summaryPlatformsDesc": "Số nền tảng đang có ít nhất một tài khoản kết nối thật.",
+      "summaryLatest": "Kết nối gần nhất",
+      "summaryLatestDesc": "Mốc thời gian mới nhất mà hệ thống nhận thêm một tài khoản mạng xã hội.",
+      "summaryLatestEmpty": "Chưa có kết nối",
+      "summaryCountBadge": "{count} tài khoản đang hoạt động",
+      "noConnections": "Chưa có tài khoản nào được kết nối.",
+      "noConnectionsFiltered": "Không có tài khoản nào phù hợp với bộ lọc.",
+      "table": {
+        "platform": "Nền tảng",
+        "account": "Tài khoản",
+        "connectedAt": "Ngày kết nối",
+        "avatar": "Avatar",
+        "actions": "Thao tác"
+      },
+      "disconnect": "Ngắt kết nối",
+      "disconnecting": "Đang ngắt...",
+      "socialConnections": "Danh mục tích hợp",
+      "socialConnectionsDesc": "Kết nối thêm các nền tảng để mở rộng phạm vi xuất bản và demo hệ thống.",
+      "connected": "Đã kết nối",
+      "notConnected": "Chưa kết nối",
+      "loginError": "Vui lòng đăng nhập lại.",
+      "blueskyError": "Vui lòng nhập identifier và password cho Bluesky",
+      "onboardingTour": {
+        "resetSuccess": "Khôi phục hướng dẫn thành công"
+      },
+      "blueskyTitle": "Kết nối Bluesky",
+      "blueskyDesc": "Bluesky yêu cầu identifier và password để kết nối. Vui lòng nhập thông tin đăng nhập của bạn.",
+      "identifierLabel": "Identifier (username hoặc email)",
+      "passwordLabel": "Mật khẩu",
+      "cancel": "Hủy",
+      "connect": "Kết nối",
+      "connectingBtn": "Đang kết nối..."
+    },
+    "userProfile": {
+      "title": "Hồ sơ người dùng",
+      "tabs": {
+        "profile": "Thông tin cá nhân",
+        "history": "Lịch sử giao dịch"
+      },
+      "basicInfo": {
+        "title": "Thông tin cơ bản",
+        "description": "Quản lý thông tin hiển thị của bạn",
+        "email": "Email",
+        "displayName": "Tên hiển thị",
+        "avatarUrl": "Avatar URL",
+        "save": "Lưu thay đổi"
+      },
+      "appSettings": {
+        "title": "Cài đặt ứng dụng",
+        "description": "Các thiết lập khác",
+        "resetTour": "Reset Onboarding Tour",
+        "resetTourDesc": "Xem lại hướng dẫn sử dụng tính năng từ đầu",
+        "resetTourBtn": "Reset Tour"
+      },
+      "history": {
+        "title": "Lịch sử thanh toán",
+        "noOrders": "Chưa có giao dịch nào"
+      },
+      "toast": {
+        "loadOrdersError": "Không thể tải lịch sử giao dịch",
+        "updateSuccess": "Cập nhật thông tin thành công",
+        "updateError": "Lỗi cập nhật",
+        "resetTourSuccess": "Đã đặt lại trạng thái Onboarding"
+      }
+    },
+    "createSection": {
+      "mobileTabs": {
+        "sources": "Nguồn",
+        "posts": "Bài viết",
+        "aiChat": "AI Chat"
+      },
+      "mediaPreview": {
+        "downloadMedia": "Tải xuống",
+        "removeMedia": "Xóa media"
+      },
+      "sourcePanel": {
+        "sourcesTitle": "Nguồn đã lưu",
+        "addSource": "Thêm nguồn",
+        "deleteSource": "Xóa nguồn",
+        "viewDetails": "Xem chi tiết",
+        "editClone": "Chỉnh sửa (Clone)",
+        "clearGeneratedImages": "Xóa danh sách ảnh đã tạo",
+        "generatedImageAlt": "Ảnh đã tạo từ AI",
+        "sourceDeleted": "Đã xóa nguồn thành công",
+        "sourceDeleteError": "Xóa nguồn thất bại",
+        "sourceAddSuccess": "Đã thêm nguồn {type} thành công",
+        "collapse": "Thu gọn",
+        "expand": "Hiện tất cả",
+        "tooltips": {
+          "addSource": "Thêm nguồn nội dung như bài viết, video, hoặc tài liệu để tạo bài đăng"
+        },
+        "emptyState": {
+          "description": "Bắt đầu hành trình tạo nội dung của bạn",
+          "step1": "Nhấp nút 'Thêm nguồn' bên dưới",
+          "step2": "Chọn nguồn vừa tạo để AI sinh nội dung"
+        },
+        "sourceTypes": {
+          "content": "Văn bản",
+          "text": "Văn bản",
+          "text-source": "Văn bản và nguồn",
+          "article": "Bài viết",
+          "youtube": "YouTube",
+          "tiktok": "TikTok",
+          "pdf": "PDF",
+          "audio": "Âm thanh"
+        },
+        "clearedImageList": "Đã xóa danh sách ảnh đã tạo",
+        "generateImageAI": "Tạo ảnh với AI",
+        "generatedImages": "Ảnh đã tạo",
+        "confirmClearTitle": "Xác nhận xóa?",
+        "confirmClearDescription": "Bạn có chắc chắn muốn xóa toàn bộ danh sách ảnh đã tạo không? Hành động này không thể hoàn tác.",
+        "cancelClear": "Hủy bỏ",
+        "confirmClearButton": "Đồng ý xóa"
+      },
+      "sourceModal": {
+        "title": "Thêm nguồn mới",
+        "subtitle": "Chọn một trong hai cách để bắt đầu",
+        "description": "Nhấp vào nút 'Thêm nguồn' bên trên để bắt đầu thêm nội dung từ văn bản, bài viết, video, hoặc file PDF",
+        "divider": "Hoặc",
+        "sourceTypeLabel": {
+          "fromText": "Văn bản",
+          "fromArticle": "Bài viết",
+          "fromYoutube": "YouTube",
+          "fromTiktok": "TikTok",
+          "fromPDF": "PDF",
+          "fromAudio": "Âm thanh"
+        },
+        "modalLabel": "Nội dung nguồn",
+        "fileLabel": "Tải lên tệp tin",
+        "characterCount": "ký tự",
+        "ideaProvided": "Ý tưởng đã nhập",
+        "uploadFile": "Nhấp để tải",
+        "sourceSavedCheckbox": "Lưu nguồn này cho các lần sử dụng sau",
+        "advancedOptions": "Cài đặt nâng cao",
+        "mockOptionsText": "Chưa có cài đặt bổ sung.",
+        "chatRequestLabel": "Yêu cầu chi tiết cho AI",
+        "chatRequestOptional": "(Tùy chọn)",
+        "chatPlaceholder": "Ví dụ: 'Viết theo phong cách chuyên nghiệp', 'Thêm nhiều emoji', 'Tập trung vào lợi ích sản phẩm'...",
+        "chatHint": "💡 Ví dụ: \"Tập trung vào phần phân tích\", \"Làm ngắn gọn hơn\", \"Thêm emoji\"...",
+        "addButton": "Thêm nguồn",
+        "processing": "Đang xử lý...",
+        "cancelButton": "Hủy",
+        "statusReadySimple": "Sẵn sàng! Đã nhập nội dung nguồn",
+        "statusExternal": "bên ngoài",
+        "statusInternal": "ý tưởng",
+        "statusWarning": "Vui lòng nhập một nguồn bên ngoài HOẶC một ý tưởng để tiếp tục",
+        "sourceAddSuccess": "Đã thêm nguồn \"{type}\" thành công!",
+        "sourceAddError": "Thêm nguồn thất bại: {error}",
+        "addResource": "Thêm nguồn tham khảo (YouTube, File...)",
+        "errors": {
+          "pleaseEnterUrl": "Vui lòng nhập URL.",
+          "pleaseEnterText": "Vui lòng nhập văn bản.",
+          "uploadingFile": "Đang tải lên file {fileName}...",
+          "uploadPdfFailed": "Upload file PDF thất bại.",
+          "pleaseProvideData": "Vui lòng cung cấp dữ liệu cho nguồn đã chọn.",
+          "errorOccurred": "Đã xảy ra lỗi."
+        },
+        "editSource": "Chỉnh sửa nguồn",
+        "textSource": "Văn bản",
+        "saveCheckbox": "Lưu nguồn?"
+      },
+      "strategySelector": {
+        "title": "Chọn Chiến lược Nội dung",
+        "subtitle": "Khám phá và chọn khuôn mẫu phù hợp nhất",
+        "goalTitle": "Mục tiêu nội dung",
+        "nicheTitle": "Ngách của bạn",
+        "templateTitle": "Chọn khuôn mẫu",
+        "emptyState": "Chưa có mẫu phù hợp cho ngách này",
+        "selectTemplateHint": "Vui lòng chọn một khuôn mẫu để tiếp tục",
+        "templateSelected": "Đã chọn: {template}",
+        "nextButton": "Tiếp tục",
+        "backButton": "Quay lại",
+        "step2Subtitle": "Nhập nội dung cho nguồn mới",
+        "contentLabel": "Nội dung nguồn",
+        "contentHint": "Nhập link bài viết, Youtube, Tiktok hoặc nhập ý tưởng",
+        "characterCount": "{count} ký tự",
+        "inputTypes": {
+          "youtube": "📺 YouTube",
+          "tiktok": "🎵 TikTok",
+          "article": "📰 Bài viết",
+          "text": "💭 Ý tưởng"
+        },
+        "fileUpload": {
+          "clickToSelect": "Nhấp để chọn file",
+          "orDragDrop": "hoặc kéo thả vào đây",
+          "uploaded": "[File đã tải: {fileName}]"
+        },
+        "saveSourceCheckbox": "💾 Lưu nguồn này để sử dụng lại sau",
+        "saveSourceExplanation": "Nguồn đã lưu có thể được tái sử dụng cho nhiều bài đăng khác nhau",
+        "contentPlaceholder": {
+          "default": "Nhập ý tưởng hoặc dán link của bạn..."
+        },
+        "or": "Hoặc",
+        "fileLabel": "Tải lên tệp tin",
+        "fileHint": "Hỗ trợ PDF hoặc file âm thanh",
+        "inputContentHint": "Vui lòng nhập nội dung hoặc tải file lên",
+        "goals": {
+          "viral": {
+            "label": "Viral & Lan truyền",
+            "description": "Tạo nội dung lan truyền nhanh, thu hút sự chú ý ngay lập tức"
+          },
+          "trust": {
+            "label": "Trust & Uy tín",
+            "description": "Xây dựng niềm tin vững chắc và uy tín chuyên gia với khán giả"
+          },
+          "sales": {
+            "label": "Sales & Chuyển đổi",
+            "description": "Thúc đẩy hành vi mua hàng và tăng tỷ lệ chuyển đổi"
+          },
+          "education": {
+            "label": "Giáo dục khách hàng",
+            "description": "Cung cấp kiến thức giá trị, giải thích vấn đề một cách dễ hiểu"
+          },
+          "branding": {
+            "label": "Thương hiệu",
+            "description": "Lan tỏa giá trị cốt lõi và kể câu chuyện thương hiệu cảm xúc"
+          }
+        },
+        "niches": {
+          "real-estate": {
+            "label": "Bất động sản",
+            "description": "Mua bán, cho thuê, đầu tư và pháp lý nhà đất"
+          },
+          "accommodation": {
+            "label": "Lưu trú & Nghỉ dưỡng",
+            "description": "Homestay, Villa, Khách sạn, Resort"
+          },
+          "interior-construction": {
+            "label": "Nội thất & Xây dựng",
+            "description": "Thiết kế kiến trúc, thi công và cải tạo nhà cửa"
+          },
+          "furniture-materials": {
+            "label": "Bán đồ nội thất & Vật liệu",
+            "description": "Sản phẩm nội thất, vật liệu xây dựng và thiết bị"
+          },
+          "home-appliances": {
+            "label": "Đồ gia dụng & Nhà bếp",
+            "description": "Review và bán các thiết bị tiện ích gia đình"
+          },
+          "fashion": {
+            "label": "Thời trang",
+            "description": "Quần áo, phối đồ (styling) và phụ kiện"
+          },
+          "beauty-spa": {
+            "label": "Làm đẹp (Spa/Nail)",
+            "description": "Dịch vụ Spa, Nail, Phun xăm và chăm sóc sắc đẹp"
+          },
+          "cosmetics": {
+            "label": "Mỹ phẩm & Skincare",
+            "description": "Review mỹ phẩm, quy trình chăm sóc da"
+          },
+          "travel": {
+            "label": "Review Du lịch",
+            "description": "Blog du lịch, review điểm đến và trải nghiệm"
+          },
+          "media-design": {
+            "label": "Media & Design",
+            "description": "Quay dựng video, thiết kế, nhiếp ảnh (Photography)"
+          },
+          "online-course": {
+            "label": "Khóa học & Giáo dục",
+            "description": "Bán khóa học online, đào tạo kỹ năng"
+          },
+          "nutrition": {
+            "label": "Dinh dưỡng & Sức khỏe",
+            "description": "Giảm cân, Eat clean, chế độ dinh dưỡng"
+          },
+          "fb-restaurant": {
+            "label": "F&B (Nhà hàng/Cafe)",
+            "description": "Review quán ăn, nhà hàng, cafe và ẩm thực"
+          }
+        },
+        "frameworks": {
+          "expert-knowledge": {
+            "title": "Chia sẻ kiến thức chuyên môn",
+            "description": "Bài viết thể hiện sự am hiểu sâu sắc, giúp xây dựng uy tín chuyên gia"
+          },
+          "authentic-review": {
+            "title": "Review chân thật",
+            "description": "Đánh giá sản phẩm/dịch vụ dựa trên trải nghiệm thực tế, khách quan"
+          },
+          "comparison": {
+            "title": "So sánh A vs B",
+            "description": "Phân tích ưu nhược điểm giữa hai lựa chọn để giúp khách hàng ra quyết định"
+          },
+          "mistake-warning": {
+            "title": "Cảnh báo sai lầm",
+            "description": "Chỉ ra những sai lầm phổ biến và nguyên nhân gốc rễ của vấn đề"
+          },
+          "howto-guide": {
+            "title": "Hướng dẫn Step-by-step",
+            "description": "Cầm tay chỉ việc từng bước chi tiết để thực hiện một công việc cụ thể"
+          },
+          "storytelling": {
+            "title": "Kể chuyện hành trình",
+            "description": "Kể câu chuyện cá nhân hoặc khách hàng để chạm đến cảm xúc người đọc"
+          },
+          "tips-tricks": {
+            "title": "Mẹo vặt & Tips hay",
+            "description": "Chia sẻ các mẹo nhỏ, dễ áp dụng ngay lập tức"
+          },
+          "before-after": {
+            "title": "Before & After",
+            "description": "Chứng minh hiệu quả rõ rệt bằng sự thay đổi trước và sau khi sử dụng giải pháp"
+          },
+          "behind-scenes": {
+            "title": "Hậu trường (Behind the scenes)",
+            "description": "Tăng sự tin tưởng bằng việc công khai quy trình làm việc thực tế"
+          },
+          "listicle": {
+            "title": "Top List & Checklist",
+            "description": "Danh sách tổng hợp ngắn gọn, dễ đọc và dễ lưu lại"
+          }
+        },
+        "content_goals": {
+          "trust": {
+            "label": "Xây dựng uy tín",
+            "description": "Tập trung vào sự chuyên nghiệp, kiến thức sâu rộng và sự chân thành"
+          },
+          "viral": {
+            "label": "Viral & Tương tác",
+            "description": "Sử dụng ngôn ngữ thu hút, hook mạnh, đánh vào cảm xúc hoặc sự tò mò"
+          },
+          "sales": {
+            "label": "Bán hàng & Chốt đơn",
+            "description": "Tập trung vào lợi ích sản phẩm, giải quyết nỗi đau và kêu gọi hành động (CTA)"
+          },
+          "education": {
+            "label": "Giáo dục khách hàng",
+            "description": "Giải thích dễ hiểu, logic, cung cấp giá trị thực tế"
+          },
+          "branding": {
+            "label": "Xây dựng thương hiệu",
+            "description": "Kể chuyện cảm xúc, truyền tải sứ mệnh và giá trị cốt lõi"
+          }
+        }
+      },
+      "postEditorWrapper": {
+        "creatingContent": "Đang tạo nội dung...",
+        "analyzingSource": "AI đang phân tích nguồn và tạo bài viết cho bạn"
+      },
+      "createFromSourceModal": {
+        "title": "Tạo bài đăng mới từ nguồn",
+        "sourceInfo": "Nguồn:",
+        "sourceType": {
+          "text": "Văn bản",
+          "article": "Bài viết",
+          "youtube": "YouTube",
+          "text-source": "Văn bản và nguồn"
+        },
+        "subtitle": "Chọn nền tảng và số lượng bài đăng cần tạo:",
+        "selectAll": "Chọn tất cả",
+        "clearAll": "Bỏ chọn tất cả",
+        "selected": "đã chọn",
+        "post": "bài",
+        "isCreating": "Đang tạo...",
+        "createButton": "Tạo bài đăng",
+        "cancelButton": "Hủy",
+        "estimatedCost": "Chi phí dự tính",
+        "estimatedOutput": "Khối lượng tạo",
+        "creditsUnit": "Credits",
+        "outputsUnit": "bài",
+        "postsUnit": "bài"
+      },
+      "postPanel": {
+        "postsTitle": "Bài đăng",
+        "selectAll": "Chọn tất cả",
+        "deselectAll": "Bỏ chọn tất cả",
+        "deleteSelected": "Xóa mục đã chọn",
+        "addImage": "Thêm ảnh",
+        "characterCount": "ký tự",
+        "postContentPlaceholder": "Bạn muốn chia sẻ gì trên",
+        "addPost": "Thêm bài đăng",
+        "clonePost": "Nhân bản",
+        "saveDraft": "Lưu nháp",
+        "saving": "Đang lưu...",
+        "publish": "Đăng",
+        "tooltips": {
+          "addPost": "Tạo bài đăng mới cho bất kỳ nền tảng nào"
+        },
+        "emptyState": {
+          "title": "Chưa có bài đăng nào",
+          "description": "Hãy bắt đầu bằng các cách chúng tôi đề xuất dưới đây",
+          "or": "hoặc",
+          "step1": {
+            "title": "Thêm nguồn nội dung",
+            "description": "Nhấp 'Thêm nguồn' bên trái → Nhập nội dung (text, link, PDF...) → Nhấp vào nguồn để AI tự động generate."
+          },
+          "step2": {
+            "title": "Hoặc tạo bài đăng thủ công",
+            "description": "Nhấp nút 'Thêm bài đăng' ở góc trên để tạo bài đăng trống và tự viết nội dung."
+          },
+          "tip": {
+            "title": "Chúng tôi khuyến khích:",
+            "description": "Thêm nguồn → Click nguồn → AI tự generate → Chỉnh sửa với AI Chat!"
+          }
+        }
+      },
+      "chatPanel": {
+        "aiChatTitle": "Trò chuyện với AI",
+        "aiChatPlaceholder": "Hỏi bất cứ điều gì hoặc yêu cầu tạo bài đăng...",
+        "sendButton": "Gửi",
+        "aiTyping": "AI đang trả lời",
+        "copiedToClipboard": "Đã sao chép nội dung vào bộ nhớ tạm!",
+        "emptyState": {
+          "title": "Trợ Lý AI Sẵn Sàng",
+          "description": "Chat này sẽ tự động mở khi bạn có bài đăng. Tôi sẽ giúp bạn chỉnh sửa và tối ưu nội dung!",
+          "examplesTitle": "Bạn có thể yêu cầu tôi:",
+          "example1": "Làm bài đăng này ngắn hơn và thêm emoji",
+          "example2": "Viết lại với giọng văn chuyên nghiệp hơn",
+          "example3": "Tạo 5 hashtag phù hợp cho bài này",
+          "hint": "💡 Lưu ý: AI Chat sẽ tự động đóng khi bạn đóng hết các tab bài đăng."
+        },
+        "offlineError": "Không có kết nối mạng. Vui lòng thử lại.",
+        "copyFailed": "Không thể sao chép. Vui lòng thử lại.",
+        "charLimitExceeded": "Đã vượt quá giới hạn ký tự.",
+        "emptyContentWarning": "Nội dung trống. Vui lòng nhập nội dung trước.",
+        "retry": "Thử lại",
+        "clearChatTitle": "Xóa cuộc trò chuyện?",
+        "clearChatDescription": "Toàn bộ lịch sử chat với AI sẽ bị xóa. Hành động này không thể hoàn tác.",
+        "clearChatConfirm": "Xóa",
+        "clearChatCancel": "Hủy",
+        "toSend": "để gửi"
+      },
+      "actionBar": {
+        "addImage": "Thêm ảnh",
+        "generate": "Tạo",
+        "generateImage": "Tạo ảnh",
+        "generateVideo": "Tạo video",
+        "clone": "Nhân bản",
+        "save": "Lưu",
+        "saving": "Đang lưu...",
+        "publish": "Đăng",
+        "characterCount": "ký tự",
+        "tooltips": {
+          "generate": "Dùng AI để tạo hình ảnh hoặc video cho bài đăng",
+          "clone": "Sao chép bài đăng này để tạo bài tương tự",
+          "save": "Lưu bài đăng này làm nháp để sử dụng sau",
+          "publish": "Đăng bài lên các kênh mạng xã hội của bạn"
+        },
+        "mediaLibrary": "Media Library",
+        "formatTitle": "Tự động định dạng lại bài viết cho đẹp mắt",
+        "formatting": "Đang sửa...",
+        "format": "Format",
+        "translateTitle": "Dịch bài viết",
+        "translating": "Đang dịch...",
+        "translate": "Dịch",
+        "selectTargetLanguage": "Chọn ngôn ngữ đích",
+        "translatePrompt": "Bạn muốn dịch bài viết sang ngôn ngữ nào?",
+        "vietnamese": "Tiếng Việt",
+        "languages": {
+          "english": "Tiếng Anh (English)",
+          "japanese": "Tiếng Nhật (日本語)",
+          "korean": "Tiếng Hàn (한국어)",
+          "chinese": "Tiếng Trung (中文)",
+          "french": "Tiếng Pháp (Français)",
+          "spanish": "Tiếng Tây Ban Nha (Español)"
+        },
+        "cancel": "Hủy",
+        "translateNow": "Dịch ngay",
+        "postsToCreate": "Bài viết sẽ tạo",
+        "postsUnit": "bài"
+      },
+      "imageGenModal": {
+        "title": "Tạo ảnh với AI",
+        "promptLabel": "Mô tả ảnh cần tạo",
+        "promptPlaceholder": "Mô tả chi tiết ảnh bạn muốn tạo...",
+        "promptHint": "Nội dung bài viết đã được tự động điền. Bạn có thể chỉnh sửa.",
+        "countLabel": "Số lượng ảnh (tối đa 3)",
+        "sizeLabel": "Kích thước ảnh",
+        "size1K": "1K - Tiêu chuẩn (1024x1024 tùy tỷ lệ)",
+        "size2K": "2K - Chất lượng cao (2048x2048 tùy tỷ lệ)",
+        "sizeHint": "Kích thước thực tế phụ thuộc vào tỷ lệ khung hình",
+        "aspectRatioLabel": "Tỷ lệ khung hình",
+        "ratio1_1": "1:1 - Vuông (Instagram, Facebook)",
+        "ratio4_3": "4:3 - Ngang (Tiêu chuẩn)",
+        "ratio3_4": "3:4 - Dọc (Story)",
+        "ratio16_9": "16:9 - Ngang (YouTube, Twitter)",
+        "ratio9_16": "9:16 - Dọc (TikTok, Reels)",
+        "safetyLabel": "Bộ lọc an toàn",
+        "safetyAllowAdult": "Cho phép người lớn (Mặc định)",
+        "safetyAllowAll": "Cho phép tất cả",
+        "safetyDontAllow": "Không cho phép",
+        "safetyHint": "Kiểm soát việc tạo hình người trong ảnh",
+      "estimatedCost": "Chi phí dự tính",
+      "estimatedOutput": "Dự kiến tạo",
+      "imagesUnit": "ảnh",
+      "cancel": "Hủy",
+      "generate": "Tạo ảnh",
+      "generating": "Đang tạo ảnh"
+      },
+      "videoGenModal": {
+        "title": "Tạo video với AI",
+        "promptLabel": "Mô tả video cần tạo",
+        "promptPlaceholder": "Mô tả chi tiết video bạn muốn tạo...",
+        "promptHint": "Nội dung bài viết đã được tự động điền. Bạn có thể chỉnh sửa.",
+        "negativePromptLabel": "Mô tả điều KHÔNG muốn (tùy chọn)",
+        "negativePromptPlaceholder": "VD: mờ, tối, xấu, biến dạng...",
+        "negativePromptHint": "Giúp AI tránh tạo những yếu tố không mong muốn",
+        "aspectRatioLabel": "Tỷ lệ khung hình",
+        "ratio16_9": "16:9 - Ngang (YouTube, Facebook)",
+        "ratio9_16": "9:16 - Dọc (TikTok, Reels)",
+        "ratio1_1": "1:1 - Vuông (Instagram, Facebook)",
+        "ratio4_5": "4:5 - Dọc (Instagram Feed)",
+        "ratio4_3": "4:3 - Tiêu chuẩn",
+        "resolutionLabel": "Chất lượng video",
+        "resolution720p": "HD - 720p",
+        "resolution1080p": "Full HD - 1080p (Khuyến nghị)",
+        "resolution4K": "Ultra HD - 4K",
+        "safetyLabel": "Bộ lọc an toàn",
+        "safetyAllowAdult": "Cho phép người lớn (Mặc định)",
+        "safetyAllowAll": "Cho phép tất cả",
+        "safetyDontAllow": "Không cho phép",
+        "safetyHint": "Kiểm soát việc tạo hình người trong video",
+      "note": "Lưu ý:",
+      "noteText": "Chỉ có thể tạo 1 video mỗi lần. Quá trình tạo video có thể mất vài phút tùy thuộc vào độ phức tạp.",
+      "estimatedOutput": "Dự kiến tạo",
+      "videosUnit": "video",
+      "cancel": "Hủy",
+      "generate": "Tạo video",
+      "generating": "Đang tạo video"
+      },
+      "publishModal": {
+        "title": "Xác nhận đăng",
+        "subtitle": "Chọn tài khoản và thời điểm đăng.",
+        "selectAccount": "Chọn tài khoản",
+        "whenPublish": "Khi nào bạn muốn đăng?",
+        "publishNow": "Bây giờ",
+        "nextFreeSlot": "Khe trống tiếp theo",
+        "pickTime": "Chọn thời gian",
+        "selectTime": "Chọn thời gian",
+        "cancel": "Hủy",
+        "publishNowButton": "Đăng ngay",
+        "confirmSchedule": "Xác nhận lên lịch",
+        "closeModal": "Đóng",
+        "shortsLabel": "Đăng dưới hình thức Shorts",
+        "dateLabel": "Ngày",
+        "timeLabel": "Giờ"
+      },
+      "mediaLibraryModal": {
+        "selectPostFirst": "Vui lòng chọn bài viết trước khi thêm media.",
+        "searchPlaceholder": "Tìm kiếm media...",
+        "loadingLibrary": "Đang tải thư viện...",
+        "error": "Lỗi: {error}",
+        "retry": "Thử lại",
+        "noMediaFound": "Không tìm thấy media nào",
+        "all": "Tất cả",
+        "video": "Video",
+        "image": "Ảnh",
+        "audio": "Audio",
+        "selectedCount": "Đã chọn {count} mục",
+        "selectMediaHint": "Chọn media để thêm vào bài viết",
+        "cancel": "Hủy",
+        "addToPost": "Thêm vào bài viết"
+      },
+      "lightboxModal": {
+        "downloadSuccess": "Tải xuống thành công!",
+        "downloadError": "Không thể tải xuống tệp.",
+        "download": "Tải xuống",
+        "close": "Đóng"
+      },
+      "errorState": {
+        "defaultTitle": "Đã xảy ra lỗi",
+        "defaultMessage": "Rất tiếc, đã có lỗi xảy ra trong quá trình xử lý. Vui lòng thử lại sau.",
+        "retryButton": "Thử lại",
+        "reportButton": "Báo lỗi",
+        "networkErrorTitle": "Lỗi kết nối",
+        "networkErrorMessage": "Vui lòng kiểm tra lại kết nối mạng của bạn và thử lại.",
+        "serverErrorTitle": "Máy chủ đang bận",
+        "serverErrorMessage": "Máy chủ đang bận. Vui lòng thử lại sau."
+      },
+      "topBarActions": {
+        "sources": "Nguồn",
+        "aiChat": "AI Chat",
+        "wizard": {
+          "step1": "Thêm nguồn",
+          "step2": "Cấu hình",
+          "step3": "Tạo bài",
+          "exit": "Thoát",
+          "next": "Tiếp",
+          "back": "Quay lại"
+        }
+      }
+    },
+    "calendarSection": {
+      "today": "Hôm nay",
+      "month": "Tháng",
+      "week": "Tuần",
+      "clearAll": "Xóa tất cả",
+      "confirmClearAll": "Bạn có chắc muốn xóa tất cả sự kiện trên lịch không? Hành động này không thể hoàn tác.",
+      "zeroStateTitle": "Lịch của bạn, canvas sáng tạo tiếp theo",
+      "zeroStateDescription": "Kéo biểu tượng nền tảng (TikTok, Instagram, YouTube...) vào ngày bạn muốn đăng bài để lên lịch.",
+      "zeroStateCtaSchedule": "Chọn ngày để lên lịch",
+      "zeroStateCtaConnect": "Kết nối tài khoản MXH",
+      "zeroStateCtaConnectMore": "Kết nối thêm tài khoản",
+      "zeroStateAria": "Lịch trống. Bạn chưa có sự kiện nào. Kéo biểu tượng nền tảng để bắt đầu lên lịch.",
+      "periodicEmpty": "Tuần này có {count} ngày trống — cơ hội để plan thêm content mới",
+      "periodicEmptyCta": "Nhảy tới ngày trống",
+      "plannerOnboarding": "Khởi động planner",
+      "stepConnectTitle": "Kết nối tài khoản",
+      "stepConnectDescription": "Liên kết các nền tảng để lịch đăng có thể đồng bộ trạng thái thật.",
+      "stepCreateTitle": "Tạo bài viết",
+      "stepCreateDescription": "Dùng AI hoặc soạn thủ công để chuẩn bị nội dung cho từng nền tảng.",
+      "stepScheduleTitle": "Xếp lịch chiến dịch",
+      "stepScheduleDescription": "Kéo thả, chọn ngày đăng và theo dõi trạng thái publishing ngay trên lịch.",
+      "recommendedAction": "Hành động khuyến nghị",
+      "recommendedActionWithAccounts": "Bắt đầu lên lịch cho tuần này bằng cách tạo bài đầu tiên.",
+      "recommendedActionWithoutAccounts": "Kết nối ít nhất một tài khoản mạng xã hội để mở tính năng lập lịch.",
+      "overviewScheduledWeek": "Lịch tuần này",
+      "overviewScheduledWeekHint": "Số bài đang chờ được xuất bản trong tuần hiện tại.",
+      "defenseStripEyebrow": "Defense snapshot",
+      "defenseStripTitle": "Mức sẵn sàng trình diễn của lịch nội dung",
+      "defenseStripHealthy": "Calendar đang ở trạng thái ổn định để demo: có độ phủ lịch, trạng thái publish rõ ràng và ít điểm nghẽn cần xử lý.",
+      "defenseStripNeedsAttention": "Có dấu hiệu nghẽn ở pipeline đăng bài. Nên ưu tiên xử lý failed queue trước khi tăng thêm lịch mới.",
+      "defenseStripCoverage": "Tỉ lệ thành công đang ổn nhưng độ phủ tuần còn thấp. Bạn có thể bổ sung thêm lịch ở các ngày trống để câu chuyện demo đầy hơn.",
+      "healthReadiness": "Độ sẵn sàng",
+      "healthCoverage": "Độ phủ tuần",
+      "healthCoverageDays": "{count}/7 ngày",
+      "healthReliability": "Độ ổn định publish",
+      "healthReliabilityHint": "thành công",
+      "overviewPostedWeek": "Đã đăng tuần này",
+      "overviewPostedWeekHint": "Các bài đã được hệ thống xác nhận đăng thành công.",
+      "overviewFailed": "Bài cần xử lý",
+      "overviewFailedHint": "Những lịch đăng lỗi nên được reschedule hoặc chỉnh sửa nội dung.",
+      "overviewTopPlatform": "Nền tảng nổi bật",
+      "overviewTopPlatformHint": "{count} lịch đang hoạt động trên nền tảng này.",
+      "overviewTopPlatformEmpty": "Chưa có nền tảng nào được sử dụng.",
+      "overviewNone": "Chưa có",
+      "plannerEyebrow": "Content operations",
+      "plannerTitle": "Bảng điều phối lịch nội dung",
+      "plannerDescription": "Theo dõi lịch đăng, lọc theo nền tảng và tập trung xử lý các điểm nghẽn trong pipeline xuất bản.",
+      "createNewSchedule": "Chọn ngày để lên lịch",
+      "filterLabel": "Bộ lọc hiển thị",
+      "filterAllPlatforms": "Tất cả nền tảng",
+      "filterAllStatuses": "Tất cả trạng thái",
+      "filterResultCount": "{count} lịch khớp bộ lọc hiện tại",
+      "scheduleFocusHint": "Đã chuyển tới ngày {date}. Kéo một nền tảng từ thanh trên vào ô ngày để tạo lịch.",
+      "insightCoverage": "Độ phủ tuần",
+      "insightCoverageValue": "Còn {count} ngày chưa có nội dung trong tuần này.",
+      "insightFocus": "Trọng tâm hiện tại",
+      "insightFocusAll": "Đang xem toàn bộ lịch đa nền tảng.",
+      "insightFocusPlatform": "Đang tập trung vào nền tảng {platform}.",
+      "insightSuggestion": "Gợi ý AI",
+      "insightSuggestionFailed": "Ưu tiên xử lý các bài failed trước khi bổ sung lịch mới để tránh đứt nhịp chiến dịch.",
+      "insightSuggestionHealthy": "Pipeline đang ổn định, bạn có thể tận dụng các ngày trống để tăng tần suất đăng.",
+      "agendaTitle": "Agenda theo ngày",
+      "agendaSubtitle": "{count} lịch đang hiển thị trong ngày được chọn.",
+      "agendaSummaryPlatforms": "Nền tảng xuất hiện",
+      "agendaSummaryStatus": "Trạng thái ưu tiên",
+      "legendTitle": "Chú giải trạng thái",
+      "legendDescription": "Màu trạng thái đã được thống nhất giữa calendar, agenda và popup chi tiết.",
+      "quickActionsTitle": "Quick actions",
+      "quickActionCreate": "Mở màn tạo nội dung",
+      "quickActionFailed": "Đi tới hàng chờ lỗi",
+      "quickActionEmpty": "Nhảy tới ngày trống gần nhất",
+      "quickActionReset": "Xóa toàn bộ bộ lọc",
+      "agendaEmptyPlatforms": "Chưa có nền tảng",
+      "agendaNoStatus": "Chưa có trạng thái",
+      "agendaEmptyTitle": "Ngày này chưa có lịch đăng",
+      "agendaEmptyDescription": "Chọn ngày khác hoặc kéo một nền tảng vào lịch để tạo lịch đăng mới.",
+      "agendaNoTime": "Chưa đặt giờ",
+      "agendaNoContent": "Chưa có nội dung mô tả cho lịch này.",
+      "posted": "Đã đăng",
+      "publishing": "Đang đăng bài...",
+      "scheduled": "Lên lịch",
+      "failed": "Thất bại",
+      "empty": "Trống",
+      "eventMoved": "Đã cập nhật vị trí sự kiện.",
+      "addedSchedule": "Đã thêm lịch cho {platform}.",
+      "addedScheduleAnnounce": "Đã thêm lịch cho {platform}",
+      "addedScheduleFromCell": "Đã thêm lịch cho {platform} vào ngày {date}",
+      "postStatusPosted": "{platform} đăng bài thành công",
+      "postStatusFailed": "{platform} đăng bài thất bại",
+      "syncing": "Đang đồng bộ...",
+      "synced": "Đã đồng bộ",
+      "syncFailed": "Đồng bộ thất bại",
+      "syncedJustNow": "Đã đồng bộ vừa xong",
+      "syncedMinutesAgo": "Đã đồng bộ {n} phút trước",
+      "offline": "Đang offline",
+      "platformIconTooltip": "Kéo biểu tượng vào ngày hoặc nhấn + trên ngày để thêm",
+      "addToDay": "Thêm vào ngày này",
+      "selectPlatform": "Chọn nền tượng để thêm vào lịch",
+      "pastDate": "Ngày đã qua. Không thể thêm sự kiện.",
+      "noEventsOnDay": "Không có bài đăng. Nhấn Enter để thêm.",
+      "eventCountOnDay": "{count} bài đăng. {platforms}.",
+      "ariaEventLabel": "{status} {platform} lúc {time}. Nhấn Enter để xem/soạn, kéo để di chuyển.",
+      "ariaDayWithEvents": "{date}. {count} bài đăng: {platforms}.",
+      "ariaDayEmpty": "{date}. Không có bài đăng. Nhấn Enter để thêm.",
+      "ariaDayPast": "{date}. Ngày đã qua. Không thể thêm sự kiện.",
+      "ariaToday": "{date}. Hôm nay. {count} bài đăng.",
+      "ariaCalendarSection": "Lịch đăng bài. Dùng phím mũi tên để di chuyển giữa các ngày.",
+      "ariaAddEvent": "Thêm lịch đăng bài vào ngày này",
+      "ariaSyncStatus": "Trạng thái đồng bộ: {status}",
+      "ariaPopup": "Tùy chọn sự kiện. {platform} {time}. Các hành động: Xem hoặc chỉnh sửa bài đăng, Xóa sự kiện.",
+      "addedMedia": "Đã thêm {count} media vào bài viết.",
+      "eventStatus": {
+        "published": "Đã đăng",
+        "scheduled": "Lên lịch",
+        "failed": "Thất bại",
+        "empty": "Trống"
+      },
+      "popup": {
+        "viewEdit": "Xem/Soạn bài",
+        "editTime": "Sửa thời gian",
+        "deleteEvent": "Xóa sự kiện",
+        "editTimeTitle": "Sửa thời gian đăng",
+        "saveTime": "Lưu",
+        "statusScheduled": "Đã lên lịch",
+        "statusPublishing": "Đang đăng",
+        "statusPosted": "Đã đăng",
+        "statusFailed": "Thất bại",
+        "scheduledTime": "Khung giờ: {time}",
+        "scheduledTimeEmpty": "Chưa có khung giờ"
+      },
+      "deleteModal": {
+        "title": "Xác nhận xóa?",
+        "message": "Bạn có chắc chắn muốn xóa sự kiện này khỏi lịch không?",
+        "no": "Không",
+        "yes": "Xóa"
+      }
+    },
+    "failedSection": {
+      "title": "Bài đăng thất bại",
+      "reason": "Lý do thất bại",
+      "reschedule": "Lên lịch lại",
+      "retryModal": {
+        "title": "Chi tiết bài đăng thất bại",
+        "postContent": "Nội dung bài đăng:",
+        "failureReason": "Lý do thất bại:",
+        "editPost": "Chỉnh sửa bài đăng",
+        "rescheduleTime": "Chọn thời gian đăng lại:",
+        "dateLabel": "Ngày:",
+        "timeLabel": "Giờ:",
+        "cancel": "Hủy",
+        "scheduleAgain": "Lên lịch lại"
+      }
+    },
+    "draftsSection": {
+      "title": "Bản nháp"
+    },
+    "publishedSection": {
+      "title": "Bài đã đăng"
+    },
+    "videosSection": {
+      "title": "Dự án Video",
+      "uploadVideo": "Tải lên video mới",
+      "quickStart": "Bắt đầu nhanh",
+      "textToVideo": "Biến ý tưởng thành Video",
+      "textToVideoDesc": "Tạo video ngắn từ mô tả văn bản bằng AI",
+      "videoFactory": "Cắt Video dài thành ngắn",
+      "videoFactoryDesc": "Tái sử dụng video dài từ YouTube hoặc file",
+      "aiPowered": "AI Magic ✨",
+      "youtubeAndUpload": "YouTube / Upload 📤",
+      "addSubtitles": "Tạo phụ đề",
+      "addSubtitlesDesc": "Thêm phụ đề và b-rolls",
+      "mergeVideos": "Cắt ghép video",
+      "mergeVideosDesc": "Kết hợp nhiều clip",
+      "extractClip": "Trích clip",
+      "extractClipDesc": "Trích clip từ video dài",
+      "generateBRolls": "Tạo B-rolls",
+      "translateSubtitles": "Dịch phụ đề",
+      "yourProjects": "Dự án của bạn",
+      "searchProjects": "Tìm kiếm dự án...",
+      "deleteProject": "Xóa dự án"
+    },
+    "videoFactory": {
+      "inputStageTitle": "Chọn nguồn Video",
+      "inputStageDesc": "Tải lên file hoặc dán link YouTube",
+      "youtubeTab": "YouTube Link",
+      "uploadTab": "Tải lên File",
+      "youtubeUrlLabel": "URL Video YouTube",
+      "validate": "Kiểm tra",
+      "enterYouTubeUrl": "Vui lòng nhập URL YouTube",
+      "invalidYouTubeUrl": "URL YouTube không hợp lệ",
+      "youtubeValidated": "Video YouTube hợp lệ!",
+      "cannotFetchYouTube": "Không thể lấy thông tin video",
+      "youtubeError": "Lỗi khi kiểm tra video YouTube",
+      "uploadFileLabel": "Tải lên Video",
+      "clickToUpload": "Click để tải lên",
+      "orDragDrop": "hoặc kéo thả",
+      "supportedFormats": "MP4, MOV, AVI, MKV, WebM (tối đa 500MB)",
+      "fileUploaded": "Đã tải file thành công!",
+      "validateYouTubeFirst": "Vui lòng kiểm tra URL YouTube trước",
+      "uploadFileFirst": "Vui lòng tải lên file video trước",
+      "remove": "Xóa",
+      "next": "Tiếp tục",
+      "back": "Quay lại",
+      "configStageTitle": "Cấu hình cắt Video",
+      "configStageDesc": "Chọn phương thức cắt video",
+      "autoMethod": "Tự động (AI Magic)",
+      "autoMethodDesc": "AI tự động tìm khoảnh khắc viral",
+      "manualMethod": "Thủ công (Transcript)",
+      "manualMethodDesc": "Chọn đoạn văn bản bạn muốn",
+      "selected": "Đã chọn",
+      "clipCount": "Số lượng clip muốn tạo",
+      "clipDuration": "Độ dài mỗi clip",
+      "contentTheme": "Chủ đề ưu tiên (Tùy chọn)",
+      "transcriptHint": "Bôi đen đoạn văn bản bạn muốn tạo clip, sau đó nhấn nút \"Tạo clip từ đoạn này\"",
+      "clipAdded": "Đã thêm đoạn clip",
+      "selectAtLeastOne": "Vui lòng chọn ít nhất một đoạn",
+      "selectedClips": "Các đoạn đã chọn",
+      "postProdStageTitle": "Tùy chọn Hậu kỳ",
+      "postProdStageDesc": "Thêm phụ đề, B-roll và hiệu ứng",
+      "autoCaptions": "Tự động tạo phụ đề",
+      "autoCaptionsDesc": "Thêm phụ đề tự động cho video",
+      "captionLanguage": "Ngôn ngữ phụ đề",
+      "captionStyle": "Phong cách phụ đề",
+      "bRollInsertion": "Tự động chèn B-roll",
+      "bRollInsertionDesc": "Thêm cảnh minh họa vào video",
+      "bRollDensity": "Mật độ B-roll",
+      "backgroundMusic": "Nhạc nền",
+      "backgroundMusicDesc": "Thêm nhạc nền phù hợp",
+      "transitions": "Hiệu ứng chuyển cảnh",
+      "transitionsDesc": "Thêm hiệu ứng mượt mà giữa các cảnh",
+      "startProcessing": "Bắt đầu xử lý",
+      "processing": "Đang xử lý Video",
+      "processingDesc": "Vui lòng chờ trong giây lát...",
+      "estimatedTime": "Ước tính",
+      "minimize": "Thu nhỏ",
+      "processingComplete": "Hoàn thành!",
+      "processingCompleteDesc": "Video của bạn đã được xử lý thành công",
+      "generatedClips": "Các clip đã tạo",
+      "preview": "Xem",
+      "download": "Tải",
+      "done": "Hoàn tất"
+    },
+    "textToVideo": {
+      "title": "Text-to-Video",
+      "subtitle": "Tạo video từ mô tả văn bản",
+      "promptLabel": "Mô tả video của bạn",
+      "promptPlaceholder": "Ví dụ: Một chú mèo đang nhảy múa trong vườn hoa rực rỡ...",
+      "beSpecific": "Mô tả càng chi tiết, video càng chính xác",
+      "negativePromptLabel": "Những gì KHÔNG muốn",
+      "optional": "Tùy chọn",
+      "negativePromptPlaceholder": "Ví dụ: mờ, độ phân giải thấp, biến dạng...",
+      "duration": "Độ dài video",
+      "aspectRatio": "Tỷ lệ khung hình",
+      "creditEstimate": "Ước tính Credit",
+      "creditEstimateDesc": "Video này sẽ tiêu tốn khoảng",
+      "creditCalculation": "{duration}s × 2 credits/giây",
+      "cancel": "Hủy",
+      "create": "Tạo Video",
+      "enterPrompt": "Vui lòng nhập mô tả video"
+    },
+    "settingsSection": {
+      "title": "Cài Đặt & Tùy Chọn",
+      "subtitle": "Quản lý tài khoản, kết nối và tùy chỉnh trải nghiệm của bạn.",
+      "socialConnections": "Tài khoản mạng xã hội",
+      "socialConnectionsDesc": "Kết nối tài khoản mạng xã hội để đăng bài trực tiếp",
+      "connected": "Đã kết nối",
+      "notConnected": "Chưa kết nối",
+      "connectionsTableTitle": "Tài khoản đã liên kết",
+      "connectionsTableDesc": "Quản lý các hồ sơ đã kết nối và ngắt những tài khoản không còn dùng.",
+      "loading": "Đang tải...",
+      "noConnections": "Chưa có tài khoản mạng xã hội nào được kết nối.",
+      "noConnectionsFiltered": "Không có tài khoản nào khớp bộ lọc.",
+      "table": {
+        "platform": "Nền tảng",
+        "account": "Tài khoản",
+        "connectedAt": "Ngày kết nối",
+        "avatar": "Ảnh đại diện",
+        "actions": "Thao tác"
+      },
+      "disconnect": "Ngắt",
+      "disconnecting": "Đang ngắt...",
+      "status": {
+        "connected": "Đã kết nối",
+        "notConnected": "Chưa kết nối",
+        "notSupported": "Chưa hỗ trợ"
+      },
+      "preferences": {
+        "title": "Tùy chọn",
+        "language": "Ngôn ngữ",
+        "timezone": "Múi giờ"
+      },
+      "onboardingTour": {
+        "title": "Hướng dẫn sử dụng",
+        "description": "Muốn xem lại hướng dẫn? Đặt lại ở đây và hướng dẫn sẽ hiện lại khi bạn tải lại trang.",
+        "resetButton": "Đặt lại hướng dẫn",
+        "resetSuccess": "Đã đặt lại hướng dẫn! Đang tải lại trang...",
+        "tooltip": "Điều này sẽ hiển thị hướng dẫn từng bước lại cho lần truy cập tiếp theo",
+        "tooltipInfo": "Hướng dẫn giúp người dùng mới hiểu cách sử dụng nền tảng",
+        "resetTourSuccess": "Đã đặt lại hướng dẫn! Đang tải lại trang..."
+      }
+    }
+  },
+  "SettingsSection": {
+    "connectionsTableTitle": "Tài khoản đã liên kết",
+    "connectionsTableDesc": "Quản lý các hồ sơ đã kết nối và ngắt những tài khoản không còn dùng.",
+    "loading": "Đang tải...",
+    "noConnections": "Chưa có tài khoản mạng xã hội nào được kết nối.",
+    "noConnectionsFiltered": "Không có tài khoản nào khớp bộ lọc.",
+    "table": {
+      "platform": "Nền tảng",
+      "account": "Tài khoản",
+      "connectedAt": "Ngày kết nối",
+      "avatar": "Ảnh đại diện",
+      "actions": "Thao tác"
+    },
+    "disconnect": "Ngắt",
+    "disconnecting": "Đang ngắt...",
+    "socialConnections": "Tài khoản mạng xã hội",
+    "socialConnectionsDesc": "Kết nối tài khoản mạng xã hội để đăng bài trực tiếp",
+    "connected": "Đã kết nối",
+    "notConnected": "Chưa kết nối",
+    "status": {
+      "connected": "Đã kết nối",
+      "notConnected": "Chưa kết nối",
+      "notSupported": "Chưa hỗ trợ"
+    },
+    "onboardingTour": {
+      "title": "Hướng dẫn sử dụng",
+      "description": "Muốn xem lại hướng dẫn? Đặt lại ở đây và hướng dẫn sẽ hiện lại khi bạn tải lại trang.",
+      "resetButton": "Đặt lại hướng dẫn",
+      "resetSuccess": "Đã đặt lại hướng dẫn! Đang tải lại trang..."
+    }
+  },
+  "FAQPage": {
+    "header": {
+      "title": "Câu hỏi thường gặp",
+      "subtitle": "Mọi thứ bạn cần biết về CreatorHub"
+    },
+    "faqs": [
+      {
+        "q": "Dịch vụ của bạn làm gì chính xác?",
+        "a": "Chúng tôi giúp các nhà sáng tạo nội dung tối ưu hóa sự hiện diện trên mạng xã hội bằng cách lên lịch, viết kịch bản và tạo nội dung trên TikTok, YouTube và Instagram. Nền tảng của chúng tôi có thể:",
+        "list": [
+          "Viết kịch bản cho video của bạn.",
+          "Tạo chú thích và hashtag được tùy chỉnh để tương tác.",
+          "Tạo bản nháp video dạng ngắn (sẵn sàng để bạn chỉnh sửa hoặc đăng).",
+          "Lên lịch mọi thứ để bạn có thể duy trì tính nhất quán mà không kiệt sức."
+        ]
+      },
+      {
+        "q": "Nó hoạt động như thế nào?",
+        "steps": [
+          "Bạn cho chúng tôi biết ngách của bạn, đối tượng mục tiêu và nền tảng ưa thích.",
+          "AI và đội ngũ sáng tạo của chúng tôi tạo kịch bản, chú thích và/hoặc bản nháp video cho bạn.",
+          "Bạn xem xét, phê duyệt hoặc yêu cầu chỉnh sửa.",
+          "Chúng tôi giúp bạn lên lịch nội dung để nó được đăng vào thời điểm tốt nhất để tương tác."
+        ],
+        "note": "Hãy nghĩ về nó như việc có một studio nội dung tự động."
+      },
+      {
+        "q": "Ai sở hữu nội dung bạn tạo cho tôi?",
+        "a": "Bạn sở hữu. 100%. Mọi thứ chúng tôi tạo—kịch bản, chú thích, video—đều thuộc về bạn sau khi được giao."
+      },
+      {
+        "q": "Tôi có thể chỉnh sửa kịch bản hoặc video không?",
+        "a": "Hoàn toàn có thể. Bạn có thể chỉnh sửa kịch bản, chú thích và bản nháp video trực tiếp trên nền tảng của chúng tôi trước khi đăng. Chúng tôi khuyến khích tùy chỉnh để giọng điệu độc đáo của bạn tỏa sáng."
+      },
+      {
+        "q": "Chi phí là bao nhiêu?",
+        "list": [
+          "Hàng tháng (30$/tháng Cá nhân, 100$/tháng Doanh nghiệp)",
+          "Hàng năm (288$/năm Cá nhân, 960$/năm Doanh nghiệp)"
+        ]
+      },
+      {
+        "q": "Bạn có cung cấp dùng thử miễn phí không?",
+        "a": "Có! Chúng tôi cung cấp dùng thử miễn phí 7 ngày để bạn có thể kiểm tra quy trình làm việc trước khi cam kết."
+      },
+      {
+        "q": "Bạn hỗ trợ những nền tảng nào?",
+        "a": "Hiện tại: TikTok, YouTube Shorts và Instagram Reels. Chúng tôi đang mở rộng sang LinkedIn và X (Twitter)."
+      },
+      {
+        "q": "Làm thế nào để đảm bảo kịch bản và chú thích phù hợp với phong cách của tôi?",
+        "a": "Trong quá trình onboarding, chúng tôi sẽ hỏi về giọng điệu, ngách và sở thích đối tượng của bạn. Hệ thống của chúng tôi sau đó học phong cách của bạn và tạo bản nháp được tùy chỉnh theo giọng điệu của bạn. Bạn luôn có thể cung cấp phản hồi để tinh chỉnh kết quả."
+      },
+      {
+        "q": "Bạn có đảm bảo tăng trưởng không?",
+        "a": "Chúng tôi không thể đảm bảo một số lượng người theo dõi hoặc lượt xem cụ thể—thuật toán mạng xã hội không thể đoán trước. Những gì chúng tôi đảm bảo là:",
+        "list": [
+          "Đầu ra nội dung nhất quán.",
+          "Kịch bản và chú thích chất lượng cao được tùy chỉnh để tương tác.",
+          "Quy trình làm việc hợp lý giúp bạn tiết kiệm thời gian."
+        ],
+        "note": "Tính nhất quán + chất lượng = nền tảng cho sự tăng trưởng."
+      },
+      {
+        "q": "Tôi có thể hủy bất cứ lúc nào không?",
+        "a": "Có, tất cả các gói đăng ký đều theo tháng. Hủy bất cứ lúc nào mà không có phí ẩn."
+      },
+      {
+        "q": "Bạn có cung cấp hoàn tiền không?",
+        "a": "Chúng tôi cung cấp hoàn tiền trong vòng 14 ngày đầu tiên của gói trả phí đầu tiên nếu bạn không hài lòng."
+      },
+      {
+        "q": "Nếu tôi cần sự trợ giúp từ con người thì sao?",
+        "a": "Chúng tôi có đội ngũ hỗ trợ (con người thực sự!) có sẵn qua chat và email. Đối với các gói Pro và Agency, chúng tôi cũng cung cấp các cuộc gọi onboarding một-đối-một."
+      }
+    ],
+    "cta": {
+      "title": "Vẫn còn thắc mắc?",
+      "subtitle": "Không tìm thấy câu trả lời bạn cần? Đội ngũ hỗ trợ của chúng tôi sẵn sàng giúp đỡ.",
+      "contactSupport": "Liên hệ hỗ trợ",
+      "viewPricing": "Xem bảng giá"
+    }
+  }
+}

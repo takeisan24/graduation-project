@@ -1,0 +1,1939 @@
+{
+  "Onboarding": {
+    "of": "of",
+    "steps": {
+      "addSource": {
+        "title": "Add Your First Source",
+        "description": "Start by adding a content source like an article, video, or document. This will be the foundation for your AI content. Click the button to begin!"
+      },
+      "sourceList": {
+        "title": "Your Source Library",
+        "description": "All saved sources will appear here. Simply click on any source to create engaging content across multiple platforms."
+      },
+      "aiChat": {
+        "title": "Chat with AI",
+        "description": "Need help? Ask AI about content, request improvements, or get creative suggestions. It's like having a content expert by your side!"
+      },
+      "createPost": {
+        "title": "Create Posts",
+        "description": "This is where the magic happens! Use AI to generate optimized content with captions, images, and videos—all tailored to your audience."
+      }
+    },
+    "buttons": {
+      "next": "Next",
+      "previous": "Back",
+      "finish": "Get Started",
+      "skip": "Skip"
+    }
+  },
+  "Common": {
+    "searchPlaceholder": "Search...",
+    "allPlatforms": "All platforms",
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "retry": "Retry",
+    "publish": "Publish",
+    "close": "Close",
+    "generate": "Generate",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "loading": "Loading your workspace...",
+    "filterByPlatform": "Filter by platform",
+    "months": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "weekdays": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ],
+    "weekdaysFull": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ],
+    "hour": "Hour",
+    "auth": {
+      "email": "Email",
+      "emailPlaceholder": "example@mail.com",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "google": "Google",
+      "facebook": "Facebook"
+    },
+    "toast": {
+      "pastTimeError": "Cannot add or move event to past time.",
+      "eventAdded": "Added schedule for {platform}.",
+      "eventMoved": "Event position updated.",
+      "dropFailed": "Drop operation failed.",
+      "timeUpdated": "Time updated.",
+      "eventDeleted": "Event deleted from calendar.",
+      "invalidDateTime": "Please select valid date and time.",
+      "pastScheduleError": "Cannot schedule to a time in the past.",
+      "pastTimeScheduleError": "Cannot schedule for past time. Please select a future time.",
+      "failedPostOpened": "Opened post in editor for you to edit.",
+      "postNotFound": "Post not found.",
+      "cannotClone": "Post not found to clone.",
+      "postCloned": "Cloned post \"{platform}\".",
+      "cannotSaveEmptyDraft": "Cannot save empty draft.",
+      "draftSavedSuccess": "Draft saved successfully!",
+      "draftSaveFailed": "Failed to save draft: {error}",
+      "cannotPublishEmpty": "Cannot publish empty post.",
+      "publishSuccess": "Post \"{platform}\" published successfully!",
+      "cannotPublishNotFound": "Post not found to publish.",
+      "draftDeletedSuccess": "Draft deleted successfully.",
+      "draftNotFoundToDelete": "Draft not found to delete.",
+      "postNotFoundToRetry": "Failed post not found to retry.",
+      "retrying": "Retrying post...",
+      "retryingModal": "Retrying...",
+      "pleaseWait": "Please wait a moment",
+      "successTitle": "Success!",
+      "successMessage": "Post has been scheduled/published successfully!",
+      "retrySuccess": "Post retried successfully!",
+      "retryFailed": "Retry failed. Please try again later.",
+      "postDeletedSuccess": "Post deleted successfully.",
+      "postNotFoundToDelete": "Post not found to delete.",
+      "videoProcessingStarted": "Started processing video: \"{title}\"...",
+      "videoProcessingCompleted": "Video processing completed: \"{title}\"!",
+      "videoEditorOpened": "Opened editor for video \"{title}\".",
+      "videoProjectNotFound": "Video project not found.",
+      "videoProjectNotFoundToDelete": "Video project not found to delete.",
+      "deletingProject": "Deleting project...",
+      "projectDeleted": "Deleted project \"{title}\".",
+      "projectDeleteFailed": "Failed to delete project.",
+      "postScheduledSuccess": "Scheduled post \"{platform}\" at {time} on {date}.",
+      "cannotScheduleEmpty": "Cannot schedule empty post.",
+      "sendingImageRequest": "Sending request to generate {count} images...",
+      "imageGenerationSuccess": "Generated and added {count} images to post!",
+      "imageGenerationFailed": "Image generation failed: {error}",
+      "cannotProcessImageData": "Cannot process image data received from API.",
+      "sendingVideoRequest": "Sending video generation request to AI...",
+      "videoGenerating": "AI is generating video. This may take a few minutes...",
+      "videoGenerationSuccess": "Video generated and added to post!",
+      "videoGenerationFailed": "Video generation failed: {error}",
+      "emptyVideoResponse": "API returned empty video file.",
+      "videoFactorySuccess": "Video processed successfully!",
+      "videoFactoryFailed": "Video processing failed. Please try again.",
+      "creatingTextToVideo": "Creating video from description...",
+      "textToVideoSuccess": "AI video created successfully!",
+      "textToVideoFailed": "Video creation failed. Please try again."
+    }
+  },
+  "Header": {
+    "nav": {
+      "features": "Features",
+      "useCases": "Use Cases",
+      "pricing": "Pricing",
+      "faq": "FAQ"
+    },
+    "buttons": {
+      "signIn": "Sign In",
+      "getStarted": "Get Started",
+      "signOut": "Sign Out",
+      "dashboard": "Dashboard",
+      "loading": "Loading...",
+      "toggleMenu": "Toggle menu"
+    },
+    "signOutDialog": {
+      "title": "Signed out successfully!",
+      "description": "Redirecting to home page..."
+    }
+  },
+  "Footer": {
+    "copyright": "© 2025 CreatorHub, Inc. All rights reserved.",
+    "description": "AI-powered social media content automation",
+    "title": {
+      "product": "Product",
+      "resources": "Resources",
+      "company": "Company"
+    },
+    "links": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "templates": "Templates",
+      "blog": "Blog",
+      "tutorials": "Tutorials",
+      "support": "Support",
+      "about": "About Us",
+      "contact": "Contact",
+      "privacy": "Privacy Policy"
+    }
+  },
+  "HomePage": {
+    "hero": {
+      "badge": "Graduation Thesis",
+      "titlePre": "AI-Powered ",
+      "titleHighlight": "Content Planning",
+      "titlePost": " & Creation for Multiple Platforms",
+      "subtitle": "Transform a single content source into optimized posts for multiple social media platforms, using Generative AI to automate the creative process.",
+      "ctaPrimary": "Try it now",
+      "ctaSecondary": "View features",
+      "platformsLabel": "Supported:",
+      "floatingCards": {
+        "aiTitle": "AI Generate",
+        "aiDesc": "Auto content creation",
+        "platformTitle": "Multi-platform",
+        "platformDesc": "8 social platforms",
+        "scheduleTitle": "Schedule",
+        "scheduleDesc": "Auto publish"
+      }
+    },
+    "stats": {
+      "platforms": {
+        "value": "8",
+        "label": "Social Platforms",
+        "trend": "TikTok, IG, YT..."
+      },
+      "aiModels": {
+        "value": "2",
+        "label": "AI Providers",
+        "trend": "Gemini, OpenAI GPT"
+      },
+      "scheduling": {
+        "value": "Auto",
+        "label": "Post Scheduling",
+        "trend": "Built-in Calendar"
+      },
+      "multiplier": {
+        "value": "1→N",
+        "label": "Source → Posts",
+        "trend": "Multi-version"
+      }
+    },
+    "sectionLabels": {
+      "features": "Features",
+      "howItWorks": "Process",
+      "useCases": "Use Cases",
+      "techStack": "Technology",
+      "cta": "Get Started",
+      "learnMore": "Learn more"
+    },
+    "socialProof": "Supported platforms",
+    "howItWorks": {
+      "title": "How It Works in 3 Simple Steps",
+      "subtitle": "CreatorHub's automation process saves you maximum time and effort.",
+      "step1": {
+        "title": "Connect Source",
+        "description": "Provide anything – an article URL, YouTube video, audio file, or just an idea."
+      },
+      "step2": {
+        "title": "AI Generates Automatically",
+        "description": "CreatorHub analyzes the source and automatically creates a complete multimedia content suite for multiple platforms."
+      },
+      "step3": {
+        "title": "Schedule & Publish",
+        "description": "Review, refine if needed, and schedule posts across all channels with just a few clicks."
+      }
+    },
+    "testimonial": {
+      "quote": "CreatorHub has completely transformed how we do marketing. We save over 20 hours per week and our social media presence has never been better.",
+      "author": {
+        "name": "Alex Tran",
+        "title": "Head of Growth, Momentum Labs"
+      },
+      "results": {
+        "title": "Real Results",
+        "metric1": {
+          "value": "20+",
+          "label": "Hours saved per week",
+          "description": "Automate repetitive tasks from ideation to publishing."
+        },
+        "metric2": {
+          "value": "5x",
+          "label": "Content output",
+          "description": "Create more content for more channels without extra effort."
+        },
+        "metric3": {
+          "value": "300%",
+          "label": "Engagement growth",
+          "description": "Maintain consistent presence across platforms to boost engagement."
+        }
+      }
+    },
+    "featuresTitle": "Core System Features",
+    "featureSubtitle": "AI-powered tools that transform content into optimized posts for each platform",
+    "features": {
+      "feature1": {
+        "title": "Multi-Source Input",
+        "description": "Easily create content from articles, videos, audio, or text prompts."
+      },
+      "feature2": {
+        "title": "Multi-Platform Content Generation",
+        "description": "Automatically generate optimized content drafts for Instagram, TikTok, X, and LinkedIn from one source."
+      },
+      "feature3": {
+        "title": "AI-Generated Media",
+        "description": "Get complete posts with AI-generated captions, images, and videos tailored for each platform."
+      },
+      "feature4": {
+        "title": "AI Chat Assistant",
+        "description": "Refine your content with natural language commands like `make this more humorous` or `create another image`."
+      },
+      "feature5": {
+        "title": "Smart Scheduling",
+        "description": "Schedule posts across all platforms with intuitive calendar and automatic optimal time suggestions."
+      },
+      "feature6": {
+        "title": "Publishing & Integration",
+        "description": "Publish posts to social media platforms via API integration, manage posting status directly within the system."
+      }
+    },
+    "useCasesTitle": "Real-World Use Cases",
+    "useCasesSubtitle": "See how CreatorHub helps create content for multiple platforms from various sources.",
+    "card": [
+      {
+        "title": "Create Content from YouTube/TikTok Videos",
+        "description": [
+          "Input a YouTube or TikTok video URL, AI automatically analyzes the content.",
+          "Generate optimized posts for each platform: X, LinkedIn, Facebook, Instagram.",
+          "Automatically extract key points and write platform-specific captions."
+        ]
+      },
+      {
+        "title": "Convert Articles & Documents",
+        "description": [
+          "Input a blog URL or upload PDF/Word files as content sources.",
+          "Create a series of in-depth LinkedIn posts from a single article.",
+          "Generate Instagram carousel slides from main points."
+        ]
+      },
+      {
+        "title": "Create from Ideas",
+        "description": [
+          "Start with just a text idea, AI develops it into video scripts.",
+          "Generate multiple content versions for 8 platforms simultaneously.",
+          "Use AI Chat to refine content with natural language commands."
+        ]
+      },
+      {
+        "title": "AI Media Generation & Scheduling",
+        "description": [
+          "Generate illustrations with Gemini AI in multiple sizes and resolutions.",
+          "Create videos from text descriptions using Veo 3.0 (Google AI).",
+          "Schedule posts automatically with built-in Calendar and direct publishing."
+        ]
+      }
+    ],
+    "ctaSection": {
+      "title": "Ready to explore CreatorHub?",
+      "subtitle": "Discover the multi-platform content creation support system built as part of an IT graduation thesis.",
+      "cta": "Try it now"
+    },
+    "techStack": {
+      "title": "Architecture & Technology",
+      "subtitle": "Modern architecture, secure, and scalable"
+    },
+    "footer": {
+      "thesis": "Graduation Thesis — Information Technology",
+      "university": "University of Transport and Communications (UTC)",
+      "student": "Student: Vu Tuan Anh — IT4",
+      "builtWith": "Built with Next.js, Supabase, and Generative AI",
+      "systemStatus": "System is running"
+    }
+  },
+  "AuthPanel": {
+    "badge": "Graduation Thesis — UTC",
+    "university": "University of Transport and Communications",
+    "pills": {
+      "aiGenerate": "AI Generate",
+      "platforms": "8 Platforms",
+      "autoSchedule": "Auto Schedule"
+    },
+    "signin": {
+      "heading1": "Create content",
+      "heading2": "multi-platform",
+      "heading3": "with AI",
+      "description": "Transform a single content source into optimized posts for 8 social media platforms."
+    },
+    "signup": {
+      "heading1": "Start your",
+      "heading2": "creative",
+      "heading3": "journey",
+      "description": "Create an account to experience the AI-powered multi-platform content creation system."
+    },
+    "forgotPassword": {
+      "heading1": "Recover",
+      "heading2": "your account",
+      "heading3": "",
+      "description": "Don't worry, we'll send you a password reset link via email."
+    },
+    "updatePassword": {
+      "heading1": "Secure",
+      "heading2": "your account",
+      "heading3": "",
+      "description": "Set a new password to protect your CreatorHub account."
+    }
+  },
+  "SignInPage": {
+    "title": "Welcome Back!",
+    "subtitle": "Enter your credentials",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign In",
+    "signingIn": "Signing in...",
+    "oauthRedirecting": "Redirecting...",
+    "orContinueWith": "Or continue with",
+    "noAccount": "Don't have an account?",
+    "createAccount": "Create account",
+    "termsText": "By signing in, you agree to our",
+    "termsOfService": "Terms of Service",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy",
+    "successDialog": {
+      "title": "Sign in successful!",
+      "description": "Redirecting to your workspace...",
+      "redirect": "Go now"
+    }
+  },
+  "SignUpPage": {
+    "title": "Create New Account",
+    "subtitle": "Start your journey with CreatorHub today!",
+    "form": {
+      "firstNameLabel": "First Name",
+      "firstNamePlaceholder": "John",
+      "lastNameLabel": "Last Name",
+      "lastNamePlaceholder": "Doe",
+      "confirmPasswordLabel": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter password",
+      "signUpButton": "Sign Up",
+      "signingUp": "Creating account...",
+      "passwordMismatch": "Passwords do not match"
+    },
+    "oauthRedirecting": "Redirecting...",
+    "divider": "Or sign up with",
+    "hasAccount": "Already have an account? ",
+    "signInLink": "Sign In",
+    "successModal": {
+      "title": "Registration Successful!",
+      "description": "Your account has been created successfully. Please sign in to continue.",
+      "signInButton": "Go to Sign In"
+    }
+  },
+  "ForgotPasswordPage": {
+    "title": "Forgot Password?",
+    "subtitle": "Don't worry! Enter your email to receive a password reset link.",
+    "form": {
+      "submitButton": "Send Reset Link",
+      "sending": "Sending..."
+    },
+    "backToSignIn": "Back to Sign In",
+    "successDialog": {
+      "title": "Email sent!",
+      "description": "We have sent a password reset link to",
+      "checkInbox": "Please check your inbox (including spam folder).",
+      "backToSignIn": "Back to Sign In"
+    }
+  },
+  "UpdatePasswordPage": {
+    "title": "Set new password",
+    "subtitle": "Enter a new password for your account.",
+    "form": {
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Update Password",
+      "updating": "Updating...",
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 6 characters"
+    },
+    "successDialog": {
+      "title": "Password reset successful!",
+      "description": "Your password has been updated. Please sign in with your new password.",
+      "signInButton": "Go to Sign In"
+    },
+    "invalidLink": "Invalid link. Please request a new password reset.",
+    "expiredLink": "Link expired or invalid. Please try again."
+  },
+  "AuthSuccessPage": {
+    "title": "Authentication successful!",
+    "settingUp": "Setting up your account...",
+    "redirecting": "Redirecting...",
+    "goToCreate": "Go to content creation",
+    "errorTitle": "Authentication failed",
+    "backToSignIn": "Back to Sign In"
+  },
+  "PricingPage": {
+    "headerTitle": "Choose the Plan That Fits Your Creativity",
+    "headerSubtitle": "Whether you're just starting or a professional agency, CreatorHub has a plan designed just for you. Start free today!",
+    "perMonth": "/ month",
+    "featureOrder": [
+      "credits",
+      "accounts",
+      "scheduling",
+      "aiContent",
+      "aiAssistant",
+      "logoUpload",
+      "teamMembers"
+    ],
+    "features": {
+      "credits": "Credits",
+      "accounts": "Social Media Accounts",
+      "scheduling": "Post Scheduling",
+      "aiContent": "AI Content Generation",
+      "aiAssistant": "AI Refine Assistant",
+      "logoUpload": "Logo Upload (Branding)",
+      "teamMembers": "Team Members"
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "price": "$0",
+        "cta": "Start Free",
+        "featureValues": {
+          "credits": "10 Credits",
+          "accounts": "2 Profiles",
+          "scheduling": "Up to 10 posts/month",
+          "aiContent": true,
+          "aiAssistant": "Limited",
+          "logoUpload": false,
+          "teamMembers": "1 user"
+        }
+      },
+      "creator": {
+        "name": "Creator",
+        "price": "$29",
+        "subtitle": "Most Popular",
+        "cta": "Choose Creator",
+        "featureValues": {
+          "credits": "200 Credits",
+          "accounts": "10 Profiles",
+          "scheduling": "Unlimited",
+          "aiContent": true,
+          "aiAssistant": true,
+          "logoUpload": true,
+          "teamMembers": "1 user"
+        }
+      },
+      "creatorPro": {
+        "name": "Creator Pro",
+        "price": "$49",
+        "cta": "Choose Creator Pro",
+        "featureValues": {
+          "credits": "450 Credits",
+          "accounts": "20 Profiles",
+          "scheduling": "Unlimited",
+          "aiContent": true,
+          "aiAssistant": true,
+          "logoUpload": true,
+          "teamMembers": "Coming Soon (Up to 3)"
+        }
+      },
+      "agency": {
+        "name": "Agency",
+        "price": "$99",
+        "cta": "Contact Sales",
+        "featureValues": {
+          "credits": "1000 Credits",
+          "accounts": "50 Profiles",
+          "scheduling": "Unlimited",
+          "aiContent": true,
+          "aiAssistant": true,
+          "logoUpload": true,
+          "teamMembers": "Coming Soon (Up to 10)"
+        }
+      }
+    },
+    "creditSystemTitle": "How Our Credit System Works?",
+    "creditSystemSubtitle": "One flexible credit type for all your creative needs.",
+    "creditSystemTable": {
+      "headerAction": "Action",
+      "headerCost": "Cost (Credits)",
+      "headerNote": "Note"
+    },
+    "creditSystem": [
+      {
+        "action": "Generate content suite (Text only)",
+        "cost": "1 Credit",
+        "note": "Applied when source is prompt/text and only generates caption."
+      },
+      {
+        "action": "Generate content suite (with AI Image)",
+        "cost": "5 Credits",
+        "note": "Cost includes caption generation and 1 AI image."
+      },
+      {
+        "action": "Generate content suite (with AI Video)",
+        "cost": "20 Credits",
+        "note": "Text-to-Video flow: Create a completely new short video from text (includes script, voiceover, video, caption)."
+      },
+      {
+        "action": "Refine with AI Assistant",
+        "cost": "1 Credit / 3 requests",
+        "note": "Each project gets 3 free refine requests, subsequent requests will be charged."
+      },
+      {
+        "action": "Process Video (Video Factory)",
+        "cost": "5 Credits / per minute",
+        "note": "Video-to-Video flow: Cost calculated per minute of original video duration you upload. Includes: transcription, auto find and insert B-rolls, add background music, logo and dynamic subtitles."
+      }
+    ],
+    "topUpTitle": "Need More \"Fuel\"?",
+    "topUpSubtitle": "You can easily purchase additional Credit packs to continue your work without upgrading your subscription immediately. Purchased credits never expire.",
+    "topUpPacks": {
+      "test": "Test",
+      "creative": "Creative",
+      "professional": "Professional"
+    },
+    "buyButton": "Buy for {price}",
+    "faqTitle": "Frequently Asked Questions",
+    "faqs": [
+      {
+        "question": "Do credits roll over to next month?",
+        "answer": "Credits from monthly subscription plans will be refreshed each billing cycle and do not accumulate. Top-up credits purchased separately never expire."
+      },
+      {
+        "question": "Can I cancel my plan anytime?",
+        "answer": "Yes, you can cancel your plan anytime from the billing management page. You will still have access to paid features until the end of your billing cycle."
+      },
+      {
+        "question": "What's the difference between \"Generate AI Video\" and \"Process Video\"?",
+        "answer": "Generate AI Video (20 Credits/time): You only need to provide an idea (text), CreatorHub will write the script and create a completely new video for you.\nProcess Video (5 Credits/minute): You already have a video (self-recorded, interview...), CreatorHub will automatically add subtitles, insert illustrative scenes, and turn it into a professional clip."
+      }
+    ],
+    "topUpTable": {
+      "headerPackage": "Credit Pack",
+      "headerPrice": "Price"
+    }
+  },
+  "BuyPlan": {
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Free experience plan"
+      },
+      "creator": {
+        "name": "Creator",
+        "description": "For individuals"
+      },
+      "creator_pro": {
+        "name": "Creator Pro",
+        "description": "For professional creators"
+      },
+      "agency": {
+        "name": "Agency",
+        "description": "For businesses"
+      },
+      "test_10k": {
+        "name": "Test 10k",
+        "description": "Test plan 10k"
+      },
+      "test_20k": {
+        "name": "Test 20k",
+        "description": "Test plan 20k"
+      },
+      "test_50k": {
+        "name": "Test 50k",
+        "description": "Test plan 50k"
+      }
+    },
+    "title": "Upgrade Your Plan",
+    "subtitle": "Choose the best plan for your creative needs",
+    "loading": "Loading plans...",
+    "noPlans": {
+      "title": "No Plans Available",
+      "description": "We couldn't load the plans at the moment.",
+      "retry": "Retry"
+    },
+    "billing": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "save": "Save {percent}%",
+      "billedYearly": "Billed {price} yearly"
+    },
+    "planStatus": {
+      "higherTier": "Higher Tier",
+      "current": "Current Plan",
+      "renewAgency": "Renew/Extended"
+    },
+    "coupon": {
+      "title": "Coupon Code",
+      "placeholder": "Enter coupon code",
+      "validating": "Validating...",
+      "apply": "Apply",
+      "success": "Coupon applied successfully!",
+      "invalid": "Invalid coupon code",
+      "error": "Error validating coupon",
+      "removed": "Coupon removed",
+      "discount": "Discount: {value}"
+    },
+    "summary": {
+      "title": "Order Summary",
+      "noPlanSelected": "Please select a plan",
+      "originalPrice": "Original Price",
+      "yearlySavings": "Yearly Savings",
+      "dealPrice": "Deal Price",
+      "subtotal": "Subtotal",
+      "plan": "Plan",
+      "voucherDiscount": "Voucher Discount",
+      "totalAmount": "Total Amount",
+      "proceed": "Proceed to Payment"
+    },
+    "successModal": {
+      "title": "Payment Successful!",
+      "description": "Your plan has been upgraded successfully.",
+      "amountPaid": "Amount Paid",
+      "totalCredits": "Total Credits",
+      "close": "Close"
+    },
+    "paymentModal": {
+      "title": "Scan to Pay",
+      "subtitle": "Banking App / E-Wallet",
+      "instruction": "Use any banking app to scan",
+      "mockLabel": "Mock QR Code",
+      "mockWarningTitle": "Mock Environment",
+      "mockWarningText": "This is a demo system. Please DO NOT transfer real money.",
+      "orderId": "Order ID",
+      "content": "Content",
+      "confirm": "Confirm Payment Success",
+      "processing": "Processing...",
+      "failed": "Payment Failed",
+      "close": "Close & Retry",
+      "reason": "Reason",
+      "support": "Support",
+      "defaultError": "Transaction was not successful. Please check your details.",
+      "generalError": "Transaction failed or cancelled by user"
+    },
+    "paymentReturn": {
+      "verifying": "Verifying Payment...",
+      "waitSecurely": "Please wait securely...",
+      "securityAlert": "Security Alert",
+      "invalidData": "Invalid Payment Data",
+      "returnShop": "Return to Shop",
+      "successTitle": "Payment Successful!",
+      "failedTitle": "Payment Failed",
+      "successMessage": "Your credits have been added to your account",
+      "failedMessage": "There was an issue processing your payment",
+      "refId": "Ref ID",
+      "amount": "Amount",
+      "transNo": "Trans No",
+      "dashboard": "Go to Dashboard",
+      "tryAgain": "Try Again",
+      "success": "Payment Successful!",
+      "creditsAdded": "Credits have been added to your account",
+      "backToHome": "Back to Home",
+      "failed": "Payment Failed"
+    }
+  },
+  "CreatePage": {
+    "sidebar": {
+      "menu": "MENU",
+      "createPost": "Create Post",
+      "videos": "Create Videos",
+      "calendar": "Calendar",
+      "management": "MANAGEMENT",
+      "drafts": "Drafts",
+      "published": "Published",
+      "failed": "Failed",
+      "account": "ACCOUNT",
+      "apiDashboard": "System Analytics",
+      "settings": "Integration Center",
+      "logout": "Log Out",
+      "signOutSuccess": "Signed out successfully!",
+      "signOutRedirect": "Redirecting to sign in...",
+      "profile": "Profile",
+      "credits": "Credits",
+      "storage": "Storage",
+      "profiles": "Profiles",
+      "currentPlan": "Current Plan",
+      "buyCredits": "Buy Credits",
+      "lowCreditsWarning": "Credits running low",
+      "accountSettings": "Account Settings",
+      "language": "Language"
+    },
+    "postCard": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "retry": "Retry",
+      "noContent": "No content yet",
+      "loadMore": "Load more",
+      "emptyDrafts": "No drafts yet",
+      "emptyDraftsAction": "Create your first post",
+      "emptyPublished": "No published posts yet",
+      "emptyPublishedAction": "Create and publish a post",
+      "emptyFailed": "No failed posts",
+      "emptyFailedDesc": "Great! All posts published successfully.",
+      "confirmDelete": "Are you sure you want to delete this post?",
+      "published": "Published"
+    },
+    "sectionHeaders": {
+      "create": {
+        "title": "Create Post",
+        "description": "Compose and generate content for social media"
+      },
+      "calendar": {
+        "title": "Calendar",
+        "description": "Schedule and manage your posting timeline"
+      },
+      "drafts": {
+        "title": "Drafts",
+        "description": "Continue working on your saved drafts"
+      },
+      "published": {
+        "title": "Published",
+        "description": "Track your published content"
+      },
+      "failed": {
+        "title": "Failed",
+        "description": "Review and retry failed posts"
+      },
+      "api-dashboard": {
+        "title": "System Analytics",
+        "description": "Monitor content operations, platform connections, and pipeline health"
+      },
+      "settings": {
+        "title": "Social Integration Center",
+        "description": "Connect, monitor, and manage social accounts that power the content pipeline"
+      }
+    },
+    "topBar": {
+      "toggleTheme": "Toggle theme",
+      "signOut": "Sign Out",
+      "signOutSuccess": "Signed out successfully!",
+      "signOutRedirect": "Redirecting to sign in...",
+      "breadcrumb": {
+        "create": "Create Post",
+        "calendar": "Calendar",
+        "drafts": "Drafts",
+        "published": "Published",
+        "failed": "Failed",
+        "api-dashboard": "System Analytics",
+        "settings": "Integration Center"
+      }
+    },
+    "apiDashboard": {
+      "title": "System Analytics",
+      "subtitle": "Operational overview of the multi-platform content workflow",
+      "overview": "Overview",
+      "analytics": "Analytics",
+      "activity": "Activity",
+      "drafts": "Drafts",
+      "published": "Published",
+      "failed": "Failed",
+      "connectedAccounts": "Connected Accounts",
+      "successRate": "Success rate",
+      "loading": "Loading dashboard data...",
+      "noData": "No data available",
+      "totalDrafts": "Drafts in progress",
+      "draftsHint": "Content waiting to be completed before scheduling or publishing.",
+      "publishedHint": "Posts that successfully passed through the publishing pipeline.",
+      "failedHint": "Items that need follow-up for content or scheduling issues.",
+      "connectedPlatformsCount": "{count} platforms currently represented",
+      "operationalSnapshot": "Operational snapshot",
+      "operationalSnapshotDesc": "Key signals that show how ready the system is for a polished demo.",
+      "readinessScore": "Readiness score",
+      "weeklyVolume": "7-day volume",
+      "weeklyVolumeHint": "Total content items created, processed, or published in the last 7 days.",
+      "successRateHint": "Calculated from items that already reached a final outcome.",
+      "dominantPlatform": "Dominant platform",
+      "dominantPlatformHint": "The platform with the highest current content concentration.",
+      "pipelineHealth": "Pipeline health",
+      "pipelineStable": "Pipeline is stable",
+      "pipelineNeedsAttention": "Pipeline needs attention",
+      "pipelineHealthHint": "A quick read on bottlenecks and operational reliability.",
+      "systemFocus": "Current focus",
+      "systemFocusDesc": "The next priorities that make the graduation-project demo clearer and stronger.",
+      "focusDrafts": "Content queue",
+      "focusDraftsDesc": "There are currently {count} drafts ready to be refined or scheduled.",
+      "focusConnections": "Connection coverage",
+      "focusConnectionsDesc": "{count} accounts are connected. More real connections strengthen the multi-platform demo.",
+      "focusFailures": "Recovery handling",
+      "focusFailuresDesc": "{count} failed items are useful to demonstrate monitoring and recovery flows.",
+      "dailyOperations": "Daily operations rhythm",
+      "dailyOperationsDesc": "How much content moved through the system over the last 7 days.",
+      "platformDist": "Platform distribution",
+      "platformDistDesc": "Where content is currently concentrated across the pipeline.",
+      "statusDistribution": "Content status distribution",
+      "statusDistributionDesc": "A quick comparison of drafts, published items, and failures.",
+      "activityPublished": "Post published",
+      "activityFailed": "Publishing failure detected",
+      "activityConnected": "Account connected",
+      "activityNoContent": "No content summary available",
+      "activityFeed": "Recent activity feed",
+      "activityFeedDesc": "Latest events across content processing, failures, and account connections.",
+      "noRecentActivity": "No recent activity found.",
+      "insightSummary": "Quick summary",
+      "insightSummaryDesc": "Short signals that help viewers understand the current system state instantly.",
+      "totalPosts": "Total managed items",
+      "connectedPlatformsLabel": "Active platforms",
+      "nextFocus": "Next focus",
+      "nextFocusFailed": "Prioritize failed items to demonstrate recovery and resilience.",
+      "nextFocusDrafts": "Turn drafts into scheduled content to improve demo coverage.",
+      "nextFocusHealthy": "The system is stable. You can expand the demo to more platforms.",
+      "latestWindow": "Observation scope",
+      "latestWindowDesc": "This view is built from the local data currently available: drafts, published items, failed items, and connected accounts."
+    },
+    "published": {
+      "title": "Published Posts",
+      "loading": "Loading published posts...",
+      "loadMore": "Load More",
+      "loadingMore": "Loading...",
+      "open": "Open",
+      "deleteFromList": "Delete from list",
+      "confirmDelete": "Are you sure you want to delete this post?",
+      "noPublishedPosts": "No published posts found"
+    },
+    "failed": {
+      "title": "Failed Posts",
+      "loading": "Loading failed posts...",
+      "loadMore": "Load More",
+      "loadingMore": "Loading...",
+      "retry": "Retry",
+      "delete": "Delete"
+    },
+    "settings": {
+      "title": "Social Integration Center",
+      "description": "Monitor social connections and integration readiness across the system.",
+      "loading": "Loading connections...",
+      "connecting": "Connecting social account, please wait...",
+      "popupBlocked": "Popup Blocked",
+      "popupBlockedMessage": "The browser is blocking the popup for {provider} connection.",
+      "popupBlockedDesc": "You can allow popups for this site and try again, or continue logging in on this current tab.",
+      "continueHere": "Continue here",
+      "retryPopup": "Retry popup",
+      "connectionsTableTitle": "Connected Accounts",
+      "connectionsTableDesc": "Manage your social media connections here.",
+      "summaryConnectedDesc": "Total number of linked accounts currently ready for synchronization.",
+      "summaryPlatforms": "Active platforms",
+      "summaryPlatformsDesc": "How many platforms currently have at least one real connection.",
+      "summaryLatest": "Latest connection",
+      "summaryLatestDesc": "The most recent moment when a new social account was linked to the system.",
+      "summaryLatestEmpty": "No connections yet",
+      "summaryCountBadge": "{count} active accounts",
+      "noConnections": "No connected accounts found.",
+      "noConnectionsFiltered": "No accounts match the current filter.",
+      "table": {
+        "platform": "Platform",
+        "account": "Account",
+        "connectedAt": "Connected At",
+        "avatar": "Avatar",
+        "actions": "Actions"
+      },
+      "disconnect": "Disconnect",
+      "disconnecting": "Disconnecting...",
+      "socialConnections": "Integration catalog",
+      "socialConnectionsDesc": "Connect more platforms to broaden publishing coverage and strengthen the demo.",
+      "connected": "Connected",
+      "notConnected": "Not connected",
+      "loginError": "Please login again.",
+      "blueskyError": "Please enter identifier and password for Bluesky",
+      "onboardingTour": {
+        "resetSuccess": "Tour reset successfully"
+      },
+      "blueskyTitle": "Connect Bluesky",
+      "blueskyDesc": "Bluesky requires identifier and password to connect. Please enter your credentials.",
+      "identifierLabel": "Identifier (username or email)",
+      "passwordLabel": "Password",
+      "cancel": "Cancel",
+      "connect": "Connect",
+      "connectingBtn": "Connecting..."
+    },
+    "userProfile": {
+      "title": "User Profile",
+      "tabs": {
+        "profile": "Personal Information",
+        "history": "Transaction History"
+      },
+      "basicInfo": {
+        "title": "Basic Information",
+        "description": "Manage your display information",
+        "email": "Email",
+        "displayName": "Display Name",
+        "avatarUrl": "Avatar URL",
+        "save": "Save Changes"
+      },
+      "appSettings": {
+        "title": "App Settings",
+        "description": "Other settings",
+        "resetTour": "Reset Onboarding Tour",
+        "resetTourDesc": "Restart the feature walkthrough",
+        "resetTourBtn": "Reset Tour"
+      },
+      "history": {
+        "title": "Payment History",
+        "noOrders": "No transactions found"
+      },
+      "toast": {
+        "loadOrdersError": "Failed to load transaction history",
+        "updateSuccess": "Profile updated successfully",
+        "updateError": "Update failed",
+        "resetTourSuccess": "Onboarding status reset"
+      }
+    },
+    "createSection": {
+      "mobileTabs": {
+        "sources": "Sources",
+        "posts": "Posts",
+        "aiChat": "AI Chat"
+      },
+      "mediaPreview": {
+        "downloadMedia": "Download",
+        "removeMedia": "Remove media"
+      },
+      "sourcePanel": {
+        "sourcesTitle": "Saved Sources",
+        "addSource": "Add Source",
+        "deleteSource": "Delete source",
+        "viewDetails": "View details",
+        "editClone": "Edit (Clone)",
+        "clearGeneratedImages": "Clear generated images list",
+        "generatedImageAlt": "AI-generated image",
+        "sourceDeleted": "Source deleted successfully",
+        "sourceAddSuccess": "Added {type} source successfully",
+        "collapse": "Collapse",
+        "expand": "Show all",
+        "tooltips": {
+          "addSource": "Add content sources like articles, videos, or documents to create posts"
+        },
+        "emptyState": {
+          "description": "Start your content creation journey",
+          "step1": "Click 'Add Source' button below",
+          "step2": "Select newly created source for AI to generate content"
+        },
+        "sourceTypes": {
+          "content": "Text",
+          "text": "Text",
+          "text-source": "Text and source",
+          "article": "Article",
+          "youtube": "YouTube",
+          "tiktok": "TikTok",
+          "pdf": "PDF",
+          "audio": "Audio"
+        },
+        "clearedImageList": "Cleared generated images list",
+        "generateImageAI": "Generate image with AI",
+        "generatedImages": "Generated images",
+        "confirmClearTitle": "Confirm delete?",
+        "confirmClearDescription": "Are you sure you want to delete all generated images? This action cannot be undone.",
+        "cancelClear": "Cancel",
+        "confirmClearButton": "Delete"
+      },
+      "sourceModal": {
+        "title": "Add New Source",
+        "subtitle": "Choose one of two ways to get started",
+        "description": "Click 'Add Source' button above to start adding content from text, articles, videos, or PDF files",
+        "externalSection": {
+          "title": "Start from External Source",
+          "description": "Link articles, videos or upload files"
+        },
+        "internalSection": {
+          "title": "Start with Idea",
+          "description": "Enter your text or idea"
+        },
+        "divider": "Or",
+        "sourceTypeLabel": {
+          "fromText": "Text",
+          "fromArticle": "Article",
+          "fromYoutube": "YouTube",
+          "fromTiktok": "TikTok",
+          "fromPDF": "PDF",
+          "fromAudio": "Audio"
+        },
+        "modalLabel": "Source Content",
+        "fileLabel": "Upload File",
+        "sourceInputPlaceholder": {
+          "fromText": "Enter your idea, text or notes...",
+          "fromArticle": "Enter article URL (e.g., https://...)",
+          "fromYoutube": "Enter YouTube URL (e.g., https://youtube.com/...)",
+          "fromTiktok": "Enter TikTok URL (e.g., https://tiktok.com/...)",
+          "fromSource": "Paste source URL...",
+          "fromFile": "Click to select file"
+        },
+        "characterCount": "characters",
+        "ideaProvided": "Idea entered",
+        "uploadFile": "Click to upload",
+        "sourceSavedCheckbox": "Save this source for future use",
+        "advancedOptions": "Advanced Settings",
+        "mockOptionsText": "No additional settings available.",
+        "chatRequestLabel": "Detailed request for AI",
+        "chatRequestOptional": "(Optional)",
+        "chatPlaceholder": "E.g., 'Write in professional style', 'Add more emojis', 'Focus on product benefits'...",
+        "chatHint": "💡 Example: \"Focus on analysis\", \"Make it shorter\", \"Add emojis\"...",
+        "addButton": "Add Source",
+        "processing": "Processing...",
+        "cancelButton": "Cancel",
+        "statusReady": "Ready! {type} source has been provided",
+        "statusReadySimple": "Ready! Source content entered",
+        "statusExternal": "external",
+        "statusInternal": "idea",
+        "statusWarning": "Please enter an external source OR an idea to continue",
+        "sourceAddSuccess": "Added \"{type}\" source successfully!",
+        "sourceAddError": "Failed to add source: {error}",
+        "addResource": "Add resource (YouTube, File...)",
+        "errors": {
+          "pleaseEnterUrl": "Please enter URL.",
+          "pleaseEnterText": "Please enter text.",
+          "uploadingFile": "Uploading file {fileName}...",
+          "uploadPdfFailed": "Failed to upload PDF file.",
+          "pleaseProvideData": "Please provide data for selected source.",
+          "errorOccurred": "An error occurred."
+        },
+        "editSource": "Edit Source",
+        "textSource": "Text",
+        "saveCheckbox": "Save source?"
+      },
+      "strategySelector": {
+        "title": "Choose Content Strategy",
+        "subtitle": "Discover and select the most suitable framework",
+        "goalTitle": "Content Goal",
+        "nicheTitle": "Your Niche",
+        "templateTitle": "Choose Framework",
+        "emptyState": "No frameworks available for this niche",
+        "selectTemplateHint": "Please select a framework to continue",
+        "templateSelected": "Selected: {template}",
+        "nextButton": "Continue",
+        "backButton": "Back",
+        "step2Subtitle": "Enter content for new source",
+        "contentLabel": "Source Content",
+        "contentHint": "Enter article, Youtube, Tiktok link or enter your idea",
+        "characterCount": "{count} characters",
+        "inputTypes": {
+          "youtube": "📺 YouTube",
+          "tiktok": "🎵 TikTok",
+          "article": "📰 Article",
+          "text": "💭 Idea"
+        },
+        "fileUpload": {
+          "clickToSelect": "Click to select file",
+          "orDragDrop": "or drag and drop here",
+          "uploaded": "[File uploaded: {fileName}]"
+        },
+        "saveSourceCheckbox": "💾 Save this source for reuse later",
+        "saveSourceExplanation": "Saved sources can be reused for multiple different posts",
+        "contentPlaceholder": {
+          "default": "Enter your idea or paste a link..."
+        },
+        "or": "Or",
+        "fileLabel": "Upload File",
+        "fileHint": "Supports PDF or audio files",
+        "inputContentHint": "Please enter content or upload a file",
+        "goals": {
+          "viral": {
+            "label": "Viral & Engagement",
+            "description": "Create fast-spreading content to grab immediate attention"
+          },
+          "trust": {
+            "label": "Trust & Credibility",
+            "description": "Build credibility and trust with your audience"
+          },
+          "sales": {
+            "label": "Sales & Conversion",
+            "description": "Drive conversions and boost sales"
+          },
+          "education": {
+            "label": "Customer Education",
+            "description": "Provide valuable knowledge to help customers understand solutions"
+          },
+          "branding": {
+            "label": "Branding",
+            "description": "Spread core values and tell the brand story emotionally"
+          }
+        },
+        "niches": {
+          "real-estate": {
+            "label": "Real Estate",
+            "description": "Buying, selling, renting, investing, and property legalities"
+          },
+          "accommodation": {
+            "label": "Accommodation",
+            "description": "Homestays, Villas, Hotels, Resorts"
+          },
+          "interior-construction": {
+            "label": "Interior & Construction",
+            "description": "Architecture design, construction, and home renovation"
+          },
+          "furniture-materials": {
+            "label": "Furniture & Materials",
+            "description": "Furniture products, building materials, and equipment"
+          },
+          "home-appliances": {
+            "label": "Home Appliances",
+            "description": "Reviews and sales of home utilities and kitchenware"
+          },
+          "fashion": {
+            "label": "Fashion",
+            "description": "Clothing, styling, and accessories"
+          },
+          "beauty-spa": {
+            "label": "Beauty & Spa",
+            "description": "Spa services, Nail art, Permanent makeup, and beauty care"
+          },
+          "cosmetics": {
+            "label": "Cosmetics & Skincare",
+            "description": "Cosmetic reviews and skincare routines"
+          },
+          "travel": {
+            "label": "Travel",
+            "description": "Travel blogs, destination reviews, and experiences"
+          },
+          "media-design": {
+            "label": "Media & Design",
+            "description": "Video editing, graphic design, and photography"
+          },
+          "online-course": {
+            "label": "Online Courses",
+            "description": "Selling online courses and skill training"
+          },
+          "nutrition": {
+            "label": "Nutrition & Health",
+            "description": "Weight loss, Eat clean, and nutritional diets"
+          },
+          "fb-restaurant": {
+            "label": "F&B (Restaurants/Cafes)",
+            "description": "Reviews of eateries, restaurants, cafes, and cuisine"
+          }
+        },
+        "frameworks": {
+          "expert-knowledge": {
+            "title": "Expert Knowledge",
+            "description": "Articles demonstrating deep understanding to build expert authority"
+          },
+          "authentic-review": {
+            "title": "Authentic Review",
+            "description": "Reviews based on real experience, objective and truthful"
+          },
+          "comparison": {
+            "title": "Comparison (A vs B)",
+            "description": "Analyzing pros and cons between options to help customers decide"
+          },
+          "mistake-warning": {
+            "title": "Mistake Warning",
+            "description": "Pointing out common mistakes and the root causes of problems"
+          },
+          "howto-guide": {
+            "title": "Step-by-step Guide",
+            "description": "Detailed walk-through instructions to complete a specific task"
+          },
+          "storytelling": {
+            "title": "Journey Storytelling",
+            "description": "Sharing personal or customer stories to touch emotions"
+          },
+          "tips-tricks": {
+            "title": "Tips & Tricks",
+            "description": "Sharing small, easy-to-apply tips for quick wins"
+          },
+          "before-after": {
+            "title": "Before & After",
+            "description": "Proving effectiveness through clear visual changes or results"
+          },
+          "behind-scenes": {
+            "title": "Behind the Scenes",
+            "description": "Building trust by showing the actual working process"
+          },
+          "listicle": {
+            "title": "Top List & Checklist",
+            "description": "Concise lists or checklists that are easy to read and save"
+          }
+        },
+        "content_goals": {
+          "trust": {
+            "label": "Build Trust",
+            "description": "Focus on professionalism, deep knowledge, and sincerity"
+          },
+          "viral": {
+            "label": "Viral & Engagement",
+            "description": "Using catchy language and strong hooks to trigger emotions or curiosity"
+          },
+          "sales": {
+            "label": "Sales & Conversion",
+            "description": "Focusing on product benefits, solving pain points, and clear CTA"
+          },
+          "education": {
+            "label": "Customer Education",
+            "description": "Explaining concepts simply and logically, providing practical value"
+          },
+          "branding": {
+            "label": "Brand Building",
+            "description": "Emotional storytelling conveying mission and core values"
+          }
+        }
+      },
+      "postEditorWrapper": {
+        "creatingContent": "Creating content...",
+        "analyzingSource": "AI is analyzing the source and generating posts for you"
+      },
+      "createFromSourceModal": {
+        "title": "Create New Posts from Source",
+        "sourceInfo": "Source:",
+        "sourceType": {
+          "text": "Text",
+          "article": "Article",
+          "youtube": "YouTube",
+          "text-source": "Text and source"
+        },
+        "subtitle": "Select platforms and number of posts to create:",
+        "selectAll": "Select all",
+        "clearAll": "Deselect all",
+        "selected": "selected",
+        "post": "post",
+        "isCreating": "Creating...",
+        "createButton": "Create Posts",
+        "cancelButton": "Cancel",
+        "estimatedCost": "Estimated cost",
+        "estimatedOutput": "Output volume",
+        "creditsUnit": "Credits",
+        "outputsUnit": "posts",
+        "postsUnit": "posts"
+      },
+      "postPanel": {
+        "postsTitle": "Posts",
+        "selectAll": "Select all",
+        "deselectAll": "Deselect all",
+        "deleteSelected": "Delete selected",
+        "addImage": "Add image",
+        "characterCount": "characters",
+        "postContentPlaceholder": "What do you want to share on",
+        "addPost": "Add Post",
+        "clonePost": "Clone",
+        "saveDraft": "Save Draft",
+        "saving": "Saving...",
+        "publish": "Publish",
+        "tooltips": {
+          "addPost": "Create new post for any platform"
+        },
+        "emptyState": {
+          "title": "No posts yet",
+          "description": "Get started with our recommended methods below",
+          "or": "or",
+          "step1": {
+            "title": "Add content source",
+            "description": "Click 'Add Source' on the left → Enter content (text, link, PDF...) → Click source for AI to auto-generate."
+          },
+          "step2": {
+            "title": "Or create post manually",
+            "description": "Click 'Add Post' button at top corner to create empty post and write your own content."
+          },
+          "tip": {
+            "title": "We recommend:",
+            "description": "Add source → Click source → AI auto-generates → Edit with AI Chat!"
+          }
+        }
+      },
+      "chatPanel": {
+        "aiChatTitle": "Chat with AI",
+        "aiChatPlaceholder": "Ask anything or request to create post...",
+        "sendButton": "Send",
+        "aiTyping": "AI is responding",
+        "copiedToClipboard": "Copied content to clipboard!",
+        "emptyState": {
+          "title": "AI Assistant Ready",
+          "description": "This chat will automatically open when you have posts. I'll help you edit and optimize content!",
+          "examplesTitle": "You can ask me to:",
+          "example1": "Make this post shorter and add emojis",
+          "example2": "Rewrite with more professional tone",
+          "example3": "Generate 5 relevant hashtags for this post",
+          "hint": "💡 Note: AI Chat will automatically close when you close all post tabs."
+        },
+        "offlineError": "No internet connection. Please try again.",
+        "copyFailed": "Unable to copy. Please try again.",
+        "charLimitExceeded": "Character limit exceeded.",
+        "emptyContentWarning": "Content is empty. Please enter content first.",
+        "retry": "Retry",
+        "clearChatTitle": "Clear conversation?",
+        "clearChatDescription": "All chat history with AI will be deleted. This action cannot be undone.",
+        "clearChatConfirm": "Delete",
+        "clearChatCancel": "Cancel",
+        "toSend": "to send"
+      },
+      "actionBar": {
+        "addImage": "Add image",
+        "generate": "Generate",
+        "generateImage": "Generate image",
+        "generateVideo": "Generate video",
+        "clone": "Clone",
+        "save": "Save",
+        "saving": "Saving...",
+        "publish": "Publish",
+        "characterCount": "characters",
+        "tooltips": {
+          "generate": "Use AI to generate images or videos for post",
+          "clone": "Copy this post to create similar content",
+          "save": "Save this post as draft for later use",
+          "publish": "Publish to your social media channels"
+        },
+        "mediaLibrary": "Media Library",
+        "formatTitle": "Automatically format your post to look better",
+        "formatting": "Formatting...",
+        "format": "Format",
+        "translateTitle": "Translate post",
+        "translating": "Translating...",
+        "translate": "Translate",
+        "selectTargetLanguage": "Select target language",
+        "translatePrompt": "Which language do you want to translate the post to?",
+        "vietnamese": "Vietnamese",
+        "languages": {
+          "english": "English",
+          "japanese": "Japanese (日本語)",
+          "korean": "Korean (한국어)",
+          "chinese": "Chinese (中文)",
+          "french": "French (Français)",
+          "spanish": "Spanish (Español)"
+        },
+        "cancel": "Cancel",
+        "translateNow": "Translate now",
+        "postsToCreate": "Posts to create",
+        "postsUnit": "posts"
+      },
+      "imageGenModal": {
+        "title": "Generate Images with AI",
+        "promptLabel": "Describe image to generate",
+        "promptPlaceholder": "Describe in detail the image you want to create...",
+        "promptHint": "Post content has been automatically filled. You can edit it.",
+        "countLabel": "Number of images (max 3)",
+        "sizeLabel": "Image size",
+        "size1K": "1K - Standard (1024x1024 custom ratio)",
+        "size2K": "2K - High quality (2048x2048 custom ratio)",
+        "sizeHint": "Actual size depends on aspect ratio",
+        "aspectRatioLabel": "Aspect ratio",
+        "ratio1_1": "1:1 - Square (Instagram, Facebook)",
+        "ratio4_3": "4:3 - Landscape (Standard)",
+        "ratio3_4": "3:4 - Portrait (Story)",
+        "ratio16_9": "16:9 - Landscape (YouTube, Twitter)",
+        "ratio9_16": "9:16 - Portrait (TikTok, Reels)",
+        "safetyLabel": "Safety filter",
+        "safetyAllowAdult": "Allow adult content (Default)",
+        "safetyAllowAll": "Allow all",
+        "safetyDontAllow": "Don't allow",
+        "estimatedCost": "Estimated cost",
+        "estimatedOutput": "Expected output",
+        "imagesUnit": "images",
+        "cancel": "Cancel",
+        "generate": "Generate images",
+        "generating": "Generating images"
+      },
+      "videoGenModal": {
+        "title": "Generate Video with AI",
+        "promptLabel": "Describe video to generate",
+        "promptPlaceholder": "Describe in detail the video you want to create...",
+        "promptHint": "Post content has been automatically filled. You can edit it.",
+        "negativePromptLabel": "Describe what NOT to include (optional)",
+        "negativePromptPlaceholder": "E.g., blurry, dark, ugly, distorted...",
+        "negativePromptHint": "Helps AI avoid creating unwanted elements",
+        "aspectRatioLabel": "Aspect ratio",
+        "ratio16_9": "16:9 - Landscape (YouTube, Facebook)",
+        "ratio9_16": "9:16 - Portrait (TikTok, Reels)",
+        "ratio1_1": "1:1 - Square (Instagram, Facebook)",
+        "ratio4_5": "4:5 - Portrait (Instagram Feed)",
+        "ratio4_3": "4:3 - Standard",
+        "resolutionLabel": "Video quality",
+        "resolution720p": "HD - 720p",
+        "resolution1080p": "Full HD - 1080p (Recommended)",
+        "resolution4K": "Ultra HD - 4K",
+        "safetyLabel": "Safety filter",
+        "safetyAllowAdult": "Allow adult content (Default)",
+        "safetyAllowAll": "Allow all",
+        "safetyDontAllow": "Don't allow",
+        "safetyHint": "Control person generation in videos",
+        "note": "Note:",
+        "noteText": "Only 1 video can be generated at a time. Video generation may take several minutes depending on complexity.",
+        "estimatedOutput": "Expected output",
+        "videosUnit": "video",
+        "cancel": "Cancel",
+        "generate": "Generate video",
+        "generating": "Generating video"
+      },
+      "publishModal": {
+        "title": "Confirm Publish",
+        "subtitle": "Select account and publish time.",
+        "selectAccount": "Select account",
+        "whenPublish": "When do you want to publish?",
+        "publishNow": "Now",
+        "nextFreeSlot": "Next free slot",
+        "pickTime": "Pick time",
+        "selectTime": "Select time",
+        "cancel": "Cancel",
+        "publishNowButton": "Publish Now",
+        "confirmSchedule": "Confirm Schedule",
+        "closeModal": "Close",
+        "shortsLabel": "Post as Shorts",
+        "dateLabel": "Date",
+        "timeLabel": "Hour"
+      },
+      "mediaLibraryModal": {
+        "selectPostFirst": "Please select a post before adding media.",
+        "searchPlaceholder": "Search media...",
+        "loadingLibrary": "Loading library...",
+        "error": "Error: {error}",
+        "retry": "Retry",
+        "noMediaFound": "No media found",
+        "all": "All",
+        "video": "Video",
+        "image": "Image",
+        "audio": "Audio",
+        "selectedCount": "Selected {count} items",
+        "selectMediaHint": "Select media to add to post",
+        "cancel": "Cancel",
+        "addToPost": "Add to post"
+      },
+      "lightboxModal": {
+        "downloadSuccess": "Downloaded successfully!",
+        "downloadError": "Cannot download file.",
+        "download": "Download",
+        "close": "Close"
+      },
+      "errorState": {
+        "defaultTitle": "An Error Occurred",
+        "defaultMessage": "Oops, something went wrong during processing. Please try again later.",
+        "retryButton": "Retry",
+        "reportButton": "Report Issue",
+        "networkErrorTitle": "Network Error",
+        "networkErrorMessage": "Please check your network connection and try again.",
+        "serverErrorTitle": "Server Busy",
+        "serverErrorMessage": "The server is busy. Please try again later."
+      },
+      "topBarActions": {
+        "sources": "Sources",
+        "aiChat": "AI Chat",
+        "wizard": {
+          "step1": "Add Source",
+          "step2": "Configure",
+          "step3": "Create",
+          "exit": "Exit",
+          "next": "Next",
+          "back": "Back"
+        }
+      }
+    },
+    "calendarSection": {
+      "today": "Today",
+      "month": "Month",
+      "week": "Week",
+      "clearAll": "Clear all",
+      "confirmClearAll": "Are you sure you want to delete all events on the calendar? This action cannot be undone.",
+      "zeroStateTitle": "Your calendar, canvas for your next creation",
+      "zeroStateDescription": "Drag platform icons (TikTok, Instagram, YouTube...) onto the day you want to schedule a post.",
+      "zeroStateCtaSchedule": "Pick a day to schedule",
+      "zeroStateCtaConnect": "Connect social accounts",
+      "zeroStateCtaConnectMore": "Connect more accounts",
+      "zeroStateAria": "Empty calendar. You have no events yet. Drag platform icons to start scheduling.",
+      "periodicEmpty": "This week has {count} open days — room for more content",
+      "periodicEmptyCta": "Jump to an open day",
+      "plannerOnboarding": "Planner onboarding",
+      "stepConnectTitle": "Connect accounts",
+      "stepConnectDescription": "Link your platforms so the calendar can sync real publishing status.",
+      "stepCreateTitle": "Create content",
+      "stepCreateDescription": "Use AI or manual writing to prepare posts for each platform.",
+      "stepScheduleTitle": "Build the campaign",
+      "stepScheduleDescription": "Drag, drop, assign publish dates, and track publishing status in one place.",
+      "recommendedAction": "Recommended action",
+      "recommendedActionWithAccounts": "Start this week by scheduling your first post.",
+      "recommendedActionWithoutAccounts": "Connect at least one social account to unlock scheduling.",
+      "overviewScheduledWeek": "Scheduled this week",
+      "overviewScheduledWeekHint": "Posts currently waiting to be published this week.",
+      "defenseStripEyebrow": "Defense snapshot",
+      "defenseStripTitle": "Presentation readiness of the content calendar",
+      "defenseStripHealthy": "The calendar is stable enough to demo: it shows schedule coverage, clear publishing states, and few operational bottlenecks.",
+      "defenseStripNeedsAttention": "There is visible friction in the publishing pipeline. Resolve the failed queue before adding more schedules.",
+      "defenseStripCoverage": "Publishing reliability looks fine, but weekly coverage is still thin. Add content on open days to make the demo story feel fuller.",
+      "healthReadiness": "Readiness",
+      "healthCoverage": "Weekly coverage",
+      "healthCoverageDays": "{count}/7 days",
+      "healthReliability": "Publishing reliability",
+      "healthReliabilityHint": "successful",
+      "overviewPostedWeek": "Posted this week",
+      "overviewPostedWeekHint": "Posts already confirmed as published by the system.",
+      "overviewFailed": "Needs attention",
+      "overviewFailedHint": "Failed schedules should be rescheduled or revised before they block the campaign.",
+      "overviewTopPlatform": "Top platform",
+      "overviewTopPlatformHint": "{count} active schedules are currently on this platform.",
+      "overviewTopPlatformEmpty": "No platform usage yet.",
+      "overviewNone": "None yet",
+      "plannerEyebrow": "Content operations",
+      "plannerTitle": "Content scheduling command center",
+      "plannerDescription": "Track the schedule, filter by platform, and focus on the bottlenecks in your publishing pipeline.",
+      "createNewSchedule": "Pick a day to schedule",
+      "filterLabel": "Display filters",
+      "filterAllPlatforms": "All platforms",
+      "filterAllStatuses": "All statuses",
+      "filterResultCount": "{count} schedules match the current filters",
+      "scheduleFocusHint": "Moved to {date}. Drag a platform from the top bar onto that day to create a schedule.",
+      "insightCoverage": "Weekly coverage",
+      "insightCoverageValue": "{count} days still have no content scheduled this week.",
+      "insightFocus": "Current focus",
+      "insightFocusAll": "Viewing the full multi-platform schedule.",
+      "insightFocusPlatform": "Currently focusing on {platform}.",
+      "insightSuggestion": "AI suggestion",
+      "insightSuggestionFailed": "Resolve failed posts first before adding more schedules so the campaign cadence stays stable.",
+      "insightSuggestionHealthy": "The pipeline looks healthy. Use the open days to increase your posting cadence.",
+      "agendaTitle": "Daily agenda",
+      "agendaSubtitle": "{count} schedules are visible on the selected day.",
+      "agendaSummaryPlatforms": "Platforms in view",
+      "agendaSummaryStatus": "Priority status",
+      "legendTitle": "Status legend",
+      "legendDescription": "Status colors are now aligned across the calendar, agenda, and event popup.",
+      "quickActionsTitle": "Quick actions",
+      "quickActionCreate": "Open content creation",
+      "quickActionFailed": "Go to failed queue",
+      "quickActionEmpty": "Jump to nearest empty day",
+      "quickActionReset": "Clear all filters",
+      "agendaEmptyPlatforms": "No platform yet",
+      "agendaNoStatus": "No status yet",
+      "agendaEmptyTitle": "No schedules on this day",
+      "agendaEmptyDescription": "Pick another date or drag a platform onto the calendar to create a new schedule.",
+      "agendaNoTime": "No time assigned",
+      "agendaNoContent": "No content summary is stored for this schedule.",
+      "posted": "Posted",
+      "publishing": "Publishing...",
+      "scheduled": "Scheduled",
+      "failed": "Failed",
+      "empty": "Empty",
+      "eventMoved": "Event position updated.",
+      "addedSchedule": "Added schedule for {platform}.",
+      "addedScheduleAnnounce": "Added schedule for {platform}",
+      "addedScheduleFromCell": "Added schedule for {platform} on {date}",
+      "postStatusPosted": "{platform} posted successfully",
+      "postStatusFailed": "{platform} posting failed",
+      "syncing": "Syncing...",
+      "synced": "Synced",
+      "syncFailed": "Sync failed",
+      "syncedJustNow": "Just synced",
+      "syncedMinutesAgo": "Synced {n} min ago",
+      "offline": "Offline",
+      "platformIconTooltip": "Drag icon to day or press + on day to add",
+      "addToDay": "Add to this day",
+      "selectPlatform": "Select platform to add to calendar",
+      "pastDate": "Past date. Cannot add events.",
+      "noEventsOnDay": "No posts scheduled. Press Enter to add.",
+      "eventCountOnDay": "{count} posts: {platforms}.",
+      "ariaEventLabel": "{status} {platform} at {time}. Press Enter to view/edit, drag to move.",
+      "ariaDayWithEvents": "{date}. {count} posts: {platforms}.",
+      "ariaDayEmpty": "{date}. No posts scheduled. Press Enter to add.",
+      "ariaDayPast": "{date}. Past date. Cannot add events.",
+      "ariaToday": "{date}. Today. {count} posts.",
+      "ariaCalendarSection": "Calendar section. Use arrow keys to navigate between days.",
+      "ariaAddEvent": "Add scheduled post to this day",
+      "ariaSyncStatus": "Sync status: {status}",
+      "ariaPopup": "Event options. {platform} {time}. Actions: View or edit post, Delete event.",
+      "addedMedia": "Added {count} media to post.",
+      "eventStatus": {
+        "published": "Published",
+        "scheduled": "Scheduled",
+        "failed": "Failed",
+        "empty": "Empty"
+      },
+      "popup": {
+        "viewEdit": "View/Edit",
+        "editTime": "Edit time",
+        "deleteEvent": "Delete event",
+        "editTimeTitle": "Edit publish time",
+        "saveTime": "Save",
+        "statusScheduled": "Scheduled",
+        "statusPublishing": "Publishing",
+        "statusPosted": "Posted",
+        "statusFailed": "Failed",
+        "scheduledTime": "Time slot: {time}",
+        "scheduledTimeEmpty": "No time assigned"
+      },
+      "deleteModal": {
+        "title": "Confirm Delete?",
+        "message": "Are you sure you want to delete this event from the calendar?",
+        "no": "No",
+        "yes": "Delete"
+      }
+    },
+    "failedSection": {
+      "title": "Failed Posts",
+      "reason": "Failure reason",
+      "reschedule": "Reschedule",
+      "retryModal": {
+        "title": "Failed Post Details",
+        "postContent": "Post content:",
+        "failureReason": "Failure reason:",
+        "editPost": "Edit post",
+        "rescheduleTime": "Choose republish time:",
+        "dateLabel": "Date:",
+        "timeLabel": "Time:",
+        "cancel": "Cancel",
+        "scheduleAgain": "Reschedule"
+      }
+    },
+    "draftsSection": {
+      "title": "Drafts"
+    },
+    "publishedSection": {
+      "title": "Published Posts"
+    },
+    "videosSection": {
+      "title": "Video Projects",
+      "uploadVideo": "Upload new video",
+      "quickStart": "Quick Start",
+      "textToVideo": "Turn Ideas into Videos",
+      "textToVideoDesc": "Create short videos from text descriptions using AI",
+      "videoFactory": "Cut Long Videos into Shorts",
+      "videoFactoryDesc": "Repurpose long videos from YouTube or uploads",
+      "aiPowered": "AI Magic ✨",
+      "youtubeAndUpload": "YouTube / Upload 📤",
+      "addSubtitles": "Create subtitles",
+      "addSubtitlesDesc": "Add subtitles and b-rolls",
+      "mergeVideos": "Merge videos",
+      "mergeVideosDesc": "Combine multiple clips",
+      "extractClip": "Extract clip",
+      "extractClipDesc": "Extract clip from long video",
+      "generateBRolls": "Generate B-rolls",
+      "translateSubtitles": "Translate subtitles",
+      "yourProjects": "Your Projects",
+      "searchProjects": "Search projects...",
+      "deleteProject": "Delete project"
+    },
+    "videoFactory": {
+      "inputStageTitle": "Choose Video Source",
+      "inputStageDesc": "Upload file or paste YouTube link",
+      "youtubeTab": "YouTube Link",
+      "uploadTab": "Upload File",
+      "youtubeUrlLabel": "YouTube Video URL",
+      "validate": "Check",
+      "enterYouTubeUrl": "Please enter YouTube URL",
+      "invalidYouTubeUrl": "Invalid YouTube URL",
+      "youtubeValidated": "Valid YouTube video!",
+      "cannotFetchYouTube": "Cannot fetch video information",
+      "youtubeError": "Error checking YouTube video",
+      "uploadFileLabel": "Upload Video",
+      "clickToUpload": "Click to upload",
+      "orDragDrop": "or drag and drop",
+      "supportedFormats": "MP4, MOV, AVI, MKV, WebM (max 500MB)",
+      "fileUploaded": "File uploaded successfully!",
+      "validateYouTubeFirst": "Please check YouTube URL first",
+      "uploadFileFirst": "Please upload video file first",
+      "remove": "Remove",
+      "next": "Next",
+      "back": "Back",
+      "configStageTitle": "Configure Video Cutting",
+      "configStageDesc": "Choose video cutting method",
+      "autoMethod": "Auto (AI Magic)",
+      "autoMethodDesc": "AI automatically finds viral moments",
+      "manualMethod": "Manual (Transcript)",
+      "manualMethodDesc": "Select text segments you want",
+      "selected": "Selected",
+      "clipCount": "Number of clips to create",
+      "clipDuration": "Duration per clip",
+      "contentTheme": "Priority theme (Optional)",
+      "transcriptHint": "Highlight text you want to create a clip from, then click the button",
+      "clipAdded": "Clip segment added",
+      "selectAtLeastOne": "Please select at least one segment",
+      "selectedClips": "Selected clips",
+      "postProdStageTitle": "Post-Production Options",
+      "postProdStageDesc": "Add captions, B-roll and effects",
+      "autoCaptions": "Auto-generate captions",
+      "autoCaptionsDesc": "Add automatic captions to video",
+      "captionLanguage": "Caption language",
+      "captionStyle": "Caption style",
+      "bRollInsertion": "Auto-insert B-roll",
+      "bRollInsertionDesc": "Add illustrative footage to video",
+      "bRollDensity": "B-roll density",
+      "backgroundMusic": "Background music",
+      "backgroundMusicDesc": "Add suitable background music",
+      "transitions": "Transition effects",
+      "transitionsDesc": "Add smooth transitions between scenes",
+      "startProcessing": "Start Processing",
+      "processing": "Processing Video",
+      "processingDesc": "Please wait a moment...",
+      "estimatedTime": "Estimated",
+      "minimize": "Minimize",
+      "processingComplete": "Complete!",
+      "processingCompleteDesc": "Your video has been processed successfully",
+      "generatedClips": "Generated clips",
+      "preview": "Preview",
+      "download": "Download",
+      "done": "Done",
+      "summaryTitle": "Configuration summary",
+      "summaryDesc": "Review your settings before starting the Video Factory job",
+      "clipsReady": "Clips are ready!",
+      "clipsReadyDesc": "Your clips have been cut successfully. You can preview and download them now."
+    },
+    "textToVideo": {
+      "title": "Text-to-Video",
+      "subtitle": "Create videos from text descriptions",
+      "promptLabel": "Describe your video",
+      "promptPlaceholder": "Example: A cat dancing in a vibrant flower garden...",
+      "beSpecific": "The more detailed, the more accurate",
+      "negativePromptLabel": "What you DON'T want",
+      "optional": "Optional",
+      "negativePromptPlaceholder": "Example: blurry, low resolution, distorted...",
+      "duration": "Video duration",
+      "aspectRatio": "Aspect ratio",
+      "creditEstimate": "Credit estimate",
+      "creditEstimateDesc": "This video will cost approximately",
+      "creditCalculation": "{duration}s × 2 credits/second",
+      "cancel": "Cancel",
+      "create": "Create Video",
+      "enterPrompt": "Please enter video description"
+    },
+    "settingsSection": {
+      "title": "Settings & Preferences",
+      "subtitle": "Manage your account, connections, and customize your experience.",
+      "socialConnections": "Social Media Accounts",
+      "socialConnectionsDesc": "Connect social media accounts to publish directly",
+      "connected": "Connected",
+      "notConnected": "Not connected",
+      "connectionsTableTitle": "Connected Accounts",
+      "connectionsTableDesc": "Manage linked profiles and disconnect those you no longer need.",
+      "loading": "Loading...",
+      "noConnections": "No social accounts connected yet.",
+      "noConnectionsFiltered": "No accounts match your filter.",
+      "table": {
+        "platform": "Platform",
+        "account": "Account",
+        "connectedAt": "Connected At",
+        "avatar": "Avatar",
+        "actions": "Actions"
+      },
+      "disconnect": "Disconnect",
+      "disconnecting": "Disconnecting...",
+      "status": {
+        "connected": "Connected",
+        "notConnected": "Not connected",
+        "notSupported": "Not supported"
+      },
+      "preferences": {
+        "title": "Preferences",
+        "language": "Language",
+        "timezone": "Timezone"
+      },
+      "onboardingTour": {
+        "title": "User Guide",
+        "description": "Want to see the guide again? Reset it here and the guide will appear when you reload the page.",
+        "resetButton": "Reset Guide",
+        "resetSuccess": "Guide reset! Reloading page...",
+        "tooltip": "This will show the step-by-step guide again on next visit",
+        "tooltipInfo": "Guide helps new users understand how to use the platform",
+        "resetTourSuccess": "Guide reset! Reloading page..."
+      }
+    }
+  },
+  "SettingsSection": {
+    "connectionsTableTitle": "Connected Accounts",
+    "connectionsTableDesc": "Manage linked profiles and disconnect those you no longer need.",
+    "loading": "Loading...",
+    "noConnections": "No social accounts connected yet.",
+    "noConnectionsFiltered": "No accounts match your filter.",
+    "table": {
+      "platform": "Platform",
+      "account": "Account",
+      "connectedAt": "Connected At",
+      "avatar": "Avatar",
+      "actions": "Actions"
+    },
+    "disconnect": "Disconnect",
+    "disconnecting": "Disconnecting...",
+    "socialConnections": "Social Media Accounts",
+    "socialConnectionsDesc": "Connect social media accounts to publish directly",
+    "connected": "Connected",
+    "notConnected": "Not connected",
+    "status": {
+      "connected": "Connected",
+      "notConnected": "Not connected",
+      "notSupported": "Not supported"
+    },
+    "onboardingTour": {
+      "title": "User Guide",
+      "description": "Want to see the guide again? Reset it here and the guide will appear when you reload the page.",
+      "resetButton": "Reset Guide",
+      "resetSuccess": "Guide reset! Reloading page..."
+    }
+  },
+  "FAQPage": {
+    "header": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about CreatorHub"
+    },
+    "faqs": [
+      {
+        "q": "What exactly does your service do?",
+        "a": "We help content creators optimize their social media presence by scheduling, scripting, and creating content on TikTok, YouTube, and Instagram. Our platform can:",
+        "list": [
+          "Write scripts for your videos.",
+          "Generate customized captions and hashtags for engagement.",
+          "Create short-form video drafts (ready for you to edit or post).",
+          "Schedule everything so you can maintain consistency without burnout."
+        ]
+      },
+      {
+        "q": "How does it work?",
+        "steps": [
+          "You tell us your niche, target audience, and preferred platforms.",
+          "Our AI and creative team create scripts, captions, and/or video drafts for you.",
+          "You review, approve, or request edits.",
+          "We help you schedule content to post at optimal times for engagement."
+        ],
+        "note": "Think of it as having an automated content studio."
+      },
+      {
+        "q": "Who owns the content you create for me?",
+        "a": "You do. 100%. Everything we create—scripts, captions, videos—belongs to you after delivery."
+      },
+      {
+        "q": "Can I edit scripts or videos?",
+        "a": "Absolutely. You can edit scripts, captions, and video drafts directly on our platform before posting. We encourage customization so your unique voice shines through."
+      },
+      {
+        "q": "How much does it cost?",
+        "list": [
+          "Monthly ($30/month Individual, $100/month Business)",
+          "Annual ($288/year Individual, $960/year Business)"
+        ]
+      },
+      {
+        "q": "Do you offer a free trial?",
+        "a": "Yes! We offer a 7-day free trial so you can test the workflow before committing."
+      },
+      {
+        "q": "What platforms do you support?",
+        "a": "Currently: TikTok, YouTube Shorts, and Instagram Reels. We're expanding to LinkedIn and X (Twitter)."
+      },
+      {
+        "q": "How do you ensure scripts and captions fit my style?",
+        "a": "During onboarding, we'll ask about your tone, niche, and audience preferences. Our system then learns your style and creates drafts tailored to your voice. You can always provide feedback to refine results."
+      },
+      {
+        "q": "Do you guarantee growth?",
+        "a": "We can't guarantee specific follower or view numbers—social media algorithms are unpredictable. What we do guarantee is:",
+        "list": [
+          "Consistent content output.",
+          "High-quality scripts and captions customized for engagement.",
+          "Streamlined workflow that saves you time."
+        ],
+        "note": "Consistency + quality = foundation for growth."
+      },
+      {
+        "q": "Can I cancel anytime?",
+        "a": "Yes, all subscription plans are monthly. Cancel anytime with no hidden fees."
+      },
+      {
+        "q": "Do you offer refunds?",
+        "a": "We offer a 14-day money-back guarantee for the first paid plan if you're not satisfied."
+      },
+      {
+        "q": "What if I need human help?",
+        "a": "We have a support team (real humans!) available via chat and email. For Pro and Agency plans, we also offer one-on-one onboarding calls."
+      }
+    ],
+    "cta": {
+      "title": "Still have questions?",
+      "subtitle": "Can't find the answer you need? Our support team is ready to help.",
+      "contactSupport": "Contact Support",
+      "viewPricing": "View Pricing"
+    }
+  }
+}
