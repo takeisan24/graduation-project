@@ -1,0 +1,238 @@
+/**
+ * Shared Types
+ *
+ * All TypeScript interfaces and types used across multiple stores
+ */
+
+import { Framework } from '@/lib/constants/content-strategy';
+
+/**
+ * Platform keys (lowercase — canonical, matches DB)
+ * Add new platforms here only. Do NOT use title case in code.
+ */
+export type PlatformKey =
+  | 'tiktok' | 'instagram' | 'youtube' | 'facebook'
+  | 'x' | 'threads' | 'linkedin' | 'pinterest';
+
+/**
+ * AI model display names (matches provider API labels)
+ */
+export type AIModel = 'ChatGPT' | 'Gemini Pro' | 'Claude Sonnet 4' | 'gpt-4.1' | 'o4-mini' | 'o3' | 'gpt-4o';
+
+/**
+ * Post lifecycle status from Late.dev
+ */
+export type LateLifecycleStatus = 'scheduled' | 'publishing' | 'posted' | 'failed';
+
+/**
+ * Wizard step for create page
+ */
+export type WizardStep = 'idle' | 'addingSource' | 'configuringPosts';
+
+/**
+ * Source to generate posts from
+ */
+export type SourceToGenerate = { type: string; value: string; label: string } | null;
+
+/**
+ * Post interface (for create page)
+ */
+export interface Post {
+  id: number;
+  type: string;
+  content?: string;
+  /** Instagram post type: 'regular' (default), 'stories', or 'reels' (auto-detected) */
+  instagramPostType?: 'regular' | 'stories' | 'reels';
+  /** Facebook post type: 'regular' (default), 'story', 'reel', etc. */
+  facebookPostType?: 'regular' | 'story' | 'reel' | string;
+  versions?: string[];
+  currentVersionIndex?: number;
+}
+
+/**
+ * Draft post interface
+ */
+export interface DraftPost {
+  id: number | string;
+  platform: string;
+  platformIcon?: string;
+  content: string;
+  time: string;
+  status: string;
+  media?: string[];
+  projectId?: string;
+  source?: 'local' | 'backend';
+}
+
+/**
+ * Published post interface
+ */
+export interface PublishedPost {
+  id: number;
+  platform: string;
+  content: string;
+  time: string;
+  status: string;
+  url: string;
+  profileName?: string;
+  profilePic?: string;
+  engagement?: {
+    likes: number;
+    comments: number;
+    shares: number;
+  };
+}
+
+/**
+ * Failed post interface
+ */
+export interface FailedPost {
+  id: string;
+  platform: string;
+  content: string;
+  date: string;
+  time: string;
+  error?: string;
+  errorMessage?: string | null;
+  profileName?: string;
+  profilePic?: string;
+  url?: string;
+  platformIcon?: string;
+  scheduledAt?: string | null;
+  lateJobId?: string | null;
+  getlateAccountId?: string | null;
+  /** Danh sách URL media (ảnh/video) gắn với bài đăng thất bại, dùng để reopen trong editor */
+  media?: string[];
+}
+
+
+/**
+ * Media file interface
+ */
+export interface MediaFile {
+  id: string;
+  type: 'image' | 'video';
+  preview: string;
+  file?: File; // ✅ Optional for library-sourced assets
+  postId?: number;
+  assetId?: string; // ✅ Optional: ID of the asset in Media Library
+}
+
+/**
+ * Media Asset from backend library
+ */
+export interface MediaAssetMetadata {
+  thumbnailUrl?: string | null;
+  title?: string;
+  original_filename?: string;
+  step?: string;
+  jobType?: string;
+  [key: string]: unknown;
+}
+
+export interface MediaAsset {
+  id: string;
+  asset_type: string;
+  source_type?: string;
+  job_id?: string | null;
+  public_url: string;
+  thumbnail_url?: string | null;
+  duration?: number | null;
+  metadata?: MediaAssetMetadata | null;
+  created_at?: string;
+}
+
+/**
+ * Chat message interface
+ */
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  isError?: boolean;
+}
+
+export interface SourceMetadata {
+  framework: Framework; // Lưu nguyên object framework để restore
+  goalId: string;
+  nicheId: string;
+  userIdea: string;     // Text content gốc chưa bị mix
+  attachment?: {
+    type: 'youtube' | 'tiktok' | 'article' | 'file' | 'text';
+    url?: string;
+    fileName?: string; // Nếu là file
+  };
+}
+
+/**
+ * Saved source interface
+ */
+export interface SavedSource {
+  id: string;
+  type: string;
+  value: string;
+  label: string;
+  metadata?: SourceMetadata;
+}
+
+/**
+ * Connected account interface
+ */
+export interface ConnectionProfileMetadata {
+  username?: string;
+  email?: string;
+  platform?: string;
+  late_profile_id?: string;
+  avatar_url?: string | null;
+  profilePicture?: string | null;
+  accountId?: string | null;
+  [key: string]: unknown;
+}
+
+export interface ConnectedAccount {
+  id: string;
+  platform: string | null;
+  profile_name?: string | null;
+  late_profile_id?: string | null;
+  social_media_account_id?: string | null;
+  profile_id?: string | null;
+  profile_metadata?: ConnectionProfileMetadata | null;
+  created_at?: string;
+}
+
+/**
+ * Pending scheduled post (stored in localStorage)
+ */
+export interface PendingScheduledPost {
+  postId: string;
+  lateJobId: string | null;
+  scheduledAt: string;
+  platform: string;
+  content: string;
+  lastKnownStatus?: LateLifecycleStatus;
+}
+
+/**
+ * API stats interface (for settings page)
+ */
+export interface ApiStats {
+  apiCalls: number;
+  successRate: number;
+  rateLimit: {
+    used: number;
+    total: number;
+    resetTime: string;
+  };
+}
+
+/**
+ * API key interface (for settings page)
+ */
+export interface ApiKey {
+  id: string;
+  name: string;
+  type: 'production' | 'development';
+  lastUsed: string;
+  isActive: boolean;
+}
+
+
