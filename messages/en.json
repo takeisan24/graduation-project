@@ -152,7 +152,7 @@
     },
     "buttons": {
       "signIn": "Sign In",
-      "getStarted": "Get Started",
+      "getStarted": "Open Demo",
       "signOut": "Sign Out",
       "dashboard": "Dashboard",
       "loading": "Loading...",
@@ -190,7 +190,7 @@
       "titleHighlight": "Content Planning",
       "titlePost": " & Creation for Multiple Platforms",
       "subtitle": "Transform a single content source into optimized posts for multiple social media platforms, using Generative AI to automate the creative process.",
-      "ctaPrimary": "Try it now",
+      "ctaPrimary": "Open demo",
       "ctaSecondary": "View features",
       "platformsLabel": "Supported:",
       "floatingCards": {
@@ -250,27 +250,27 @@
       }
     },
     "testimonial": {
-      "quote": "CreatorHub has completely transformed how we do marketing. We save over 20 hours per week and our social media presence has never been better.",
+      "quote": "CreatorHub demonstrates how a single source can be transformed into a coordinated multi-platform workflow with AI assistance, calendar planning, and publishing feedback in one system.",
       "author": {
-        "name": "Alex Tran",
-        "title": "Head of Growth, Momentum Labs"
+        "name": "Graduation Thesis Demo",
+        "title": "End-to-end AI content workflow"
       },
       "results": {
-        "title": "Real Results",
+        "title": "System Highlights",
         "metric1": {
-          "value": "20+",
-          "label": "Hours saved per week",
-          "description": "Automate repetitive tasks from ideation to publishing."
+          "value": "8",
+          "label": "Supported platforms",
+          "description": "One source can be expanded into coordinated drafts for multiple social channels."
         },
         "metric2": {
-          "value": "5x",
-          "label": "Content output",
-          "description": "Create more content for more channels without extra effort."
+          "value": "2",
+          "label": "AI providers",
+          "description": "Gemini and OpenAI are integrated through a shared generation layer."
         },
         "metric3": {
-          "value": "300%",
-          "label": "Engagement growth",
-          "description": "Maintain consistent presence across platforms to boost engagement."
+          "value": "Create→Plan→Publish",
+          "label": "Workflow coverage",
+          "description": "The system supports generation, scheduling, publishing review, and failure recovery."
         }
       }
     },
@@ -341,7 +341,7 @@
     "ctaSection": {
       "title": "Ready to explore CreatorHub?",
       "subtitle": "Discover the multi-platform content creation support system built as part of an IT graduation thesis.",
-      "cta": "Try it now"
+      "cta": "Open demo"
     },
     "techStack": {
       "title": "Architecture & Technology",
@@ -476,8 +476,8 @@
     "backToSignIn": "Back to Sign In"
   },
   "PricingPage": {
-    "headerTitle": "Choose the Plan That Fits Your Creativity",
-    "headerSubtitle": "Whether you're just starting or a professional agency, CreatorHub has a plan designed just for you. Start free today!",
+    "headerTitle": "Resource Configuration Reference",
+    "headerSubtitle": "This page summarizes the resource and capacity model used in CreatorHub for AI-intensive workflows and demo scenarios.",
     "perMonth": "/ month",
     "featureOrder": [
       "credits",
@@ -649,8 +649,8 @@
         "description": "Test plan 50k"
       }
     },
-    "title": "Upgrade Your Plan",
-    "subtitle": "Choose the best plan for your creative needs",
+    "title": "Resource Package Configuration",
+    "subtitle": "Reference available package tiers used by the system configuration",
     "loading": "Loading plans...",
     "noPlans": {
       "title": "No Plans Available",
@@ -748,19 +748,19 @@
       "published": "Published",
       "failed": "Failed",
       "account": "ACCOUNT",
-      "apiDashboard": "Operations Hub",
-      "connections": "Platform Connections",
+      "apiDashboard": "Workflow Overview",
+      "connections": "Platform Integrations",
       "settings": "System Settings",
       "logout": "Log Out",
       "signOutSuccess": "Signed out successfully!",
       "signOutRedirect": "Redirecting to sign in...",
       "profile": "Profile",
-      "credits": "Credits",
-      "storage": "Storage",
-      "profiles": "Profiles",
-      "currentPlan": "Current Plan",
-      "buyCredits": "Buy Credits",
-      "lowCreditsWarning": "Credits running low",
+      "credits": "AI Resources",
+      "storage": "Storage Capacity",
+      "profiles": "Connected Profiles",
+      "currentPlan": "Resource Tier",
+      "buyCredits": "Open Resource Reference",
+      "lowCreditsWarning": "Resource budget running low",
       "accountSettings": "Account Settings",
       "language": "Language"
     },
@@ -808,12 +808,12 @@
         "description": "Review and retry failed posts"
       },
       "operations": {
-        "title": "Operations Hub",
-        "description": "Monitor content operations, platform connections, and pipeline health"
+        "title": "Workflow Overview",
+        "description": "Review workflow status, platform connectivity, and pipeline health"
       },
       "connections": {
-        "title": "Platform Connections",
-        "description": "Connect, monitor, and manage social accounts that power the content pipeline"
+        "title": "Platform Integrations",
+        "description": "Connect, monitor, and manage social accounts that support the publishing workflow"
       },
       "settings": {
         "title": "System Settings",
@@ -835,24 +835,24 @@
         "drafts": "Drafts",
         "published": "Published",
         "failed": "Failed",
-        "operations": "Operations Hub",
-        "connections": "Platform Connections",
+        "operations": "Workflow Overview",
+        "connections": "Platform Integrations",
         "settings": "System Settings",
         "profile": "User Profile"
       }
     },
     "apiDashboard": {
-      "title": "Operations Hub",
-      "subtitle": "Operational overview of the multi-platform content workflow",
+      "title": "Workflow Overview",
+      "subtitle": "System-level overview of the multi-platform content workflow",
       "overview": "Overview",
-      "analytics": "Analytics",
+      "analytics": "Workflow Analytics",
       "activity": "Activity",
       "drafts": "Drafts",
       "published": "Published",
       "failed": "Failed",
       "connectedAccounts": "Connected Accounts",
       "successRate": "Success rate",
-      "loading": "Loading dashboard data...",
+      "loading": "Loading workflow data...",
       "noData": "No data available",
       "totalDrafts": "Drafts in progress",
       "draftsHint": "Content waiting to be completed before scheduling or publishing.",
@@ -871,8 +871,8 @@
       "pipelineStable": "Pipeline is stable",
       "pipelineNeedsAttention": "Pipeline needs attention",
       "pipelineHealthHint": "A quick read on bottlenecks and operational reliability.",
-      "systemFocus": "Current focus",
-      "systemFocusDesc": "The next priorities that make the graduation-project demo clearer and stronger.",
+      "systemFocus": "Current priorities",
+      "systemFocusDesc": "The next priorities that make the graduation-project workflow clearer and stronger.",
       "focusDrafts": "Content queue",
       "focusDraftsDesc": "There are currently {count} drafts ready to be refined or scheduled.",
       "focusConnections": "Connection coverage",
@@ -922,8 +922,8 @@
       "delete": "Delete"
     },
     "connections": {
-      "title": "Platform Connections",
-      "description": "Monitor social connections and integration readiness across the system.",
+      "title": "Platform Integrations",
+      "description": "Review social account connectivity and integration readiness across the system.",
       "loading": "Loading connections...",
       "connecting": "Connecting social account, please wait...",
       "popupBlocked": "Popup Blocked",
@@ -932,7 +932,7 @@
       "continueHere": "Continue here",
       "retryPopup": "Retry popup",
       "connectionsTableTitle": "Connected Accounts",
-      "connectionsTableDesc": "Manage your social media connections here.",
+      "connectionsTableDesc": "Review and manage the accounts currently available for publishing flows.",
       "summaryConnectedDesc": "Total number of linked accounts currently ready for synchronization.",
       "summaryPlatforms": "Active platforms",
       "summaryPlatformsDesc": "How many platforms currently have at least one real connection.",
@@ -953,8 +953,8 @@
       "disconnecting": "Disconnecting...",
       "previewConnectSuccess": "Mock-connected {platform}.",
       "previewDisconnectSuccess": "Removed the demo connection from the list.",
-      "socialConnections": "Integration catalog",
-      "socialConnectionsDesc": "Connect more platforms to broaden publishing coverage and strengthen the demo.",
+      "socialConnections": "Available integrations",
+      "socialConnectionsDesc": "Connect additional platforms to broaden publishing coverage and strengthen the workflow demo.",
       "connected": "Connected",
       "notConnected": "Not connected",
       "loginError": "Please login again.",
@@ -974,9 +974,9 @@
       "appearanceTitle": "Appearance",
       "appearanceDesc": "Adjust the system theme so the workspace fits both demos and day-to-day usage.",
       "workspaceTitle": "Workspace behavior",
-      "workspaceDesc": "Controls related to onboarding state and how the user experiences the app shell.",
-      "accountTitle": "Account navigation",
-      "accountDesc": "Sensitive account details such as email, avatar, and login methods are managed in Profile and Connections.",
+      "workspaceDesc": "Controls related to onboarding state and how the workspace behaves during demos and normal use.",
+      "accountTitle": "Profile and integrations",
+      "accountDesc": "Sensitive account details such as email, avatar, and login methods are managed through Profile and Platform Integrations.",
       "light": "Light",
       "dark": "Dark",
       "resetTour": "Restart onboarding",
@@ -986,7 +986,7 @@
       "currentTheme": "Current theme",
       "currentLocale": "Current locale",
       "modeLabel": "Mode",
-      "modeValue": "Content operations",
+      "modeValue": "AI content workflow",
       "tourResetSuccess": "Onboarding was reset so the user can walk through it again"
     },
     "userProfile": {

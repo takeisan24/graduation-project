@@ -2,8 +2,9 @@
 
 ## Objective
 
-CreatorHub is a thesis project that supports multi-platform content planning and
- AI-assisted content creation inside a single web application.
+CreatorHub is a graduation-thesis system that supports multi-platform content
+planning, AI-assisted content creation, publishing orchestration, and workflow
+monitoring inside a single web application.
 
 ## Core Stack
 
@@ -31,7 +32,8 @@ CreatorHub is a thesis project that supports multi-platform content planning and
 ### 3. API layer
 
 - `app/api/**`: route handlers for auth, AI generation, draft management,
-  scheduling, file handling, usage tracking, and connected accounts
+  scheduling, publishing, file handling, monitoring data, and connected
+  accounts
 - API routes validate inputs, enforce access control, and delegate business
   logic to services
 
@@ -39,7 +41,7 @@ CreatorHub is a thesis project that supports multi-platform content planning and
 
 - `lib/services/ai`: AI orchestration, generation, extraction, assistant logic
 - `lib/services/db`: data access for projects, drafts, profiles, accounts, chat
-- `lib/services/posts`: scheduling and post lifecycle helpers
+- `lib/services/posts`: scheduling, publishing, and post lifecycle helpers
 - `lib/services/storage`: upload and storage helpers
 
 ### 5. Integration layer
@@ -60,9 +62,20 @@ modal flows, and media preview.
 Provides a visual schedule surface for content planning, status display,
 re-scheduling, and drag-and-drop interactions.
 
-### Draft lifecycle
+### Draft and publish lifecycle
 
-Manages draft lists, editing access, published states, and failed post views.
+Manages draft lists, publishing transitions, published states, failed recovery
+views, and editor re-entry from operational states.
+
+### Integration center
+
+Handles platform account connectivity so the content workflow can move from
+planning to actual publishing across multiple channels.
+
+### Operations hub
+
+Summarizes drafts, published items, failed items, platform coverage, and recent
+activity to give a system-level view of workflow health.
 
 ### AI assistant
 
@@ -75,15 +88,19 @@ to project and draft context.
 2. API routes normalize and validate the request
 3. Service layer extracts context and builds AI prompts
 4. AI provider returns generated output
-5. Drafts, chat history, files, and schedule data are persisted in Supabase
+5. Drafts, chat history, files, schedule data, and publishing states are
+   persisted in Supabase
 6. UI modules read and update the state through stores and API responses
 
 ## Thesis Scope Emphasis
 
-The project centers on two main thesis objectives:
+The project centers on four practical thesis objectives:
 
 - AI-assisted content ideation and generation
-- Visual planning and organization of multi-platform content
+- visual planning and scheduling of multi-platform content
+- connected execution across publishing channels
+- monitoring and recovery of workflow outcomes
 
-Commercial SaaS concerns such as billing or monetization are intentionally kept
-outside the thesis-facing narrative.
+Commercial SaaS concerns such as billing or monetization remain background
+implementation detail and are intentionally kept outside the main thesis-facing
+narrative.

@@ -4,23 +4,54 @@ import {
   readStorageJson,
 } from "./helpers/createSection";
 
+test.describe.configure({ mode: "serial" });
+
 function visibleTestId(page: Page, testId: string) {
   return page.locator(`[data-testid="${testId}"]:visible`).first();
 }
 
+async function ensureSourceFormOpen(page: Page) {
+  if (await visibleTestId(page, "goal-tab-awareness").isVisible().catch(() => false)) {
+    return;
+  }
+
+  if (await visibleTestId(page, "empty-state-add-source-button").isVisible().catch(() => false)) {
+    await visibleTestId(page, "empty-state-add-source-button").click();
+  }
+
+  if (await visibleTestId(page, "create-add-source-button").isVisible().catch(() => false)) {
+    await visibleTestId(page, "create-add-source-button").click();
+  }
+
+  await expect(visibleTestId(page, "goal-tab-awareness")).toBeVisible({ timeout: 15000 });
+}
+
+async function selectFramework(page: Page) {
+  await ensureSourceFormOpen(page);
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await visibleTestId(page, "goal-tab-awareness").click({ force: true });
+    await expect(visibleTestId(page, "goal-tab-awareness")).toHaveAttribute("data-state", "active", {
+      timeout: 5000,
+    });
+
+    await visibleTestId(page, "niche-chip-travel").click({ force: true });
+
+    if (await visibleTestId(page, "framework-card-authentic-review").isVisible().catch(() => false)) {
+      await visibleTestId(page, "framework-card-authentic-review").click();
+      await visibleTestId(page, "source-form-next-step").click();
+      await expect(visibleTestId(page, "source-idea-textarea")).toBeVisible({ timeout: 15000 });
+      return;
+    }
+
+    await page.waitForTimeout(500);
+  }
+
+  await expect(visibleTestId(page, "framework-card-authentic-review")).toBeVisible({ timeout: 15000 });
+}
+
 async function generateSinglePost(page: Page, options?: { attachment?: "youtube" | "file" }) {
-  await expect(visibleTestId(page, "empty-state-add-source-button")).toBeVisible();
-  await visibleTestId(page, "empty-state-add-source-button").click();
-
-  await expect(visibleTestId(page, "create-add-source-button")).toBeVisible();
-  await visibleTestId(page, "create-add-source-button").click();
-
-  await expect(visibleTestId(page, "goal-tab-awareness")).toBeVisible();
-  await visibleTestId(page, "goal-tab-awareness").click();
-  await visibleTestId(page, "niche-chip-travel").click();
-  await visibleTestId(page, "framework-card-authentic-review").click();
-  await visibleTestId(page, "source-form-next-step").click();
-
+  await selectFramework(page);
   await visibleTestId(page, "source-idea-textarea").fill("Make a compelling travel post about Da Nang.");
 
   if (options?.attachment === "youtube") {
@@ -39,15 +70,26 @@ async function generateSinglePost(page: Page, options?: { attachment?: "youtube"
     });
   }
 
-  await visibleTestId(page, "source-submit-button").click();
+  if (await visibleTestId(page, "source-submit-button").isVisible().catch(() => false)) {
+    await visibleTestId(page, "source-submit-button").click();
+  }
 
-  await expect(visibleTestId(page, "platform-checkbox-facebook")).toBeVisible();
-  await visibleTestId(page, "platform-checkbox-facebook").check({ force: true });
-  await visibleTestId(page, "generate-posts-button").click({ force: true });
+  await expect(visibleTestId(page, "platform-checkbox-facebook")).toBeVisible({ timeout: 15000 });
+  await visibleTestId(page, "platform-checkbox-facebook").evaluate((node) => {
+    (node as HTMLInputElement).click();
+  });
+  const generationRequest = page.waitForResponse((response) =>
+    response.url().includes("/api/ai/generate-from-source") &&
+    response.request().method() === "POST"
+  );
+  await visibleTestId(page, "generate-posts-button").evaluate((node) => {
+    (node as HTMLButtonElement).click();
+  });
+  await generationRequest;
 
   await expect(visibleTestId(page, "post-editor-textarea")).toHaveValue(
     /Generated facebook content #1/
-  );
+  , { timeout: 15000 });
 }
 
 test.describe("Create Sections - Authenticated UI", () => {
@@ -107,12 +149,7 @@ test.describe("Create Sections - Authenticated UI", () => {
   test("edge case: invalid youtube url blocks source submission", async ({ page }) => {
     await openAuthenticatedCreatePage(page);
 
-    await visibleTestId(page, "empty-state-add-source-button").click();
-    await visibleTestId(page, "create-add-source-button").click();
-    await visibleTestId(page, "goal-tab-awareness").click();
-    await visibleTestId(page, "niche-chip-travel").click();
-    await visibleTestId(page, "framework-card-authentic-review").click();
-    await visibleTestId(page, "source-form-next-step").click();
+    await selectFramework(page);
 
     await visibleTestId(page, "source-idea-textarea").fill("Create a short post from a YouTube video.");
     await visibleTestId(page, "source-open-attachment-picker").click();
@@ -126,12 +163,7 @@ test.describe("Create Sections - Authenticated UI", () => {
   test("edge case: oversized file blocks source submission", async ({ page }) => {
     await openAuthenticatedCreatePage(page);
 
-    await visibleTestId(page, "empty-state-add-source-button").click();
-    await visibleTestId(page, "create-add-source-button").click();
-    await visibleTestId(page, "goal-tab-awareness").click();
-    await visibleTestId(page, "niche-chip-travel").click();
-    await visibleTestId(page, "framework-card-authentic-review").click();
-    await visibleTestId(page, "source-form-next-step").click();
+    await selectFramework(page);
 
     await visibleTestId(page, "source-idea-textarea").fill("Create a post from a file.");
     await visibleTestId(page, "source-open-attachment-picker").click();

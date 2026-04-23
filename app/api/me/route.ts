@@ -13,9 +13,10 @@ export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/me
- * Get current user's profile with subscription and usage information
- * 
- * Refactored: Uses service layer for all database operations
+ * Returns the authenticated user profile plus workflow-related resource data.
+ *
+ * Legacy keys such as `subscription`, `usage`, and `limits` remain intact for
+ * compatibility. Neutral aliases are added for thesis-facing review.
  */
 export async function GET(req: NextRequest) {
   try {
@@ -23,7 +24,7 @@ export async function GET(req: NextRequest) {
     if ('error' in auth) return auth.error;
     const { user } = auth;
 
-    // Fetch user profile with subscription details via service layer
+    // Fetch user profile plus stored tier metadata.
     const profile = await getUserProfileWithSubscription(user.id);
 
     // Get current usage for the month via service layer
@@ -32,7 +33,7 @@ export async function GET(req: NextRequest) {
     // Get connected accounts count via service layer
     const connectedAccountsCount = await countConnectedAccounts(user.id);
 
-    // Calculate subscription info
+    // Calculate current AI resource state from the configured tier and usage.
     const plan = profile?.plan || 'free';
     const subscription = profile?.subscriptions?.[0] || null;
     const creditsUsed = usage?.credits_used || 0;
@@ -40,17 +41,36 @@ export async function GET(req: NextRequest) {
     const totalCredits = getPlanCredits(plan) + creditsPurchased;
     const creditsRemaining = totalCredits - creditsUsed;
     
-    // Use credits_balance from users table if available (real-time), otherwise calculate
+    // Prefer the real-time balance when it is already stored on the user row.
     const creditsBalance = profile?.credits_balance !== undefined && profile?.credits_balance !== null
       ? profile.credits_balance
       : creditsRemaining;
 
-    // Check if subscription is active
+    // Legacy subscription activity field kept for compatibility.
     const isSubscriptionActive = subscription?.status === 'active' || plan === 'free';
+
+    const resourceProfile = {
+      tier: plan,
+      budget: {
+        used: creditsUsed,
+        purchased: creditsPurchased,
+        total: totalCredits,
+        remaining: creditsRemaining,
+        balance: creditsBalance,
+        periodStart: usage?.period_start,
+        periodEnd: usage?.period_end,
+      },
+      workflowCapacity: {
+        profiles: getPlanProfileLimit(plan),
+        posts: getPlanPostLimit(plan),
+        connectedAccounts: connectedAccountsCount || 0,
+      },
+    };
 
     return success({ 
       authUser: user, 
       profile: profile || null,
+      resourceProfile,
       subscription: {
         plan,
         status: subscription?.status || 'inactive',
@@ -68,11 +88,7 @@ export async function GET(req: NextRequest) {
         periodStart: usage?.period_start,
         periodEnd: usage?.period_end
       },
-      limits: {
-        profiles: getPlanProfileLimit(plan),
-        posts: getPlanPostLimit(plan),
-        connectedAccounts: connectedAccountsCount || 0
-      }
+      limits: resourceProfile.workflowCapacity
     });
   
   } catch (err: unknown) {

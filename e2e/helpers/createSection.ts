@@ -40,6 +40,17 @@ type ScheduledPost = {
   };
 };
 
+type BackendDraft = {
+  id: string;
+  project_id: string;
+  platform: string | null;
+  text_content: string | null;
+  media_urls: string[] | null;
+  status: "draft" | "scheduled" | "posted" | "failed";
+  created_at: string;
+  updated_at?: string;
+};
+
 export type CreateSectionMockOptions = {
   accounts?: MockAccount[];
   publishShouldFail?: boolean;
@@ -52,6 +63,14 @@ export type CreateSectionMockState = {
   publishedPosts: PublishedPost[];
   failedPosts: Array<Record<string, unknown>>;
   scheduledPosts: ScheduledPost[];
+  drafts: BackendDraft[];
+  project: {
+    id: string;
+    name: string;
+    source_type: string;
+    source_content: string | null;
+    created_at: string;
+  };
 };
 
 const DEFAULT_ACCOUNTS: MockAccount[] = [
@@ -77,9 +96,13 @@ const DEFAULT_ACCOUNTS: MockAccount[] = [
 
 function buildSession() {
   const expiresAt = Math.floor(Date.now() / 1000) + 60 * 60;
+  const jwtLikeToken =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+    "eyJzdWIiOiJwbGF5d3JpZ2h0LXVzZXItaWQiLCJlbWFpbCI6InBsYXl3cmlnaHRAZXhhbXBsZS5jb20iLCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImV4cCI6MjUzNDAyMzAwNzk5fQ." +
+    "playwright-signature";
   return {
-    access_token: "playwright-access-token",
-    refresh_token: "playwright-refresh-token",
+    access_token: jwtLikeToken,
+    refresh_token: "playwright-refresh-token.playwright-refresh-token.playwright-refresh-token",
     token_type: "bearer",
     expires_in: 3600,
     expires_at: expiresAt,
@@ -149,14 +172,150 @@ export async function installCreateSectionMocks(
     publishedPosts: [],
     failedPosts: [],
     scheduledPosts: [],
+    drafts: [],
+    project: {
+      id: "project-e2e-1",
+      name: "Playwright Workspace",
+      source_type: "prompt",
+      source_content: "Seeded E2E workspace",
+      created_at: new Date().toISOString(),
+    },
   };
 
   const accounts = options.accounts ?? DEFAULT_ACCOUNTS;
 
-  await page.route("**/api/late/connections", async (route) => {
+  await page.route(/.*\/api\/connections(?:\?.*)?$/, async (route) => {
     await fulfillJson(route, {
       success: true,
-      data: { connections: accounts },
+      data: accounts,
+    });
+  });
+
+  await page.route(/.*\/api\/projects(?:\?.*)?$/, async (route) => {
+    const method = route.request().method();
+
+    if (method === "GET") {
+      await fulfillJson(route, {
+        success: true,
+        data: [state.project],
+      });
+      return;
+    }
+
+    if (method === "POST") {
+      const body = route.request().postDataJSON() as {
+        name?: string;
+        sourceType?: string;
+        sourceContent?: string | null;
+      };
+
+      state.project = {
+        id: state.project.id,
+        name: body.name || state.project.name,
+        source_type: body.sourceType || state.project.source_type,
+        source_content: body.sourceContent ?? state.project.source_content,
+        created_at: state.project.created_at,
+      };
+
+      await fulfillJson(route, {
+        success: true,
+        data: state.project,
+      }, 201);
+    }
+  });
+
+  await page.route(/.*\/api\/projects\/[^/]+(?:\?.*)?$/, async (route) => {
+    await fulfillJson(route, {
+      success: true,
+      data: state.project,
+    });
+  });
+
+  await page.route(/.*\/api\/projects\/[^/]+\/drafts(?:\?.*)?$/, async (route) => {
+    const method = route.request().method();
+
+    if (method === "GET") {
+      await fulfillJson(route, {
+        success: true,
+        data: state.drafts,
+      });
+      return;
+    }
+
+    if (method === "POST") {
+      const body = route.request().postDataJSON() as {
+        platform?: string;
+        text_content?: string;
+        media_urls?: string[];
+        status?: "draft" | "scheduled" | "posted" | "failed";
+      };
+
+      const draft: BackendDraft = {
+        id: `draft-${state.drafts.length + 1}`,
+        project_id: state.project.id,
+        platform: body.platform || "Facebook",
+        text_content: body.text_content || "",
+        media_urls: body.media_urls || [],
+        status: body.status || "draft",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      state.drafts.unshift(draft);
+
+      await fulfillJson(route, {
+        success: true,
+        data: draft,
+      }, 201);
+    }
+  });
+
+  await page.route(/.*\/api\/projects\/[^/]+\/drafts\/[^/]+(?:\?.*)?$/, async (route) => {
+    const method = route.request().method();
+    const draftId = route.request().url().split("/").pop()?.split("?")[0] || "";
+    const target = state.drafts.find((draft) => draft.id === draftId);
+
+    if (method === "DELETE") {
+      state.drafts = state.drafts.filter((draft) => draft.id !== draftId);
+      await fulfillJson(route, {
+        success: true,
+        data: { deleted: true, id: draftId },
+      });
+      return;
+    }
+
+    if (method === "PUT" && target) {
+      const body = route.request().postDataJSON() as {
+        platform?: string;
+        text_content?: string;
+        media_urls?: string[];
+        status?: "draft" | "scheduled" | "posted" | "failed";
+        scheduled_at?: string | null;
+      };
+
+      target.platform = body.platform || target.platform;
+      target.text_content = body.text_content ?? target.text_content;
+      target.media_urls = body.media_urls ?? target.media_urls;
+      target.status = body.status || target.status;
+      target.updated_at = new Date().toISOString();
+
+      await fulfillJson(route, {
+        success: true,
+        data: target,
+      });
+      return;
+    }
+
+    await fulfillJson(route, {
+      success: true,
+      data: target || null,
+    });
+  });
+
+  await page.route(/.*\/api\/drafts(?:\?.*)?$/, async (route) => {
+    await fulfillJson(route, {
+      success: true,
+      data: state.drafts.filter((draft) => draft.status === "draft"),
     });
   });
 
@@ -493,6 +652,17 @@ export async function openAuthenticatedCreatePage(
   await seedAuthenticatedSession(page);
   const state = await installCreateSectionMocks(page, options);
   await page.goto("/en/create", { waitUntil: "domcontentloaded" });
+  await page.waitForFunction(() => {
+    const isLoading = document.body?.innerText?.includes("Loading your workspace...");
+    if (isLoading) return false;
+
+    return Boolean(
+      document.querySelector('[data-testid="empty-state-add-source-button"]') ||
+      document.querySelector('[data-testid="create-add-source-button"]') ||
+      document.querySelector('[data-testid="goal-tab-awareness"]') ||
+      document.querySelector('[data-testid="platform-checkbox-facebook"]')
+    );
+  }, undefined, { timeout: 15000 });
   return state;
 }
 

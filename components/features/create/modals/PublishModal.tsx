@@ -249,7 +249,7 @@ export default function PublishModal() {
 
     return (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={closeModal}>
-            <div ref={modalRef} className="bg-card border border-border rounded-xl p-4 lg:p-6 w-[calc(100%-2rem)] lg:w-[480px] max-w-full shadow-2xl relative mx-4" onClick={e => e.stopPropagation()}>
+            <div data-testid="publish-modal" ref={modalRef} className="bg-card border border-border rounded-xl p-4 lg:p-6 w-[calc(100%-2rem)] lg:w-[480px] max-w-full shadow-2xl relative mx-4" onClick={e => e.stopPropagation()}>
                 <button
                     onClick={closeModal}
                     className="absolute top-5 right-5 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-lg p-1.5 transition-all"
@@ -333,6 +333,7 @@ export default function PublishModal() {
                     <p className="text-foreground/90 mb-2 text-sm font-medium">{t('whenPublish')}</p>
                     <div className="relative rounded-lg bg-background border border-border hover:border-border transition-colors">
                         <select
+                            data-testid="publish-time-select"
                             value={publishTime}
                             onChange={(e) => setPublishTime(e.target.value)}
                             className="w-full bg-background text-foreground rounded-lg p-3 appearance-none pr-10 focus:outline-none cursor-pointer [&>option]:bg-background [&>option]:text-foreground"
@@ -463,6 +464,7 @@ export default function PublishModal() {
                 <div className="flex gap-3 mt-6 pt-4 border-t border-border">
                     <Button variant="outline" className="flex-1 border-border text-foreground hover:bg-secondary hover:border-border transition-all" onClick={closeModal}>{t('cancel')}</Button>
                     <Button
+                        data-testid="publish-confirm-button"
                         className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed" 
                         onClick={handleConfirm}
                         disabled={isPublishing}

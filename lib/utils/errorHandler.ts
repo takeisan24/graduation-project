@@ -1,7 +1,8 @@
 /**
  * Error Handler Utility
- * 
- * Handles parsing and displaying errors from BE, especially for limit/credits errors
+ *
+ * Handles parsing and displaying backend errors, especially resource-budget and
+ * workflow-capacity constraints.
  */
 
 import { toast } from 'sonner';
@@ -20,8 +21,8 @@ export interface ParsedError {
 }
 
 /**
- * Parse error from BE response
- * BE errors can be:
+ * Parse error from backend response.
+ * Supported inputs:
  * - Plain string
  * - JSON stringified object
  * - Error object with message/error field
@@ -105,7 +106,8 @@ export function parseError(error: any): ParsedError {
   // Sau khi có errorMessage & parsedData, dùng helper để lấy thông điệp thân thiện nhất
   errorMessage = extractHumanMessage(parsedData || errorMessage);
 
-  // Check if this is a limit/credits error
+  // Detect resource-constraint style errors while remaining compatible with
+  // the older credits/plan-oriented payload shape.
   const isLimitError = parsedData && (
     parsedData.reason === 'profile_limit_reached' ||
     parsedData.reason === 'post_limit_reached' ||
@@ -130,9 +132,9 @@ export function parseError(error: any): ParsedError {
 }
 
 /**
- * Handle error from BE - show toast and modal if it's a limit/credits error
- * 
- * @param error - Error from BE (can be string, Error object, or response data)
+ * Handle backend errors and surface them consistently to the UI.
+ *
+ * @param error - Error from backend (can be string, Error object, or response data)
  * @param defaultMessage - Default message if error cannot be parsed
  */
 export async function handleErrorWithModal(error: any, defaultMessage: string = 'Đã xảy ra lỗi') {
@@ -144,9 +146,9 @@ export async function handleErrorWithModal(error: any, defaultMessage: string = 
   // Always show toast with error message
   toast.error(finalErrorMessage);
 
-  // Log limit/credits errors for debugging
+  // Log resource-constraint errors for debugging.
   if (parsed.isLimitError) {
-    console.error('[handleErrorWithModal] Limit/credits error:', {
+    console.error('[handleErrorWithModal] Resource constraint error:', {
       reason: parsed.reason,
       creditsRequired: parsed.creditsRequired,
       creditsRemaining: parsed.creditsRemaining,

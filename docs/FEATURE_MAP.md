@@ -27,7 +27,9 @@ công cụ Generative AI.
 5. AI generates draft content for multiple platforms
 6. User refines the draft through editor tools or AI chat
 7. User plans content on the calendar
-8. User tracks drafts and schedule states
+8. User connects platform accounts to support realistic execution
+9. User publishes or schedules content
+10. User reviews drafts, published results, failed items, and workflow status
 
 ## Scope Boundaries
 
@@ -36,11 +38,14 @@ Included:
 - content generation
 - draft refinement
 - visual planning
+- publishing and recovery workflow
+- platform connection management
+- operational monitoring
 - file and media support
 - bilingual user experience
 
 De-emphasized in the thesis narrative:
 
 - commercial monetization logic
-- operational analytics for SaaS management
+- pricing and payment-oriented flows
 - billing-oriented usage behavior

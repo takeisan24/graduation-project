@@ -16,16 +16,19 @@ export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/usage
- * Get user's current usage and limits
- * 
- * Refactored: Uses service layer for all database operations
+ * Returns the current AI resource budget, workflow capacity, and recent
+ * activity counters for the authenticated user.
+ *
+ * Legacy fields such as `plan`, `credits`, and `limits` are preserved for
+ * compatibility with existing frontend code. Neutral aliases are included so
+ * thesis-facing code review can discuss "resources" rather than billing.
  */
 export async function GET(req: NextRequest) {
   try {
     const user = await requireAuth(req);
     if (!user) return fail("Unauthorized", 401);
 
-    // Get user's plan and credits_balance via service layer
+    // Read the user's configured resource tier and current AI budget.
     const userData = await getUserProfile(user.id);
     const plan = userData?.plan || 'free';
     const isSubscriptionActive = userData?.subscription_status === 'active' || plan === 'free';
@@ -40,50 +43,66 @@ export async function GET(req: NextRequest) {
     // Get connected accounts count via service layer
     const connectedAccountsCount = await countConnectedAccounts(user.id);
 
-    // Calculate credits
+    // Calculate AI resource budget from the configured tier and current usage.
     const creditsUsed = usage?.credits_used || 0;
     const creditsPurchased = usage?.credits_purchased || 0;
     const totalCredits = getPlanCredits(plan) + creditsPurchased;
     const creditsRemaining = totalCredits - creditsUsed;
 
-    // Use credits_balance from users table if available (real-time), otherwise calculate
+    // Prefer the real-time balance from the users table when available.
     const creditsBalance = userData?.credits_balance !== undefined && userData?.credits_balance !== null
       ? userData.credits_balance
       : creditsRemaining;
-    // Fetch subscription details to get billing_cycle and credits_per_period
+    // Legacy subscription fields are still returned for compatibility.
     const subscription = await getUserSubscription(user.id);
     const billingCycle = subscription?.billing_cycle || 'monthly';
     const creditsPerPeriod = subscription?.credits_per_period || getPlanCredits(plan);
     const nextCreditGrantAt = userData?.next_credit_grant_at || subscription?.next_credit_date || null;
     const subscriptionEndsAt = userData?.subscription_ends_at || subscription?.current_period_end || null;
 
+    const workflowCapacity = {
+      profiles: getPlanProfileLimit(plan),
+      posts: getPlanPostLimit(plan),
+      connectedAccounts: connectedAccountsCount || 0,
+    };
+
+    const resourceBudget = {
+      used: creditsUsed,
+      purchased: creditsPurchased,
+      total: totalCredits,
+      remaining: creditsRemaining,
+      balance: creditsBalance,
+      periodStart: usage?.period_start,
+      periodEnd: usage?.period_end,
+      allocationCycle: billingCycle,
+      allocationPerCycle: creditsPerPeriod,
+      nextAllocationAt: nextCreditGrantAt,
+      tierEndsAt: subscriptionEndsAt,
+    };
+
+    const activityCounters = {
+      projectsCreated: monthlyUsage?.projects_created || 0,
+      postsCreated: monthlyUsage?.posts_created || 0,
+      imagesGenerated: monthlyUsage?.images_generated || 0,
+      videosGenerated: monthlyUsage?.videos_generated || 0,
+    };
+
     return success({
       plan,
+      resourceTier: plan,
       isSubscriptionActive,
       credits: {
-        used: creditsUsed,
-        purchased: creditsPurchased,
-        total: totalCredits,
-        remaining: creditsRemaining,
-        balance: creditsBalance, // Real-time balance from users table
-        periodStart: usage?.period_start,
-        periodEnd: usage?.period_end,
-        billingCycle: billingCycle,
-        creditsPerPeriod: creditsPerPeriod,
-        nextCreditGrantAt: nextCreditGrantAt,
-        subscriptionEndsAt: subscriptionEndsAt
+        ...resourceBudget,
+        billingCycle,
+        creditsPerPeriod,
+        nextCreditGrantAt,
+        subscriptionEndsAt,
       },
-      limits: {
-        profiles: getPlanProfileLimit(plan),
-        posts: getPlanPostLimit(plan),
-        connectedAccounts: connectedAccountsCount || 0
-      },
-      usage: {
-        projectsCreated: monthlyUsage?.projects_created || 0,
-        postsCreated: monthlyUsage?.posts_created || 0,
-        imagesGenerated: monthlyUsage?.images_generated || 0,
-        videosGenerated: monthlyUsage?.videos_generated || 0
-      }
+      resourceBudget,
+      limits: workflowCapacity,
+      workflowCapacity,
+      usage: activityCounters,
+      activityCounters,
     });
 
   } catch (err: unknown) {

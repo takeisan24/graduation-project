@@ -12,12 +12,12 @@ export const PLAN_ERRORS = {
   /**
    * Error message when Free plan user tries to use video generation feature
    */
-  FREE_PLAN_NO_VIDEO_GENERATION: "Tài khoản Free không có chức năng tạo video, hãy nâng cấp lên plan cao hơn",
+  FREE_PLAN_NO_VIDEO_GENERATION: "Cấu hình tài nguyên hiện tại chưa hỗ trợ tạo video. Vui lòng dùng cấu hình cao hơn hoặc điều chỉnh phạm vi demo.",
 
   /**
    * Error message when unable to check user plan information
    */
-  UNABLE_TO_CHECK_PLAN: "Không thể kiểm tra thông tin plan của bạn. Vui lòng thử lại sau.",
+  UNABLE_TO_CHECK_PLAN: "Không thể kiểm tra cấu hình tài nguyên hiện tại. Vui lòng thử lại sau.",
 } as const;
 
 /**
@@ -30,7 +30,7 @@ export const CREDIT_ERRORS = {
    * @param creditsRemaining - Number of credits remaining
    */
   INSUFFICIENT_CREDITS_VIDEO: (creditsRequired: number, creditsRemaining: number) =>
-    `Bạn không đủ credits để tạo video. Cần ${creditsRequired} credits nhưng chỉ còn ${creditsRemaining} credits. Nâng cấp gói plan của bạn để tiếp tục sử dụng tính năng AI.`,
+    `Nguồn lực AI hiện không đủ để tạo video. Cần ${creditsRequired} credits nhưng chỉ còn ${creditsRemaining} credits trong cấu hình hiện tại.`,
 
   /**
    * Error message when user doesn't have enough credits for Video Factory cut
@@ -38,7 +38,7 @@ export const CREDIT_ERRORS = {
    * @param creditsRemaining - Number of credits remaining
    */
   INSUFFICIENT_CREDITS_VIDEO_FACTORY_CUT: (creditsRequired: number, creditsRemaining: number) =>
-    `Bạn không đủ credits để cắt video thành các clips. Cần ${creditsRequired} credits nhưng chỉ còn ${creditsRemaining} credits. Cần thêm credit để thực hiện chức năng này.`,
+    `Nguồn lực AI hiện không đủ để cắt video thành clips. Cần ${creditsRequired} credits nhưng chỉ còn ${creditsRemaining} credits trong cấu hình hiện tại.`,
 
   /**
    * Error message when user doesn't have enough credits for Video Factory postprocess
@@ -46,7 +46,7 @@ export const CREDIT_ERRORS = {
    * @param creditsRemaining - Number of credits remaining
    */
   INSUFFICIENT_CREDITS_VIDEO_FACTORY_POSTPROCESS: (creditsRequired: number, creditsRemaining: number) =>
-    `Bạn không đủ credits để thực hiện hậu kỳ video. Cần ${creditsRequired} credits nhưng chỉ còn ${creditsRemaining} credits. Cần thêm credit để thực hiện chức năng này.`,
+    `Nguồn lực AI hiện không đủ để thực hiện hậu kỳ video. Cần ${creditsRequired} credits nhưng chỉ còn ${creditsRemaining} credits trong cấu hình hiện tại.`,
 
   /**
    * Error message when user doesn't have enough credits for image generation
@@ -55,14 +55,14 @@ export const CREDIT_ERRORS = {
    * @param creditsRemaining - Number of credits remaining
    */
   INSUFFICIENT_CREDITS_IMAGE: (count: number, creditsRequired: number, creditsRemaining: number) =>
-    `Bạn không đủ credits để tạo ${count} ảnh. Cần ${creditsRequired} credits nhưng chỉ còn ${creditsRemaining} credits. Nâng cấp gói plan của bạn để tiếp tục sử dụng tính năng AI.`,
+    `Nguồn lực AI hiện không đủ để tạo ${count} ảnh. Cần ${creditsRequired} credits nhưng chỉ còn ${creditsRemaining} credits trong cấu hình hiện tại.`,
 
   /**
    * Error message when user doesn't have enough credits for chat AI
    * @param creditsRequired - Number of credits required per message
    */
   INSUFFICIENT_CREDITS_CHAT: (creditsRequired: number) =>
-    `Bạn không còn credits để sử dụng tính năng chat AI. Cần ${creditsRequired} credit cho mỗi tin nhắn (sau 10 tin nhắn miễn phí). Nâng cấp gói plan của bạn để tiếp tục sử dụng.`,
+    `Nguồn lực AI hiện không đủ để tiếp tục dùng chat AI. Cần ${creditsRequired} credit cho mỗi tin nhắn sau ngưỡng miễn phí.`,
 
   /**
    * Error message when user doesn't have enough credits for content generation
@@ -71,7 +71,7 @@ export const CREDIT_ERRORS = {
    * @param creditsRemaining - Number of credits remaining
    */
   INSUFFICIENT_CREDITS_CONTENT: (totalPosts: number, creditsRequired: number, creditsRemaining: number) =>
-    `Bạn không đủ credits để tạo ${totalPosts} bài viết từ nguồn. Cần ${creditsRequired} credits (${totalPosts} bài × 1 credit/bài) nhưng chỉ còn ${creditsRemaining} credits. Nâng cấp gói plan của bạn để tiếp tục sử dụng tính năng AI.`,
+    `Nguồn lực AI hiện không đủ để tạo ${totalPosts} bài viết từ nguồn. Cần ${creditsRequired} credits (${totalPosts} bài × 1 credit/bài) nhưng chỉ còn ${creditsRemaining} credits trong cấu hình hiện tại.`,
 
   /**
    * Generic error message for insufficient credits (backend)
@@ -79,18 +79,18 @@ export const CREDIT_ERRORS = {
    */
   INSUFFICIENT_CREDITS_GENERIC: (creditAction: string) => {
     if (creditAction === "WITH_VIDEO") {
-      return "Không đủ credits để tạo video. Hãy mua thêm hoặc nâng cấp plan.";
+      return "Nguồn lực AI hiện không đủ để tạo video trong cấu hình hiện tại.";
     }
     if (creditAction === "WITH_IMAGE") {
-      return "Không đủ credits để tạo ảnh. Hãy mua thêm hoặc nâng cấp plan.";
+      return "Nguồn lực AI hiện không đủ để tạo ảnh trong cấu hình hiện tại.";
     }
     if (creditAction === "VIDEO_FACTORY_START") {
-      return "Không đủ credits để cắt video thành các clips (cần 5 credits).";
+      return "Nguồn lực AI hiện không đủ để cắt video thành clips (cần 5 credits).";
     }
     if (creditAction === "VIDEO_FACTORY_POSTPROCESS") {
-      return "Không đủ credits để thực hiện hậu kỳ video (cần 10 credits).";
+      return "Nguồn lực AI hiện không đủ để thực hiện hậu kỳ video (cần 10 credits).";
     }
-    return "Không đủ credits. Hãy mua thêm hoặc nâng cấp plan.";
+    return "Nguồn lực AI hiện không đủ trong cấu hình hiện tại.";
   },
 } as const;
 
@@ -104,7 +104,7 @@ export const LIMIT_ERRORS = {
    * @param limit - Maximum allowed accounts
    */
   PROFILE_LIMIT_REACHED: (current: number, limit: number) =>
-    `Bạn đã kết nối tối đa tài khoản mxh (${current}/${limit} tài khoản). Ngắt kết nối 1 tài khoản không sử dụng hoặc nâng cấp gói plan của bạn.`,
+    `Bạn đã kết nối tối đa số tài khoản mạng xã hội cho cấu hình hiện tại (${current}/${limit} tài khoản). Hãy ngắt một tài khoản không dùng hoặc điều chỉnh cấu hình tài nguyên.`,
 
   /**
    * Error message when user has reached maximum monthly posts
@@ -112,7 +112,7 @@ export const LIMIT_ERRORS = {
    * @param limit - Maximum allowed posts
    */
   POST_LIMIT_REACHED: (current: number, limit: number) =>
-    `Bạn đã đăng tối đa số bài post trong tháng (${current}/${limit} bài). Nâng cấp gói plan của bạn để tiếp tục đăng bài.`,
+    `Bạn đã đạt ngưỡng số bài cho cấu hình hiện tại trong tháng này (${current}/${limit} bài). Hãy điều chỉnh phạm vi vận hành hoặc cấu hình tài nguyên.`,
 } as const;
 
 /**

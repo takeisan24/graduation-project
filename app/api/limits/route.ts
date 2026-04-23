@@ -15,9 +15,10 @@ import { getMonthStartDate, DEFAULT_TIMEZONE } from "@/lib/utils/date";
 
 /**
  * GET /api/limits
- * Combined limits and counters for FE (credits, profiles, posts)
- * 
- * Refactored: Uses service layer for all database operations
+ * Returns compact workflow capacity data for the authenticated user.
+ *
+ * Legacy fields such as `plan` and `creditsRemaining` are preserved for
+ * compatibility. Neutral aliases are included for thesis-facing review.
  */
 export async function GET(req: NextRequest) {
   try {
@@ -25,7 +26,7 @@ export async function GET(req: NextRequest) {
     if ('error' in auth) return auth.error;
     const { user } = auth;
 
-    // Users: plan + credits via service layer
+    // Read the configured resource tier and real-time AI balance.
     let plan = 'free';
     let creditsRemaining = 0;
     const userRow = await getUserPlanAndCredits(user.id);
@@ -34,7 +35,7 @@ export async function GET(req: NextRequest) {
       plan = userRow.plan || 'free';
       creditsRemaining = userRow.credits_balance ?? 0;
     } else {
-      // No users row yet -> ensure profile via RPC and use returned credits
+      // No users row yet: bootstrap the profile and use the returned balance.
       const ensuredCredits = await ensureUserProfile(user.id);
       if (ensuredCredits !== null && ensuredCredits !== undefined) {
         creditsRemaining = ensuredCredits;
@@ -49,11 +50,21 @@ export async function GET(req: NextRequest) {
     const month = getMonthStartDate(DEFAULT_TIMEZONE);
     const mu = await getMonthlyUsage(user.id, month);
 
+    const workflowCapacity = {
+      profiles: { current: profilesCurrent ?? 0, limit: getPlanProfileLimit(plan) },
+      posts: { current: mu?.scheduled_posts ?? 0, limit: getPlanPostLimit(plan) },
+    };
+
     return success({
       creditsRemaining,
       plan,
-      profiles: { current: profilesCurrent ?? 0, limit: getPlanProfileLimit(plan) },
-      posts: { current: mu?.scheduled_posts ?? 0, limit: getPlanPostLimit(plan) }
+      resourceTier: plan,
+      profiles: workflowCapacity.profiles,
+      posts: workflowCapacity.posts,
+      resourceBudget: {
+        remaining: creditsRemaining,
+      },
+      workflowCapacity,
     });
 
   } catch (err: unknown) {

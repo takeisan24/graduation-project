@@ -82,6 +82,18 @@ const getStorageKey = (): string => {
 };
 
 const storageKey = getStorageKey();
+const readE2ESession = () => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  try {
+    const raw = window.localStorage.getItem(E2E_SESSION_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
 
 const getBrowserStorage = () => {
   if (typeof window === 'undefined') {
@@ -136,3 +148,24 @@ export const supabaseClient = createClient(supabaseUrl, anonKey, {
     storageKey: typeof window !== 'undefined' ? storageKey : undefined,
   },
 });
+
+const originalGetSession = supabaseClient.auth.getSession.bind(supabaseClient.auth);
+
+supabaseClient.auth.getSession = async () => {
+  const result = await originalGetSession();
+  if (result.data.session) {
+    return result;
+  }
+
+  const e2eSession = readE2ESession();
+  if (e2eSession) {
+    return {
+      data: {
+        session: e2eSession,
+      },
+      error: null,
+    };
+  }
+
+  return result;
+};

@@ -94,10 +94,9 @@ export default function SectionPage({ params }: { params: { section: string } })
   }, [sectionFromUrl, setActiveSection, setIsSidebarOpen, isInitialLoad, isMounted]);
 
   /**
-   * Hydrate limits/credits for "create" and "operations" sections
-   * Only refreshes once per section change to prevent duplicate API calls
+   * Support data hydration is intentionally kept lightweight here.
+   * Workspace sections fetch their own operational data when needed.
    */
-  // Credits refresh removed (credits store deleted)
 
   // Show full page loader only on first session load
   if (!isMounted || isInitialLoad) {

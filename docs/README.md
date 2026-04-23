@@ -12,8 +12,8 @@ architecture, implementation roadmap, and defense narrative of CreatorHub.
 - `FEATURE_MAP.md`: connects thesis requirements to implemented features
 - `DEFENSE_NOTES.md`: short notes for presenting the project and answering
   common review questions
-- `thesis-feature-scope.md`: scope decision document for what is kept or hidden
-  in the thesis version
+- `thesis-feature-scope.md`: scope decision document for what is emphasized,
+  de-emphasized, and how the full workflow is framed for the thesis
 
 ## Detailed Blueprints
 

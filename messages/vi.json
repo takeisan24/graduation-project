@@ -152,7 +152,7 @@
     },
     "buttons": {
       "signIn": "Đăng nhập",
-      "getStarted": "Bắt đầu dùng thử",
+      "getStarted": "Mở demo",
       "signOut": "Đăng xuất",
       "dashboard": "Bảng điều khiển",
       "loading": "Đang tải...",
@@ -190,7 +190,7 @@
       "titleHighlight": "Sáng tạo Nội dung",
       "titlePost": " đa nền tảng bằng AI",
       "subtitle": "Biến một nguồn nội dung duy nhất thành bài đăng tối ưu cho nhiều nền tảng mạng xã hội, sử dụng Generative AI để tự động hóa quy trình sáng tạo.",
-      "ctaPrimary": "Trải nghiệm ngay",
+      "ctaPrimary": "Mở demo",
       "ctaSecondary": "Xem tính năng",
       "platformsLabel": "Hỗ trợ:",
       "floatingCards": {
@@ -250,27 +250,27 @@
       }
     },
     "testimonial": {
-      "quote": "CreatorHub đã thay đổi hoàn toàn cách chúng tôi làm marketing. Chúng tôi tiết kiệm được hơn 20 giờ mỗi tuần và sự hiện diện trên mạng xã hội chưa bao giờ tốt hơn thế.",
+      "quote": "CreatorHub minh họa cách một nguồn đầu vào có thể được chuyển thành quy trình nội dung đa nền tảng hoàn chỉnh, từ tạo nội dung bằng AI đến lập lịch, xuất bản và theo dõi kết quả trong cùng một hệ thống.",
       "author": {
-        "name": "Alex Trần",
-        "title": "Trưởng phòng Tăng trưởng, Momentum Labs"
+        "name": "Demo đồ án tốt nghiệp",
+        "title": "Quy trình nội dung AI đầu-cuối"
       },
       "results": {
-        "title": "Kết quả thực tế",
+        "title": "Điểm nhấn hệ thống",
         "metric1": {
-          "value": "20+",
-          "label": "Giờ tiết kiệm mỗi tuần",
-          "description": "Tự động hóa các công việc lặp đi lặp lại từ khâu lên ý tưởng đến xuất bản."
+          "value": "8",
+          "label": "Nền tảng hỗ trợ",
+          "description": "Một nguồn có thể được mở rộng thành nhiều bản nháp phù hợp cho các kênh xã hội khác nhau."
         },
         "metric2": {
-          "value": "5x",
-          "label": "Sản lượng nội dung",
-          "description": "Tạo ra nhiều nội dung hơn cho nhiều kênh hơn mà không cần tốn thêm công sức."
+          "value": "2",
+          "label": "Nhà cung cấp AI",
+          "description": "Gemini và OpenAI được tích hợp qua cùng một lớp điều phối tạo nội dung."
         },
         "metric3": {
-          "value": "300%",
-          "label": "Tăng trưởng tương tác",
-          "description": "Duy trì sự hiện diện nhất quán trên các nền tảng giúp tăng vọt lượt tương tác."
+          "value": "Create→Plan→Publish",
+          "label": "Độ phủ quy trình",
+          "description": "Hệ thống hỗ trợ tạo nội dung, lên lịch, theo dõi xuất bản và xử lý lỗi trong cùng một luồng."
         }
       }
     },
@@ -341,7 +341,7 @@
     "ctaSection": {
       "title": "Sẵn sàng trải nghiệm CreatorHub?",
       "subtitle": "Khám phá hệ thống hỗ trợ sáng tạo nội dung đa nền tảng được xây dựng như một phần của đồ án tốt nghiệp ngành CNTT.",
-      "cta": "Trải nghiệm ngay"
+      "cta": "Mở demo"
     },
     "techStack": {
       "title": "Kiến trúc & Công nghệ",
@@ -476,8 +476,8 @@
     "backToSignIn": "Quay lại Đăng nhập"
   },
   "PricingPage": {
-    "headerTitle": "Chọn Gói Phù hợp với Sức sáng tạo của bạn",
-    "headerSubtitle": "Dù bạn mới bắt đầu hay đã là một agency chuyên nghiệp, CreatorHub luôn có một gói được thiết kế riêng cho bạn. Bắt đầu miễn phí ngay hôm nay!",
+    "headerTitle": "Tham chiếu Cấu hình Tài nguyên",
+    "headerSubtitle": "Trang này tóm tắt cách CreatorHub cấu hình tài nguyên và năng lực xử lý cho các luồng AI và các kịch bản demo.",
     "perMonth": "/ tháng",
     "featureOrder": [
       "credits",
@@ -649,8 +649,8 @@
         "description": "Gói test 50k"
       }
     },
-    "title": "Nâng cấp gói của bạn",
-    "subtitle": "Chọn gói phù hợp nhất với nhu cầu sáng tạo của bạn",
+    "title": "Cấu hình Gói Tài nguyên",
+    "subtitle": "Tham chiếu các mức cấu hình tài nguyên đang được hệ thống hỗ trợ",
     "loading": "Đang tải danh sách gói...",
     "noPlans": {
       "title": "Không có gói nào",
@@ -748,19 +748,19 @@
       "published": "Bài đã đăng",
       "failed": "Bài đăng thất bại",
       "account": "TÀI KHOẢN",
-      "apiDashboard": "Trung tâm vận hành",
-      "connections": "Kết nối nền tảng",
+      "apiDashboard": "Tổng quan quy trình",
+      "connections": "Tích hợp nền tảng",
       "settings": "Cài đặt hệ thống",
       "logout": "Đăng xuất",
       "signOutSuccess": "Đăng xuất thành công!",
       "signOutRedirect": "Đang chuyển đến trang đăng nhập...",
       "profile": "Hồ sơ",
-      "credits": "Tín dụng",
-      "storage": "Dung lượng",
-      "profiles": "Profiles",
-      "currentPlan": "Gói hiện tại",
-      "buyCredits": "Mua tín dụng",
-      "lowCreditsWarning": "Sắp hết tín dụng",
+      "credits": "Nguồn lực AI",
+      "storage": "Dung lượng lưu trữ",
+      "profiles": "Hồ sơ kết nối",
+      "currentPlan": "Mức cấu hình",
+      "buyCredits": "Mở tham chiếu tài nguyên",
+      "lowCreditsWarning": "Nguồn lực AI sắp chạm ngưỡng",
       "accountSettings": "Cài đặt tài khoản",
       "language": "Ngôn ngữ"
     },
@@ -808,12 +808,12 @@
         "description": "Xem lại và thử lại các bài đăng lỗi"
       },
       "operations": {
-        "title": "Trung tâm vận hành",
-        "description": "Theo dõi vận hành nội dung, kết nối nền tảng và trạng thái pipeline"
+        "title": "Tổng quan quy trình",
+        "description": "Theo dõi trạng thái quy trình, kết nối nền tảng và sức khỏe pipeline"
       },
       "connections": {
-        "title": "Kết nối nền tảng",
-        "description": "Kết nối, theo dõi và quản lý các tài khoản mạng xã hội phục vụ pipeline nội dung"
+        "title": "Tích hợp nền tảng",
+        "description": "Kết nối, theo dõi và quản lý các tài khoản mạng xã hội phục vụ luồng xuất bản"
       },
       "settings": {
         "title": "Cài đặt hệ thống",
@@ -835,24 +835,24 @@
         "drafts": "Bản nháp",
         "published": "Đã đăng",
         "failed": "Thất bại",
-        "operations": "Trung tâm vận hành",
-        "connections": "Kết nối nền tảng",
+        "operations": "Tổng quan quy trình",
+        "connections": "Tích hợp nền tảng",
         "settings": "Cài đặt hệ thống",
         "profile": "Hồ sơ người dùng"
       }
     },
     "apiDashboard": {
-      "title": "Trung tâm vận hành",
-      "subtitle": "Tổng quan vận hành của quy trình tạo nội dung và xuất bản đa nền tảng",
+      "title": "Tổng quan quy trình",
+      "subtitle": "Góc nhìn cấp hệ thống cho quy trình tạo nội dung và xuất bản đa nền tảng",
       "overview": "Tổng quan",
-      "analytics": "Phân tích",
+      "analytics": "Phân tích quy trình",
       "activity": "Hoạt động",
       "drafts": "Bản nháp",
       "published": "Đã xuất bản",
       "failed": "Thất bại",
       "connectedAccounts": "Tài khoản kết nối",
       "successRate": "Tỷ lệ thành công",
-      "loading": "Đang tải dữ liệu...",
+      "loading": "Đang tải dữ liệu quy trình...",
       "noData": "Chưa có dữ liệu",
       "totalDrafts": "Bản nháp đang chuẩn bị",
       "draftsHint": "Nguồn nội dung chờ hoàn thiện trước khi lên lịch hoặc đăng.",
@@ -871,8 +871,8 @@
       "pipelineStable": "Pipeline đang ổn định",
       "pipelineNeedsAttention": "Pipeline cần theo dõi",
       "pipelineHealthHint": "Theo dõi nhanh tình trạng luồng đăng bài và các điểm nghẽn cần xử lý.",
-      "systemFocus": "Trọng tâm hiện tại",
-      "systemFocusDesc": "Những việc cần ưu tiên tiếp theo để trình diễn hệ thống mạch lạc hơn.",
+      "systemFocus": "Ưu tiên hiện tại",
+      "systemFocusDesc": "Những việc nên ưu tiên tiếp theo để phần trình diễn hệ thống mạch lạc và chắc hơn.",
       "focusDrafts": "Kho nội dung chờ xử lý",
       "focusDraftsDesc": "Hiện có {count} bản nháp. Đây là nguồn nguyên liệu để tiếp tục lên lịch hoặc hoàn thiện nội dung.",
       "focusConnections": "Độ phủ kết nối",
@@ -922,8 +922,8 @@
       "delete": "Xóa"
     },
     "connections": {
-      "title": "Kết nối nền tảng",
-      "description": "Theo dõi các kết nối mạng xã hội và trạng thái đồng bộ của hệ thống.",
+      "title": "Tích hợp nền tảng",
+      "description": "Theo dõi các kết nối tài khoản và mức sẵn sàng tích hợp của hệ thống.",
       "loading": "Đang tải danh sách kết nối...",
       "connecting": "Đang kết nối tài khoản mạng xã hội, vui lòng đợi...",
       "popupBlocked": "Popup bị chặn",
@@ -932,7 +932,7 @@
       "continueHere": "Tiếp tục trên trang này",
       "retryPopup": "Thử mở lại popup",
       "connectionsTableTitle": "Tài khoản đang kết nối",
-      "connectionsTableDesc": "Quản lý các kết nối mạng xã hội của bạn tại đây.",
+      "connectionsTableDesc": "Xem và quản lý các tài khoản hiện sẵn sàng cho luồng xuất bản.",
       "summaryConnectedDesc": "Tổng số tài khoản đã được liên kết và sẵn sàng cho việc đồng bộ nội dung.",
       "summaryPlatforms": "Nền tảng hoạt động",
       "summaryPlatformsDesc": "Số nền tảng đang có ít nhất một tài khoản kết nối thật.",
@@ -953,8 +953,8 @@
       "disconnecting": "Đang ngắt...",
       "previewConnectSuccess": "Đã mô phỏng kết nối {platform}.",
       "previewDisconnectSuccess": "Đã gỡ kết nối demo khỏi danh sách.",
-      "socialConnections": "Danh mục tích hợp",
-      "socialConnectionsDesc": "Kết nối thêm các nền tảng để mở rộng phạm vi xuất bản và demo hệ thống.",
+      "socialConnections": "Các tích hợp khả dụng",
+      "socialConnectionsDesc": "Kết nối thêm nền tảng để mở rộng phạm vi xuất bản và tăng độ thuyết phục của phần demo quy trình.",
       "connected": "Đã kết nối",
       "notConnected": "Chưa kết nối",
       "loginError": "Vui lòng đăng nhập lại.",
@@ -975,8 +975,8 @@
       "appearanceDesc": "Điều chỉnh theme hệ thống để phù hợp với môi trường trình diễn và thao tác hằng ngày.",
       "workspaceTitle": "Không gian làm việc",
       "workspaceDesc": "Các tùy chọn liên quan đến trải nghiệm sử dụng và trạng thái onboarding của người dùng.",
-      "accountTitle": "Điều hướng tài khoản",
-      "accountDesc": "Các thông tin nhạy cảm như email, avatar và phương thức đăng nhập được quản lý ở Profile và Connections.",
+      "accountTitle": "Hồ sơ và tích hợp",
+      "accountDesc": "Các thông tin nhạy cảm như email, avatar và phương thức đăng nhập được quản lý trong Hồ sơ và phần Tích hợp nền tảng.",
       "light": "Sáng",
       "dark": "Tối",
       "resetTour": "Chạy lại onboarding",
@@ -986,7 +986,7 @@
       "currentTheme": "Theme đang dùng",
       "currentLocale": "Ngôn ngữ hiện tại",
       "modeLabel": "Chế độ",
-      "modeValue": "Vận hành nội dung",
+      "modeValue": "Quy trình nội dung AI",
       "tourResetSuccess": "Đã đặt lại onboarding để người dùng có thể xem lại từ đầu"
     },
     "userProfile": {

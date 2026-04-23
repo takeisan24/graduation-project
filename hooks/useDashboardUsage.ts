@@ -29,10 +29,13 @@ export function useDashboardUsage() {
     { revalidateOnFocus: false, dedupingInterval: 60000 }
   )
 
-  const creditsRemaining = usageData?.credits?.balance ?? usageData?.credits?.remaining ?? 0
-  const totalCredits = usageData?.credits?.total ?? 0
-  const currentPlan = usageData?.plan || "free"
-  const profileLimits = usageData?.limits?.profiles ?? { current: 0, limit: 2 }
+  const resourceBudget = usageData?.resourceBudget ?? usageData?.credits ?? null
+  const workflowCapacity = usageData?.workflowCapacity ?? usageData?.limits ?? null
+  const resourceTier = usageData?.resourceTier ?? usageData?.plan ?? "free"
+  const creditsRemaining = resourceBudget?.balance ?? resourceBudget?.remaining ?? 0
+  const totalCredits = resourceBudget?.total ?? 0
+  const currentPlan = resourceTier
+  const profileLimits = workflowCapacity?.profiles ?? { current: 0, limit: 2 }
 
   const storageData = storageRaw
     ? {
@@ -47,6 +50,9 @@ export function useDashboardUsage() {
   const isCreditsCritical = creditsPercent <= 5
 
   return {
+    resourceTier,
+    resourceBudget,
+    workflowCapacity,
     creditsRemaining,
     totalCredits,
     creditsPercent,

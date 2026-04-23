@@ -53,6 +53,7 @@ export default function CreateSection() {
     wizardStep: state.wizardStep,
     setWizardStep: state.setWizardStep
   })));
+  const previousWizardStep = useRef(wizardStep);
   const savedSources = useCreateSourcesStore(state => state.savedSources);
   const openPosts = useCreatePostsStore(state => state.openPosts);
   const sourceToGenerate = useCreateSourcesStore(state => state.sourceToGenerate);
@@ -186,6 +187,14 @@ export default function CreateSection() {
     if (wizardStep === 'configuringPosts') {
       setActiveMobilePanel('editor');
     }
+  }, [wizardStep]);
+
+  useEffect(() => {
+    if (previousWizardStep.current !== 'idle' && wizardStep === 'idle') {
+      setIsSourcesOpen(false);
+    }
+
+    previousWizardStep.current = wizardStep;
   }, [wizardStep]);
 
   const isAddingSource = wizardStep === 'addingSource';

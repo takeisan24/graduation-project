@@ -59,7 +59,7 @@ CreatorHub cung cấp một nền tảng duy nhất để:
               |                             |
     +---------v----------+       +----------v---------+
     |    API Routes       |       | Server Components  |
-    |   (44 endpoints)    |       |   (SSR Pages)      |
+    |   (56 endpoints)    |       |   (SSR Pages)      |
     +---------+----------+       +---------------------+
               |
     +---------v----------+
@@ -181,7 +181,7 @@ do_an_tot_nghiep/
 │   ├── [locale]/              # Trang theo ngôn ngữ (vi/en)
 │   │   ├── (pages)/           # Trang public (landing, auth)
 │   │   └── profile/           # Trang cá nhân
-│   └── api/                   # 44 API Route handlers
+│   └── api/                   # 56 API Route handlers
 │       ├── ai/                # Tạo nội dung AI (text, image, suggestions)
 │       ├── auth/              # Xác thực (email, OAuth)
 │       ├── chat/              # Chatbot AI (sessions, messages)
@@ -246,18 +246,21 @@ Chi tiết schema: [`db/schema.sql`](db/schema.sql)
 
 ## API Endpoints
 
-Hệ thống có **44 API endpoints**, chia theo chức năng:
+Hệ thống có **56 API endpoints**, chia theo chức năng:
 
 | Nhóm | Endpoints | Chức năng |
 |------|-----------|-----------|
 | `/api/auth` | 3 | Đăng ký, đăng nhập, OAuth (Google) |
 | `/api/ai` | 5 | Tạo nội dung, tạo hình ảnh, gợi ý, models |
-| `/api/chat` | 4 | Quản lý phiên chat và tin nhắn AI |
-| `/api/projects` | 8 | CRUD dự án, drafts, workspace, generate |
-| `/api/schedule` | 3 | Lập lịch, hủy lịch, cập nhật |
+| `/api/assets` | 1 | Proxy và quản lý asset phụ trợ |
+| `/api/chat` | 3 | Quản lý phiên chat và tin nhắn AI |
+| `/api/projects` | 7 | CRUD dự án, drafts, workspace, generate |
+| `/api/drafts` | 2 | Truy xuất và quản lý bản nháp dùng chung |
+| `/api/schedule` | 6 | Lập lịch, hủy lịch, cập nhật và đồng bộ lịch |
 | `/api/posts` | 2 | Bài đã đăng, bài lỗi |
-| `/api/connections` | 2 | Kết nối/ngắt kết nối mạng xã hội |
-| `/api/files` | 3 | Upload, signed URL, presigned upload |
+| `/api/late` | 5 | Publish now, kiểm tra trạng thái và reschedule |
+| `/api/connections` | 3 | Kết nối/ngắt kết nối mạng xã hội và callback |
+| `/api/files` | 4 | Upload, signed URL, presigned upload, listing |
 | `/api/media-assets` | 2 | Thư viện media |
 | `/api/usage` | 3 | Credits, lịch sử, dung lượng |
 | `/api/v1` | 5 | Content strategy (niches, goals, frameworks) |
