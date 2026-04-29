@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useLocale } from "next-intl"
+import { useRouter } from "@/i18n/navigation"
 import { useAuth } from "./useAuth"
 
 /**
@@ -16,7 +17,11 @@ import { useAuth } from "./useAuth"
 export function useRequireAuth(options: { redirectTo?: string; requireAuth?: boolean } = {}) {
   const { redirectTo = "/signin", requireAuth = true } = options
   const router = useRouter()
+  const locale = useLocale()
   const { user, session, loading, isAuthenticated } = useAuth()
+  const resolvedRedirect = redirectTo.startsWith("/")
+    ? `/${locale}${redirectTo}`
+    : redirectTo
 
   useEffect(() => {
     // Don't redirect while loading - wait for auth check to complete
@@ -24,16 +29,10 @@ export function useRequireAuth(options: { redirectTo?: string; requireAuth?: boo
       return
     }
 
-    // Redirect if auth is required but user is not authenticated
-    // Add a delay to give time for session to load from localStorage
     if (requireAuth && !isAuthenticated) {
-      const timeoutId = setTimeout(() => {
-        router.push(redirectTo)
-      }, 300) // Increased delay to ensure session has time to load
-
-      return () => clearTimeout(timeoutId)
+      router.replace(resolvedRedirect)
     }
-  }, [loading, isAuthenticated, requireAuth, redirectTo, router, user, session])
+  }, [loading, isAuthenticated, requireAuth, resolvedRedirect, router, user, session])
 
   return {
     user,

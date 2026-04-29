@@ -803,7 +803,7 @@ export class GeminiProvider {
     const platformPrompts = {
       instagram: `Create an engaging Instagram caption for this content. Use emojis, hashtags, and make it visually appealing. Title: ${extracted.title}. Summary: ${extracted.summary}`,
       tiktok: `Create a catchy TikTok caption that's short and viral-worthy. Title: ${extracted.title}. Summary: ${extracted.summary}`,
-      x: `Create a concise X (Twitter) post that captures the essence. Title: ${extracted.title}. Summary: ${extracted.summary}`,
+      x: `Create a concise X post that captures the essence. Title: ${extracted.title}. Summary: ${extracted.summary}`,
       linkedin: `Create a professional LinkedIn post that adds value. Title: ${extracted.title}. Summary: ${extracted.summary}`,
       facebook: `Create an engaging Facebook post. Post length should be flexible. Title: ${extracted.title}. Summary: ${extracted.summary}`,
       threads: `Create a Threads post that's conversational and engaging, similar to Twitter but more personal. Title: ${extracted.title}. Summary: ${extracted.summary}`,

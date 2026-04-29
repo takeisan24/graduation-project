@@ -3,12 +3,14 @@ import { test, expect } from "@playwright/test";
 test.describe("Dashboard - Unauthenticated Access", () => {
   const dashboardRoutes = [
     "create",
+    "connections",
     "settings",
     "calendar",
     "drafts",
     "published",
     "failed",
     "videos",
+    "operations",
     "api-dashboard",
   ];
 

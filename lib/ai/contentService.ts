@@ -111,7 +111,7 @@ function generateImagePrompt(platform: string, extracted: { title: string; summa
   const platformStyles = {
     instagram: "Instagram feed style, modern, high-quality, vibrant colors, square format",
     tiktok: "TikTok style, vertical format, bold text overlay, trendy, eye-catching",
-    x: "Twitter/X style, clean, minimal, professional, square format",
+    x: "X style, clean, minimal, professional, square format",
     linkedin: "LinkedIn style, professional, business-focused, clean design",
     facebook: "Facebook style, engaging, colorful, social media optimized",
     threads: "Threads style, modern, clean, Instagram-inspired but more personal",
@@ -133,7 +133,7 @@ function generateVideoPrompt(platform: string, extracted: { title: string; summa
   const platformStyles = {
     instagram: "Instagram Reels style, vertical, engaging, trendy",
     tiktok: "TikTok style, vertical, viral-worthy, fast-paced",
-    x: "Twitter/X style, short, informative, clean",
+    x: "X style, short, informative, clean",
     linkedin: "LinkedIn style, professional, educational",
     facebook: "Facebook style, engaging, shareable, community-focused",
     threads: "Threads style, vertical, conversational, Instagram-inspired",

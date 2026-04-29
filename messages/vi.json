@@ -1461,7 +1461,7 @@
         "ratio1_1": "1:1 - Vuông (Instagram, Facebook)",
         "ratio4_3": "4:3 - Ngang (Tiêu chuẩn)",
         "ratio3_4": "3:4 - Dọc (Story)",
-        "ratio16_9": "16:9 - Ngang (YouTube, Twitter)",
+        "ratio16_9": "16:9 - Ngang (YouTube, X)",
         "ratio9_16": "9:16 - Dọc (TikTok, Reels)",
         "safetyLabel": "Bộ lọc an toàn",
         "safetyAllowAdult": "Cho phép người lớn (Mặc định)",
@@ -1957,7 +1957,7 @@
       },
       {
         "q": "Bạn hỗ trợ những nền tảng nào?",
-        "a": "Hiện tại: TikTok, YouTube Shorts và Instagram Reels. Chúng tôi đang mở rộng sang LinkedIn và X (Twitter)."
+        "a": "Hiện tại: TikTok, YouTube Shorts và Instagram Reels. Chúng tôi đang mở rộng sang LinkedIn và X."
       },
       {
         "q": "Làm thế nào để đảm bảo kịch bản và chú thích phù hợp với phong cách của tôi?",

@@ -19,7 +19,7 @@ import { useRouter } from "@/i18n/navigation"
  */
 export default function SectionPage({ params }: { params: { section: string } }) {
   // Protect route - require authentication
-  const { loading: authLoading } = useRequireAuth()
+  const { loading: authLoading, isAuthenticated } = useRequireAuth()
   const router = useRouter()
   
   // Check pending scheduled posts when user enters the page (fallback when webhook is not called)
@@ -110,6 +110,17 @@ export default function SectionPage({ params }: { params: { section: string } })
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Redirecting...</p>
         </div>
       </div>
     )

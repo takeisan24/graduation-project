@@ -7,7 +7,7 @@ const PlatformIcon = ({ name }: { name: string }) => {
 
   
   const icons: Record<string, JSX.Element> = {
-    Twitter: (
+    X: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10">
         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
       </svg>
@@ -61,7 +61,7 @@ export default function SocialProof() {
     { name: "Instagram", color: "text-pink-500" },
     { name: "YouTube", color: "text-red-500" },
     { name: "Facebook", color: "text-blue-600" },
-    { name: "Twitter", color: "text-foreground" },
+    { name: "X", color: "text-foreground" },
     { name: "Threads", color: "text-foreground" },
     { name: "LinkedIn", color: "text-blue-500" },
     { name: "Pinterest", color: "text-red-500" },

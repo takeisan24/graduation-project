@@ -9,7 +9,7 @@ import { useRequireAuth } from "@/hooks/useRequireAuth"
 export default function ProfilePage() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true)
     const setActiveSection = useNavigationStore((state) => state.setActiveSection)
-    const { loading: authLoading } = useRequireAuth()
+    const { loading: authLoading, isAuthenticated } = useRequireAuth()
 
     useEffect(() => {
         setActiveSection("profile")
@@ -21,6 +21,17 @@ export default function ProfilePage() {
                 <div className="text-center">
                     <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-primary" />
                     <p className="text-muted-foreground">Loading...</p>
+                </div>
+            </div>
+        )
+    }
+
+    if (!isAuthenticated) {
+        return (
+            <div className="flex h-screen items-center justify-center bg-background text-foreground">
+                <div className="text-center">
+                    <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-primary" />
+                    <p className="text-muted-foreground">Redirecting...</p>
                 </div>
             </div>
         )

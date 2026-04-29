@@ -63,7 +63,7 @@ export const PLATFORM_CONTEXTS = {
   instagram: "Instagram: Focus on visual appeal, hashtags, emojis, and community engagement.",
   youtube: "YouTube: Focus on SEO optimization, detailed descriptions, and audience retention strategies.",
   facebook: "Facebook: Focus on community building, shareable content, and diverse audience appeal.",
-  x: "X (Twitter): Focus on concise messaging, current events, and thought leadership.",
+  x: "X: Focus on concise messaging, current events, and thought leadership.",
   threads: "Threads: Focus on conversational tone, personal connection, and Instagram-inspired engagement.",
   linkedin: "LinkedIn: Focus on professional value, industry insights, and business networking.",
   pinterest: "Pinterest: Focus on keyword-rich descriptions, lifestyle inspiration, and visual discovery."
@@ -140,7 +140,7 @@ export const IMAGE_GENERATION_PROMPTS = {
     instagram: (description: string) => `Create an Instagram-worthy image: ${description}. Style: modern, vibrant, engaging.`,
     facebook: (description: string) => `Create a Facebook post image: ${description}. Style: clear, shareable, professional.`,
     linkedin: (description: string) => `Create a LinkedIn post image: ${description}. Style: professional, clean, business-focused.`,
-    twitter: (description: string) => `Create a Twitter/X post image: ${description}. Style: bold, attention-grabbing, concise.`
+    twitter: (description: string) => `Create an X post image: ${description}. Style: bold, attention-grabbing, concise.`
   }
 } as const;
 
@@ -169,7 +169,7 @@ export const TEXT_GENERATION_PROMPTS = {
       `Create a viral TikTok caption based on: ${extracted.title}. Summary: ${extracted.summary}. Make it catchy and trending.`,
 
     x: (extracted: { title: string; summary: string }) =>
-      `Create a concise X (Twitter) post based on: ${extracted.title}. Summary: ${extracted.summary}. Keep it under 280 characters.`,
+      `Create a concise X post based on: ${extracted.title}. Summary: ${extracted.summary}. Keep it under 280 characters.`,
 
     linkedin: (extracted: { title: string; summary: string }) =>
       `Create a professional LinkedIn post based on: ${extracted.title}. Summary: ${extracted.summary}. Focus on value and insights.`,
@@ -203,7 +203,7 @@ export const HASHTAG_PROMPTS = {
       `Generate ${count} trending TikTok hashtags: ${content}`,
 
     twitter: (content: string, count: number) =>
-      `Generate ${count} Twitter/X hashtags (trending topics): ${content}`
+      `Generate ${count} X hashtags (trending topics): ${content}`
   }
 } as const;
 

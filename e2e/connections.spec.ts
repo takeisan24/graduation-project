@@ -10,10 +10,10 @@ test.describe("Connections - API Protection", () => {
 });
 
 test.describe("Connections - Settings Page Unauthenticated", () => {
-  test("should redirect /settings to signin when not authenticated", async ({
+  test("should redirect /connections to signin when not authenticated", async ({
     page,
   }) => {
-    await page.goto("/en/settings", { waitUntil: "domcontentloaded" });
+    await page.goto("/en/connections", { waitUntil: "domcontentloaded" });
     await page.waitForURL(/signin/, { timeout: 15000 });
     expect(page.url()).toContain("signin");
   });

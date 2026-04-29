@@ -80,12 +80,14 @@ test.describe("Public Page Navigation", () => {
 test.describe("Protected Route Redirects (unauthenticated)", () => {
   const protectedRoutes = [
     "create",
+    "connections",
     "settings",
     "calendar",
     "drafts",
     "published",
     "failed",
     "videos",
+    "operations",
     "api-dashboard",
     "profile",
   ];

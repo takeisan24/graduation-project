@@ -53,8 +53,16 @@ Status:
 
 - keep monitoring whether a future explicit “new project” UX is needed for users who intentionally want to split workspaces
 - keep future schedule features aligned with `/api/schedule` as the canonical namespace
+- keep platform naming canonicalized as `X` on user-facing surfaces while preserving legacy alias compatibility in API/store paths
 
 ### 4. Legacy Billing Field Isolation
 
 - continue ignoring legacy `creditsRemaining`, `upgradeRequired`, `usage`, and `subscription` fields in FE logic
 - avoid reintroducing billing semantics in new code paths
+
+## Verification Snapshot
+
+- build, lint, and direct typecheck are currently clean
+- Playwright smoke coverage currently passes for `landing.spec.ts`, `navigation.spec.ts`, `connections.spec.ts`, `dashboard.spec.ts`, and `create-sections-api.spec.ts`
+- public locale-routing and unauthenticated protection flows should continue to be smoke-tested after route/section renames
+- OAuth popup, authenticated connection management, and cross-section reopen flows still require manual verification against a real signed-in session

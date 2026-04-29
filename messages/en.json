@@ -1477,7 +1477,7 @@
         "ratio1_1": "1:1 - Square (Instagram, Facebook)",
         "ratio4_3": "4:3 - Landscape (Standard)",
         "ratio3_4": "3:4 - Portrait (Story)",
-        "ratio16_9": "16:9 - Landscape (YouTube, Twitter)",
+        "ratio16_9": "16:9 - Landscape (YouTube, X)",
         "ratio9_16": "9:16 - Portrait (TikTok, Reels)",
         "safetyLabel": "Safety filter",
         "safetyAllowAdult": "Allow adult content (Default)",
@@ -1976,7 +1976,7 @@
       },
       {
         "q": "What platforms do you support?",
-        "a": "Currently: TikTok, YouTube Shorts, and Instagram Reels. We're expanding to LinkedIn and X (Twitter)."
+        "a": "Currently: TikTok, YouTube Shorts, and Instagram Reels. We're expanding to LinkedIn and X."
       },
       {
         "q": "How do you ensure scripts and captions fit my style?",
