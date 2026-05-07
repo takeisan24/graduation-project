@@ -4,6 +4,7 @@ type MockAccount = {
   id: string;
   platform: string;
   profile_name: string;
+  created_at?: string;
   profile_metadata: {
     username: string;
     avatar_url?: string;
@@ -53,6 +54,11 @@ type BackendDraft = {
 
 export type CreateSectionMockOptions = {
   accounts?: MockAccount[];
+  drafts?: BackendDraft[];
+  failedPosts?: Array<Record<string, unknown>>;
+  publishedPosts?: PublishedPost[];
+  scheduledPosts?: ScheduledPost[];
+  profileIdentities?: Array<{ identity_id: string; provider: string }>;
   publishShouldFail?: boolean;
   scheduleShouldFail?: boolean;
   generateMalformedResponse?: boolean;
@@ -78,6 +84,7 @@ const DEFAULT_ACCOUNTS: MockAccount[] = [
     id: "acc-facebook-1",
     platform: "facebook",
     profile_name: "Creator Hub FB",
+    created_at: new Date().toISOString(),
     profile_metadata: {
       username: "creatorhub.fb",
       avatar_url: "/shego.jpg",
@@ -87,12 +94,22 @@ const DEFAULT_ACCOUNTS: MockAccount[] = [
     id: "acc-youtube-1",
     platform: "youtube",
     profile_name: "Creator Hub YT",
+    created_at: new Date().toISOString(),
     profile_metadata: {
       username: "creatorhub.yt",
       avatar_url: "/shego.jpg",
     },
   },
 ];
+
+const DEFAULT_PROFILE_IDENTITIES = [
+  { identity_id: "identity-google-1", provider: "google" },
+  { identity_id: "identity-email-1", provider: "email" },
+];
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 function buildSession() {
   const expiresAt = Math.floor(Date.now() / 1000) + 60 * 60;
@@ -168,11 +185,16 @@ export async function installCreateSectionMocks(
   page: Page,
   options: CreateSectionMockOptions = {}
 ) {
+  const sessionUser = buildSession().user;
+  const accounts = options.accounts ?? DEFAULT_ACCOUNTS;
+  const supabaseUrl =
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
+  const profileIdentities = options.profileIdentities ?? DEFAULT_PROFILE_IDENTITIES;
   const state: CreateSectionMockState = {
-    publishedPosts: [],
-    failedPosts: [],
-    scheduledPosts: [],
-    drafts: [],
+    publishedPosts: options.publishedPosts ? [...options.publishedPosts] : [],
+    failedPosts: options.failedPosts ? [...options.failedPosts] : [],
+    scheduledPosts: options.scheduledPosts ? [...options.scheduledPosts] : [],
+    drafts: options.drafts ? [...options.drafts] : [],
     project: {
       id: "project-e2e-1",
       name: "Playwright Workspace",
@@ -182,7 +204,15 @@ export async function installCreateSectionMocks(
     },
   };
 
-  const accounts = options.accounts ?? DEFAULT_ACCOUNTS;
+  await page.route(new RegExp(`${escapeRegExp(supabaseUrl)}/auth/v1/user/identities(?:\\?.*)?$`), async (route) => {
+    await fulfillJson(route, { identities: profileIdentities });
+  });
+  await page.route(new RegExp(`${escapeRegExp(supabaseUrl)}/auth/v1/user(?:\\?.*)?$`), async (route) => {
+    await fulfillJson(route, {
+      ...sessionUser,
+      identities: profileIdentities,
+    });
+  });
 
   await page.route(/.*\/api\/connections(?:\?.*)?$/, async (route) => {
     await fulfillJson(route, {
@@ -649,20 +679,37 @@ export async function openAuthenticatedCreatePage(
   page: Page,
   options: CreateSectionMockOptions = {}
 ) {
+  return openAuthenticatedSectionPage(page, "/en/create", options, async () => {
+    await page.waitForFunction(() => {
+      const isLoading = document.body?.innerText?.includes("Loading your workspace...");
+      if (isLoading) return false;
+  
+      return Boolean(
+        document.querySelector('[data-testid="empty-state-add-source-button"]') ||
+        document.querySelector('[data-testid="create-add-source-button"]') ||
+        document.querySelector('[data-testid="goal-tab-awareness"]') ||
+        document.querySelector('[data-testid="platform-checkbox-facebook"]')
+      );
+    }, undefined, { timeout: 15000 });
+  });
+}
+
+export async function openAuthenticatedSectionPage(
+  page: Page,
+  path: string,
+  options: CreateSectionMockOptions = {},
+  waitForReady?: () => Promise<void>
+) {
   await seedAuthenticatedSession(page);
   const state = await installCreateSectionMocks(page, options);
-  await page.goto("/en/create", { waitUntil: "domcontentloaded" });
+  await page.goto(path, { waitUntil: "domcontentloaded" });
   await page.waitForFunction(() => {
     const isLoading = document.body?.innerText?.includes("Loading your workspace...");
-    if (isLoading) return false;
-
-    return Boolean(
-      document.querySelector('[data-testid="empty-state-add-source-button"]') ||
-      document.querySelector('[data-testid="create-add-source-button"]') ||
-      document.querySelector('[data-testid="goal-tab-awareness"]') ||
-      document.querySelector('[data-testid="platform-checkbox-facebook"]')
-    );
+    return !isLoading;
   }, undefined, { timeout: 15000 });
+  if (waitForReady) {
+    await waitForReady();
+  }
   return state;
 }
 
