@@ -204,10 +204,10 @@ export async function installCreateSectionMocks(
     },
   };
 
-  await page.route(new RegExp(`${escapeRegExp(supabaseUrl)}/auth/v1/user/identities(?:\\?.*)?$`), async (route) => {
+  await page.route(/\/auth\/v1\/user\/identities(?:\?.*)?$/, async (route) => {
     await fulfillJson(route, { identities: profileIdentities });
   });
-  await page.route(new RegExp(`${escapeRegExp(supabaseUrl)}/auth/v1/user(?:\\?.*)?$`), async (route) => {
+  await page.route(/\/auth\/v1\/user(?:\?.*)?$/, async (route) => {
     await fulfillJson(route, {
       ...sessionUser,
       identities: profileIdentities,

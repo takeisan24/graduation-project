@@ -169,7 +169,7 @@ test.describe("Create Sections - Manual QA Coverage", () => {
     await expect(page.getByText("Playwright User")).toBeVisible({ timeout: 15000 });
     await expect(page.getByText("playwright@example.com").nth(1)).toBeVisible();
     await expect(page.getByText("Basic Information")).toBeVisible();
-    await expect(page.getByText("Login methods")).toBeVisible();
-    await expect(page.getByText("Google")).toBeVisible();
+    await expect(page.getByText("Login methods", { exact: true })).toBeVisible();
+    await expect(page.getByText("Google", { exact: true })).toBeVisible();
   });
 });
