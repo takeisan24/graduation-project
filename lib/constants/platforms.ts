@@ -3,13 +3,7 @@
  * DO NOT change these — backend routes map these strings directly
  */
 export const MODEL_OPTIONS = [
-  'ChatGPT',
-  'Gemini Pro',
-  'Claude Sonnet 4',
-  'gpt-4.1',
-  'o4-mini',
-  'o3',
-  'gpt-4o',
+  'Gemini',
 ] as const;
 export type ModelOption = typeof MODEL_OPTIONS[number];
 

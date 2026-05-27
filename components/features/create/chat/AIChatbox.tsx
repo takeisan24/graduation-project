@@ -19,7 +19,7 @@ export default function AIChatbox() {
   // State cục bộ cho UI của chatbox
   const [chatInput, setChatInput] = useState("");
   const [showModelMenu, setShowModelMenu] = useState<boolean>(false);
-  const [selectedChatModel, setSelectedChatModel] = useState<string>("ChatGPT");
+  const [selectedChatModel, setSelectedChatModel] = useState<string>("Gemini");
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const modelMenuRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
@@ -84,7 +84,7 @@ export default function AIChatbox() {
   const openPosts = useCreatePostsStore(state => state.openPosts);
   useEffect(() => {
     if (openPosts.length === 0) {
-      setSelectedChatModel("ChatGPT");
+      setSelectedChatModel("Gemini");
     }
   }, [openPosts.length]);
 
@@ -151,7 +151,7 @@ export default function AIChatbox() {
   const confirmClearChat = () => {
     clearChat();
     // Khi user tạo cuộc chat mới, luôn reset về ChatGPT để đồng bộ với default
-    setSelectedChatModel("ChatGPT");
+    setSelectedChatModel("Gemini");
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -181,33 +181,9 @@ export default function AIChatbox() {
       <div className="flex-1 min-h-0 flex flex-col">
         {/* Model Selector Header */}
         <div className="flex items-center justify-between px-3 py-2 border-b border-border/50 bg-card/50 flex-shrink-0">
-          <div className="relative" ref={modelMenuRef}>
-            <button
-              type="button"
-              onClick={() => setShowModelMenu((v) => !v)}
-              className={`inline-flex items-center gap-1.5 text-xs font-semibold transition-all ${showModelMenu ? 'text-foreground bg-gradient-to-r from-utc-royal/10 to-utc-sky/10 border border-utc-royal/30 rounded-md px-2.5 py-1.5' : 'text-foreground/90 hover:text-foreground'}`}
-            >
-              <SparklesIcon className="w-3.5 h-3.5" />
-              {selectedChatModel}
-              <ChevronDownIcon className={`w-3 h-3 transition-transform ${showModelMenu ? 'rotate-180' : ''}`} />
-            </button>
-            {showModelMenu && (
-              <div className="absolute mt-1 w-48 bg-card border border-border rounded-md shadow-lg py-1 z-20">
-                {MODEL_OPTIONS.map((model) => (
-                  <button
-                    key={model}
-                    onClick={() => {
-                      setSelectedChatModel(model)
-                      setShowModelMenu(false)
-                    }}
-                    className={`w-full text-left px-3 py-1.5 text-xs hover:bg-secondary ${selectedChatModel === model ? 'text-foreground font-medium' : 'text-muted-foreground'
-                      }`}
-                  >
-                    {model}
-                  </button>
-                ))}
-              </div>
-            )}
+          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-foreground/90">
+            <SparklesIcon className="w-3.5 h-3.5" />
+            {selectedChatModel}
           </div>
           <button
             onClick={handleClearChat}

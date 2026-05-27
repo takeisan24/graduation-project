@@ -7,6 +7,7 @@ import { NextRequest } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { deductCredits, CREDIT_COSTS, type CreditResult } from "@/lib/usage";
 import { fail } from "@/lib/response";
+import { supabase } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 
 export interface ApiProtectionOptions {
@@ -102,14 +103,23 @@ export async function deductCredit(
 }
 
 /**
- * Create default paywall result (always allowed since paywall is removed)
+ * Read actual credits from users table
  */
-function createDefaultPaywallResult(totalCreditsNeeded: number): PaywallResult {
+async function createPaywallResult(userId: string, totalCreditsNeeded: number): Promise<PaywallResult> {
+  const { data } = await supabase
+    .from("users")
+    .select("credits_balance")
+    .eq("id", userId)
+    .single();
+
+  const balance = data?.credits_balance ?? 0;
+
   return {
-    allowed: true,
+    allowed: balance >= totalCreditsNeeded,
     creditsRequired: totalCreditsNeeded,
-    creditsRemaining: 0,
-    totalCredits: 0
+    creditsRemaining: balance,
+    totalCredits: balance,
+    upgradeRequired: balance < totalCreditsNeeded,
   };
 }
 
@@ -132,8 +142,8 @@ export async function withApiProtection(
     if ('error' in authResult) return authResult;
     const { user } = authResult;
 
-    // 2. Paywall is removed - always allow
-    const paywallResult = createDefaultPaywallResult(totalCreditsNeeded);
+    // 2. Check actual credit balance
+    const paywallResult = await createPaywallResult(user.id, totalCreditsNeeded);
 
     // 3. Credit deduction (unless skipped)
     const deductResult = options.skipDeduct

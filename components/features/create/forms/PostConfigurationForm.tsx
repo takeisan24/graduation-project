@@ -24,7 +24,7 @@ export default function PostConfigurationForm({
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Model selector state (giống phần Chat AI)
-  const [selectedModel, setSelectedModel] = useState<string>("ChatGPT");
+  const [selectedModel, setSelectedModel] = useState<string>("Gemini");
   const [showModelMenu, setShowModelMenu] = useState<boolean>(false);
   const modelMenuRef = useRef<HTMLDivElement | null>(null);
 
@@ -119,34 +119,9 @@ export default function PostConfigurationForm({
         <div className="flex items-center justify-between mb-3 gap-3">
           <p className="text-foreground">{t('subtitle')}</p>
 
-          {/* Model selector - giống Chat AI, mặc định ChatGPT */}
-          <div className="relative" ref={modelMenuRef}>
-            <button
-              type="button"
-              onClick={() => setShowModelMenu((v) => !v)}
-              className="inline-flex items-center gap-2 text-xs font-semibold leading-none text-foreground/90 hover:text-foreground bg-background border border-border rounded-md px-2.5 py-1.5"
-            >
-              <SparklesIcon className="w-3.5 h-3.5" />
-              <span>{selectedModel}</span>
-              <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${showModelMenu ? 'rotate-180' : ''}`} />
-            </button>
-            {showModelMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-md shadow-[0_0_0_1px_rgba(255,255,255,0.08)] py-1.5 z-20">
-                {MODEL_OPTIONS.map((model) => (
-                  <button
-                    key={model}
-                    onClick={() => {
-                      setSelectedModel(model);
-                      setShowModelMenu(false);
-                    }}
-                    className={`w-full text-left px-3 py-1.5 text-xs hover:bg-secondary ${selectedModel === model ? 'text-foreground' : 'text-foreground/80'
-                      }`}
-                  >
-                    {model}
-                  </button>
-                ))}
-              </div>
-            )}
+          <div className="inline-flex items-center gap-2 text-xs font-semibold leading-none text-foreground/90 bg-background border border-border rounded-md px-2.5 py-1.5">
+            <SparklesIcon className="w-3.5 h-3.5" />
+            <span>{selectedModel}</span>
           </div>
         </div>
         <div className="space-y-3">
