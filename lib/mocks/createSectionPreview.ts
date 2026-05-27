@@ -31,7 +31,7 @@ function timePart(iso: string) {
 }
 
 export function isCreatePreviewEnabled() {
-  return process.env.NODE_ENV !== "production";
+  return false;
 }
 
 export function getCreatePreviewCopy(locale: string) {

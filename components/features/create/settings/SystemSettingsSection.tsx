@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import SectionHeader from "../layout/SectionHeader"
 import { useSectionNavigation } from "@/hooks/useSectionNavigation"
+import CreditTopUp from "./CreditTopUp"
 
 export default function SystemSettingsSection() {
   const tHeaders = useTranslations("CreatePage.sectionHeaders")
@@ -26,7 +27,6 @@ export default function SystemSettingsSection() {
       <SectionHeader
         icon={MonitorCog}
         title={tHeaders("settings.title")}
-        description={tHeaders("settings.description")}
       />
 
       <div className="space-y-6 px-4 py-4 lg:px-6 lg:py-5">
@@ -77,6 +77,10 @@ export default function SystemSettingsSection() {
             </div>
           </Card>
         </div>
+
+        <Card className="rounded-3xl border-border/70 bg-card/70 p-6">
+          <CreditTopUp />
+        </Card>
 
         <Card className="rounded-3xl border-border/70 bg-card/70 p-6">
           <h3 className="text-base font-semibold text-foreground">{t("statusTitle")}</h3>

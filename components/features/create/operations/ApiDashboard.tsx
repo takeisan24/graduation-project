@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTheme } from "next-themes";
 import { useTranslations, useLocale } from "next-intl";
 import SectionHeader from "../layout/SectionHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -71,7 +72,13 @@ export default function ApiDashboardSection() {
   const t = useTranslations("CreatePage.apiDashboard");
   const tHeaders = useTranslations("CreatePage.sectionHeaders");
   const locale = useLocale();
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
   const [activeTab, setActiveTab] = useState("overview");
+
+  const chartAxisColor = isDark ? "#94a3b8" : "#64748b";
+  const chartGridColor = isDark ? "rgba(148,163,184,0.10)" : "rgba(148,163,184,0.18)";
+  const chartBorderColor = isDark ? "rgba(148,163,184,0.15)" : "rgba(148,163,184,0.2)";
 
   const { publishedPosts, loadPublishedPosts, hasLoadedPublishedPosts } = usePublishedPostsStore(
     useShallow((state) => ({
@@ -245,7 +252,6 @@ export default function ApiDashboardSection() {
       <SectionHeader
         icon={BarChart3}
         title={tHeaders("operations.title")}
-        description={tHeaders("operations.description")}
       />
 
       <div className="mx-auto w-full max-w-[1440px] px-4 pb-8 pt-4 sm:px-6 xl:px-8">
@@ -373,29 +379,6 @@ export default function ApiDashboardSection() {
               </CardContent>
             </Card>
 
-            <Card className="border-border/70 bg-card/95">
-              <CardHeader>
-                <div className="flex items-center gap-2 text-primary">
-                  <Sparkles className="h-5 w-5" />
-                  <CardTitle>{t("systemFocus")}</CardTitle>
-                </div>
-                <CardDescription>{t("systemFocusDesc")}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="rounded-2xl border border-border/70 bg-secondary/25 p-4">
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t("focusDrafts")}</p>
-                  <p className="mt-2 text-sm leading-6 text-foreground">{t("focusDraftsDesc", { count: displayDraftPosts.length })}</p>
-                </div>
-                <div className="rounded-2xl border border-border/70 bg-secondary/25 p-4">
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t("focusConnections")}</p>
-                  <p className="mt-2 text-sm leading-6 text-foreground">{t("focusConnectionsDesc", { count: displayAccounts.length })}</p>
-                </div>
-                <div className="rounded-2xl border border-border/70 bg-secondary/25 p-4">
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t("focusFailures")}</p>
-                  <p className="mt-2 text-sm leading-6 text-foreground">{t("focusFailuresDesc", { count: displayFailedPosts.length })}</p>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </TabsContent>
 
@@ -416,18 +399,18 @@ export default function ApiDashboardSection() {
                           <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(148,163,184,0.18)" />
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartGridColor} />
                       <XAxis
                         dataKey="date"
                         tickFormatter={(value) => format(new Date(value), "dd/MM")}
-                        stroke="#64748b"
+                        stroke={chartAxisColor}
                         fontSize={12}
                         tickLine={false}
                         axisLine={false}
                       />
-                      <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
+                      <YAxis stroke={chartAxisColor} fontSize={12} tickLine={false} axisLine={false} />
                       <Tooltip
-                        contentStyle={{ backgroundColor: "hsl(var(--card))", borderColor: "rgba(148,163,184,0.2)", borderRadius: "14px" }}
+                        contentStyle={{ backgroundColor: "hsl(var(--card))", borderColor: chartBorderColor, borderRadius: "14px" }}
                         formatter={(value: number) => [value, t("totalPosts")]}
                         labelFormatter={(value) => format(new Date(value), "dd/MM/yyyy")}
                       />
@@ -448,19 +431,19 @@ export default function ApiDashboardSection() {
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
-                        data={platformDistribution.length > 0 ? platformDistribution : [{ name: t("noData"), value: 1, color: "#94a3b8" }]}
+                        data={platformDistribution.length > 0 ? platformDistribution : [{ name: t("noData"), value: 1, color: isDark ? "#cbd5e1" : "#94a3b8" }]}
                         dataKey="value"
                         nameKey="name"
                         innerRadius={70}
                         outerRadius={110}
                         paddingAngle={4}
                       >
-                        {(platformDistribution.length > 0 ? platformDistribution : [{ name: t("noData"), value: 1, color: "#94a3b8" }]).map((entry) => (
+                        {(platformDistribution.length > 0 ? platformDistribution : [{ name: t("noData"), value: 1, color: isDark ? "#cbd5e1" : "#94a3b8" }]).map((entry) => (
                           <Cell key={entry.name} fill={entry.color} />
                         ))}
                       </Pie>
                       <Tooltip
-                        contentStyle={{ backgroundColor: "hsl(var(--card))", borderColor: "rgba(148,163,184,0.2)", borderRadius: "14px" }}
+                        contentStyle={{ backgroundColor: "hsl(var(--card))", borderColor: chartBorderColor, borderRadius: "14px" }}
                       />
                     </PieChart>
                   </ResponsiveContainer>
@@ -486,11 +469,11 @@ export default function ApiDashboardSection() {
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={statusDistribution}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(148,163,184,0.18)" />
-                    <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartGridColor} />
+                    <XAxis dataKey="name" stroke={chartAxisColor} fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke={chartAxisColor} fontSize={12} tickLine={false} axisLine={false} />
                     <Tooltip
-                      contentStyle={{ backgroundColor: "hsl(var(--card))", borderColor: "rgba(148,163,184,0.2)", borderRadius: "14px" }}
+                      contentStyle={{ backgroundColor: "hsl(var(--card))", borderColor: chartBorderColor, borderRadius: "14px" }}
                     />
                     <Bar dataKey="value" radius={[12, 12, 0, 0]}>
                       {statusDistribution.map((entry) => (
