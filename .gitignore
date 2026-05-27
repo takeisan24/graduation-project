@@ -40,6 +40,13 @@ settings.json
 !README.md
 !docs/
 !docs/**
+docs/blueprints/
+docs/DEFENSE_NOTES.md
+docs/FEATURE_MAP.md
+docs/manual-e2e-run-dev-test-cases.md
+docs/manual-e2e-test-plan-v2.md
+docs/PROJECT_TIMELINE.md
+docs/thesis-feature-scope.md
 !specs/**/*.md
 *.rar
 VuTuanAnh_CNTT4_DeCuongDATN.docx
@@ -70,3 +77,9 @@ specs/*
 /test-results/
 /blob-report/
 /playwright/.cache/
+
+# E2E test specs (internal)
+e2e/
+
+# Personal placeholder images
+public/images/shego.jpg
