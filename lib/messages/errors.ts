@@ -171,6 +171,11 @@ export const POST_ERRORS = {
   /**
    * Error message when trying to publish an empty post
    */
+  PUBLISHING_IN_PROGRESS: "Đang đăng bài lên mạng xã hội, vui lòng đợi...",
+
+  PUBLISH_SUCCESS: (platform: string) =>
+    `Bài viết "${platform}" đã được đăng thành công!`,
+
   CANNOT_PUBLISH_EMPTY: "Không thể đăng một bài viết rỗng.",
 
   /**
@@ -290,6 +295,10 @@ export const MEDIA_ERRORS = {
    * Error message when media upload fails
    * @param errorMessage - Detailed error message
    */
+  PRESIGN_FAILED: "Không thể chuẩn bị URL upload cho media.",
+
+  S3_UPLOAD_FAILED: "Upload media lên server thất bại.",
+
   UPLOAD_FAILED: (errorMessage: string = "Lỗi không xác định") =>
     `Không thể upload media: ${errorMessage}`,
 

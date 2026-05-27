@@ -82,7 +82,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
 
     let publishingToastId: string | number | undefined;
     try {
-      publishingToastId = toast.loading("Đang đăng bài lên mạng xã hội, vui lòng đợi...");
+      publishingToastId = toast.loading(POST_ERRORS.PUBLISHING_IN_PROGRESS);
       const mediaUrls: string[] = [];
       const postContext = useCreatePostsStore.getState().postContextMap[postId];
       const backendDraftId = postContext?.draftId && postContext?.projectId ? postContext.draftId : null;
@@ -145,7 +145,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
             const { signed_url, upload_url } = presignJson.data || presignJson;
             if (!signed_url || !upload_url) {
               console.error('[handlePublish] Invalid presign response:', presignJson);
-              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED('Không thể chuẩn bị URL upload cho media.'));
+              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(MEDIA_ERRORS.PRESIGN_FAILED));
               continue;
             }
 
@@ -160,7 +160,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
 
             if (!putRes.ok) {
               console.error('[handlePublish] Failed to upload media to S3:', await putRes.text());
-              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED('Upload media lên server thất bại.'));
+              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(MEDIA_ERRORS.S3_UPLOAD_FAILED));
               continue;
             }
 
@@ -258,7 +258,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
       // Update published posts
       const now = new Date();
       const publishedPost: PublishedPost = {
-        id: postId,
+        id: data?.scheduledPost?.id || data?.latePost?.id || String(postId),
         platform: post.type,
         content: content,
         time: now.toISOString(),
@@ -305,7 +305,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
         }, 5 * 60 * 1000);
       }
 
-      toast.success(`Bài viết "${post.type}" đã được đăng thành công!`, {
+      toast.success(POST_ERRORS.PUBLISH_SUCCESS(post.type), {
         id: publishingToastId
       });
 
@@ -438,7 +438,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
             const { signed_url, upload_url } = presignJson.data || presignJson;
             if (!signed_url || !upload_url) {
               console.error('[schedulePost] Invalid presign response:', presignJson);
-              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED('Không thể chuẩn bị URL upload cho media.'));
+              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(MEDIA_ERRORS.PRESIGN_FAILED));
               continue;
             }
 
@@ -453,7 +453,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
 
             if (!putRes.ok) {
               console.error('[schedulePost] Failed to upload media to S3:', await putRes.text());
-              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED('Upload media lên server thất bại.'));
+              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(MEDIA_ERRORS.S3_UPLOAD_FAILED));
               continue;
             }
 
@@ -559,7 +559,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
       const pendingScheduledPosts = loadFromLocalStorage<PendingScheduledPost[]>('pendingScheduledPosts', []);
 
       scheduledPosts.forEach((sp: any) => {
-        if (sp.id && sp.late_job_id && sp.scheduled_at) {
+        if (sp.id && sp.scheduled_at) {
           const exists = pendingScheduledPosts.find(p => p.postId === sp.id);
           if (!exists) {
             let scheduledAtISO: string;
@@ -578,7 +578,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
 
             pendingScheduledPosts.push({
               postId: sp.id,
-              lateJobId: sp.late_job_id,
+              lateJobId: sp.late_job_id || null,
               scheduledAt: scheduledAtISO,
               platform: sp.platform || '',
               content: sp.payload?.text_content || sp.payload?.text || '',

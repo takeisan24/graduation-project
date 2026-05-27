@@ -112,7 +112,7 @@ export default function TopBarActions({
         <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/80 px-3 py-1 text-xs text-muted-foreground">
           <FolderKanban className="h-3.5 w-3.5 text-primary" />
           <span className="max-w-[220px] truncate">
-            {projectId ? `Du an: ${workspaceLabel}` : `Du an nhap: ${workspaceLabel}`}
+            {projectId ? `Dự án: ${workspaceLabel}` : `Nháp: ${workspaceLabel}`}
           </span>
         </div>
       )}

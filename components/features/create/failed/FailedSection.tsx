@@ -24,6 +24,7 @@ export default function FailedSection() {
   const t = useTranslations('CreatePage.failed')
   const tHeaders = useTranslations('CreatePage.sectionHeaders')
   const tCard = useTranslations('CreatePage.postCard')
+  const tSection = useTranslations('CreatePage.failedSection')
   const locale = useLocale()
   
   const { 
@@ -117,18 +118,18 @@ export default function FailedSection() {
         <div className="px-4 lg:px-6 py-3">
           <div className="mb-3 grid gap-3 md:grid-cols-3">
             <div className="rounded-2xl border border-border/70 bg-card/60 px-4 py-3">
-              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Pipeline errors</p>
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{tSection("pipelineErrors")}</p>
               <p className="mt-2 text-2xl font-semibold text-foreground">{displayPosts.length}</p>
             </div>
             <div className="rounded-2xl border border-border/70 bg-card/60 px-4 py-3">
-              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Retry ready</p>
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{tSection("retryReady")}</p>
               <p className="mt-2 inline-flex items-center gap-2 text-2xl font-semibold text-foreground">
                 <RotateCcw className="h-5 w-5 text-primary" />
                 {retryReadyCount}
               </p>
             </div>
             <div className="rounded-2xl border border-border/70 bg-card/60 px-4 py-3">
-              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Affected platforms</p>
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{tSection("affectedPlatforms")}</p>
               <p className="mt-2 inline-flex items-center gap-2 text-2xl font-semibold text-foreground">
                 <TriangleAlert className="h-5 w-5 text-rose-500" />
                 {failedPlatforms}
