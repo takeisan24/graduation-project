@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { createConnectionLegacy, findConnectionByUserPlatformAndProfileId } from "@/lib/services/db/connections";
+import { checkProfileLimit } from "@/lib/usage";
 
 const SUPPORTED_PROVIDER_TO_PLATFORM: Record<string, string> = {
   tiktok: "tiktok",
@@ -129,6 +130,15 @@ export async function GET(
     const existing = await findConnectionByUserPlatformAndProfileId(user.id, platform, profileId);
 
     if (!existing) {
+      const limitCheck = await checkProfileLimit(user.id);
+      if (!limitCheck.canAdd) {
+        return buildPopupResponse({
+          success: false,
+          provider,
+          returnTo,
+          message: `Profile limit reached (${limitCheck.current}/${limitCheck.limit})`,
+        });
+      }
       const displayName = `Demo ${platform.charAt(0).toUpperCase()}${platform.slice(1)} Account`;
       const created = await createConnectionLegacy({
         user_id: user.id,

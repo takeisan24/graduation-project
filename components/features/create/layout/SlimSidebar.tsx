@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
 import { useNavigationStore } from "@/store"
 import { useShallow } from "zustand/react/shallow"
@@ -42,6 +42,14 @@ export default function SlimSidebar({
   const { wizardStep } = useNavigationStore(useShallow((s) => ({ wizardStep: s.wizardStep })))
 
   const isInWizard = wizardStep !== "idle"
+
+  const [isDesktop, setIsDesktop] = useState(false)
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 1024)
+    check()
+    window.addEventListener("resize", check)
+    return () => window.removeEventListener("resize", check)
+  }, [])
 
   const handleNavClick = useCallback(
     (sectionId: string) => {
@@ -138,7 +146,7 @@ export default function SlimSidebar({
       </aside>
 
       {/* Mobile sheet */}
-      <Sheet open={isSidebarOpen} onOpenChange={onSidebarToggle}>
+      <Sheet open={!isDesktop && isSidebarOpen} onOpenChange={onSidebarToggle}>
         <SheetContent side="left" className="w-[280px] p-0">
           <SheetHeader className="p-4 border-b border-border/50">
             <SheetTitle className="flex items-center gap-2">

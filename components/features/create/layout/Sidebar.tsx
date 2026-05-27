@@ -10,7 +10,7 @@ import { CheckCircle2, Link2, LogOut, Settings, Sparkles, UserCircle2 } from "lu
 import { useAuth } from "@/hooks/useAuth"
 import { useTranslations } from "next-intl"
 import { useSectionNavigation } from "@/hooks/useSectionNavigation"
-import { useRouter } from "next/navigation"
+import { useRouter } from "@/i18n/navigation"
 
 interface SidebarProps {
   activeSection: string
@@ -34,6 +34,18 @@ export default function Sidebar({
 
   const wizardStep = useNavigationStore((state) => state.wizardStep)
   const isInWizard = wizardStep !== "idle"
+
+  const hoverLockRef = useRef(false)
+  const prevSectionRef = useRef(activeSection)
+
+  useEffect(() => {
+    if (prevSectionRef.current !== activeSection) {
+      prevSectionRef.current = activeSection
+      hoverLockRef.current = true
+      const timer = setTimeout(() => { hoverLockRef.current = false }, 500)
+      return () => clearTimeout(timer)
+    }
+  }, [activeSection])
 
   useEffect(() => {
     if (!isSidebarOpen) {
@@ -204,8 +216,8 @@ export default function Sidebar({
           ${isSidebarOpen ? "w-[280px] translate-x-0 lg:w-55" : "w-[280px] -translate-x-full lg:w-[80px] lg:translate-x-0"}
           ${isInWizard ? "pointer-events-none" : ""}
         `}
-        onMouseEnter={() => !isInWizard && window.innerWidth >= 1024 && onSidebarToggle(true)}
-        onMouseLeave={() => !isInWizard && window.innerWidth >= 1024 && onSidebarToggle(false)}
+        onMouseEnter={() => !isInWizard && !hoverLockRef.current && window.innerWidth >= 1024 && onSidebarToggle(true)}
+        onMouseLeave={() => !isInWizard && !hoverLockRef.current && window.innerWidth >= 1024 && onSidebarToggle(false)}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
