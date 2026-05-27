@@ -316,12 +316,6 @@ export const useFailedPostsStore = create<FailedPostsState>((set, get) => ({
     }
 
     if (rescheduleDate && rescheduleTime) {
-      if (!post.lateJobId) {
-        toast.warning(POST_ERRORS.NO_LATE_JOB_ID);
-        // Note: openPostFromUrl should be called from calling component
-        return false;
-      }
-
       const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const [hourStr = "0", minuteStr = "0"] = rescheduleTime.split(":");
       const dateObj = new Date(rescheduleDate);

@@ -24,7 +24,7 @@ interface PublishedPostsState {
   loadPublishedPosts: () => Promise<void>;
   loadMorePublishedPosts: () => Promise<void>;
   handleViewPost: (url: string) => void;
-  handleDeletePost: (id: number) => void;
+  handleDeletePost: (id: string | number) => void;
 }
 
 // Module-level lock to prevent concurrent API calls
@@ -335,7 +335,7 @@ export const usePublishedPostsStore = create<PublishedPostsState>((set, get) => 
   handleDeletePost: (id) => {
     let postFound = false;
     set(state => {
-      const updatedPublished = state.publishedPosts.filter(p => p.id !== id);
+      const updatedPublished = state.publishedPosts.filter(p => String(p.id) !== String(id));
 
       if (updatedPublished.length < state.publishedPosts.length) {
         postFound = true;

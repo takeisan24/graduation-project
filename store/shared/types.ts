@@ -68,7 +68,7 @@ export interface DraftPost {
  * Published post interface
  */
 export interface PublishedPost {
-  id: number;
+  id: string | number;
   platform: string;
   content: string;
   time: string;

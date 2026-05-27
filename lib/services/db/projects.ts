@@ -240,6 +240,69 @@ export async function updateDraft(
 }
 
 /**
+ * Recalculate a draft status from its related scheduled posts.
+ *
+ * Priority:
+ * - any scheduled/publishing post => draft stays scheduled
+ * - otherwise any posted post => draft becomes posted
+ * - otherwise any failed post => draft becomes failed
+ * - otherwise no related posts => draft returns to draft
+ */
+export async function syncDraftStatusFromScheduledPosts(
+  draftId: string,
+  userId: string
+): Promise<ContentDraft | null> {
+  const draft = await getDraftById(draftId, userId);
+  if (!draft) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("scheduled_posts")
+    .select("status, scheduled_at")
+    .eq("draft_id", draftId)
+    .eq("user_id", userId)
+    .order("scheduled_at", { ascending: true });
+
+  if (error) {
+    console.error("[db/projects] Error syncing draft status from scheduled posts:", error);
+    return null;
+  }
+
+  const relatedPosts = (data || []) as Array<{
+    status: "scheduled" | "publishing" | "posted" | "failed" | "cancelled";
+    scheduled_at: string | null;
+  }>;
+
+  let nextStatus: ContentDraft["status"] = "draft";
+  let nextScheduledAt: string | null = null;
+
+  const activePost = relatedPosts.find(
+    (post) => post.status === "scheduled" || post.status === "publishing"
+  );
+
+  if (activePost) {
+    nextStatus = "scheduled";
+    nextScheduledAt = activePost.scheduled_at ?? draft.scheduled_at ?? null;
+  } else if (relatedPosts.some((post) => post.status === "posted")) {
+    nextStatus = "posted";
+  } else if (relatedPosts.some((post) => post.status === "failed")) {
+    nextStatus = "failed";
+  }
+
+  const updated = await updateDraft(draftId, userId, {
+    status: nextStatus,
+    scheduled_at: nextScheduledAt,
+  });
+
+  if (!updated) {
+    return null;
+  }
+
+  return getDraftById(draftId, userId);
+}
+
+/**
  * Delete draft
  */
 export async function deleteDraft(draftId: string, userId: string): Promise<boolean> {

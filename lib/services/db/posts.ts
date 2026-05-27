@@ -70,6 +70,9 @@ export interface PostPayload {
   mediaUrls?: string[];
   media_urls?: string[];
   id?: string;
+  late_job_id?: string | null;
+  getlate_profile_id?: string | null;
+  getlate_account_id?: string | null;
   connected_account_metadata?: PostPayloadAccountMetadata;
   webhook_data?: PostPayloadWebhookData;
   late_dev_response?: PostPayloadLateDevResponse;
@@ -88,16 +91,139 @@ export interface ScheduledPost {
   id: string;
   user_id: string;
   draft_id: string | null;
+  connected_account_id: string | null;
   getlate_profile_id: string | null;
   getlate_account_id: string | null;
   platform: string;
   scheduled_at: string;
   late_job_id: string | null;
-  status: 'scheduled' | 'posted' | 'failed';
+  status: 'scheduled' | 'publishing' | 'posted' | 'failed' | 'cancelled';
   post_url: string | null;
   payload: PostPayload;
   created_at: string;
   updated_at: string;
+}
+
+type ScheduledPostRecord = {
+  id: string;
+  user_id: string;
+  draft_id: string | null;
+  connected_account_id?: string | null;
+  platform: string;
+  scheduled_at: string;
+  status: ScheduledPost["status"];
+  post_url: string | null;
+  payload: PostPayload | null;
+  created_at: string;
+  updated_at: string;
+  content_drafts?: {
+    id: string;
+    text_content: string | null;
+    media_urls: string[] | null;
+    platform: string | null;
+  } | {
+    id: string;
+    text_content: string | null;
+    media_urls: string[] | null;
+    platform: string | null;
+  }[] | null;
+};
+
+type VirtualScheduledPostMetadata = Pick<
+  Partial<ScheduledPost>,
+  "late_job_id" | "getlate_profile_id" | "getlate_account_id"
+>;
+
+function normalizePayload(payload?: PostPayload | null): PostPayload {
+  if (!payload || typeof payload !== "object") {
+    return {};
+  }
+  return payload;
+}
+
+function mergeVirtualMetadataIntoPayload(
+  payload: PostPayload | null | undefined,
+  metadata: VirtualScheduledPostMetadata
+): PostPayload {
+  const nextPayload = {
+    ...normalizePayload(payload),
+  };
+
+  if (metadata.late_job_id !== undefined) {
+    nextPayload.late_job_id = metadata.late_job_id ?? null;
+  }
+  if (metadata.getlate_profile_id !== undefined) {
+    nextPayload.getlate_profile_id = metadata.getlate_profile_id ?? null;
+  }
+  if (metadata.getlate_account_id !== undefined) {
+    nextPayload.getlate_account_id = metadata.getlate_account_id ?? null;
+  }
+
+  return nextPayload;
+}
+
+function normalizeScheduledPost(record: ScheduledPostRecord): ScheduledPost {
+  const payload = normalizePayload(record.payload);
+
+  return {
+    id: record.id,
+    user_id: record.user_id,
+    draft_id: record.draft_id ?? null,
+    connected_account_id: record.connected_account_id ?? payload.connected_account_id ?? null,
+    getlate_profile_id: record.payload?.getlate_profile_id ?? null,
+    getlate_account_id: record.payload?.getlate_account_id ?? null,
+    platform: record.platform,
+    scheduled_at: record.scheduled_at,
+    late_job_id: record.payload?.late_job_id ?? null,
+    status: record.status,
+    post_url: record.post_url,
+    payload,
+    created_at: record.created_at,
+    updated_at: record.updated_at,
+  };
+}
+
+function buildScheduledPostMutationData(
+  updates: Partial<ScheduledPost>
+): Record<string, unknown> {
+  const shouldUpdatePayload =
+    updates.payload !== undefined ||
+    updates.late_job_id !== undefined ||
+    updates.getlate_profile_id !== undefined ||
+    updates.getlate_account_id !== undefined ||
+    updates.connected_account_id !== undefined;
+
+  const mutationData: Record<string, unknown> = {};
+
+  if (shouldUpdatePayload) {
+    const normalizedPayload = mergeVirtualMetadataIntoPayload(updates.payload, {
+      late_job_id: updates.late_job_id,
+      getlate_profile_id: updates.getlate_profile_id,
+      getlate_account_id: updates.getlate_account_id,
+    });
+
+    if (updates.connected_account_id !== undefined) {
+      normalizedPayload.connected_account_id = updates.connected_account_id ?? undefined;
+    }
+
+    mutationData.payload = normalizedPayload;
+  }
+
+  if (updates.user_id !== undefined) mutationData.user_id = updates.user_id;
+  if (updates.draft_id !== undefined) mutationData.draft_id = updates.draft_id;
+  if (updates.connected_account_id !== undefined) {
+    mutationData.connected_account_id = updates.connected_account_id;
+  }
+  if (updates.platform !== undefined) mutationData.platform = updates.platform;
+  if (updates.scheduled_at !== undefined) mutationData.scheduled_at = updates.scheduled_at;
+  if (updates.status !== undefined) mutationData.status = updates.status;
+  if (updates.post_url !== undefined) mutationData.post_url = updates.post_url;
+  if (updates.created_at !== undefined) mutationData.created_at = updates.created_at;
+  if (updates.updated_at !== undefined) mutationData.updated_at = updates.updated_at;
+
+  return Object.fromEntries(
+    Object.entries(mutationData).filter(([, value]) => value !== undefined)
+  );
 }
 
 /**
@@ -139,7 +265,7 @@ export async function getPublishedPosts(
     return [];
   }
   
-  return data || [];
+  return ((data || []) as ScheduledPostRecord[]).map(normalizeScheduledPost);
 }
 
 /**
@@ -181,7 +307,7 @@ export async function getFailedPosts(
     return [];
   }
   
-  return data || [];
+  return ((data || []) as ScheduledPostRecord[]).map(normalizeScheduledPost);
 }
 
 /**
@@ -218,11 +344,9 @@ export async function getScheduledPosts(userId: string): Promise<ScheduledPostWi
       id,
       user_id,
       draft_id,
-      getlate_profile_id,
-      getlate_account_id,
+      connected_account_id,
       platform,
       scheduled_at,
-      late_job_id,
       status,
       post_url,
       payload,
@@ -240,28 +364,17 @@ export async function getScheduledPosts(userId: string): Promise<ScheduledPostWi
   
   if (error) {
     console.error("[db/posts] Error getting scheduled posts:", error);
-    return [];
+    throw new Error(error.message || "Unable to load scheduled posts");
   }
   
-  const normalizedPosts: ScheduledPostWithDraft[] = ((data || []) as Array<ScheduledPost & { content_drafts?: { id: string; text_content: string | null; media_urls: string[] | null; platform: string | null } | { id: string; text_content: string | null; media_urls: string[] | null; platform: string | null }[] | null }>).map((post) => {
+  const normalizedPosts: ScheduledPostWithDraft[] = ((data || []) as ScheduledPostRecord[]).map((post) => {
     const draftData = Array.isArray(post.content_drafts)
       ? post.content_drafts[0]
       : post.content_drafts;
+    const normalizedPost = normalizeScheduledPost(post);
 
     return {
-      id: post.id,
-      user_id: post.user_id,
-      draft_id: post.draft_id,
-      getlate_profile_id: post.getlate_profile_id,
-      getlate_account_id: post.getlate_account_id,
-      platform: post.platform,
-      scheduled_at: post.scheduled_at,
-      late_job_id: post.late_job_id,
-      status: post.status,
-      post_url: post.post_url,
-      payload: post.payload,
-      created_at: post.created_at,
-      updated_at: post.updated_at,
+      ...normalizedPost,
       content_drafts: draftData
         ? {
             id: String(draftData.id ?? ""),
@@ -301,7 +414,7 @@ export async function getPostById(id: string): Promise<ScheduledPost | null> {
     return null;
   }
   
-  return data;
+  return data ? normalizeScheduledPost(data as ScheduledPostRecord) : null;
 }
 
 /**
@@ -310,12 +423,13 @@ export async function getPostById(id: string): Promise<ScheduledPost | null> {
 export interface CreateScheduledPostData {
   user_id: string;
   draft_id?: string | null;
+  connected_account_id?: string | null;
   getlate_profile_id?: string | null;
   getlate_account_id?: string | null;
   platform: string;
   scheduled_at: string;
   late_job_id?: string | null;
-  status?: 'scheduled' | 'posted' | 'failed';
+  status?: ScheduledPost["status"];
   post_url?: string | null;
   payload: PostPayload;
 }
@@ -350,20 +464,27 @@ export interface CreateScheduledPostData {
  */
 export async function createScheduledPost(data: CreateScheduledPostData): Promise<ScheduledPost | null> {
   const normalizedPlatform = normalizePlatform(data.platform) || data.platform;
+  const payload = mergeVirtualMetadataIntoPayload(data.payload, {
+    late_job_id: data.late_job_id,
+    getlate_profile_id: data.getlate_profile_id,
+    getlate_account_id: data.getlate_account_id,
+  });
+
+  if (data.connected_account_id) {
+    payload.connected_account_id = data.connected_account_id;
+  }
 
   const { data: post, error } = await supabase
     .from("scheduled_posts")
     .insert({
       user_id: data.user_id,
       draft_id: data.draft_id || null,
-      getlate_profile_id: data.getlate_profile_id || null,
-      getlate_account_id: data.getlate_account_id || null,
+      connected_account_id: data.connected_account_id || null,
       platform: normalizedPlatform,
       scheduled_at: data.scheduled_at,
-      late_job_id: data.late_job_id || null,
       status: data.status || 'scheduled',
       post_url: data.post_url || null,
-      payload: data.payload
+      payload
     })
     .select()
     .single();
@@ -373,7 +494,7 @@ export async function createScheduledPost(data: CreateScheduledPostData): Promis
     return null;
   }
   
-  return post;
+  return post ? normalizeScheduledPost(post as ScheduledPostRecord) : null;
 }
 
 /**
@@ -393,7 +514,7 @@ export async function createScheduledPost(data: CreateScheduledPostData): Promis
  */
 export async function updatePostStatus(
   id: string,
-  status: 'scheduled' | 'posted' | 'failed',
+  status: ScheduledPost["status"],
   updates?: Partial<ScheduledPost>
 ): Promise<boolean> {
   const updateData: Partial<ScheduledPost> & { status: string } = { status };
@@ -404,7 +525,7 @@ export async function updatePostStatus(
   
   const { error } = await supabase
     .from("scheduled_posts")
-    .update(updateData)
+    .update(buildScheduledPostMutationData(updateData))
     .eq("id", id);
   
   if (error) {
@@ -446,7 +567,7 @@ export async function updatePost(
 
   const { data, error } = await supabase
     .from("scheduled_posts")
-    .update(normalizedUpdates)
+    .update(buildScheduledPostMutationData(normalizedUpdates))
     .eq("id", id)
     .eq("user_id", userId)
     .select()
@@ -457,7 +578,7 @@ export async function updatePost(
     return null;
   }
   
-  return data;
+  return data ? normalizeScheduledPost(data as ScheduledPostRecord) : null;
 }
 
 /**
@@ -598,7 +719,7 @@ export async function getPendingPosts(userId?: string): Promise<ScheduledPost[]>
     return [];
   }
   
-  return data || [];
+  return ((data || []) as ScheduledPostRecord[]).map(normalizeScheduledPost);
 }
 
 /**
@@ -627,19 +748,17 @@ export async function getLatePosts(userId: string): Promise<Pick<ScheduledPost, 
     .from("scheduled_posts")
     .select(`
       id,
+      connected_account_id,
       platform,
       scheduled_at,
       status,
       post_url,
       payload,
       created_at,
-      updated_at,
-      late_job_id,
-      getlate_profile_id,
-      getlate_account_id
+      updated_at
     `)
     .eq("user_id", userId)
-    .not("late_job_id", "is", null)
+    .not("connected_account_id", "is", null)
     .order("created_at", { ascending: false });
   
   if (error) {
@@ -647,6 +766,6 @@ export async function getLatePosts(userId: string): Promise<Pick<ScheduledPost, 
     return [];
   }
   
-  return data || [];
+  return ((data || []) as ScheduledPostRecord[]).map(normalizeScheduledPost);
 }
 

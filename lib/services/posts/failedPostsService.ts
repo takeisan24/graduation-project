@@ -168,7 +168,7 @@ function transformPostToFailed(
   timeZone: string
 ): FailedPost {
   const payload = post.payload || {};
-  const connectedAccountId = payload.connected_account_id;
+  const connectedAccountId = post.connected_account_id || payload.connected_account_id;
   const connectedAccount = connectedAccountId ? accountsMap[connectedAccountId] : null;
   const profileMetadata: ProfileInfo = connectedAccount?.profile_metadata || payload.connected_account_metadata || {};
 
@@ -209,7 +209,7 @@ function transformPostToFailed(
   return {
     id: post.id,
     platform: post.platform || connectedAccount?.platform || 'Unknown',
-    content: payload.text_content || '', // Use text_content only (text is duplicate)
+    content: payload.text_content || payload.text || '',
     date: getDateStringInTimezone(scheduledDate, timeZone),
     time: scheduledDate.toTimeString().slice(0, 5), // HH:MM
     error: errorMessage,
@@ -251,7 +251,7 @@ export async function getFailedPostsForUser(
   // Extract unique connected_account_ids from payload
   const connectedAccountIds = new Set<string>();
   posts.forEach((post) => {
-    const connectedAccountId = post.payload?.connected_account_id;
+    const connectedAccountId = post.connected_account_id || post.payload?.connected_account_id;
     if (connectedAccountId) {
       connectedAccountIds.add(connectedAccountId);
     }

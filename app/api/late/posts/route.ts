@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { fail, success } from "@/lib/response";
 import { withAuthOnly } from "@/lib/middleware/api-protected";
-import { getDraftById } from "@/lib/services/db/projects";
+import { getDraftById, updateDraft } from "@/lib/services/db/projects";
 import {
   createInternalLatePost,
   getAllInternalLatePosts,
@@ -55,6 +55,13 @@ export async function POST(req: NextRequest) {
       contentType: typeof contentType === "string" ? contentType : null,
       status: "posted",
     });
+
+    if (typeof draftId === "string") {
+      await updateDraft(draftId, auth.user.id, {
+        status: "posted",
+        scheduled_at: null,
+      }).catch(() => false);
+    }
 
     return success(
       {

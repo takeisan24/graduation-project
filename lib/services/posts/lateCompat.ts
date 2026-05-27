@@ -12,6 +12,7 @@ import {
   findConnectionsByIds,
   type Connection,
 } from "@/lib/services/db/connections";
+import { syncDraftStatusFromScheduledPosts } from "@/lib/services/db/projects";
 
 type CreateInternalLatePostParams = {
   userId: string;
@@ -208,6 +209,7 @@ export async function createInternalLatePost(params: CreateInternalLatePostParam
   const createdPost = await createScheduledPost({
     user_id: params.userId,
     draft_id: params.draftId || null,
+    connected_account_id: params.connection.id,
     platform: normalizePlatform(params.connection.platform),
     scheduled_at: scheduledAt,
     late_job_id: randomUUID(),
@@ -313,6 +315,10 @@ export async function resolveInternalLatePost(post: ScheduledPost): Promise<Reso
     post_url: finalUrl,
     payload: updatedPayload,
   };
+
+  if (resolvedPost.draft_id) {
+    await syncDraftStatusFromScheduledPosts(resolvedPost.draft_id, resolvedPost.user_id);
+  }
 
   return {
     post: resolvedPost,

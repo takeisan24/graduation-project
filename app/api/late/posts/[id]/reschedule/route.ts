@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import { fail, success } from "@/lib/response";
 import { withAuthOnly } from "@/lib/middleware/api-protected";
 import { getPostById, updatePost, type PostPayload } from "@/lib/services/db/posts";
+import { syncDraftStatusFromScheduledPosts } from "@/lib/services/db/projects";
 import { serializeLatePost } from "@/lib/services/posts/lateCompat";
 
 type RouteContext = {
@@ -46,6 +47,10 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 
     if (!updatedPost) {
       return fail("Unable to reschedule post", 500);
+    }
+
+    if (updatedPost.draft_id) {
+      await syncDraftStatusFromScheduledPosts(updatedPost.draft_id, auth.user.id);
     }
 
     return success({ post: serializeLatePost(updatedPost) });

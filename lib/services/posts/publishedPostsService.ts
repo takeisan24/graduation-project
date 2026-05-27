@@ -132,7 +132,7 @@ function transformPostToPublished(
   accountsMap: Record<string, Connection>
 ): PublishedPost {
   const payload = post.payload || {};
-  const connectedAccountId = payload.connected_account_id;
+  const connectedAccountId = post.connected_account_id || payload.connected_account_id;
   const connectedAccount = connectedAccountId ? accountsMap[connectedAccountId] : null;
   const profileMetadata: ProfileInfo = connectedAccount?.profile_metadata || payload.connected_account_metadata || {};
 
@@ -162,7 +162,7 @@ function transformPostToPublished(
   return {
     id: post.id,
     platform: post.platform || connectedAccount?.platform || 'Unknown',
-    content: payload.text_content || '', // Use text_content only (text is duplicate)
+    content: payload.text_content || payload.text || '',
     time: post.scheduled_at || post.created_at,
     status: post.status,
     url: postUrl || '', // Priority: column post_url > extracted from payload
@@ -199,7 +199,7 @@ export async function getPublishedPostsForUser(
   // Extract unique connected_account_ids from payload
   const connectedAccountIds = new Set<string>();
   posts.forEach((post) => {
-    const connectedAccountId = post.payload?.connected_account_id;
+    const connectedAccountId = post.connected_account_id || post.payload?.connected_account_id;
     if (connectedAccountId) {
       connectedAccountIds.add(connectedAccountId);
     }

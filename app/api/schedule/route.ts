@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { success, fail } from "@/lib/response";
 import { getScheduledPosts } from "@/lib/services/db/posts";
-import { getDraftById } from "@/lib/services/db/projects";
+import { getDraftById, updateDraft } from "@/lib/services/db/projects";
 import { DEFAULT_TIMEZONE } from "@/lib/utils/date";
 import { createInternalLatePost, getOwnedConnectionsByIds, serializeLatePost } from "@/lib/services/posts/lateCompat";
 
@@ -74,6 +74,7 @@ export async function POST(req: NextRequest) {
 
     const scheduledPosts = [];
     const errors: string[] = [];
+    const draftScheduleUpdates = new Map<string, string>();
 
     for (const post of posts) {
       const draftId = typeof post.draftId === "string" ? post.draftId : null;
@@ -111,6 +112,9 @@ export async function POST(req: NextRequest) {
           });
 
           scheduledPosts.push(serializeLatePost(savedPost));
+          if (draftId) {
+            draftScheduleUpdates.set(draftId, scheduledAt);
+          }
         } catch (e: unknown) {
           const eMsg = e instanceof Error ? e.message : String(e);
           errors.push(`Failed to schedule for ${post.platform}/${connection.id}: ${eMsg}`);
@@ -121,6 +125,15 @@ export async function POST(req: NextRequest) {
     if (scheduledPosts.length === 0) {
       return fail(`Failed to schedule any posts. Errors: ${JSON.stringify(errors)}`, 500);
     }
+
+    await Promise.all(
+      Array.from(draftScheduleUpdates.entries()).map(([draftId, nextScheduledAt]) =>
+        updateDraft(draftId, user.id, {
+          status: "scheduled",
+          scheduled_at: nextScheduledAt,
+        }).catch(() => false)
+      )
+    );
 
     return success({
       scheduledPosts,
