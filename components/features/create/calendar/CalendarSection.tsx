@@ -172,7 +172,8 @@ export default function CalendarSection() {
             window.removeEventListener("online", handleOnline);
             window.removeEventListener("offline", handleOffline);
         };
-    }, [calendarEvents, autoUpdatePublishingStatus, hydrateScheduledPosts]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [autoUpdatePublishingStatus, hydrateScheduledPosts]);
 
     const goPrev = () => {
         if (calendarView === "monthly") {

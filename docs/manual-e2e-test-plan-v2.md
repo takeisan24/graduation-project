@@ -198,6 +198,16 @@
 
 **Known issue**: Nút Edit có thể không navigate — xem `docs/known-issues.md`.
 
+### TC-C05: Xem danh sách Drafts 🔲
+
+| Bước | Thao tác | Kết quả mong đợi |
+|------|---------|------------------|
+| 1 | Click icon Drafts trên sidebar | Navigate đến Drafts section |
+| 2 | Kiểm tra Network | `GET /api/projects` hoặc tương đương trả 200 |
+| 3 | Nếu có draft: hiện danh sách với platform, preview content, thời gian | Đúng |
+| 4 | Nếu không có draft: empty state hiển thị | Không crash |
+| 5 | Mỗi draft có nút Edit và Delete | Hiển thị đúng |
+
 ### TC-C03: Xóa draft 🔲
 
 | Bước | Thao tác | Kết quả mong đợi |
@@ -430,6 +440,24 @@
 
 | Bước | Thao tác | Kết quả mong đợi |
 |------|---------|------------------|
+| 1 | Click **Xem chi tiết** trên 1 published post | Detail modal/panel mở |
+| 2 | Kiểm tra: full content, platform icon, time | Tất cả hiển thị đúng |
+| 3 | URL bài đăng có nút copy/open | Hoạt động |
+| 4 | Engagement (likes=0, comments=0, shares=0) | Hiển thị ở demo mode |
+| 5 | Đóng modal | Quay về danh sách đúng |
+
+### TC-G03: Search và filter Published 🔲
+
+| Bước | Thao tác | Kết quả mong đợi |
+|------|---------|------------------|
+| 1 | Trong Published, click filter "Tất cả nền tảng" | Dropdown hiển thị danh sách platforms |
+| 2 | Chọn "Facebook" | Chỉ hiển thị Facebook posts |
+| 3 | Chọn "TikTok" | Chỉ hiển thị TikTok posts (hoặc empty nếu chưa có) |
+| 4 | Chọn "Tất cả nền tảng" lại | Hiện toàn bộ |
+| 5 | Search box: gõ từ khóa trong content | Filter theo nội dung |
+
+| Bước | Thao tác | Kết quả mong đợi |
+|------|---------|------------------|
 | 1 | Click vào 1 published post | Detail modal hiển thị |
 | 2 | Kiểm tra: full content, time, URL, engagement | Tất cả hiển thị đúng |
 | 3 | Engagement (likes, comments, shares) | Hiển thị (mặc định 0 ở demo mode) |
@@ -455,6 +483,15 @@
 | 3 | Click **Reschedule** | Reschedule modal hiển thị |
 | 4 | Chọn thời gian mới, confirm | Post chuyển thành `scheduled` |
 | 5 | Calendar cập nhật | Event mới xuất hiện |
+
+### TC-H04: Mở lại bài thất bại trong editor 🔲
+
+| Bước | Thao tác | Kết quả mong đợi |
+|------|---------|------------------|
+| 1 | Click **Edit Again** / **Chỉnh sửa** trên 1 failed post | Navigate về Create section |
+| 2 | Editor load đúng content + platform gốc | Đúng |
+| 3 | Có thể sửa nội dung | Editor cho phép edit |
+| 4 | Publish hoặc schedule lại | Flow bình thường |
 
 ### TC-H03: Xóa bài thất bại 🔲
 
@@ -495,6 +532,24 @@
 | 3 | Số liệu có logic | Đúng |
 
 **Kết quả 2026-05-27**: ✅ Operations: Drafts=0, Published=1, Failed=0, Connections=4. Điểm sẵn sàng: 56/100. Khối lượng 7 ngày: 1. Tỷ lệ thành công: 100%.
+
+### TC-I04: Operations — Tab "Phân tích quy trình" 🔲
+
+| Bước | Thao tác | Kết quả mong đợi |
+|------|---------|------------------|
+| 1 | Trong Operations, click tab **Phân tích quy trình** | Tab content hiển thị |
+| 2 | Kiểm tra chart/graph render | Không lỗi, axis label đúng |
+| 3 | Số liệu có tính logic (không NaN, không undefined) | Đúng |
+| 4 | Hover tooltip trên chart | Tooltip hiển thị giá trị |
+
+### TC-I05: Operations — Tab "Hoạt động" 🔲
+
+| Bước | Thao tác | Kết quả mong đợi |
+|------|---------|------------------|
+| 1 | Click tab **Hoạt động** | Activity log hiển thị |
+| 2 | Các action gần nhất xuất hiện | Publish, schedule, connect — đúng thứ tự thời gian |
+| 3 | Mỗi entry có: action type, time, context | Đúng |
+| 4 | Scroll xuống (nếu nhiều entries) | Không crash |
 
 ---
 
@@ -624,6 +679,16 @@
 | 2 | Kiểm tra Network | `GET /api/me` trả 200 |
 | 3 | Login methods hiển thị đúng | Email / Google |
 
+### TC-L03: Cập nhật thông tin Profile 🔲
+
+| Bước | Thao tác | Kết quả mong đợi |
+|------|---------|------------------|
+| 1 | Vào Profile section | Form thông tin hiển thị |
+| 2 | Sửa display name | Input nhận giá trị mới |
+| 3 | Click Save / Cập nhật | Toast success, DB updated |
+| 4 | Refresh trang | Tên mới vẫn hiển thị |
+| 5 | Header user chip | Cập nhật theo tên mới |
+
 ### TC-L02: System Settings ✅
 
 | Bước | Thao tác | Kết quả mong đợi |
@@ -634,6 +699,46 @@
 | 4 | Click "Mở hồ sơ" / "Mở kết nối" | Navigate đến profile / connections |
 
 **Kết quả 2026-05-27**: ✅ Settings UI: Theme=Sáng, Language=VI, Chế độ=Quy trình nội dung AI.
+
+---
+
+## PHẦN O: ONBOARDING & NAVIGATION
+
+### TC-O01: Chạy lại Onboarding 🔲
+
+| Bước | Thao tác | Kết quả mong đợi |
+|------|---------|------------------|
+| 1 | Vào Settings, click **Chạy lại onboarding** | Onboarding modal/flow xuất hiện |
+| 2 | Đi qua từng bước của onboarding | Các bước hiển thị đúng thứ tự |
+| 3 | Hoàn thành onboarding | Redirect về Create section |
+| 4 | Không bị loop vô tận | Đúng |
+
+### TC-O02: Manual post creation (không dùng AI) 🔲
+
+| Bước | Thao tác | Kết quả mong đợi |
+|------|---------|------------------|
+| 1 | Trong Create empty state, click **TikTok** | Tạo post thủ công cho TikTok |
+| 2 | Hoặc click **Thêm bài đăng** | Post tab mới xuất hiện |
+| 3 | Nhập nội dung thủ công | Editor nhận text |
+| 4 | Publish ngay | Flow bình thường, không cần AI |
+
+### TC-O03: Sidebar navigation 🔲
+
+| Bước | Thao tác | Kết quả mong đợi |
+|------|---------|------------------|
+| 1 | Click từng icon trên sidebar (Create → Calendar → Drafts → Published → Failed → Operations → Connections → Settings → Profile) | Mỗi section load đúng |
+| 2 | URL thay đổi theo section | `/vi/create`, `/vi/calendar`, v.v. |
+| 3 | Không có blank page hoặc crash | Đúng |
+| 4 | Active icon highlight đúng section hiện tại | Đúng |
+
+### TC-O04: Dark mode persistence 🔲
+
+| Bước | Thao tác | Kết quả mong đợi |
+|------|---------|------------------|
+| 1 | Settings → click **Tối** | Toàn bộ UI chuyển dark |
+| 2 | Refresh trang | Vẫn dark mode |
+| 3 | Navigate sang Calendar, Operations | Tất cả sections đều dark |
+| 4 | Click **Sáng** | UI chuyển light, persisted sau refresh |
 
 ---
 
