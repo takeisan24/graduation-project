@@ -10,6 +10,7 @@ import { Sparkles, Zap, Crown, Rocket, Copy, Check, Loader2 } from "lucide-react
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
@@ -206,6 +207,7 @@ export default function CreditTopUp() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t("qrTitle")}</DialogTitle>
+            <DialogDescription>{t("qrNote")}</DialogDescription>
           </DialogHeader>
 
           {orderData && (

@@ -76,7 +76,7 @@ export function getPlanProfileLimit(plan: string): number {
     case "creator": return 10;
     case "creator_pro": return 20;
     case "agency": return 50;
-    default: return 2; // free plan
+    default: return 5; // free plan
   }
 }
 
