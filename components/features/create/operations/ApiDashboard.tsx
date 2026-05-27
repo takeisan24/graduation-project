@@ -7,7 +7,7 @@ import SectionHeader from "../layout/SectionHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BarChart3, CheckCircle2, FileText, Layers3, Link2, RadioTower, ShieldAlert, Sparkles, Workflow, XCircle } from "lucide-react";
+import { BarChart3, CheckCircle2, FileText, Layers3, Link2, RadioTower, ShieldAlert, Workflow, XCircle } from "lucide-react";
 import { usePublishedPostsStore } from "@/store/published/publishedPageStore";
 import { useFailedPostsStore } from "@/store/failed/failedPageStore";
 import { useDraftsStore } from "@/store/drafts/draftsPageStore";

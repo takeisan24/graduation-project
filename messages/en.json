@@ -996,7 +996,9 @@
       "qrContent": "Transfer Note",
       "qrNote": "Please transfer the exact amount with the correct transfer note. Click confirm after completing the transfer.",
       "confirmPayment": "I have paid",
-      "confirmingPayment": "Confirming..."
+      "confirmingPayment": "Confirming...",
+      "creditsUnit": "credits",
+      "perCredit": "₫/credit"
     },
     "systemSettings": {
       "appearanceTitle": "Appearance",

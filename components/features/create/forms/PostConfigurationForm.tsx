@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
-import { SparklesIcon, ChevronDownIcon } from 'lucide-react';
-import { SOCIAL_PLATFORMS, MODEL_OPTIONS } from '@/lib/constants/platforms';
+import { SparklesIcon } from 'lucide-react';
+import { SOCIAL_PLATFORMS } from '@/lib/constants/platforms';
 
 interface PostConfigurationFormProps {
   source?: { type: string; value: string; label: string };
@@ -23,8 +23,7 @@ export default function PostConfigurationForm({
   const [selectedPlatforms, setSelectedPlatforms] = useState<{ platform: string; count: number }[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Model selector state (giống phần Chat AI)
-  const [selectedModel, setSelectedModel] = useState<string>("Gemini");
+  const selectedModel = "Gemini";
   const [showModelMenu, setShowModelMenu] = useState<boolean>(false);
   const modelMenuRef = useRef<HTMLDivElement | null>(null);
 

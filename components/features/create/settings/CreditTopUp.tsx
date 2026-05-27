@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useState } from "react"
 import { CREDIT_PACKAGES } from "@/lib/constants/credit-packages"
 import { supabaseClient } from "@/lib/supabaseClient"
@@ -120,9 +121,10 @@ export default function CreditTopUp() {
   }
 
   const copyToClipboard = (text: string, field: string) => {
-    navigator.clipboard.writeText(text)
-    setCopiedField(field)
-    setTimeout(() => setCopiedField(null), 2000)
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedField(field)
+      setTimeout(() => setCopiedField(null), 2000)
+    }).catch(() => toast.error(t("unknownError")))
   }
 
   const CopyButton = ({ value, field }: { value: string; field: string }) => (
@@ -145,7 +147,7 @@ export default function CreditTopUp() {
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {CREDIT_PACKAGES.map((pkg, index) => {
           const Icon = PACKAGE_ICONS[index] || Sparkles
           const isPopular = pkg.id === "popular"
@@ -169,7 +171,7 @@ export default function CreditTopUp() {
 
               <div>
                 <p className="text-2xl font-bold">{pkg.credits}</p>
-                <p className="text-xs text-muted-foreground">credits</p>
+                <p className="text-xs text-muted-foreground">{t("creditsUnit")}</p>
               </div>
 
               <p className="text-xl font-semibold text-primary">
@@ -177,7 +179,7 @@ export default function CreditTopUp() {
               </p>
 
               <p className="text-xs text-muted-foreground">
-                {Math.round(pkg.priceVND / pkg.credits).toLocaleString("vi-VN")}&#8363;/credit
+                {Math.round(pkg.priceVND / pkg.credits).toLocaleString("vi-VN")}{t("perCredit")}
               </p>
 
               <button
@@ -209,10 +211,13 @@ export default function CreditTopUp() {
           {orderData && (
             <div className="space-y-4">
               <div className="flex justify-center">
-                <img
+                <Image
                   src={orderData.qrUrl}
                   alt="VietQR"
-                  className="w-64 h-64 rounded-lg border"
+                  width={256}
+                  height={256}
+                  className="rounded-lg border"
+                  unoptimized
                 />
               </div>
 
@@ -246,7 +251,7 @@ export default function CreditTopUp() {
                 <div className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2">
                   <span className="text-muted-foreground">{t("qrContent")}</span>
                   <div className="flex items-center">
-                    <span className="font-mono font-medium text-xs">{orderData.bankInfo.content}</span>
+                    <span className="font-mono font-medium text-xs break-all max-w-[140px] text-right">{orderData.bankInfo.content}</span>
                     <CopyButton value={orderData.bankInfo.content} field="content" />
                   </div>
                 </div>

@@ -2,13 +2,12 @@
 
 import { useState, useRef, useEffect } from 'react';
 
-import { SparklesIcon, ChevronDownIcon, SendIcon, MessageCircle, Wand2, Lightbulb, Zap, Plus, Copy, Check, AlertCircle, RefreshCw } from 'lucide-react';
+import { SparklesIcon, SendIcon, MessageCircle, Wand2, Lightbulb, Zap, Plus, Copy, Check, AlertCircle, RefreshCw } from 'lucide-react';
 
 import { useCreateChatStore, useCreatePostsStore, useNavigationStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { MODEL_OPTIONS } from '@/lib/constants/platforms';
 import ConfirmModal from '@/components/shared/ConfirmModal';
 
 // Logic gọi API Gemini có thể được trừu tượng hóa ra service (Giai đoạn 3)

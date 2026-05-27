@@ -996,7 +996,9 @@
       "qrContent": "Nội dung CK",
       "qrNote": "Vui lòng chuyển khoản đúng số tiền và nội dung. Sau khi chuyển khoản xong, bấm xác nhận bên dưới.",
       "confirmPayment": "Tôi đã thanh toán",
-      "confirmingPayment": "Đang xác nhận..."
+      "confirmingPayment": "Đang xác nhận...",
+      "creditsUnit": "credits",
+      "perCredit": "đ/credit"
     },
     "systemSettings": {
       "appearanceTitle": "Giao diện hiển thị",

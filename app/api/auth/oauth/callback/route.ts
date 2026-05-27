@@ -15,7 +15,6 @@ export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const code = url.searchParams.get('code');
-    const localeFromQuery = url.searchParams.get('locale');
     const error = url.searchParams.get('error');
     const error_description = url.searchParams.get('error_description');
 
@@ -65,12 +64,6 @@ export async function GET(req: NextRequest) {
     // Redirect to frontend with success
     // Resolve app URL for final redirect using normalization helper
     const appUrl = getAppUrl();
-
-    /**
-     * Support i18n path prefixes: prefer query ?locale, then NEXT_LOCALE cookie, fallback 'vi'
-     */
-    const cookieLocale = req.cookies.get('NEXT_LOCALE')?.value;
-    const locale = (localeFromQuery || cookieLocale || 'vi').trim();
 
     // Include credits in session data
     const sessionData = {

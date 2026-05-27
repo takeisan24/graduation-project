@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     const orderCode = Number(url.searchParams.get("orderCode"));
 
     if (!orderCode || isNaN(orderCode)) {
-      return fail("Mã đơn hàng không hợp lệ", 400);
+      return fail("INVALID_ORDER_CODE", 400);
     }
 
     const { data: order } = await supabase
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
       .single();
 
     if (!order) {
-      return fail("Đơn hàng không tồn tại", 404);
+      return fail("ORDER_NOT_FOUND", 404);
     }
 
     return success({ status: order.status, credits: order.credits });

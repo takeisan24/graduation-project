@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     const { orderCode } = body;
 
     if (!orderCode) {
-      return fail("Mã đơn hàng không hợp lệ", 400);
+      return fail("INVALID_ORDER_CODE", 400);
     }
 
     const { data: order } = await supabase
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (!order) {
-      return fail("Đơn hàng không tồn tại", 404);
+      return fail("ORDER_NOT_FOUND", 404);
     }
 
     if (order.status === "PAID") {
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (order.status !== "PENDING") {
-      return fail("Đơn hàng không thể xác nhận", 400);
+      return fail("ORDER_NOT_CONFIRMABLE", 400);
     }
 
     const { error: updateError } = await supabase
@@ -43,14 +43,14 @@ export async function POST(req: NextRequest) {
 
     if (updateError) {
       console.error("[payment/confirm-order] Update error:", updateError);
-      return fail("Không thể xác nhận đơn hàng", 500);
+      return fail("ORDER_CONFIRM_FAILED", 500);
     }
 
     const creditResult = await addPurchasedCredits(order.user_id, order.credits);
 
     if (!creditResult.success) {
       console.error("[payment/confirm-order] Add credits failed:", creditResult.reason);
-      return fail("Không thể cộng credits", 500);
+      return fail("CREDITS_ADD_FAILED", 500);
     }
 
     return success({ status: "PAID", credits: order.credits });

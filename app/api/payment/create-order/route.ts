@@ -15,11 +15,11 @@ export async function POST(req: NextRequest) {
 
     const pkg = findPackageById(packageId);
     if (!pkg) {
-      return fail("Gói credits không hợp lệ", 400);
+      return fail("INVALID_PACKAGE", 400);
     }
 
     const orderCode = Number(
-      `${Date.now()}${Math.floor(Math.random() * 1000)}`.slice(-12)
+      `${Date.now()}${Math.floor(Math.random() * 10000)}`.slice(-12)
     );
 
     const { error: insertError } = await supabase
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 
     if (insertError) {
       console.error("[payment/create-order] DB insert error:", insertError);
-      return fail("Không thể tạo đơn hàng", 500);
+      return fail("ORDER_CREATE_FAILED", 500);
     }
 
     const qrUrl = buildVietQRUrl({ amount: pkg.priceVND, orderCode });
