@@ -493,7 +493,13 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
           });
 
           const hydratedEvents = scheduledEventsByDate.get(dateKey) || [];
-          const nextEvents = [...preservedLocalEvents, ...hydratedEvents]
+          const hydratedIds = new Set(hydratedEvents.map(e => e.scheduled_post_id).filter(Boolean));
+          const deduplicatedLocal = preservedLocalEvents.filter(
+            e => !e.scheduled_post_id || !hydratedIds.has(e.scheduled_post_id)
+          );
+          const seenIds = new Set<string>();
+          const nextEvents = [...deduplicatedLocal, ...hydratedEvents]
+            .filter(e => { if (seenIds.has(e.id)) return false; seenIds.add(e.id); return true; })
             .sort((a, b) => (a.time || '').localeCompare(b.time || ''));
 
           if (nextEvents.length > 0) {

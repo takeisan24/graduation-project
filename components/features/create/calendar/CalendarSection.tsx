@@ -563,7 +563,7 @@ export default function CalendarSection() {
                                 ) : null}
                             </div>
                             <p className="mt-2 text-xs text-muted-foreground">
-                                {selectedDateEvents.length} {t("agendaSubtitle", { count: selectedDateEvents.length }).toLowerCase()} • {t("filterResultCount", { count: filteredEventCount }).toLowerCase()}
+                                {t("agendaSubtitle", { count: selectedDateEvents.length })} • {t("filterResultCount", { count: filteredEventCount })}
                             </p>
                         </div>
 
