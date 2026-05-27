@@ -110,7 +110,7 @@ export default function AuthSuccessPage() {
             <p className="text-sm text-muted-foreground">{error}</p>
             <Button
               variant="outline"
-              onClick={() => router.push("/signin")}
+              onClick={() => router.push(`/${currentLocale}/signin`)}
               className="w-full"
             >
               {t("backToSignIn")}

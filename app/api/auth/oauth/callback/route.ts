@@ -78,7 +78,7 @@ export async function GET(req: NextRequest) {
       creditsRemaining: creditsBalance
     };
 
-    const frontendUrl = `${appUrl}/${locale}/auth/success?session=${encodeURIComponent(JSON.stringify(sessionData))}`;
+    const frontendUrl = `${appUrl}/auth/success?session=${encodeURIComponent(JSON.stringify(sessionData))}`;
     return NextResponse.redirect(frontendUrl, { status: 303 });
 
   } catch (err: unknown) {
