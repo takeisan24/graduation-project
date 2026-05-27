@@ -169,14 +169,20 @@ export default function CreateSection() {
     window.localStorage.setItem(CHAT_WIDTH_STORAGE_KEY, String(chatPanelWidth));
   }, [chatPanelWidth]);
 
-  // Auto-open AI Chat when posts appear
+  // Auto-open AI Chat when posts first appear; auto-close when all posts removed (only if user hasn't manually toggled)
+  const prevPostCount = useRef(openPosts.length);
   useEffect(() => {
-    if (openPosts.length > 0 && !isAIChatOpen) {
+    const wasEmpty = prevPostCount.current === 0;
+    const hasNow = openPosts.length > 0;
+    const isEmpty = openPosts.length === 0;
+
+    if (wasEmpty && hasNow && !manualChatToggle) {
       setIsAIChatOpen(true);
-    } else if (openPosts.length === 0 && isAIChatOpen && !manualChatToggle) {
+    } else if (isEmpty && !manualChatToggle) {
       setIsAIChatOpen(false);
     }
-  }, [openPosts.length, isAIChatOpen, manualChatToggle]);
+    prevPostCount.current = openPosts.length;
+  }, [openPosts.length, manualChatToggle]);
 
   // Wizard opens sources panel automatically
   useEffect(() => {
@@ -281,7 +287,7 @@ export default function CreateSection() {
           {/* Sources dropdown panel */}
           {isSourcesOpen && (
             <>
-              {!isAddingSource && (
+              {!isAddingSource && !isConfiguringPosts && (
                 <div
                   className="hidden md:block fixed inset-0 z-20"
                   onClick={() => setIsSourcesOpen(false)}
