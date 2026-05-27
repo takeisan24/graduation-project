@@ -13,6 +13,7 @@ import {
   type Connection,
 } from "@/lib/services/db/connections";
 import { syncDraftStatusFromScheduledPosts } from "@/lib/services/db/projects";
+import { isZernioConfigured, createZernioPost as callZernioPost } from "@/lib/zernio";
 
 type CreateInternalLatePostParams = {
   userId: string;
@@ -160,6 +161,57 @@ export async function createInternalLatePost(params: CreateInternalLatePostParam
 
   if (!scheduledAt) {
     throw new Error("scheduledAt is required for scheduled posts");
+  }
+
+  // --- Real Zernio publishing (when account has a real Zernio account ID) ---
+  const zernioAccountId = params.connection.getlate_account_id;
+  if (zernioAccountId && isZernioConfigured()) {
+    const publishNow = status === "posted";
+    let zernioPost;
+    try {
+      zernioPost = await callZernioPost({
+        accountIds: [zernioAccountId],
+        content: params.text,
+        publishNow,
+        scheduledFor: !publishNow ? scheduledAt : undefined,
+        mediaUrls: params.mediaUrls,
+      });
+    } catch (err) {
+      console.error("[lateCompat] Zernio publish failed, falling back to demo:", err);
+      // Fall through to demo mode
+    }
+
+    if (zernioPost) {
+      const realPostUrl = zernioPost.platformPostUrl || null;
+      const platformPayload = buildPlatformPayload(
+        { id: zernioPost._id, platform: normalizePlatform(params.connection.platform) } as ScheduledPost,
+        params.connection,
+        realPostUrl
+      );
+      const payload: PostPayload = {
+        ...buildBasePayload({ connection: params.connection, text: params.text, mediaUrls: params.mediaUrls, contentType: params.contentType, timezone: params.timezone }),
+        late_dev_response: { post: { platforms: [platformPayload], url: realPostUrl || undefined, post_url: realPostUrl || undefined } },
+        ...(publishNow ? {
+          status_check_response: { post: { platforms: [platformPayload], url: realPostUrl || undefined, post_url: realPostUrl || undefined }, platforms: [platformPayload] },
+          engagement: { likes: 0, comments: 0, shares: 0 },
+        } : {}),
+      };
+      const createdPost = await createScheduledPost({
+        user_id: params.userId,
+        draft_id: params.draftId || null,
+        connected_account_id: params.connection.id,
+        platform: normalizePlatform(params.connection.platform),
+        scheduled_at: scheduledAt,
+        late_job_id: zernioPost._id,
+        status: publishNow ? "posted" : "scheduled",
+        post_url: realPostUrl,
+        getlate_profile_id: params.connection.getlate_profile_id || null,
+        getlate_account_id: zernioAccountId,
+        payload,
+      });
+      if (!createdPost) throw new Error("Failed to save Zernio post to DB");
+      return createdPost;
+    }
   }
 
   const basePayload = buildBasePayload({

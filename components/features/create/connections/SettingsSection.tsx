@@ -47,9 +47,9 @@ const PROVIDER_SLUGS: Record<string, string | null> = {
   Instagram: "instagram",
   YouTube: "youtube",
   Facebook: "facebook",
-  X: "twitter",
-  Twitter: "twitter",
-  "X (Twitter)": "twitter",
+  X: "x",
+  Twitter: "x",
+  "X (Twitter)": "x",
   Threads: "threads",
   LinkedIn: "linkedin",
   Pinterest: "pinterest"
@@ -311,6 +311,13 @@ export default function SettingsSection() {
         throw new Error('Missing OAuth redirect URL from backend')
       }
 
+      // Only append token for same-origin popup URLs (our demo flow).
+      // External Zernio OAuth URLs must not have our token appended.
+      const isSameOrigin = json.url.startsWith(window.location.origin)
+      const popupUrl = isSameOrigin && session?.access_token
+        ? `${json.url}&token=${encodeURIComponent(session.access_token)}`
+        : json.url
+
       // Use popup window for better UX instead of redirecting entire page
       // Mở popup ngay lập tức để user thấy OAuth login page
       const width = 600
@@ -320,7 +327,7 @@ export default function SettingsSection() {
 
       // Mở popup ngay lập tức với URL từ backend
       const popup = window.open(
-        json.url,
+        popupUrl,
         "oauth-popup",
         `width=${width},height=${height},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes,resizable=yes`
       )
@@ -331,7 +338,7 @@ export default function SettingsSection() {
         // Clear global loading state so user can interact with the page again
         setActionId(null)
         // Store info so we can either retry popup or fallback to full-page later
-        setBlockedPopup({ provider, url: json.url })
+        setBlockedPopup({ provider, url: popupUrl })
         return
       }
 

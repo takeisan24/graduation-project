@@ -2,96 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { createConnectionLegacy, findConnectionByUserPlatformAndProfileId } from "@/lib/services/db/connections";
 import { checkProfileLimit } from "@/lib/usage";
+import { isZernioConfigured, getZernioConnectUrl, listZernioAccounts } from "@/lib/zernio";
+import { createPendingConnection } from "@/lib/zernioState";
+import { buildPopupResponse } from "@/lib/utils/connectionPopup";
 
 const SUPPORTED_PROVIDER_TO_PLATFORM: Record<string, string> = {
   tiktok: "tiktok",
   instagram: "instagram",
   youtube: "youtube",
   facebook: "facebook",
+  x: "x",
   twitter: "x",
   threads: "threads",
   linkedin: "linkedin",
   pinterest: "pinterest",
 };
-
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-function buildPopupResponse(params: {
-  success: boolean;
-  provider: string;
-  returnTo: string;
-  message?: string;
-}) {
-  const { success, provider, returnTo, message } = params;
-  const origin = (() => {
-    try {
-      return new URL(returnTo).origin;
-    } catch {
-      return "";
-    }
-  })();
-
-  const payload = success
-    ? `{ type: "oauth-success", provider: "${escapeHtml(provider)}" }`
-    : `{ type: "oauth-error", provider: "${escapeHtml(provider)}", error: "${escapeHtml(message || "Connection failed")}" }`;
-
-  const redirectUrl = (() => {
-    try {
-      const url = new URL(returnTo);
-      url.searchParams.set("oauth_callback", success ? "success" : "error");
-      url.searchParams.set("provider", provider);
-      if (success) {
-        url.searchParams.set("connected", "true");
-      } else if (message) {
-        url.searchParams.set("error", message);
-      }
-      return url.toString();
-    } catch {
-      return returnTo;
-    }
-  })();
-
-  const html = `<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>${success ? "Connection complete" : "Connection failed"}</title>
-  </head>
-  <body>
-    <script>
-      (function () {
-        try {
-          if (window.opener) {
-            ${origin ? `window.opener.postMessage(${payload}, "${escapeHtml(origin)}");` : `window.opener.postMessage(${payload}, "*");`}
-          }
-        } catch (err) {}
-        try {
-          if (window.opener) {
-            window.close();
-            return;
-          }
-        } catch (err) {}
-        window.location.replace(${JSON.stringify(redirectUrl)});
-      })();
-    </script>
-  </body>
-</html>`;
-
-  return new NextResponse(html, {
-    status: success ? 200 : 500,
-    headers: {
-      "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "no-store",
-    },
-  });
-}
 
 export async function GET(
   req: NextRequest,
@@ -114,6 +39,31 @@ export async function GET(
     const isPopupMode = req.nextUrl.searchParams.get("popup") === "1";
     const shouldComplete = req.nextUrl.searchParams.get("complete") === "1";
 
+    // --- Zernio real OAuth mode ---
+    if (wantsJson && !shouldComplete && isZernioConfigured()) {
+      try {
+        const existingAccounts = await listZernioAccounts();
+        const existingIds = existingAccounts.map(a => a._id);
+
+        const state = createPendingConnection({
+          userId: user.id,
+          platform,
+          returnTo,
+          isPopup: isPopupMode,
+          existingAccountIds: existingIds,
+        });
+
+        const callbackUrl = `${req.nextUrl.origin}/api/connections/callback/${provider}?state=${state}&returnTo=${encodeURIComponent(returnTo)}`;
+        const authUrl = await getZernioConnectUrl(platform, callbackUrl);
+        return NextResponse.json({ url: authUrl, isExternal: true });
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "Zernio error";
+        console.error("[connections/start] Zernio error, falling back to demo:", msg);
+        // Fall through to demo mode below
+      }
+    }
+
+    // --- Demo mode: return URL for ?complete=1 step ---
     if (wantsJson && !shouldComplete) {
       const url = `${req.nextUrl.origin}/api/connections/start/${provider}?complete=1&popup=${isPopupMode ? "1" : "0"}&returnTo=${encodeURIComponent(returnTo)}`;
       return NextResponse.json({ url }, { status: 200 });
@@ -126,7 +76,8 @@ export async function GET(
       );
     }
 
-    const profileId = `demo-${platform}-${user.id}`;
+    // --- Demo: create fake connection in DB ---
+    const profileId = `demo-${platform}-${user.id.slice(0, 8)}`;
     const existing = await findConnectionByUserPlatformAndProfileId(user.id, platform, profileId);
 
     if (!existing) {
@@ -160,21 +111,11 @@ export async function GET(
       }
     }
 
-    return buildPopupResponse({
-      success: true,
-      provider,
-      returnTo,
-    });
+    return buildPopupResponse({ success: true, provider, returnTo });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Server error";
     console.error("GET /api/connections/start/[provider] error:", message);
-
     const returnTo = req.nextUrl.searchParams.get("returnTo") || `${req.nextUrl.origin}/vi/settings`;
-    return buildPopupResponse({
-      success: false,
-      provider: params.provider,
-      returnTo,
-      message,
-    });
+    return buildPopupResponse({ success: false, provider: params.provider, returnTo, message });
   }
 }

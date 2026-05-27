@@ -546,6 +546,8 @@ export async function createConnectionLegacy(data: {
   profile_name?: string | null;
   profile_id: string;
   expires_at?: string | null;
+  getlate_account_id?: string | null;
+  profile_metadata?: Record<string, unknown> | null;
 }): Promise<Connection | null> {
   const { data: connection, error } = await supabase
     .from("connected_accounts")
@@ -557,7 +559,8 @@ export async function createConnectionLegacy(data: {
       profile_name: data.profile_name || null,
       profile_id: data.profile_id,
       expires_at: data.expires_at || null,
-      profile_metadata: {}
+      getlate_account_id: data.getlate_account_id || null,
+      profile_metadata: data.profile_metadata || {}
     })
     .select()
     .single();
