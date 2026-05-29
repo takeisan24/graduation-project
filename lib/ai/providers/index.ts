@@ -36,54 +36,6 @@ export const MODEL_IDS = {
  * Available AI Models Configuration
  */
 export const AI_MODELS: Record<string, AIModel> = {
-  // OpenAI Models
-  'gpt-5-mini': {
-    id: 'gpt-5-mini',
-    name: 'GPT-5 Mini',
-    provider: 'openai',
-    type: 'text',
-    maxTokens: 128000,
-    capabilities: ['text-generation', 'content-extraction', 'chat', 'reasoning']
-  },
-  'gpt-4o': {
-    id: 'gpt-4o',
-    name: 'GPT-4 Omni',
-    provider: 'openai',
-    type: 'text',
-    maxTokens: 128000,
-    capabilities: ['text-generation', 'content-extraction', 'chat', 'reasoning']
-  },
-  'gpt-4o-mini': {
-    id: 'gpt-4o-mini',
-    name: 'GPT-4 Omni Mini',
-    provider: 'openai',
-    type: 'text',
-    maxTokens: 128000,
-    capabilities: ['text-generation', 'content-extraction', 'chat', 'reasoning']
-  },
-  'gpt-3.5-turbo': {
-    id: 'gpt-3.5-turbo',
-    name: 'GPT-3.5 Turbo',
-    provider: 'openai',
-    type: 'text',
-    maxTokens: 16384,
-    capabilities: ['text-generation', 'content-extraction', 'chat']
-  },
-  'dall-e-3': {
-    id: 'dall-e-3',
-    name: 'DALL-E 3',
-    provider: 'openai',
-    type: 'image',
-    capabilities: ['image-generation', 'high-quality', 'artistic']
-  },
-  'dall-e-2': {
-    id: 'dall-e-2',
-    name: 'DALL-E 2',
-    provider: 'openai',
-    type: 'image',
-    capabilities: ['image-generation', 'fast', 'cost-effective']
-  },
-
   // Google Gemini Models
   'gemini-2.5-flash': {
     id: 'gemini-2.5-flash',

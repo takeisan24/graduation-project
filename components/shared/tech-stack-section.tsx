@@ -43,7 +43,7 @@ const stack = [
   {
     category: "AI / GenAI",
     icon: <Cpu className="h-5 w-5" />,
-    items: ["Google Gemini", "OpenAI GPT", "Multi-modal Generation", "Prompt Engineering"],
+    items: ["Google Gemini", "Multi-modal Generation", "Prompt Engineering"],
     featured: true,
   },
   {

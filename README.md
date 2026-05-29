@@ -32,7 +32,7 @@ CreatorHub cung cấp một nền tảng duy nhất để:
 
 | Tính năng | Mô tả |
 |-----------|-------|
-| Sáng tạo nội dung AI | Tích hợp Google Gemini và OpenAI để sinh nội dung văn bản, kịch bản video, gợi ý hình ảnh |
+| Sáng tạo nội dung AI | Tích hợp Google Gemini để sinh nội dung văn bản, kịch bản video, gợi ý hình ảnh |
 | Lập kế hoạch trực quan | Giao diện Lịch với thao tác kéo thả (Drag & Drop), theo dõi trạng thái bài đăng |
 | Chatbot AI trợ lý | Tinh chỉnh nội dung - viết lại, tóm tắt, thay đổi giọng văn, dịch ngôn ngữ |
 | Đa nền tảng | Tạo nội dung tối ưu cho Instagram, TikTok, LinkedIn, Facebook, X, YouTube, Pinterest |
@@ -68,9 +68,9 @@ CreatorHub cung cấp một nền tảng duy nhất để:
     +----+----------+----+
          |          |
 +--------v---+  +---v-----------+
-| Supabase   |  | AI Providers  |
-| - Auth     |  | - Gemini      |
-| - PostgreSQL| | - OpenAI      |
+| Supabase   |  | AI Provider   |
+| - Auth     |  | - Google      |
+| - PostgreSQL| |   Gemini      |
 | - Storage  |  +---------------+
 +------------+
 ```
@@ -84,7 +84,7 @@ User Input → API Route (Auth + Credits) → Service Layer → AI/Database → 
 - **API Routes**: Xác thực (JWT), kiểm tra credits, ủy quyền cho Service Layer
 - **Service Layer**: Xử lý business logic, không throw exception, trả về giá trị mặc định an toàn
 - **Supabase**: Authentication (OAuth + Email), PostgreSQL (RLS), Storage (file upload)
-- **AI Providers**: Gemini (primary), OpenAI (fallback) với cơ chế chuyển đổi tự động
+- **AI Provider**: Google Gemini (sinh văn bản, ảnh, video) với cơ chế thử lại tự động khi quá tải
 
 ---
 
@@ -99,8 +99,7 @@ User Input → API Route (Auth + Credits) → Service Layer → AI/Database → 
 | Data Fetching | SWR | 2.x |
 | Forms | React Hook Form + Zod | |
 | Auth & Database | Supabase (PostgreSQL, Auth, Storage) | |
-| AI - Primary | Google Gemini (`@google/genai`) | |
-| AI - Secondary | OpenAI API | |
+| AI | Google Gemini (`@google/genai`) | |
 | i18n | next-intl | |
 | Charts | Recharts | |
 | Animation | Framer Motion | |
@@ -116,7 +115,7 @@ User Input → API Route (Auth + Credits) → Service Layer → AI/Database → 
 - Node.js >= 18.0
 - npm >= 9.0
 - Tài khoản Supabase (free tier)
-- API Key: Google Gemini và/hoặc OpenAI
+- API Key: Google Gemini
 
 ### Hướng dẫn cài đặt
 
@@ -143,20 +142,26 @@ NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
-# AI Providers
+# AI Provider
 GEMINI_API_KEY=your_gemini_key
-OPENAI_API_KEY=your_openai_key
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Social publishing (Zernio)
+ZERNIO_API_KEY=your_zernio_key
+ZERNIO_PROFILE_ID=your_zernio_profile_id
 ```
 
 4. **Khởi tạo database** — chạy trong Supabase SQL Editor:
 ```sql
--- Bước 1: Tạo bảng và indexes
+-- Bước 1: Tạo bảng, indexes, trigger và RPC phục vụ auth/credits/usage
 -- File: db/schema.sql
 
--- Bước 2: Thêm dữ liệu khởi tạo (niches, goals, frameworks)
+-- Bước 2: Tạo bảng đơn nạp credits/thanh toán
+-- File: db/migration-credit-orders.sql
+
+-- Bước 3: Thêm dữ liệu khởi tạo (niches, goals, frameworks)
 -- File: db/initDataForGenerateContent.sql
 ```
 

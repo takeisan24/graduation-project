@@ -53,9 +53,9 @@ export function getBestModel(useCase: keyof typeof DEFAULT_MODELS, tier: 'primar
 
   // Provider preference per use case (forces Gemini-first for text/extraction)
   const providerPreference: Record<keyof typeof DEFAULT_MODELS, Array<'gemini' | 'fal' | 'openai' | 'anthropic'>> = {
-    text: ['gemini', 'openai', 'anthropic'],
-    extraction: ['gemini', 'openai'],
-    image: ['gemini','fal', 'openai'],
+    text: ['gemini', 'anthropic'],
+    extraction: ['gemini'],
+    image: ['gemini','fal'],
     video: ['gemini', 'fal']
   };
 
