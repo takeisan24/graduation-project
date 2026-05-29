@@ -60,3 +60,47 @@ Mục đích: chuyển thành phần "Hạn chế & Hướng phát triển" tron
   2. Nếu navigate được → đây là test issue, accept-as-flaky.
   3. Nếu KHÔNG navigate → bug thật, fix nhỏ ở component card draft, commit riêng kèm tag `v1.1-fix-draft-edit`.
 - Ghi chú cho báo cáo: nếu kết luận là bug, đưa vào "Hạn chế" và demo thay bằng luồng tạo draft mới (vẫn cover được phần draft editor).
+
+### [2026-05-27] Google OAuth login redirect về `/vi/vi/signin`
+- Mức độ: minor / demo-risk
+- Tái hiện:
+  1. Từ trang đăng nhập, chọn "Đăng nhập bằng Google".
+  2. Sau OAuth callback, URL có thể bị nhân đôi locale thành `/vi/vi/signin`.
+- Quan sát:
+  - Luồng email/password vẫn đăng nhập được và là luồng demo chính.
+  - Lỗi phụ thuộc cấu hình redirect URL của Supabase/OAuth và cách ghép locale ở client.
+- Quyết định: defer cho sau mốc nộp báo cáo; demo bằng email/password.
+- Ghi chú cho báo cáo: đưa vào phần hạn chế tích hợp OAuth bên thứ ba và yêu cầu cấu hình redirect URL chính xác khi triển khai.
+
+### [2026-05-27] Logout có thể chờ lâu do Supabase Auth latency
+- Mức độ: minor / demo-risk
+- Tái hiện:
+  1. Đăng nhập bằng tài khoản test.
+  2. Click "Đăng xuất".
+  3. Spinner "Redirecting..." có thể hiển thị lâu.
+- Quan sát:
+  - Local session/localStorage được xóa trước, nhưng Promise `supabaseClient.auth.signOut()` có thể chờ Supabase Auth API.
+- Quyết định: defer; không dùng logout làm bước chính trong demo.
+- Ghi chú cho báo cáo: mô tả là rủi ro phụ thuộc dịch vụ ngoài và đã có xử lý xóa session cục bộ.
+
+### [2026-05-28] Manual QA stale: Operations test kỳ vọng `Current priorities`
+- Mức độ: cosmetic (test-only)
+- Tái hiện:
+  1. Chạy `npx playwright test e2e/create-sections-manual-qa.spec.ts --workers=1`.
+  2. Test Operations Hub fail ở text `Current priorities`.
+- Quan sát:
+  - Component Operations hiện hiển thị "Operational snapshot", "Pipeline health", "Recent activity feed" thay vì card "Current priorities".
+  - Các luồng create authenticated khác vẫn pass.
+- Quyết định: accept-as-test-stale; cập nhật test sau khi khóa nội dung báo cáo.
+- Ghi chú cho báo cáo: không ảnh hưởng chức năng demo Operations Hub.
+
+### [2026-05-28] Security audit phụ thuộc framework/dependency
+- Mức độ: minor cho báo cáo nội bộ, high nếu public production
+- Tái hiện:
+  1. Chạy `npm audit --audit-level=high`.
+  2. Audit báo nhiều advisory ở Next.js 14.2.x và dependency gián tiếp.
+- Quan sát:
+  - `npm run build` và lint vẫn pass.
+  - Nâng Next.js major ngay trước ngày nộp có rủi ro regression lớn.
+- Quyết định: defer; ghi vào "Hạn chế và hướng phát triển" là nâng cấp framework/dependency và kiểm thử regression trước production.
+- Ghi chú cho báo cáo: hệ thống phục vụ đồ án/demo, chưa tuyên bố production hardening hoàn chỉnh.

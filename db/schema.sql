@@ -13,14 +13,27 @@ create extension if not exists pg_trgm;
 
 create table if not exists users (
   id uuid primary key references auth.users (id) on delete cascade,
+  email text,
   name text,
   avatar_url text,
   role text default 'user',
+  plan text default 'free',
+  subscription_status text,
+  credits_balance integer not null default 10,
+  subscription_ends_at timestamptz,
+  next_credit_grant_at timestamptz,
   created_at timestamptz default now(),
   updated_at timestamptz default now(),
 
   constraint users_role_check check (role in ('user', 'admin'))
 );
+
+alter table users add column if not exists email text;
+alter table users add column if not exists plan text default 'free';
+alter table users add column if not exists subscription_status text;
+alter table users add column if not exists credits_balance integer not null default 10;
+alter table users add column if not exists subscription_ends_at timestamptz;
+alter table users add column if not exists next_credit_grant_at timestamptz;
 
 -- ============================================
 -- 2. BẢNG DỰ ÁN NỘI DUNG
@@ -171,6 +184,7 @@ create table if not exists media_assets (
   metadata jsonb default '{}'::jsonb,
   parent_asset_id uuid references media_assets (id) on delete cascade,
   created_at timestamptz default now(),
+  updated_at timestamptz default now(),
 
   constraint media_assets_asset_type_check check (
     asset_type in ('image', 'video', 'audio', 'document')
@@ -183,8 +197,69 @@ create table if not exists media_assets (
   )
 );
 
+alter table media_assets add column if not exists updated_at timestamptz default now();
+
 -- ============================================
--- 8. BẢNG CHIẾN LƯỢC NỘI DUNG (Niches, Goals, Frameworks)
+-- 8. BẢNG GÓI DỊCH VỤ, CREDITS & THỐNG KÊ SỬ DỤNG
+-- ============================================
+
+create table if not exists subscriptions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references users (id) on delete cascade,
+  plan text not null default 'free',
+  status text not null default 'active',
+  billing_cycle text,
+  credits_per_period integer,
+  next_credit_date timestamptz,
+  current_period_start timestamptz default now(),
+  current_period_end timestamptz default (now() + interval '1 month'),
+  cancel_at_period_end boolean default false,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists usage (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references users (id) on delete cascade,
+  credits_used integer not null default 0,
+  credits_purchased integer not null default 0,
+  period_start timestamptz not null,
+  period_end timestamptz not null,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now(),
+  unique (user_id, period_start)
+);
+
+create table if not exists monthly_usage (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references users (id) on delete cascade,
+  month date not null,
+  projects_created integer not null default 0,
+  posts_created integer not null default 0,
+  images_generated integer not null default 0,
+  videos_generated integer not null default 0,
+  scheduled_posts integer not null default 0,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now(),
+  unique (user_id, month)
+);
+
+create table if not exists credit_transactions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references users (id) on delete cascade,
+  action_type text not null,
+  credits_used integer not null default 0,
+  credits_remaining integer,
+  resource_id text,
+  resource_type text,
+  platform text,
+  metadata jsonb default '{}'::jsonb,
+  response_data jsonb,
+  created_at timestamptz default now()
+);
+
+-- ============================================
+-- 9. BẢNG CHIẾN LƯỢC NỘI DUNG (Niches, Goals, Frameworks)
 -- ============================================
 
 create table if not exists niches (
@@ -221,11 +296,12 @@ create table if not exists framework_niches (
 );
 
 -- ============================================
--- 9. CHỈ MỤC (INDEXES)
+-- 10. CHỈ MỤC (INDEXES)
 -- ============================================
 
 -- Users
 create index if not exists idx_users_role on users (role);
+create index if not exists idx_users_plan on users (plan);
 
 -- Projects
 create index if not exists idx_projects_user_id on projects (user_id);
@@ -259,8 +335,16 @@ create index if not exists idx_media_assets_storage_key on media_assets (storage
 create index if not exists idx_media_assets_source_type on media_assets (source_type);
 create index if not exists idx_media_assets_parent_asset_id on media_assets (parent_asset_id) where parent_asset_id is not null;
 
+-- Usage, credits, subscriptions
+create index if not exists idx_subscriptions_user_id on subscriptions (user_id);
+create index if not exists idx_subscriptions_status on subscriptions (status);
+create index if not exists idx_usage_user_period on usage (user_id, period_start, period_end);
+create index if not exists idx_monthly_usage_user_month on monthly_usage (user_id, month);
+create index if not exists idx_credit_transactions_user_created on credit_transactions (user_id, created_at desc);
+create index if not exists idx_credit_transactions_action_type on credit_transactions (action_type);
+
 -- ============================================
--- 10. HÀM VÀ TRIGGER
+-- 11. HÀM VÀ TRIGGER
 -- ============================================
 
 -- A. Tự động cập nhật updated_at
@@ -272,6 +356,17 @@ begin
 end;
 $$ language plpgsql;
 
+drop trigger if exists update_users_updated_at on users;
+drop trigger if exists update_projects_updated_at on projects;
+drop trigger if exists update_content_drafts_updated_at on content_drafts;
+drop trigger if exists update_chat_sessions_updated_at on chat_sessions;
+drop trigger if exists update_connected_accounts_updated_at on connected_accounts;
+drop trigger if exists update_scheduled_posts_updated_at on scheduled_posts;
+drop trigger if exists update_media_assets_updated_at on media_assets;
+drop trigger if exists update_subscriptions_updated_at on subscriptions;
+drop trigger if exists update_usage_updated_at on usage;
+drop trigger if exists update_monthly_usage_updated_at on monthly_usage;
+
 create trigger update_users_updated_at before update on users for each row execute function update_updated_at_column();
 create trigger update_projects_updated_at before update on projects for each row execute function update_updated_at_column();
 create trigger update_content_drafts_updated_at before update on content_drafts for each row execute function update_updated_at_column();
@@ -279,13 +374,52 @@ create trigger update_chat_sessions_updated_at before update on chat_sessions fo
 create trigger update_connected_accounts_updated_at before update on connected_accounts for each row execute function update_updated_at_column();
 create trigger update_scheduled_posts_updated_at before update on scheduled_posts for each row execute function update_updated_at_column();
 create trigger update_media_assets_updated_at before update on media_assets for each row execute function update_updated_at_column();
+create trigger update_subscriptions_updated_at before update on subscriptions for each row execute function update_updated_at_column();
+create trigger update_usage_updated_at before update on usage for each row execute function update_updated_at_column();
+create trigger update_monthly_usage_updated_at before update on monthly_usage for each row execute function update_updated_at_column();
 
 -- B. Tạo hồ sơ người dùng khi đăng nhập (Auth Hook)
+drop function if exists ensure_user_profile(uuid, text, text, text);
 create or replace function ensure_user_profile(
   p_user_id uuid,
   p_name text default null,
   p_avatar_url text default null,
   p_email text default null
+)
+returns integer
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_credits_balance integer;
+begin
+  -- Tạo user nếu chưa tồn tại
+  insert into users (id, email, name, avatar_url, plan, credits_balance)
+  values (p_user_id, p_email, p_name, p_avatar_url, 'free', 10)
+  on conflict (id) do update
+  set
+    email = coalesce(excluded.email, users.email),
+    name = coalesce(excluded.name, users.name),
+    avatar_url = coalesce(excluded.avatar_url, users.avatar_url),
+    updated_at = now();
+
+  select credits_balance into v_credits_balance
+  from users
+  where id = p_user_id;
+
+  return coalesce(v_credits_balance, 0);
+end;
+$$;
+
+grant execute on function ensure_user_profile(uuid, text, text, text) to anon, authenticated, service_role;
+
+-- C. Cập nhật thống kê tháng theo trường được phép
+create or replace function increment_usage(
+  p_user_id uuid,
+  p_month date,
+  p_field text,
+  p_amount integer default 1
 )
 returns void
 language plpgsql
@@ -293,22 +427,123 @@ security definer
 set search_path = public
 as $$
 begin
-  -- Tạo user nếu chưa tồn tại
-  insert into users (id, name, avatar_url)
-  values (p_user_id, p_name, p_avatar_url)
-  on conflict (id) do nothing;
+  insert into monthly_usage (user_id, month)
+  values (p_user_id, p_month)
+  on conflict (user_id, month) do nothing;
 
-  -- Cập nhật thời gian đăng nhập
-  update users
-  set updated_at = now()
-  where id = p_user_id;
+  if p_field not in ('projects_created', 'posts_created', 'images_generated', 'videos_generated', 'scheduled_posts') then
+    raise exception 'Invalid usage field: %', p_field;
+  end if;
+
+  execute format(
+    'update monthly_usage set %I = greatest(0, coalesce(%I, 0) + $1), updated_at = now() where user_id = $2 and month = $3',
+    p_field,
+    p_field
+  )
+  using p_amount, p_user_id, p_month;
 end;
 $$;
 
-grant execute on function ensure_user_profile(uuid, text, text, text) to anon, authenticated, service_role;
+grant execute on function increment_usage(uuid, date, text, integer) to service_role;
+
+-- D. Trừ credits an toàn ở database để tránh race condition
+create or replace function deduct_user_credits(
+  p_user_id uuid,
+  p_credits_to_deduct integer
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_balance integer;
+begin
+  if p_credits_to_deduct <= 0 then
+    select credits_balance into v_balance from users where id = p_user_id;
+    return jsonb_build_object('success', true, 'credits_left', coalesce(v_balance, 0));
+  end if;
+
+  update users
+  set credits_balance = credits_balance - p_credits_to_deduct,
+      updated_at = now()
+  where id = p_user_id
+    and credits_balance >= p_credits_to_deduct
+  returning credits_balance into v_balance;
+
+  if v_balance is null then
+    select credits_balance into v_balance from users where id = p_user_id;
+    return jsonb_build_object(
+      'success', false,
+      'reason', 'insufficient_credits',
+      'credits_left', coalesce(v_balance, 0)
+    );
+  end if;
+
+  update usage
+  set credits_used = credits_used + p_credits_to_deduct,
+      updated_at = now()
+  where user_id = p_user_id
+    and now() >= period_start
+    and now() < period_end;
+
+  return jsonb_build_object('success', true, 'credits_left', v_balance);
+end;
+$$;
+
+grant execute on function deduct_user_credits(uuid, integer) to service_role;
+
+-- E. Hoàn credits khi tác vụ AI fail sau bước trừ
+create or replace function rollback_user_credits(
+  p_user_id uuid,
+  p_credits_to_rollback integer,
+  p_action_type text default 'ROLLBACK',
+  p_metadata jsonb default '{}'::jsonb
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_balance integer;
+begin
+  update users
+  set credits_balance = credits_balance + greatest(0, p_credits_to_rollback),
+      updated_at = now()
+  where id = p_user_id
+  returning credits_balance into v_balance;
+
+  update usage
+  set credits_used = greatest(0, credits_used - greatest(0, p_credits_to_rollback)),
+      updated_at = now()
+  where user_id = p_user_id
+    and now() >= period_start
+    and now() < period_end;
+
+  insert into credit_transactions (
+    user_id,
+    action_type,
+    credits_used,
+    credits_remaining,
+    metadata
+  )
+  values (
+    p_user_id,
+    p_action_type || '_REFUND',
+    -greatest(0, p_credits_to_rollback),
+    coalesce(v_balance, 0),
+    coalesce(p_metadata, '{}'::jsonb)
+  );
+
+  return jsonb_build_object('success', true, 'credits_left', coalesce(v_balance, 0));
+end;
+$$;
+
+grant execute on function rollback_user_credits(uuid, integer, text, jsonb) to service_role;
 
 -- ============================================
--- 11. QUYỀN TRUY CẬP
+-- 12. QUYỀN TRUY CẬP
 -- ============================================
 
 grant all on all tables in schema public to service_role;

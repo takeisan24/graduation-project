@@ -5,6 +5,9 @@ architecture, implementation roadmap, and defense narrative of CreatorHub.
 
 ## Main Documents
 
+- `BAO_CAO_DATN_DRAFT.md`: working Vietnamese thesis report draft based on the
+  current codebase
+- `DATN_SUBMISSION_PLAN.md`: deadline plan and school formatting checklist
 - `PROJECT_TIMELINE.md`: maps the proposal schedule to the rebuilt repository
   milestones and commit groups
 - `ARCHITECTURE.md`: summarizes the system structure, data flow, and module
