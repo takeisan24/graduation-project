@@ -120,51 +120,23 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
             const fileName = media.file?.name || `media-${Date.now()}.${media.type === 'image' ? 'jpg' : 'mp4'}`;
             const contentType = media.type === 'image' ? (blob.type || 'image/jpeg') : (blob.type || 'video/mp4');
 
-            // Step 1: request presigned URL from Server A -> Server B
-            const presignRes = await fetch('/api/files/presign-upload', {
+            // Upload lên Supabase Storage (bucket 'uploads') — không phụ thuộc Server B
+            const uploadForm = new FormData();
+            uploadForm.append('file', new File([blob], fileName, { type: contentType }));
+            const uploadRes = await fetch('/api/files/upload', {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session.access_token}`,
-              },
-              body: JSON.stringify({
-                filename: fileName,
-                contentType,
-                contentLength: blob.size,
-                prefix: 'posts/media'
-              })
+              headers: { 'Authorization': `Bearer ${session.access_token}` },
+              body: uploadForm,
             });
-
-            const presignJson = await presignRes.json();
-            if (!presignRes.ok || !presignJson?.success) {
-              console.error('[handlePublish] Failed to get presigned URL:', presignJson);
-              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(presignJson?.error || GENERIC_ERRORS.UNKNOWN_ERROR));
+            const uploadJson = await uploadRes.json();
+            const publicURL = uploadJson?.data?.publicURL || uploadJson?.publicURL;
+            if (!uploadRes.ok || !uploadJson?.success || !publicURL) {
+              console.error('[handlePublish] Failed to upload media to storage:', uploadJson);
+              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(uploadJson?.error || GENERIC_ERRORS.UNKNOWN_ERROR));
               continue;
             }
 
-            const { signed_url, upload_url } = presignJson.data || presignJson;
-            if (!signed_url || !upload_url) {
-              console.error('[handlePublish] Invalid presign response:', presignJson);
-              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(MEDIA_ERRORS.PRESIGN_FAILED));
-              continue;
-            }
-
-            // Step 2: upload directly from FE to S3 using presigned URL
-            const putRes = await fetch(signed_url, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': contentType
-              },
-              body: blob
-            });
-
-            if (!putRes.ok) {
-              console.error('[handlePublish] Failed to upload media to S3:', await putRes.text());
-              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(MEDIA_ERRORS.S3_UPLOAD_FAILED));
-              continue;
-            }
-
-            mediaUrls.push(upload_url);
+            mediaUrls.push(publicURL);
           } catch (uploadError: any) {
             console.error(`[handlePublish] Error uploading media via presigned URL:`, uploadError);
             toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(uploadError.message || GENERIC_ERRORS.UNKNOWN_ERROR));
@@ -413,51 +385,23 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
             const fileName = media.file?.name || `media-${Date.now()}.${media.type === 'image' ? 'jpg' : 'mp4'}`;
             const contentType = media.type === 'image' ? (blob.type || 'image/jpeg') : (blob.type || 'video/mp4');
 
-            // Step 1: request presigned URL from Server A -> Server B
-            const presignRes = await fetch('/api/files/presign-upload', {
+            // Upload lên Supabase Storage (bucket 'uploads') — không phụ thuộc Server B
+            const uploadForm = new FormData();
+            uploadForm.append('file', new File([blob], fileName, { type: contentType }));
+            const uploadRes = await fetch('/api/files/upload', {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session.access_token}`,
-              },
-              body: JSON.stringify({
-                filename: fileName,
-                contentType,
-                contentLength: blob.size,
-                prefix: 'posts/media'
-              })
+              headers: { 'Authorization': `Bearer ${session.access_token}` },
+              body: uploadForm,
             });
-
-            const presignJson = await presignRes.json();
-            if (!presignRes.ok || !presignJson?.success) {
-              console.error('[schedulePost] Failed to get presigned URL:', presignJson);
-              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(presignJson?.error || GENERIC_ERRORS.UNKNOWN_ERROR));
+            const uploadJson = await uploadRes.json();
+            const publicURL = uploadJson?.data?.publicURL || uploadJson?.publicURL;
+            if (!uploadRes.ok || !uploadJson?.success || !publicURL) {
+              console.error('[schedulePost] Failed to upload media to storage:', uploadJson);
+              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(uploadJson?.error || GENERIC_ERRORS.UNKNOWN_ERROR));
               continue;
             }
 
-            const { signed_url, upload_url } = presignJson.data || presignJson;
-            if (!signed_url || !upload_url) {
-              console.error('[schedulePost] Invalid presign response:', presignJson);
-              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(MEDIA_ERRORS.PRESIGN_FAILED));
-              continue;
-            }
-
-            // Step 2: upload directly from FE to S3 using presigned URL
-            const putRes = await fetch(signed_url, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': contentType
-              },
-              body: blob
-            });
-
-            if (!putRes.ok) {
-              console.error('[schedulePost] Failed to upload media to S3:', await putRes.text());
-              toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(MEDIA_ERRORS.S3_UPLOAD_FAILED));
-              continue;
-            }
-
-            mediaUrls.push(upload_url);
+            mediaUrls.push(publicURL);
           } catch (uploadError: any) {
             console.error(`[schedulePost] Error uploading blob media via presigned URL:`, uploadError);
             toast.warning(MEDIA_ERRORS.UPLOAD_FAILED(uploadError.message || GENERIC_ERRORS.UNKNOWN_ERROR));

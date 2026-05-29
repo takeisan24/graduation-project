@@ -121,9 +121,6 @@ export default function ActionBar() {
       <div className="flex flex-col gap-2 px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-4">
         {/* Left: Add Image, Generate, Format */}
         <div className="flex flex-wrap items-center gap-2">
-          {/* Upload file từ máy tạm ẩn cho demo: phụ thuộc dịch vụ Server B (S3) chưa cấu hình. Bật lại bằng env NEXT_PUBLIC_ENABLE_MEDIA_UPLOAD=true. */}
-          {process.env.NEXT_PUBLIC_ENABLE_MEDIA_UPLOAD === "true" && (
-          <>
           <input
             type="file"
             accept="image/*,video/*"
@@ -145,8 +142,6 @@ export default function ActionBar() {
               </span>
             </Button>
           </label>
-          </>
-          )}
 
           {/* Generate button */}
           <div className="relative">
