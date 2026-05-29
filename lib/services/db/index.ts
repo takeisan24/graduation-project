@@ -4,8 +4,6 @@
  * Central export point for all database services
  */
 
-export * from './accounts';
-export * from './profiles';
 export * from './connections';
 export * from './posts';
 export * from './projects';
