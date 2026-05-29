@@ -209,9 +209,9 @@
         "trend": "TikTok, IG, YT..."
       },
       "aiModels": {
-        "value": "2",
-        "label": "AI Providers",
-        "trend": "Gemini, OpenAI GPT"
+        "value": "1",
+        "label": "AI Provider",
+        "trend": "Google Gemini"
       },
       "scheduling": {
         "value": "Auto",
@@ -263,9 +263,9 @@
           "description": "Một nguồn có thể được mở rộng thành nhiều bản nháp phù hợp cho các kênh xã hội khác nhau."
         },
         "metric2": {
-          "value": "2",
+          "value": "1",
           "label": "Nhà cung cấp AI",
-          "description": "Gemini và OpenAI được tích hợp qua cùng một lớp điều phối tạo nội dung."
+          "description": "Google Gemini được tích hợp qua một lớp điều phối tạo nội dung linh hoạt."
         },
         "metric3": {
           "value": "Create→Plan→Publish",
@@ -1132,6 +1132,14 @@
         "title": "Thêm nguồn mới",
         "subtitle": "Chọn một trong hai cách để bắt đầu",
         "description": "Nhấp vào nút 'Thêm nguồn' bên trên để bắt đầu thêm nội dung từ văn bản, bài viết, video, hoặc file PDF",
+        "externalSection": {
+          "title": "Bắt đầu từ nguồn bên ngoài",
+          "description": "Dán liên kết bài viết, video hoặc tải tệp lên"
+        },
+        "internalSection": {
+          "title": "Bắt đầu từ ý tưởng",
+          "description": "Nhập văn bản hoặc ý tưởng của bạn"
+        },
         "divider": "Hoặc",
         "sourceTypeLabel": {
           "fromText": "Văn bản",
@@ -1143,6 +1151,14 @@
         },
         "modalLabel": "Nội dung nguồn",
         "fileLabel": "Tải lên tệp tin",
+        "sourceInputPlaceholder": {
+          "fromText": "Nhập ý tưởng, văn bản hoặc ghi chú...",
+          "fromArticle": "Nhập URL bài viết (ví dụ: https://...)",
+          "fromYoutube": "Nhập URL YouTube (ví dụ: https://youtube.com/...)",
+          "fromTiktok": "Nhập URL TikTok (ví dụ: https://tiktok.com/...)",
+          "fromSource": "Dán URL nguồn...",
+          "fromFile": "Nhấp để chọn tệp"
+        },
         "characterCount": "ký tự",
         "ideaProvided": "Ý tưởng đã nhập",
         "uploadFile": "Nhấp để tải",
@@ -1156,6 +1172,7 @@
         "addButton": "Thêm nguồn",
         "processing": "Đang xử lý...",
         "cancelButton": "Hủy",
+        "statusReady": "Sẵn sàng! Đã cung cấp nguồn {type}",
         "statusReadySimple": "Sẵn sàng! Đã nhập nội dung nguồn",
         "statusExternal": "bên ngoài",
         "statusInternal": "ý tưởng",
@@ -1853,7 +1870,11 @@
       "generatedClips": "Các clip đã tạo",
       "preview": "Xem",
       "download": "Tải",
-      "done": "Hoàn tất"
+      "done": "Hoàn tất",
+      "summaryTitle": "Tóm tắt cấu hình",
+      "summaryDesc": "Kiểm tra lại thiết lập trước khi bắt đầu tác vụ Video Factory",
+      "clipsReady": "Clip đã sẵn sàng!",
+      "clipsReadyDesc": "Các clip đã được cắt thành công. Bạn có thể xem trước và tải xuống ngay."
     },
     "textToVideo": {
       "title": "Text-to-Video",

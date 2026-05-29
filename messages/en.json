@@ -209,9 +209,9 @@
         "trend": "TikTok, IG, YT..."
       },
       "aiModels": {
-        "value": "2",
-        "label": "AI Providers",
-        "trend": "Gemini, OpenAI GPT"
+        "value": "1",
+        "label": "AI Provider",
+        "trend": "Google Gemini"
       },
       "scheduling": {
         "value": "Auto",
@@ -263,9 +263,9 @@
           "description": "One source can be expanded into coordinated drafts for multiple social channels."
         },
         "metric2": {
-          "value": "2",
-          "label": "AI providers",
-          "description": "Gemini and OpenAI are integrated through a shared generation layer."
+          "value": "1",
+          "label": "AI provider",
+          "description": "Google Gemini is integrated through a flexible generation orchestration layer."
         },
         "metric3": {
           "value": "Create→Plan→Publish",
