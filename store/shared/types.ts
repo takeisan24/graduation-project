@@ -26,8 +26,9 @@ export type LateLifecycleStatus = 'scheduled' | 'publishing' | 'posted' | 'faile
 
 /**
  * Wizard step for create page
+ * generatingPosts: bước 3 — AI đang sinh bài sau khi cấu hình xong (để breadcrumb tiến tới step 3)
  */
-export type WizardStep = 'idle' | 'addingSource' | 'configuringPosts';
+export type WizardStep = 'idle' | 'addingSource' | 'configuringPosts' | 'generatingPosts';
 
 /**
  * Source to generate posts from

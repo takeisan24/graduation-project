@@ -103,12 +103,12 @@ export default function CreateSection() {
   useEffect(() => {
     if (hasResetOnMount.current) return;
     hasResetOnMount.current = true;
-    if (wizardStep === 'configuringPosts' && !sourceToGenerate) setWizardStep('idle');
+    if ((wizardStep === 'configuringPosts' || wizardStep === 'generatingPosts') && !sourceToGenerate) setWizardStep('idle');
     if (wizardStep === 'addingSource' && !isSourceModalOpen) setWizardStep('idle');
   }, [wizardStep, sourceToGenerate, isSourceModalOpen, setWizardStep]);
 
   useEffect(() => {
-    if (wizardStep === 'configuringPosts' && !sourceToGenerate) setWizardStep('idle');
+    if ((wizardStep === 'configuringPosts' || wizardStep === 'generatingPosts') && !sourceToGenerate) setWizardStep('idle');
   }, [sourceToGenerate, wizardStep, setWizardStep]);
 
   useEffect(() => {
@@ -190,7 +190,7 @@ export default function CreateSection() {
       setIsSourcesOpen(true);
       setActiveMobilePanel('sources');
     }
-    if (wizardStep === 'configuringPosts') {
+    if (wizardStep === 'configuringPosts' || wizardStep === 'generatingPosts') {
       setActiveMobilePanel('editor');
     }
   }, [wizardStep]);
@@ -205,6 +205,9 @@ export default function CreateSection() {
 
   const isAddingSource = wizardStep === 'addingSource';
   const isConfiguringPosts = wizardStep === 'configuringPosts';
+  const isGeneratingPosts = wizardStep === 'generatingPosts';
+  // Bước cấu hình + bước AI đang sinh bài đều dùng cùng layout 'configure' của editor
+  const isConfigureMode = isConfiguringPosts || isGeneratingPosts;
 
   const [activeMobilePanel, setActiveMobilePanel] = useState<'sources' | 'editor' | 'chat'>('editor');
 
@@ -287,7 +290,7 @@ export default function CreateSection() {
           {/* Sources dropdown panel */}
           {isSourcesOpen && (
             <>
-              {!isAddingSource && !isConfiguringPosts && (
+              {!isAddingSource && !isConfigureMode && (
                 <div
                   className="hidden md:block fixed inset-0 z-20"
                   onClick={() => setIsSourcesOpen(false)}
@@ -312,7 +315,7 @@ export default function CreateSection() {
               }}
             >
               <div className="min-w-0">
-                <PostEditorWrapper mode={isConfiguringPosts ? 'configure' : 'normal'} onOpenSources={() => setIsSourcesOpen(true)} />
+                <PostEditorWrapper mode={isConfigureMode ? 'configure' : 'normal'} onOpenSources={() => setIsSourcesOpen(true)} />
               </div>
               <div
                 className={`min-h-0 overflow-hidden transition-all duration-300 ease-out ${
@@ -353,7 +356,7 @@ export default function CreateSection() {
             </div>
 
             <div className="h-full w-full lg:hidden">
-              <PostEditorWrapper mode={isConfiguringPosts ? 'configure' : 'normal'} onOpenSources={() => setIsSourcesOpen(true)} />
+              <PostEditorWrapper mode={isConfigureMode ? 'configure' : 'normal'} onOpenSources={() => setIsSourcesOpen(true)} />
             </div>
           </div>
         </div>

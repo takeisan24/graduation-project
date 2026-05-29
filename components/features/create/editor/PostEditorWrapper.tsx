@@ -34,6 +34,8 @@ export default function PostEditorWrapper({ mode = 'normal', onOpenSources }: Po
   const runGeneration = async (selectedPlatforms: { platform: string; count: number }[], selectedModel: string) => {
     setIsGenerating(true);
     setGenerationError(null);
+    // Bước 3 của wizard: tiến breadcrumb sang "Tạo bài" trong khi AI đang sinh nội dung
+    setWizardStep('generatingPosts');
     try {
       const postsStore = useCreatePostsStore.getState();
       const success = await generatePostsFromSource(selectedPlatforms, selectedModel, {

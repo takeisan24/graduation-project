@@ -35,9 +35,12 @@ export default function TopBarActions({
 
   const isAddingSource = wizardStep === 'addingSource'
   const isConfiguringPosts = wizardStep === 'configuringPosts'
+  const isGeneratingPosts = wizardStep === 'generatingPosts'
   const isInWizard = wizardStep !== 'idle'
-  const step1Done = isConfiguringPosts
+  const step1Done = isConfiguringPosts || isGeneratingPosts
   const step2Active = isConfiguringPosts
+  const step2Done = isGeneratingPosts
+  const step3Active = isGeneratingPosts
   const activePostContext = selectedPostId ? postContextMap[selectedPostId] : undefined
   const inferredWorkspace = deriveWorkspaceSeed()
   const workspaceLabel = projectName || (savedSources.length > 0 ? inferredWorkspace.name : null)
@@ -70,13 +73,17 @@ export default function TopBarActions({
           </div>
           <ChevronRight className="h-3 w-3 text-muted-foreground" />
           {/* Step 2 indicator */}
-          <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${step2Active ? 'bg-utc-royal text-white' : 'text-muted-foreground'}`}>
-            <span className="w-4 h-4 rounded-full bg-current/20 flex items-center justify-center text-[10px] font-bold">2</span>
+          <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
+            step2Active ? 'bg-utc-royal text-white' : step2Done ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground'
+          }`}>
+            <span className="w-4 h-4 rounded-full bg-current/20 flex items-center justify-center text-[10px] font-bold">
+              {step2Done ? <Check className="h-3 w-3" /> : '2'}
+            </span>
             <span className="hidden lg:inline">{t('wizard.step2')}</span>
           </div>
           <ChevronRight className="h-3 w-3 text-muted-foreground" />
           {/* Step 3 indicator */}
-          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full text-muted-foreground">
+          <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${step3Active ? 'bg-utc-royal text-white' : 'text-muted-foreground'}`}>
             <span className="w-4 h-4 rounded-full bg-current/20 flex items-center justify-center text-[10px] font-bold">3</span>
             <span className="hidden lg:inline">{t('wizard.step3')}</span>
           </div>
