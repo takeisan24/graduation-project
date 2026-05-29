@@ -83,3 +83,23 @@ e2e/
 
 # Personal placeholder images
 public/images/shego.jpg
+
+# PlantUML renderer jar (binary, tải lại khi cần)
+scripts/plantuml.jar
+docs/diagrams/*.png
+
+# Ảnh chụp màn hình báo cáo (binary) và script tạm
+docs/screenshots/*.png
+scripts/tmp_*.cjs
+
+# ===== Tài liệu & công cụ đồ án tốt nghiệp (cá nhân, không đẩy lên repo sản phẩm public) =====
+.app_list.txt
+.feat_list.txt
+docs/*.docx
+docs/BAO_CAO_DATN_DRAFT.md
+docs/DATN_SUBMISSION_PLAN.md
+docs/QA_TEST_PLAN_TOAN_LUONG.md
+docs/survey-google-form.md
+docs/diagrams/
+scripts/build_thesis_docx.py
+scripts/slim_docx.py
