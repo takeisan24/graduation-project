@@ -181,6 +181,9 @@ export default function SignUpPage() {
               )}
             </Button>
 
+            {/* OAuth tạm ẩn cho demo: Google lỗi double-locale, redirect URL Supabase chưa cấu hình. Bật lại bằng env NEXT_PUBLIC_ENABLE_OAUTH=true. */}
+            {process.env.NEXT_PUBLIC_ENABLE_OAUTH === "true" && (
+            <>
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-border" />
@@ -205,6 +208,8 @@ export default function SignUpPage() {
               </svg>
               {oauthProviderLoading === "google" ? t('oauthRedirecting') : tCommon('google')}
             </Button>
+            </>
+            )}
 
             <div className="text-center pt-4">
               <span className="text-sm text-muted-foreground">{t('hasAccount')}</span>
