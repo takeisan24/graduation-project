@@ -6,10 +6,28 @@ import { X, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 interface OnboardingStep {
-  target: string;
+  /** Danh sách selector ưu tiên; chọn element đầu tiên đang HIỂN THỊ */
+  targets: string[];
   title: string;
   description: string;
   position: 'top' | 'bottom' | 'left' | 'right';
+}
+
+/**
+ * Trả về element đầu tiên đang hiển thị (có kích thước thật, không display:none)
+ * theo thứ tự ưu tiên selector. Tránh việc trỏ vào element ẩn (rect = 0) làm
+ * spotlight/khung lệch khỏi mục tiêu.
+ */
+function findVisibleTarget(selectors: string[]): HTMLElement | null {
+  for (const selector of selectors) {
+    const candidates = Array.from(document.querySelectorAll<HTMLElement>(selector));
+    for (const el of candidates) {
+      const rect = el.getBoundingClientRect();
+      const visible = el.offsetParent !== null && rect.width > 0 && rect.height > 0;
+      if (visible) return el;
+    }
+  }
+  return null;
 }
 
 export default function OnboardingTour() {
@@ -19,31 +37,30 @@ export default function OnboardingTour() {
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const retryRef = useRef<number | null>(null);
 
   const steps: OnboardingStep[] = useMemo(() => [
     {
-      target: '[data-tour="add-source"]',
+      // Nút "Thêm nguồn" hiển thị (empty-state hoặc trong panel nguồn)
+      targets: ['[data-testid="empty-state-add-source-button"]', '[data-testid="create-add-source-button"]', '[data-tour="add-source"]'],
       title: t('steps.addSource.title'),
       description: t('steps.addSource.description'),
       position: 'bottom',
     },
     {
-      target: '[data-tour="create-post"]',
+      targets: ['[data-tour="create-post"]'],
       title: t('steps.createPost.title'),
       description: t('steps.createPost.description'),
       position: 'top',
     },
   ], [t]);
 
-  const calculatePosition = useCallback((targetElement: HTMLElement, position: string) => {
-    const rect = targetElement.getBoundingClientRect();
-    setTargetRect(rect);
-    
+  const calculatePosition = useCallback((rect: DOMRect, position: string) => {
     const tooltip = tooltipRef.current;
     if (!tooltip) return { top: 0, left: 0 };
 
     const tooltipRect = tooltip.getBoundingClientRect();
-    const gap = 20; // Gap between tooltip and target
+    const gap = 20; // Khoảng cách giữa tooltip và mục tiêu
 
     let top = 0;
     let left = 0;
@@ -62,12 +79,13 @@ export default function OnboardingTour() {
         left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
         break;
       case 'bottom':
+      default:
         top = rect.bottom + gap;
         left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
         break;
     }
 
-    // Ensure tooltip stays within viewport
+    // Giữ tooltip trong viewport
     const padding = 10;
     if (left < padding) left = padding;
     if (left + tooltipRect.width > window.innerWidth - padding) {
@@ -81,41 +99,55 @@ export default function OnboardingTour() {
     return { top, left };
   }, []);
 
-  const updatePosition = useCallback(() => {
+  /** Cập nhật vị trí; trả về true nếu tìm thấy target hiển thị */
+  const updatePosition = useCallback((): boolean => {
     const currentStepData = steps[currentStep];
-    const targetElement = document.querySelector(currentStepData.target) as HTMLElement;
-    
+    const targetElement = findVisibleTarget(currentStepData.targets);
+
     if (targetElement && tooltipRef.current) {
-      const pos = calculatePosition(targetElement, currentStepData.position);
-      setTooltipPosition(pos);
+      const rect = targetElement.getBoundingClientRect();
+      setTargetRect(rect);
+      setTooltipPosition(calculatePosition(rect, currentStepData.position));
+      return true;
     }
+    return false;
   }, [currentStep, calculatePosition, steps]);
 
   useEffect(() => {
     const hasSeenTour = localStorage.getItem('hasSeenOnboarding');
-    
-    // Chỉ hiện tour nếu chưa xem (bỏ điều kiện hasCompletedFirstFlow)
     if (!hasSeenTour) {
-      // Delay to ensure DOM is ready
-      const timer = setTimeout(() => {
-        setIsVisible(true);
-      }, 1500);
+      // Chờ DOM render xong rồi mới hiện tour
+      const timer = setTimeout(() => setIsVisible(true), 1500);
       return () => clearTimeout(timer);
     }
   }, []);
 
-  // Update position when step changes or visibility changes
+  // Cập nhật vị trí khi đổi bước/hiện tour; retry tới khi target hiển thị
   useEffect(() => {
-    if (isVisible) {
-      // Small delay to ensure DOM is updated
-      const timer = setTimeout(() => {
-        updatePosition();
-      }, 50);
-      return () => clearTimeout(timer);
-    }
+    if (!isVisible) return;
+
+    let attempts = 0;
+    const maxAttempts = 20; // ~4s
+
+    const tryUpdate = () => {
+      const found = updatePosition();
+      if (found) return;
+      attempts += 1;
+      if (attempts >= maxAttempts) {
+        // Không tìm thấy mục tiêu hiển thị: ẩn tour thay vì vẽ khung lệch
+        setIsVisible(false);
+        return;
+      }
+      retryRef.current = window.setTimeout(tryUpdate, 200);
+    };
+
+    retryRef.current = window.setTimeout(tryUpdate, 50);
+    return () => {
+      if (retryRef.current) window.clearTimeout(retryRef.current);
+    };
   }, [isVisible, currentStep, updatePosition]);
 
-  // Handle scroll and resize with debouncing
+  // Cập nhật khi scroll/resize (debounce)
   useEffect(() => {
     if (!isVisible) return;
 
@@ -123,13 +155,13 @@ export default function OnboardingTour() {
     const handleUpdate = () => {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
-        requestAnimationFrame(updatePosition);
-      }, 100); // Debounce by 100ms
+        requestAnimationFrame(() => updatePosition());
+      }, 100);
     };
-    
+
     window.addEventListener('scroll', handleUpdate, true);
     window.addEventListener('resize', handleUpdate);
-    
+
     return () => {
       clearTimeout(timeoutId);
       window.removeEventListener('scroll', handleUpdate, true);
@@ -163,57 +195,65 @@ export default function OnboardingTour() {
   if (!isVisible) return null;
 
   const currentStepData = steps[currentStep];
+  // Padding của khung spotlight quanh mục tiêu
+  const pad = 6;
 
   return (
     <>
-      {/* Overlay with spotlight effect - Block all clicks outside */}
-      <div 
-        className="fixed inset-0 z-40 transition-all duration-500 ease-out"
-        style={{
-          background: targetRect 
-            ? `radial-gradient(circle at ${targetRect.left + targetRect.width / 2}px ${targetRect.top + targetRect.height / 2}px, transparent ${Math.max(targetRect.width, targetRect.height) / 2 + 10}px, rgba(0,0,0,0.85) ${Math.max(targetRect.width, targetRect.height) / 2 + 100}px)`
-            : 'rgba(0,0,0,0.85)',
-          pointerEvents: 'auto',
-          cursor: 'not-allowed'
-        }}
+      {/* Lớp chặn click toàn màn hình (trong suốt) */}
+      <div
+        className="fixed inset-0 z-40"
+        style={{ pointerEvents: 'auto', cursor: 'not-allowed' }}
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          // Không làm gì cả - chặn click
         }}
       />
-      
-      {/* Highlight border around target */}
+
+      {/* Spotlight CHỮ NHẬT khớp đúng khung mục tiêu (dùng box-shadow tạo vùng tối xung quanh) */}
+      {targetRect && (
+        <div
+          className="fixed z-[41] rounded-lg pointer-events-none"
+          style={{
+            top: targetRect.top - pad,
+            left: targetRect.left - pad,
+            width: targetRect.width + pad * 2,
+            height: targetRect.height + pad * 2,
+            boxShadow: '0 0 0 9999px rgba(0,0,0,0.82)',
+            transition: 'all 300ms ease-out',
+          }}
+        />
+      )}
+
+      {/* Viền + glow quanh mục tiêu (khớp đúng rect) */}
       {targetRect && (
         <>
-          {/* Animated glow effect */}
           <div
             className="fixed z-[45] rounded-lg pointer-events-none animate-pulse"
             style={{
-              top: targetRect.top - 8,
-              left: targetRect.left - 8,
-              width: targetRect.width + 16,
-              height: targetRect.height + 16,
+              top: targetRect.top - pad,
+              left: targetRect.left - pad,
+              width: targetRect.width + pad * 2,
+              height: targetRect.height + pad * 2,
               boxShadow: '0 0 0 4px hsl(var(--primary) / 0.3), 0 0 30px hsl(var(--primary) / 0.4)',
-              transition: 'all 500ms ease-out'
+              transition: 'all 300ms ease-out',
             }}
           />
-          {/* Solid border */}
           <div
             className="fixed z-[45] border-2 border-primary rounded-lg pointer-events-none"
             style={{
-              top: targetRect.top - 4,
-              left: targetRect.left - 4,
-              width: targetRect.width + 8,
-              height: targetRect.height + 8,
-              transition: 'all 500ms ease-out'
+              top: targetRect.top - pad,
+              left: targetRect.left - pad,
+              width: targetRect.width + pad * 2,
+              height: targetRect.height + pad * 2,
+              transition: 'all 300ms ease-out',
             }}
           />
         </>
       )}
-      
+
       {/* Tooltip */}
-      <div 
+      <div
         ref={tooltipRef}
         className="fixed z-50 bg-gradient-to-br from-card to-background rounded-xl shadow-2xl border border-border p-6 max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-300"
         style={{
@@ -225,15 +265,15 @@ export default function OnboardingTour() {
           <h3 className="text-lg font-semibold text-foreground pr-2">
             {currentStepData.title}
           </h3>
-          <button 
-            onClick={handleSkip} 
+          <button
+            onClick={handleSkip}
             className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
             aria-label={t('buttons.skip')}
           >
             <X className="w-5 h-5" />
           </button>
         </div>
-        
+
         <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
           {currentStepData.description}
         </p>
@@ -242,7 +282,7 @@ export default function OnboardingTour() {
           <div className="text-xs text-muted-foreground font-medium">
             {currentStep + 1} {t('of')} {steps.length}
           </div>
-          
+
           <div className="flex gap-2">
             {currentStep > 0 && (
               <Button
@@ -255,7 +295,7 @@ export default function OnboardingTour() {
                 {t('buttons.previous')}
               </Button>
             )}
-            
+
             <Button
               size="sm"
               onClick={handleNext}
