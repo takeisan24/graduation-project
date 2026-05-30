@@ -1606,6 +1606,24 @@
       "topBarActions": {
         "sources": "Sources",
         "aiChat": "AI Chat",
+        "project": {
+          "current": "Project: {name}",
+          "draft": "Draft: {name}",
+          "default": "Project",
+          "manageAria": "Manage project",
+          "rename": "Rename project",
+          "renamePlaceholder": "Project name",
+          "save": "Save",
+          "cancel": "Cancel",
+          "delete": "Delete project",
+          "confirmDelete": "Confirm delete?",
+          "newProject": "New project",
+          "allProjects": "All projects",
+          "empty": "No projects yet",
+          "loadFailed": "Could not load projects",
+          "renameFailed": "Could not rename project",
+          "deleteFailed": "Could not delete project"
+        },
         "wizard": {
           "step1": "Add Source",
           "step2": "Configure",

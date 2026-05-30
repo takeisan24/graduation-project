@@ -1,11 +1,11 @@
 "use client"
 
 import { Button } from '@/components/ui/button'
-import { useNavigationStore, useCreateSourcesStore, useCreatePostsStore, useCreateWorkspaceStore } from '@/store'
+import { useNavigationStore, useCreateSourcesStore, useCreatePostsStore } from '@/store'
 import { useShallow } from 'zustand/react/shallow'
 import { useTranslations } from 'next-intl'
-import { FolderOpen, MessageSquare, X, Check, ChevronRight, Route, FolderKanban } from 'lucide-react'
-import { deriveWorkspaceSeed } from '@/store/create/workspace'
+import { FolderOpen, MessageSquare, X, Check, ChevronRight, Route } from 'lucide-react'
+import ProjectMenu from './ProjectMenu'
 
 interface TopBarActionsProps {
   onToggleSources: () => void
@@ -24,10 +24,6 @@ export default function TopBarActions({
     selectedPostId: state.selectedPostId,
     postContextMap: state.postContextMap,
   })))
-  const { projectName, projectId } = useCreateWorkspaceStore(useShallow((state) => ({
-    projectName: state.projectName,
-    projectId: state.projectId,
-  })))
   const { wizardStep, setWizardStep } = useNavigationStore(useShallow(state => ({
     wizardStep: state.wizardStep,
     setWizardStep: state.setWizardStep,
@@ -42,8 +38,6 @@ export default function TopBarActions({
   const step2Done = isGeneratingPosts
   const step3Active = isGeneratingPosts
   const activePostContext = selectedPostId ? postContextMap[selectedPostId] : undefined
-  const inferredWorkspace = deriveWorkspaceSeed()
-  const workspaceLabel = projectName || (savedSources.length > 0 ? inferredWorkspace.name : null)
 
   const contextLabel = activePostContext?.source === 'drafts'
     ? 'Từ bản nháp'
@@ -115,14 +109,7 @@ export default function TopBarActions({
         </div>
       )}
 
-      {!isInWizard && workspaceLabel && (
-        <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/80 px-3 py-1 text-xs text-muted-foreground">
-          <FolderKanban className="h-3.5 w-3.5 text-primary" />
-          <span className="max-w-[220px] truncate">
-            {projectId ? `Dự án: ${workspaceLabel}` : `Nháp: ${workspaceLabel}`}
-          </span>
-        </div>
-      )}
+      {!isInWizard && <ProjectMenu />}
 
       {/* Wizard nav: back */}
       {isInWizard && (

@@ -1608,6 +1608,24 @@
       "topBarActions": {
         "sources": "Nguồn",
         "aiChat": "AI Chat",
+        "project": {
+          "current": "Dự án: {name}",
+          "draft": "Nháp: {name}",
+          "default": "Dự án",
+          "manageAria": "Quản lý dự án",
+          "rename": "Đổi tên dự án",
+          "renamePlaceholder": "Tên dự án",
+          "save": "Lưu",
+          "cancel": "Hủy",
+          "delete": "Xóa dự án",
+          "confirmDelete": "Xác nhận xóa?",
+          "newProject": "Dự án mới",
+          "allProjects": "Tất cả dự án",
+          "empty": "Chưa có dự án nào",
+          "loadFailed": "Không tải được danh sách dự án",
+          "renameFailed": "Không đổi được tên dự án",
+          "deleteFailed": "Không xóa được dự án"
+        },
         "wizard": {
           "step1": "Thêm nguồn",
           "step2": "Cấu hình",

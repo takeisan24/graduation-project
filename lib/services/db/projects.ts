@@ -184,6 +184,96 @@ export async function createProject(data: {
 }
 
 /**
+ * Update project (e.g. đổi tên). Chỉ cập nhật khi đúng chủ sở hữu.
+ */
+export async function updateProject(
+  projectId: string,
+  userId: string,
+  updates: { name?: string; description?: string | null }
+): Promise<Project | null> {
+  const patch: Record<string, unknown> = {};
+  if (typeof updates.name === "string") {
+    const name = updates.name.replace(/\s+/g, " ").trim().slice(0, 80);
+    if (name) patch.name = name;
+  }
+  if (updates.description !== undefined) patch.description = updates.description;
+
+  if (Object.keys(patch).length === 0) {
+    return getProjectById(projectId, userId);
+  }
+
+  const { data, error } = await supabase
+    .from("projects")
+    .update(patch)
+    .eq("id", projectId)
+    .eq("user_id", userId)
+    .select()
+    .maybeSingle();
+
+  if (error) {
+    console.error("[db/projects] Error updating project:", error);
+    return null;
+  }
+
+  return data;
+}
+
+/**
+ * Delete project + toàn bộ dữ liệu liên quan.
+ *
+ * content_drafts có ON DELETE CASCADE theo project_id, nhưng scheduled_posts
+ * tham chiếu content_drafts(id) KHÔNG có cascade — nên phải xoá scheduled_posts
+ * của các draft thuộc project trước, tránh vướng khoá ngoại khi xoá project.
+ */
+export async function deleteProject(projectId: string, userId: string): Promise<boolean> {
+  // Xác thực quyền sở hữu trước
+  const project = await getProjectById(projectId, userId);
+  if (!project) {
+    return false;
+  }
+
+  // Lấy id các draft thuộc project để dọn scheduled_posts liên quan
+  const { data: draftRows, error: draftErr } = await supabase
+    .from("content_drafts")
+    .select("id")
+    .eq("project_id", projectId)
+    .eq("user_id", userId);
+
+  if (draftErr) {
+    console.error("[db/projects] Error listing drafts before delete:", draftErr);
+    return false;
+  }
+
+  const draftIds = (draftRows || []).map((row) => (row as { id: string }).id);
+  if (draftIds.length > 0) {
+    const { error: spErr } = await supabase
+      .from("scheduled_posts")
+      .delete()
+      .in("draft_id", draftIds)
+      .eq("user_id", userId);
+
+    if (spErr) {
+      console.error("[db/projects] Error deleting scheduled posts of project drafts:", spErr);
+      return false;
+    }
+  }
+
+  // Xoá project — content_drafts (và các bảng cascade theo nó) tự dọn
+  const { error } = await supabase
+    .from("projects")
+    .delete()
+    .eq("id", projectId)
+    .eq("user_id", userId);
+
+  if (error) {
+    console.error("[db/projects] Error deleting project:", error);
+    return false;
+  }
+
+  return true;
+}
+
+/**
  * Create draft
  */
 export async function createDraft(data: {

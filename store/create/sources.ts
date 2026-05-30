@@ -24,6 +24,7 @@ interface CreateSourcesState {
   setIsSourceModalOpen: (isOpen: boolean) => void;
   addSavedSource: (source: Omit<SavedSource, 'id'>) => SavedSource;
   deleteSavedSource: (sourceId: string) => void;
+  clearSavedSources: () => void;
   openCreateFromSourceModal: (source: SourceToGenerate) => void;
   closeCreateFromSourceModal: () => void;
   setExtractedContent: (content: string | null) => void;
@@ -69,6 +70,11 @@ export const useCreateSourcesStore = create<CreateSourcesState>((set) => ({
       saveToLocalStorage('savedSources', updated);
       return { savedSources: updated };
     });
+  },
+
+  clearSavedSources: () => {
+    saveToLocalStorage('savedSources', []);
+    set({ savedSources: [], sourceToGenerate: null, extractedContent: null });
   },
 
   openCreateFromSourceModal: (source) => set({ sourceToGenerate: source, isCreateFromSourceModalOpen: true }),
