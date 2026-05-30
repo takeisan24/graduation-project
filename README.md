@@ -59,7 +59,7 @@ CreatorHub cung cấp một nền tảng duy nhất để:
               |                             |
     +---------v----------+       +----------v---------+
     |    API Routes       |       | Server Components  |
-    |   (56 endpoints)    |       |   (SSR Pages)      |
+    |   (59 endpoints)    |       |   (SSR Pages)      |
     +---------+----------+       +---------------------+
               |
     +---------v----------+
@@ -186,7 +186,7 @@ do_an_tot_nghiep/
 │   ├── [locale]/              # Trang theo ngôn ngữ (vi/en)
 │   │   ├── (pages)/           # Trang public (landing, auth)
 │   │   └── profile/           # Trang cá nhân
-│   └── api/                   # 56 API Route handlers
+│   └── api/                   # 59 API Route handlers
 │       ├── ai/                # Tạo nội dung AI (text, image, suggestions)
 │       ├── auth/              # Xác thực (email, OAuth)
 │       ├── chat/              # Chatbot AI (sessions, messages)
@@ -230,7 +230,7 @@ do_an_tot_nghiep/
 
 ## Database Schema
 
-Hệ thống sử dụng **10 bảng chính** trên Supabase PostgreSQL:
+Hệ thống sử dụng **18 bảng** trên Supabase PostgreSQL:
 
 | Bảng | Mục đích |
 |------|----------|
@@ -243,7 +243,10 @@ Hệ thống sử dụng **10 bảng chính** trên Supabase PostgreSQL:
 | `scheduled_posts` | Lịch đăng bài |
 | `files` | Metadata file upload |
 | `media_assets` | Thư viện tài nguyên media |
-| `niches` / `content_goals` / `frameworks` | Dữ liệu chiến lược nội dung |
+| `niches` / `content_goals` / `frameworks` / `framework_niches` | Dữ liệu chiến lược nội dung (ngách, mục tiêu, khung, ánh xạ khung–ngách) |
+| `usage` / `monthly_usage` | Thống kê credits và hoạt động theo chu kỳ / theo tháng |
+| `credit_transactions` / `credit_orders` | Nhật ký giao dịch credits & đơn nạp credits (VietQR) |
+| `subscriptions` | Gói thuê bao và cấp credits định kỳ |
 
 Chi tiết schema: [`db/schema.sql`](db/schema.sql)
 
@@ -251,7 +254,7 @@ Chi tiết schema: [`db/schema.sql`](db/schema.sql)
 
 ## API Endpoints
 
-Hệ thống có **56 API endpoints**, chia theo chức năng:
+Hệ thống có **59 API route handler**, chia theo chức năng:
 
 | Nhóm | Endpoints | Chức năng |
 |------|-----------|-----------|

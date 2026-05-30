@@ -273,7 +273,6 @@ export async function processChatMessage(
     context = 'general',
     contentType = 'text',
     platform = 'general',
-    modelKey,
     sessionId,
     projectId,
     draftId,
@@ -361,15 +360,8 @@ export async function processChatMessage(
     platform
   });
 
-  // Xác định modelId cho AI Assistant
-  // - Nếu FE gửi modelKey là 'chatgpt' => ép dùng OpenAI với model trong env OPENAI_MODEL (mặc định 'gpt-5-mini')
-  // - Nếu không gửi hoặc model khác => để trống, assistant sẽ fallback về Gemini (getBestModel('text'))
-  const clientModelKey = (modelKey || '').toLowerCase().trim();
-  const openaiEnvModel = process.env.OPENAI_MODEL || 'gpt-5-mini';
-  const modelIdForAssistant =
-    clientModelKey === 'chatgpt'
-      ? openaiEnvModel
-      : undefined;
+  // Trợ lý AI luôn dùng Google Gemini (fallback getBestModel('text')); hệ thống không hỗ trợ nhà cung cấp khác
+  const modelIdForAssistant: string | undefined = undefined;
 
   // Get AI response with enhanced context
   let response;

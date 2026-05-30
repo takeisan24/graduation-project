@@ -258,6 +258,21 @@ create table if not exists credit_transactions (
   created_at timestamptz default now()
 );
 
+-- Đơn nạp credits qua VietQR
+create table if not exists credit_orders (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references users (id) on delete cascade,
+  order_code bigint unique not null,
+  package_id text not null,
+  credits integer not null,
+  amount integer not null,
+  status text not null default 'PENDING' check (status in ('PENDING', 'PAID', 'CANCELLED', 'FAILED')),
+  paid_at timestamptz,
+  created_at timestamptz default now()
+);
+create index if not exists idx_credit_orders_user_id on credit_orders (user_id);
+create index if not exists idx_credit_orders_order_code on credit_orders (order_code);
+
 -- ============================================
 -- 9. BẢNG CHIẾN LƯỢC NỘI DUNG (Niches, Goals, Frameworks)
 -- ============================================

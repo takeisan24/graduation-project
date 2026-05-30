@@ -103,3 +103,7 @@ docs/survey-google-form.md
 docs/diagrams/
 scripts/build_thesis_docx.py
 scripts/slim_docx.py
+
+# PDF xuất & ảnh preview soát layout (local)
+docs/*.pdf
+docs/_pdfpreview/
