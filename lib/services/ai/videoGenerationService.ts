@@ -97,7 +97,20 @@ export async function generateVideoWithCredits(
       throw new Error("No video data returned");
     }
 
-    // Trừ credits sau khi tác vụ sinh đã khởi tạo/hoàn tất thành công
+    // Nếu chỉ mới nhận jobId (tác vụ async, video CHƯA tạo xong) thì KHÔNG trừ credits;
+    // chỉ trừ khi đã có video thật (url hoặc blob).
+    if (hasJob && !hasUrl && !hasBlob) {
+      return {
+        prompt,
+        model: videoModel,
+        creditsRemaining: paywallResult.creditsRemaining ?? 0,
+        jobId: result.jobId,
+        status: 'processing',
+        message: "Video đang được tạo, sẽ thông báo khi hoàn thành.",
+      };
+    }
+
+    // Đã có video thật → trừ credits (chỉ sau khi sinh thành công)
     const creditResult = await deductCredits(
       user.id,
       'WITH_VIDEO',

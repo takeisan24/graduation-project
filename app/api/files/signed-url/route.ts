@@ -23,7 +23,13 @@ export async function GET(req: NextRequest) {
     
     const path = req.nextUrl.searchParams.get("path");
     if (!path) return fail("path required", 400);
-    
+
+    // Chống IDOR: chỉ cấp signed URL cho tệp thuộc chính người dùng.
+    // Khoá lưu trữ luôn có dạng `${user.id}/...` (xem /api/files/upload).
+    if (!path.startsWith(`${user.id}/`)) {
+      return fail("Forbidden", 403);
+    }
+
     const bucket = process.env.SUPABASE_STORAGE_BUCKET || "uploads";
     
     // Create signed URL via service layer

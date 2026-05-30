@@ -246,11 +246,12 @@ export async function deleteProject(projectId: string, userId: string): Promise<
 
   const draftIds = (draftRows || []).map((row) => (row as { id: string }).id);
   if (draftIds.length > 0) {
+    // Xoá theo draft_id (đã thuộc về user vì draftIds lấy từ content_drafts của user);
+    // không lọc thêm user_id để tránh sót bản ghi gây vướng khoá ngoại khi xoá project.
     const { error: spErr } = await supabase
       .from("scheduled_posts")
       .delete()
-      .in("draft_id", draftIds)
-      .eq("user_id", userId);
+      .in("draft_id", draftIds);
 
     if (spErr) {
       console.error("[db/projects] Error deleting scheduled posts of project drafts:", spErr);

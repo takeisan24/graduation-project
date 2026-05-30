@@ -3,8 +3,9 @@ import { success, fail } from "@/lib/response";
 import { withAuthOnly } from "@/lib/middleware/api-protected";
 import { generateVideoWithCredits } from "@/lib/services/ai/videoGenerationService";
 
-// Veo sinh video có thể mất khá lâu — đặt mốc tối đa trước khi Vercel ngắt.
-export const maxDuration = 60;
+// Veo sinh video có thể mất vài phút — đặt mốc tối đa cao (cần gói Vercel Pro;
+// với tác vụ dài hơn nên chuyển sang cơ chế job bất đồng bộ + cron/webhook).
+export const maxDuration = 300;
 
 /**
  * POST /api/ai/generate-video
