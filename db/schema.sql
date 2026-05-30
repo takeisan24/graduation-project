@@ -114,6 +114,11 @@ create table if not exists connected_accounts (
   connection_provider text default 'native' check (connection_provider in ('late', 'native')),
   platform_metadata jsonb default '{}'::jsonb,
   profile_metadata jsonb default '{}'::jsonb,
+  -- Định danh tài khoản/hồ sơ phía dịch vụ đăng bài Zernio (getlate.dev)
+  getlate_account_id text,
+  getlate_profile_id text,
+  late_profile_id text,
+  social_media_account_id text,
   created_at timestamptz default now(),
   updated_at timestamptz default now(),
 
