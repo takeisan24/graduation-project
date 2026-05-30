@@ -15,9 +15,9 @@ export type PlatformKey =
   | 'x' | 'threads' | 'linkedin' | 'pinterest';
 
 /**
- * AI model display names (matches provider API labels)
+ * Nhãn mô hình AI hiển thị. Hệ thống dùng Google Gemini làm nhà cung cấp.
  */
-export type AIModel = 'ChatGPT' | 'Gemini Pro' | 'Claude Sonnet 4' | 'gpt-4.1' | 'o4-mini' | 'o3' | 'gpt-4o';
+export type AIModel = 'Gemini';
 
 /**
  * Post lifecycle status from Late.dev

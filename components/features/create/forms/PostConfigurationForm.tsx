@@ -86,7 +86,7 @@ export default function PostConfigurationForm({
     setIsGenerating(true);
 
     if (onComplete) {
-      // Truyền thêm selectedModel để BE quyết định dùng ChatGPT hay Gemini giống phần chat AI
+      // Truyền selectedModel (Gemini) để BE chọn cấu hình mô hình, đồng bộ với phần chat AI
       await onComplete(selectedPlatforms, selectedModel);
     }
 

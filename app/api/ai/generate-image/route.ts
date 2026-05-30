@@ -9,7 +9,7 @@ export const maxDuration = 60;
 
 /**
  * POST /api/ai/generate-image
- * Generate image content using AI (default: Gemini, can select OpenAI/Fal)
+ * Generate image content using Google Gemini (gemini-3-pro-image-preview)
  */
 export async function POST(req: NextRequest) {
   try {

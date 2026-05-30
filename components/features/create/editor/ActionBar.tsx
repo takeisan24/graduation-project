@@ -175,6 +175,8 @@ export default function ActionBar() {
                 <ImageIcon className="w-4 h-4 mr-3" />
                 {t('generateImage')}
               </Button>
+              {/* Sinh video tạm ẩn cho demo: endpoint /api/ai/generate-video chưa triển khai. Bật lại bằng env NEXT_PUBLIC_ENABLE_VIDEO_GEN=true. */}
+              {process.env.NEXT_PUBLIC_ENABLE_VIDEO_GEN === "true" && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -189,6 +191,7 @@ export default function ActionBar() {
                 </svg>
                 {t('generateVideo')}
               </Button>
+              )}
               {/* Media Library tạm ẩn cho demo: phụ thuộc Server B (S3) chưa cấu hình. Bật lại bằng env NEXT_PUBLIC_ENABLE_MEDIA_UPLOAD=true. */}
               {process.env.NEXT_PUBLIC_ENABLE_MEDIA_UPLOAD === "true" && (
               <Button

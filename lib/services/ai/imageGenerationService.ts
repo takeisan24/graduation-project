@@ -4,7 +4,7 @@
  * Handles image generation business logic including:
  * - Credit checking and deduction
  * - Usage tracking
- * - Automatic provider fallback (Gemini → DALL-E → Fal.ai)
+ * - Sinh ảnh bằng Google Gemini (gemini-3-pro-image-preview), retry cùng model + xoay API key
  * - Error handling and rollback
  * - Response formatting
  */
@@ -77,7 +77,7 @@ function parsePrompts(originalPrompt: string): string[] {
  * Flow:
  * 1. Auth + paywall check (no credit deduction yet)
  * 2. Parse prompts (regex, sync)
- * 3. Generate images with automatic provider fallback (Gemini → DALL-E → Fal.ai)
+ * 3. Generate images with Google Gemini (gemini-3-pro-image-preview), retry cùng model + xoay API key
  * 4. Deduct credits ONLY after successful generation
  * 5. Return images + updated credit balance
  */
@@ -172,7 +172,7 @@ export async function generateImageWithCredits(
       if (result.images && result.images.length > 0) {
         allImages.push(...result.images);
       } else if (result.url && result.url.length > 0) {
-        // For URL-based results (OpenAI/Fal), fetch and convert to base64
+        // For URL-based results, fetch and convert to base64
         // so frontend always receives a consistent format
         try {
           const imgResponse = await fetch(result.url);

@@ -79,7 +79,7 @@ export default function AIChatbox() {
       clearChat: state.clearChat,
     })));
 
-  // Reset model về ChatGPT khi user đóng hết tab post (bắt đầu flow tạo post mới)
+  // Reset model về Gemini khi user đóng hết tab post (bắt đầu flow tạo post mới)
   const openPosts = useCreatePostsStore(state => state.openPosts);
   useEffect(() => {
     if (openPosts.length === 0) {
@@ -149,7 +149,7 @@ export default function AIChatbox() {
 
   const confirmClearChat = () => {
     clearChat();
-    // Khi user tạo cuộc chat mới, luôn reset về ChatGPT để đồng bộ với default
+    // Khi user tạo cuộc chat mới, luôn reset về Gemini để đồng bộ với default
     setSelectedChatModel("Gemini");
   }
 
