@@ -501,7 +501,7 @@ export async function trackActivity(
  */
 export async function trackUsage(
   userId: string,
-  action: 'project_created' | 'post_created' | 'image_generated' | 'video_generated' | 'text_to_video_generated',
+  action: 'project_created' | 'post_created' | 'image_generated' | 'video_generated' | 'text_to_video_generated' | 'post_scheduled',
   amount: number = 1
 ): Promise<void> {
   await ensureMonthlyUsageRow(userId, DEFAULT_TIMEZONE);
@@ -513,7 +513,8 @@ export async function trackUsage(
     post_created: 'posts_created',
     image_generated: 'images_generated',
     video_generated: 'videos_generated',
-    text_to_video_generated: 'videos_generated' // Maps to video counts
+    text_to_video_generated: 'videos_generated', // Maps to video counts
+    post_scheduled: 'scheduled_posts'
   } as const;
 
   const field = fieldMap[action];

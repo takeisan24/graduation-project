@@ -33,7 +33,10 @@ export default function AuthSuccessPage() {
   useEffect(() => {
     const handleAuthSuccess = async () => {
       try {
-        const sessionParam = searchParams.get("session")
+        // Session OAuth được trả qua URL fragment (#) thay vì query (?),
+        // nhờ vậy access_token/refresh_token không lọt vào server log hay Referer.
+        const hash = typeof window !== "undefined" ? window.location.hash.replace(/^#/, "") : ""
+        const sessionParam = new URLSearchParams(hash).get("session")
 
         if (sessionParam) {
           const session = JSON.parse(decodeURIComponent(sessionParam))
@@ -42,6 +45,10 @@ export default function AuthSuccessPage() {
             refresh_token: session.refresh_token,
           })
           if (sessionError) throw sessionError
+          // Xoá token khỏi URL/history ngay sau khi đã nạp phiên
+          if (typeof window !== "undefined") {
+            window.history.replaceState(null, "", window.location.pathname + window.location.search)
+          }
         } else {
           await new Promise<void>((resolve, reject) => {
             let resolved = false

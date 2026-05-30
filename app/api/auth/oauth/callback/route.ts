@@ -71,7 +71,9 @@ export async function GET(req: NextRequest) {
       creditsRemaining: creditsBalance
     };
 
-    const frontendUrl = `${appUrl}/auth/success?session=${encodeURIComponent(JSON.stringify(sessionData))}`;
+    // Trả session qua URL fragment (#) thay vì query (?) để access_token/refresh_token
+    // không lọt vào access log máy chủ hay header Referer.
+    const frontendUrl = `${appUrl}/auth/success#session=${encodeURIComponent(JSON.stringify(sessionData))}`;
     return NextResponse.redirect(frontendUrl, { status: 303 });
 
   } catch (err: unknown) {

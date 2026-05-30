@@ -3,6 +3,7 @@ import { requireAuth } from "@/lib/auth";
 import { success, fail } from "@/lib/response";
 import { getDraftById, updateDraft } from "@/lib/services/db/projects";
 import { DEFAULT_TIMEZONE } from "@/lib/utils/date";
+import { checkPostLimit, trackUsage } from "@/lib/usage";
 
 /**
  * POST /api/schedule/:draftId
@@ -31,6 +32,17 @@ export async function POST(req: NextRequest, { params }: { params: { draftId: st
     // If draft already scheduled/posted, block
     if (["scheduled", "posted"].includes(draft.status)) {
       return fail(`Draft status is '${draft.status}', cannot schedule`, 400);
+    }
+
+    // Giới hạn số bài lên lịch theo gói (free: 10/tháng; trả phí: không giới hạn)
+    const postLimit = await checkPostLimit(user.id);
+    if (!postLimit.canSchedule) {
+      return fail(JSON.stringify({
+        message: `Đã đạt giới hạn ${postLimit.limit} bài lên lịch trong tháng của gói hiện tại.`,
+        current: postLimit.current,
+        limit: postLimit.limit,
+        upgradeRequired: true,
+      }), 403);
     }
 
     // Save scheduled posts to DB
@@ -64,6 +76,8 @@ export async function POST(req: NextRequest, { params }: { params: { draftId: st
     // Update draft status if at least one post was scheduled successfully
     if (anySuccess) {
       await updateDraft(draftId, user.id, { status: "scheduled", scheduled_at: scheduledTime });
+      const okCount = results.filter(r => r.success).length;
+      await trackUsage(user.id, 'post_scheduled', okCount).catch(() => {});
     }
 
     return success({ ok: anySuccess, results }, 201);

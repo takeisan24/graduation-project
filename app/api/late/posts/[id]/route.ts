@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { fail, success } from "@/lib/response";
 import { withAuthOnly } from "@/lib/middleware/api-protected";
 import { deletePost, getPostById } from "@/lib/services/db/posts";
+import { syncDraftStatusFromScheduledPosts } from "@/lib/services/db/projects";
 import { serializeLatePost } from "@/lib/services/posts/lateCompat";
 
 type RouteContext = {
@@ -32,9 +33,18 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
 
   try {
     const { id } = await context.params;
+    const post = await getPostById(id);
+    if (!post || post.user_id !== auth.user.id) {
+      return fail("Post not found", 404);
+    }
+
     const deleted = await deletePost(id, auth.user.id);
     if (!deleted) {
       return fail("Unable to delete post", 404);
+    }
+
+    if (post.draft_id) {
+      await syncDraftStatusFromScheduledPosts(post.draft_id, auth.user.id);
     }
 
     return success({ deleted: true, id });

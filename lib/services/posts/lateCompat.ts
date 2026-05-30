@@ -124,7 +124,7 @@ export function serializeLatePost(post: ScheduledPost) {
 }
 
 export async function getOwnedConnectionOrNull(connectionId: string, userId: string) {
-  const connection = await findConnectionById(connectionId);
+  const connection = await findConnectionById(connectionId, userId);
   if (!connection || connection.user_id !== userId) {
     return null;
   }

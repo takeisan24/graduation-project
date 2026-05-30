@@ -18,8 +18,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
 
     const connectionId = params.id;
 
-    // Verify ownership via service layer
-    const connection = await findConnectionById(connectionId);
+    // Verify ownership via service layer (scope query by user_id)
+    const connection = await findConnectionById(connectionId, user.id);
     
     if (!connection || connection.user_id !== user.id) {
       return fail("Connection not found or access denied", 404);

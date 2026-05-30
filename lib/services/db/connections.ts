@@ -80,12 +80,13 @@ export interface Connection {
  * const connection = await findConnectionById('conn_123');
  * ```
  */
-export async function findConnectionById(id: string): Promise<Connection | null> {
-  const { data, error } = await supabase
+export async function findConnectionById(id: string, userId?: string): Promise<Connection | null> {
+  let query = supabase
     .from("connected_accounts")
     .select("*")
-    .eq("id", id)
-    .maybeSingle();
+    .eq("id", id);
+  if (userId) query = query.eq("user_id", userId);
+  const { data, error } = await query.maybeSingle();
   
   if (error) {
     console.error("[db/connections] Error finding connection:", error);
@@ -278,12 +279,15 @@ export async function createConnection(data: {
  */
 export async function updateConnection(
   id: string,
-  updates: Partial<Connection>
+  updates: Partial<Connection>,
+  userId?: string
 ): Promise<boolean> {
-  const { error } = await supabase
+  let query = supabase
     .from("connected_accounts")
     .update(updates)
     .eq("id", id);
+  if (userId) query = query.eq("user_id", userId);
+  const { error } = await query;
   
   if (error) {
     console.error("[db/connections] Error updating connection:", error);

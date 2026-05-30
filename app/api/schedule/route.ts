@@ -5,6 +5,7 @@ import { getScheduledPosts } from "@/lib/services/db/posts";
 import { getDraftById, updateDraft } from "@/lib/services/db/projects";
 import { DEFAULT_TIMEZONE } from "@/lib/utils/date";
 import { createInternalLatePost, getOwnedConnectionsByIds, serializeLatePost } from "@/lib/services/posts/lateCompat";
+import { checkPostLimit, trackUsage } from "@/lib/usage";
 
 /**
  * GET /api/schedule
@@ -72,6 +73,17 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Giới hạn số bài lên lịch theo gói (free: 10/tháng; trả phí: không giới hạn)
+    const postLimit = await checkPostLimit(user.id);
+    if (!postLimit.canSchedule) {
+      return fail(JSON.stringify({
+        message: `Đã đạt giới hạn ${postLimit.limit} bài lên lịch trong tháng của gói hiện tại.`,
+        current: postLimit.current,
+        limit: postLimit.limit,
+        upgradeRequired: true,
+      }), 403);
+    }
+
     const scheduledPosts = [];
     const errors: string[] = [];
     const draftScheduleUpdates = new Map<string, string>();
@@ -134,6 +146,9 @@ export async function POST(req: NextRequest) {
         }).catch(() => false)
       )
     );
+
+    // Ghi nhận số bài đã lên lịch vào monthly_usage.scheduled_posts
+    await trackUsage(user.id, 'post_scheduled', scheduledPosts.length).catch(() => {});
 
     return success({
       scheduledPosts,
