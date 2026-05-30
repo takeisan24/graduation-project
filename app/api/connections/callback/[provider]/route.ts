@@ -20,11 +20,16 @@ export async function GET(
   if (!pending) {
     return buildPopupResponse({ success: false, provider, returnTo, message: "Invalid or expired OAuth state" });
   }
+  console.log(`[connections/callback/${provider}] pending OK: user=${pending.userId} platform=${pending.platform} existing=${pending.existingAccountIds.length}`);
 
   try {
     // Fetch all accounts from Zernio to find the newly connected one
     const allAccounts = await listZernioAccounts();
     const newAccount = allAccounts.find(a => !pending.existingAccountIds.includes(a._id));
+    console.log(`[connections/callback/${provider}] zernio accounts=${allAccounts.length} newAccount=${newAccount?._id ?? "NONE"}`);
+    if (!newAccount) {
+      console.warn(`[connections/callback/${provider}] Không phát hiện tài khoản mới (Zernio có thể chưa cập nhật kịp danh sách).`);
+    }
 
     if (newAccount) {
       await createConnectionLegacy({
