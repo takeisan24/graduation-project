@@ -13,6 +13,7 @@ import { vietnameseWeekdays } from '@/lib/constants/calendar';
 import { toast } from 'sonner';
 import { useConnectedAccounts } from '@/hooks/useConnectedAccounts';
 import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import { GENERIC_ERRORS } from '@/lib/messages/errors';
 import { getPlatformIcon, getPlatformName, needsInversion } from '@/lib/utils/platform';
 
@@ -49,6 +50,7 @@ export default function PublishModal() {
     
     // Fetch connected accounts using shared hook
     const { getAccountsForPlatform: getConnectedAccountsForPlatform } = useConnectedAccounts();
+    const router = useRouter();
 
     const closeModal = useCallback(() => {
         setIsPublishModalOpen(false);
@@ -271,7 +273,26 @@ export default function PublishModal() {
                 {(() => {
                             const platformAccounts = getAccountsForPlatform(selectedPlatform);
                             const hasAccounts = platformAccounts.length > 0;
-                            
+
+                            // Chưa kết nối tài khoản nào cho nền tảng này -> hướng người dùng đi kết nối
+                            if (!hasAccounts) {
+                                return (
+                                    <div className="bg-background rounded-lg p-3 border border-dashed border-border">
+                                        <p className="text-sm text-muted-foreground mb-2.5">
+                                            {getText('noConnectedAccount', `Chưa có tài khoản ${selectedPlatformLabel} nào được kết nối. Hãy kết nối trước khi đăng.`)}
+                                        </p>
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                                            onClick={() => { closeModal(); router.push('/connections'); }}
+                                        >
+                                            {getText('goToConnections', 'Kết nối tài khoản')}
+                                        </Button>
+                                    </div>
+                                );
+                            }
+
                             return (
                             <>
                             <div 

@@ -1558,6 +1558,8 @@
         "title": "Xác nhận đăng",
         "subtitle": "Chọn tài khoản và thời điểm đăng.",
         "selectAccount": "Chọn tài khoản",
+        "noConnectedAccount": "Chưa có tài khoản nào được kết nối cho nền tảng này. Hãy kết nối trước khi đăng.",
+        "goToConnections": "Kết nối tài khoản",
         "whenPublish": "Khi nào bạn muốn đăng?",
         "publishNow": "Bây giờ",
         "nextFreeSlot": "Khe trống tiếp theo",

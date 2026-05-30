@@ -1556,6 +1556,8 @@
         "title": "Confirm Publish",
         "subtitle": "Select account and publish time.",
         "selectAccount": "Select account",
+        "noConnectedAccount": "No account is connected for this platform yet. Please connect one before publishing.",
+        "goToConnections": "Connect an account",
         "whenPublish": "When do you want to publish?",
         "publishNow": "Now",
         "nextFreeSlot": "Next free slot",
