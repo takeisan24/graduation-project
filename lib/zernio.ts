@@ -53,6 +53,9 @@ export interface ZernioAccount {
   displayName: string
   profileUrl?: string
   avatarUrl?: string
+  // Zernio trả ảnh đại diện ở field `profilePicture` (hoặc trong metadata.profileData)
+  profilePicture?: string | null
+  metadata?: { profileData?: { profilePicture?: string | null } } | null
 }
 
 export async function listZernioAccounts(): Promise<ZernioAccount[]> {

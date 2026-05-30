@@ -45,7 +45,7 @@ export async function GET(
         getlate_account_id: acc._id,
         profile_metadata: {
           username: acc.username,
-          avatar_url: acc.avatarUrl || null,
+          avatar_url: acc.profilePicture || acc.metadata?.profileData?.profilePicture || acc.avatarUrl || null,
         },
       });
       if (created) saved++;
