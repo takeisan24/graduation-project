@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { listZernioAccounts } from "@/lib/zernio";
 import { resolvePendingConnection } from "@/lib/zernioState";
-import { createConnectionLegacy } from "@/lib/services/db/connections";
+import { createConnectionLegacy, findConnectionByUserPlatformAndProfileId } from "@/lib/services/db/connections";
 import { buildPopupResponse } from "@/lib/utils/connectionPopup";
 
 export async function GET(
@@ -23,30 +23,34 @@ export async function GET(
   console.log(`[connections/callback/${provider}] pending OK: user=${pending.userId} platform=${pending.platform} existing=${pending.existingAccountIds.length}`);
 
   try {
-    // Fetch all accounts from Zernio to find the newly connected one
+    // Đồng bộ TẤT CẢ tài khoản từ Zernio vào connected_accounts của người dùng.
+    // Cách này bền hơn việc chỉ tìm "tài khoản mới so với lúc bắt đầu": nó xử lý cả
+    // trường hợp tài khoản đã được kết nối sẵn trên Zernio từ lần thử trước.
+    // Idempotent: bỏ qua tài khoản đã tồn tại trong cơ sở dữ liệu.
     const allAccounts = await listZernioAccounts();
-    const newAccount = allAccounts.find(a => !pending.existingAccountIds.includes(a._id));
-    console.log(`[connections/callback/${provider}] zernio accounts=${allAccounts.length} newAccount=${newAccount?._id ?? "NONE"}`);
-    if (!newAccount) {
-      console.warn(`[connections/callback/${provider}] Không phát hiện tài khoản mới (Zernio có thể chưa cập nhật kịp danh sách).`);
-    }
-
-    if (newAccount) {
-      await createConnectionLegacy({
+    console.log(`[connections/callback/${provider}] zernio accounts=${allAccounts.length}`);
+    let saved = 0;
+    for (const acc of allAccounts) {
+      const chPlatform = acc.platform === "twitter" ? "x" : acc.platform;
+      const existing = await findConnectionByUserPlatformAndProfileId(pending.userId, chPlatform, acc._id);
+      if (existing) continue;
+      const created = await createConnectionLegacy({
         user_id: pending.userId,
-        platform: pending.platform,
+        platform: chPlatform,
         access_token: "zernio-managed",
         refresh_token: null,
-        profile_name: newAccount.displayName || newAccount.username,
-        profile_id: newAccount._id,
+        profile_name: acc.displayName || acc.username,
+        profile_id: acc._id,
         expires_at: null,
-        getlate_account_id: newAccount._id,
+        getlate_account_id: acc._id,
         profile_metadata: {
-          username: newAccount.username,
-          avatar_url: newAccount.avatarUrl || null,
+          username: acc.username,
+          avatar_url: acc.avatarUrl || null,
         },
       });
+      if (created) saved++;
     }
+    console.log(`[connections/callback/${provider}] đã lưu ${saved} kết nối mới vào CSDL`);
 
     return buildPopupResponse({ success: true, provider, returnTo: pending.returnTo });
   } catch (err) {
