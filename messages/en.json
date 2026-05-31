@@ -1090,6 +1090,7 @@
         "removeMedia": "Remove media"
       },
       "sourcePanel": {
+        "sourceDeleteError": "Failed to delete source",
         "sourcesTitle": "Saved Sources",
         "addSource": "Add Source",
         "deleteSource": "Delete source",
@@ -1395,6 +1396,7 @@
         "postsUnit": "posts"
       },
       "postPanel": {
+        "versionHistory": "AI edit history",
         "postsTitle": "Posts",
         "selectAll": "Select all",
         "deselectAll": "Deselect all",
@@ -1456,6 +1458,7 @@
         "toSend": "to send"
       },
       "actionBar": {
+        "emptyContentWarning": "Content is empty. Please add content before publishing.",
         "addImage": "Add image",
         "generate": "Generate",
         "generateImage": "Generate image",
@@ -1495,6 +1498,7 @@
         "postsUnit": "posts"
       },
       "imageGenModal": {
+        "safetyHint": "Control whether people are generated in images",
         "title": "Generate Images with AI",
         "promptLabel": "Describe image to generate",
         "promptPlaceholder": "Describe in detail the image you want to create...",
@@ -1752,6 +1756,8 @@
         "empty": "Empty"
       },
       "popup": {
+        "ariaPopup": "{platform} post at {time}",
+        "noEventsOnDay": "No time set",
         "viewEdit": "View/Edit",
         "editTime": "Edit time",
         "deleteEvent": "Delete event",

@@ -1396,6 +1396,7 @@
         "postsUnit": "bài"
       },
       "postPanel": {
+        "versionHistory": "Lịch sử chỉnh sửa AI",
         "postsTitle": "Bài đăng",
         "selectAll": "Chọn tất cả",
         "deselectAll": "Bỏ chọn tất cả",
@@ -1457,6 +1458,7 @@
         "toSend": "để gửi"
       },
       "actionBar": {
+        "emptyContentWarning": "Nội dung đang trống, vui lòng nhập nội dung trước khi đăng.",
         "addImage": "Thêm ảnh",
         "generate": "Tạo",
         "generateImage": "Tạo ảnh",
@@ -1754,6 +1756,8 @@
         "empty": "Trống"
       },
       "popup": {
+        "ariaPopup": "Bài đăng {platform} lúc {time}",
+        "noEventsOnDay": "Chưa đặt giờ",
         "viewEdit": "Xem/Soạn bài",
         "editTime": "Sửa thời gian",
         "deleteEvent": "Xóa sự kiện",
