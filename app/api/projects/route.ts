@@ -41,7 +41,8 @@ export async function POST(req: NextRequest) {
     const { user } = auth;
 
     const body = await req.json().catch(() => ({} as any));
-    let name = body?.name as string | undefined;
+    const requestedName = typeof body?.name === "string" ? body.name : undefined;
+    let name = requestedName?.trim() ? requestedName : undefined;
     const sourceType = (body?.sourceType || body?.source_type || 'prompt') as string;
     const sourceContent = (body?.sourceContent || body?.source_content || null) as string | null;
 

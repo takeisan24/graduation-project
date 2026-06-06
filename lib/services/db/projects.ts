@@ -43,12 +43,12 @@ export async function getProjectById(projectId: string, userId: string): Promise
     .eq("id", projectId)
     .eq("user_id", userId)
     .maybeSingle();
-  
+
   if (error) {
     console.error("[db/projects] Error getting project:", error);
     return null;
   }
-  
+
   return data;
 }
 
@@ -62,12 +62,12 @@ export async function getProjectWithDrafts(projectId: string, userId: string): P
     .eq("id", projectId)
     .eq("user_id", userId)
     .single();
-  
+
   if (error) {
     console.error("[db/projects] Error getting project with drafts:", error);
     return null;
   }
-  
+
   const normalizedData = data as ProjectWithDraftRows | null;
   if (!normalizedData) {
     return null;
@@ -89,12 +89,12 @@ export async function getDraftsByProjectId(projectId: string, userId: string): P
     .eq("project_id", projectId)
     .eq("user_id", userId)
     .order("created_at", { ascending: true });
-  
+
   if (error) {
     console.error("[db/projects] Error getting drafts:", error);
     return [];
   }
-  
+
   return data || [];
 }
 
@@ -126,12 +126,12 @@ export async function getDraftById(draftId: string, userId: string): Promise<Con
     .eq("id", draftId)
     .eq("user_id", userId)
     .maybeSingle();
-  
+
   if (error) {
     console.error("[db/projects] Error getting draft:", error);
     return null;
   }
-  
+
   return data;
 }
 
@@ -144,12 +144,12 @@ export async function getProjectsByUserId(userId: string): Promise<Project[]> {
     .select("*")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
-  
+
   if (error) {
     console.error("[db/projects] Error getting projects:", error);
     return [];
   }
-  
+
   return data || [];
 }
 
@@ -163,23 +163,26 @@ export async function createProject(data: {
   source_type?: string;
   source_content?: string | null;
 }): Promise<Project | null> {
+
+  const name = data.name.replace(/\s+/g, " ").trim().slice(0, 80) || "Untitled Project";
+
   const { data: project, error } = await supabase
     .from("projects")
     .insert({
       user_id: data.user_id,
-      name: data.name,
+      name,
       description: data.description || null,
       source_type: data.source_type || 'prompt',
       source_content: data.source_content || null
     })
     .select()
     .single();
-  
+
   if (error) {
     console.error("[db/projects] Error creating project:", error);
     return null;
   }
-  
+
   return project;
 }
 
@@ -299,12 +302,12 @@ export async function createDraft(data: {
     })
     .select()
     .single();
-  
+
   if (error) {
     console.error("[db/projects] Error creating draft:", error);
     return null;
   }
-  
+
   return draft;
 }
 
@@ -321,12 +324,12 @@ export async function updateDraft(
     .update(updates)
     .eq("id", draftId)
     .eq("user_id", userId);
-  
+
   if (error) {
     console.error("[db/projects] Error updating draft:", error);
     return false;
   }
-  
+
   return true;
 }
 
@@ -402,12 +405,12 @@ export async function deleteDraft(draftId: string, userId: string): Promise<bool
     .delete()
     .eq("id", draftId)
     .eq("user_id", userId);
-  
+
   if (error) {
     console.error("[db/projects] Error deleting draft:", error);
     return false;
   }
-  
+
   return true;
 }
 
