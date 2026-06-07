@@ -829,6 +829,10 @@
       "signOut": "Đăng xuất",
       "signOutSuccess": "Đăng xuất thành công!",
       "signOutRedirect": "Đang chuyển đến trang đăng nhập...",
+      "creditsUnit": "credits",
+      "creditsTooltip": "Còn {credits} credits trong gói {plan}. Nhấp để xem hoặc nạp thêm.",
+      "creditsLowTooltip": "Credits sắp hết: còn {credits} trong gói {plan}. Nhấp để nạp thêm.",
+      "creditsAria": "Còn {credits} credits trong gói {plan}",
       "breadcrumb": {
         "create": "Tạo bài viết",
         "calendar": "Lịch",

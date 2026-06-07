@@ -104,3 +104,14 @@ Mục đích: chuyển thành phần "Hạn chế & Hướng phát triển" tron
   - Nâng Next.js major ngay trước ngày nộp có rủi ro regression lớn.
 - Quyết định: defer; ghi vào "Hạn chế và hướng phát triển" là nâng cấp framework/dependency và kiểm thử regression trước production.
 - Ghi chú cho báo cáo: hệ thống phục vụ đồ án/demo, chưa tuyên bố production hardening hoàn chỉnh.
+
+### [2026-06-06] UI chưa hiển thị rõ số credits và gói hiện tại
+- Mức độ: minor / demo-risk
+- Tái hiện:
+  1. Đăng nhập và dùng các tính năng AI có trừ credits.
+  2. Quan sát workspace: người dùng chưa có điểm nhìn rõ ràng về `credits_balance` và `plan` hiện tại trước khi tạo nội dung.
+- Quan sát:
+  - Backend đã có `/api/usage`, `/api/me`, `useDashboardUsage`, và `CreditTopUp`.
+  - Đã bổ sung badge credits/plan tối thiểu trên workspace TopBar, đọc dữ liệu từ `useDashboardUsage` và dẫn người dùng về Settings để xem/nạp thêm.
+- Quyết định: fixed-minimal trước phản biện; phần mở rộng sau là dashboard chi tiết hơn cho lịch sử tiêu dùng credits.
+- Ghi chú cho báo cáo: trình bày đây là cải thiện minh bạch tài nguyên ở lớp UI/UX, không thay đổi logic giao dịch credits.

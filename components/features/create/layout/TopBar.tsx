@@ -1,13 +1,15 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useTheme } from "next-themes"
 import { useAuth } from "@/hooks/useAuth"
+import { useDashboardUsage } from "@/hooks/useDashboardUsage"
 import { useNavigationStore } from "@/store"
 import CreatorHubIcon from "@/components/shared/CreatorHubIcon"
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import {
   DropdownMenu,
@@ -19,7 +21,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
-import { Sun, Moon, LogOut, ChevronRight, CheckCircle2, Link2, Menu, Settings, UserCircle2 } from "lucide-react"
+import { Sun, Moon, LogOut, ChevronRight, CheckCircle2, Link2, Menu, Settings, UserCircle2, Coins } from "lucide-react"
 import { useRouter } from "@/i18n/navigation"
 
 interface TopBarProps {
@@ -29,8 +31,15 @@ interface TopBarProps {
 export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
   const router = useRouter()
   const t = useTranslations("CreatePage.topBar")
+  const locale = useLocale()
   const { user, signOut } = useAuth()
   const { theme, setTheme } = useTheme()
+  const {
+    creditsRemaining,
+    currentPlan,
+    isCreditsLow,
+    isLoadingCredits,
+  } = useDashboardUsage()
   const activeSection = useNavigationStore((s) => s.activeSection)
   const [showSignOutDialog, setShowSignOutDialog] = useState(false)
 
@@ -44,6 +53,8 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
 
   const userInitial = user?.email?.charAt(0).toUpperCase() || "U"
   const breadcrumbLabel = t(`breadcrumb.${activeSection}` as any) || activeSection
+  const planLabel = currentPlan ? currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1) : "Free"
+  const creditsLabel = isLoadingCredits ? "..." : creditsRemaining.toLocaleString(locale === "vi" ? "vi-VN" : "en-US")
 
   return (
     <>
@@ -77,6 +88,34 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
 
         {/* Right actions */}
         <div className="flex items-center gap-1">
+          {user && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="hidden sm:inline-flex h-9 items-center gap-2 rounded-md border border-border/70 bg-background px-2.5 text-xs text-foreground transition-colors hover:bg-accent"
+                  onClick={() => router.push("/settings")}
+                  aria-label={t("creditsAria", { credits: creditsLabel, plan: planLabel })}
+                >
+                  <Coins className={`h-3.5 w-3.5 ${isCreditsLow ? "text-amber-500" : "text-utc-royal"}`} />
+                  <span className="font-semibold tabular-nums">{creditsLabel}</span>
+                  <span className="hidden lg:inline text-muted-foreground">{t("creditsUnit")}</span>
+                  <Badge
+                    variant={isCreditsLow ? "destructive" : "secondary"}
+                    className="hidden xl:inline-flex max-w-20 truncate px-1.5 py-0 text-[10px]"
+                  >
+                    {planLabel}
+                  </Badge>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {isCreditsLow
+                  ? t("creditsLowTooltip", { credits: creditsLabel, plan: planLabel })
+                  : t("creditsTooltip", { credits: creditsLabel, plan: planLabel })}
+              </TooltipContent>
+            </Tooltip>
+          )}
+
           {/* Theme toggle */}
           <Tooltip>
             <TooltipTrigger asChild>
