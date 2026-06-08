@@ -61,7 +61,7 @@ const getStorageKey = (): string => {
   }
 
   try {
-    // Get current domain (e.g., "localhost:3000" or "content-schedule-ai-demo.vercel.app")
+    // Get current domain (e.g., "localhost:3000" or a production deployment domain)
     const hostname = window.location.hostname;
     const port = window.location.port;
     const domain = port ? `${hostname}:${port}` : hostname;

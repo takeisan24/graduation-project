@@ -311,7 +311,7 @@ export default function SettingsSection() {
         throw new Error('Missing OAuth redirect URL from backend')
       }
 
-      // Only append token for same-origin popup URLs (our demo flow).
+      // Only append token for same-origin popup URLs (local preview flow).
       // External Zernio OAuth URLs must not have our token appended.
       const isSameOrigin = json.url.startsWith(window.location.origin)
       const popupUrl = isSameOrigin && session?.access_token

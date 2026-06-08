@@ -18,6 +18,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import { enUS, vi } from "date-fns/locale";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell, BarChart, Bar } from "recharts";
 import PreviewNotice from "../shared/PreviewNotice";
+import { getPlatformName, normalizePlatformKey } from "@/lib/utils/platform";
 import {
   getCreatePreviewCopy,
   getPreviewConnectedAccounts,
@@ -66,6 +67,56 @@ function getResolvedPostDate(post: TimeResolvablePost): Date | null {
   }
 
   return null;
+}
+
+function getDisplayPlatformName(platform: unknown, fallback: string): string {
+  const platformName = getPlatformName(String(platform || "").trim());
+  return platformName || fallback;
+}
+
+function OperationsDashboardSkeleton() {
+  return (
+    <div className="mx-auto w-full max-w-[1440px] px-4 pb-8 pt-4 sm:px-6 xl:px-8">
+      <div className="mb-4 grid h-10 w-full grid-cols-3 gap-1 rounded-lg bg-card p-1 lg:mb-6">
+        <div className="rounded-md bg-background" />
+        <div className="rounded-md bg-secondary/50" />
+        <div className="rounded-md bg-secondary/50" />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <Card key={index} className="border-border/70 bg-card/95">
+            <CardHeader className="pb-2">
+              <div className="h-4 w-28 animate-pulse rounded bg-secondary" />
+              <div className="mt-4 h-8 w-14 animate-pulse rounded bg-secondary" />
+            </CardHeader>
+            <CardContent>
+              <div className="h-4 w-full animate-pulse rounded bg-secondary" />
+              <div className="mt-2 h-4 w-2/3 animate-pulse rounded bg-secondary" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <Card className="mt-6 border-border/70 bg-card/95">
+        <CardHeader>
+          <div className="h-5 w-44 animate-pulse rounded bg-secondary" />
+          <div className="h-4 w-2/3 animate-pulse rounded bg-secondary" />
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="rounded-2xl border border-border/70 bg-background/80 p-4">
+                <div className="h-3 w-24 animate-pulse rounded bg-secondary" />
+                <div className="mt-4 h-8 w-20 animate-pulse rounded bg-secondary" />
+                <div className="mt-3 h-2 w-full animate-pulse rounded bg-secondary" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
 
 export default function ApiDashboardSection() {
@@ -153,9 +204,10 @@ export default function ApiDashboardSection() {
     const platformSet = new Set<string>();
 
     allOperationalPosts.forEach((post) => {
-      const platform = String(post.platform || "Unknown");
-      platformSet.add(platform);
-      platformCounts.set(platform, (platformCounts.get(platform) || 0) + 1);
+      const platformKey = normalizePlatformKey(String(post.platform || ""));
+      const platformName = platformKey ? getPlatformName(platformKey) : t("unknownPlatform");
+      platformSet.add(platformKey || "unknown");
+      platformCounts.set(platformName, (platformCounts.get(platformName) || 0) + 1);
     });
 
     const distribution = Array.from(platformCounts.entries())
@@ -206,14 +258,14 @@ export default function ApiDashboardSection() {
       ...displayPublishedPosts.slice(0, 8).map((post) => ({
         id: `published-${post.id}`,
         title: t("activityPublished"),
-        detail: `${post.platform} • ${post.content?.slice(0, 80) || t("activityNoContent")}`,
+        detail: `${getDisplayPlatformName(post.platform, t("unknownPlatform"))} • ${post.content?.slice(0, 80) || t("activityNoContent")}`,
         date: getResolvedPostDate(post) || new Date(),
         status: "success" as const,
       })),
       ...displayFailedPosts.slice(0, 8).map((post) => ({
         id: `failed-${post.id}`,
         title: t("activityFailed"),
-        detail: `${post.platform} • ${post.content?.slice(0, 80) || t("activityNoContent")}`,
+        detail: `${getDisplayPlatformName(post.platform, t("unknownPlatform"))} • ${post.content?.slice(0, 80) || t("activityNoContent")}`,
         date: getResolvedPostDate(post) || new Date(),
         status: "warning" as const,
       })),
@@ -246,6 +298,11 @@ export default function ApiDashboardSection() {
 
   const weeklyVolume = useMemo(() => activityTimeline.reduce((sum, day) => sum + day.total, 0), [activityTimeline]);
   const totalManagedPosts = displayDraftPosts.length + displayPublishedPosts.length + displayFailedPosts.length;
+  const isInitialLoading =
+    (!hasLoadedDrafts && draftPosts.length === 0) ||
+    (!hasLoadedPublishedPosts && publishedPosts.length === 0) ||
+    (!hasLoadedFailedPosts && failedPosts.length === 0) ||
+    (connectionsLoading && !hasLoadedConnectedAccounts && accounts.length === 0);
 
   return (
     <div className="h-full w-full max-w-none overflow-y-auto py-2 lg:py-3">
@@ -253,6 +310,10 @@ export default function ApiDashboardSection() {
         icon={BarChart3}
         title={tHeaders("operations.title")}
       />
+
+      {isInitialLoading ? (
+        <OperationsDashboardSkeleton />
+      ) : (
 
       <div className="mx-auto w-full max-w-[1440px] px-4 pb-8 pt-4 sm:px-6 xl:px-8">
       {showPreviewNotice ? (
@@ -323,7 +384,7 @@ export default function ApiDashboardSection() {
             </Card>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)]">
+          <div className="grid grid-cols-1 gap-6">
             <Card className="border-border/70 bg-gradient-to-br from-background via-card to-primary/5">
               <CardHeader>
                 <div className="flex items-center gap-2 text-primary">
@@ -564,6 +625,7 @@ export default function ApiDashboardSection() {
         </TabsContent>
       </Tabs>
       </div>
+      )}
     </div>
   );
 }

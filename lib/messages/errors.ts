@@ -12,7 +12,7 @@ export const PLAN_ERRORS = {
   /**
    * Error message when Free plan user tries to use video generation feature
    */
-  FREE_PLAN_NO_VIDEO_GENERATION: "Cấu hình tài nguyên hiện tại chưa hỗ trợ tạo video. Vui lòng dùng cấu hình cao hơn hoặc điều chỉnh phạm vi demo.",
+  FREE_PLAN_NO_VIDEO_GENERATION: "Cấu hình tài nguyên hiện tại chưa hỗ trợ tạo video. Vui lòng dùng cấu hình cao hơn hoặc điều chỉnh phạm vi sử dụng.",
 
   /**
    * Error message when unable to check user plan information

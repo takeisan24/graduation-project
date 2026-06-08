@@ -58,12 +58,12 @@ export async function GET(
         return NextResponse.json({ url: authUrl, isExternal: true });
       } catch (err) {
         const msg = err instanceof Error ? err.message : "Zernio error";
-        console.error("[connections/start] Zernio error, falling back to demo:", msg);
-        // Fall through to demo mode below
+        console.error("[connections/start] Zernio error, falling back to local preview:", msg);
+        // Fall through to local preview mode below
       }
     }
 
-    // --- Demo mode: return URL for ?complete=1 step ---
+    // --- Local preview mode: return URL for ?complete=1 step ---
     if (wantsJson && !shouldComplete) {
       const url = `${req.nextUrl.origin}/api/connections/start/${provider}?complete=1&popup=${isPopupMode ? "1" : "0"}&returnTo=${encodeURIComponent(returnTo)}`;
       return NextResponse.json({ url }, { status: 200 });
@@ -76,8 +76,8 @@ export async function GET(
       );
     }
 
-    // --- Demo: create fake connection in DB ---
-    const profileId = `demo-${platform}-${user.id.slice(0, 8)}`;
+    // --- Local preview: create a simulated connection in DB ---
+    const profileId = `preview-${platform}-${user.id.slice(0, 8)}`;
     const existing = await findConnectionByUserPlatformAndProfileId(user.id, platform, profileId);
 
     if (!existing) {
@@ -90,11 +90,11 @@ export async function GET(
           message: `Profile limit reached (${limitCheck.current}/${limitCheck.limit})`,
         });
       }
-      const displayName = `Demo ${platform.charAt(0).toUpperCase()}${platform.slice(1)} Account`;
+      const displayName = `Preview ${platform.charAt(0).toUpperCase()}${platform.slice(1)} Account`;
       const created = await createConnectionLegacy({
         user_id: user.id,
         platform,
-        access_token: `demo-token-${platform}-${Date.now()}`,
+        access_token: `preview-token-${platform}-${Date.now()}`,
         refresh_token: null,
         profile_name: displayName,
         profile_id: profileId,

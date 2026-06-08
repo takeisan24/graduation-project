@@ -152,7 +152,7 @@
     },
     "buttons": {
       "signIn": "Sign In",
-      "getStarted": "Open Demo",
+      "getStarted": "Open Workspace",
       "signOut": "Sign Out",
       "dashboard": "Dashboard",
       "loading": "Loading...",
@@ -190,7 +190,7 @@
       "titleHighlight": "Content Planning",
       "titlePost": " & Creation for Multiple Platforms",
       "subtitle": "Transform a single content source into optimized posts for multiple social media platforms, using Generative AI to automate the creative process.",
-      "ctaPrimary": "Open demo",
+      "ctaPrimary": "Open workspace",
       "ctaSecondary": "View features",
       "platformsLabel": "Supported:",
       "floatingCards": {
@@ -250,9 +250,9 @@
       }
     },
     "testimonial": {
-      "quote": "CreatorHub demonstrates how a single source can be transformed into a coordinated multi-platform workflow with AI assistance, calendar planning, and publishing feedback in one system.",
+      "quote": "CreatorHub shows how a single source can be transformed into a coordinated multi-platform workflow with AI assistance, calendar planning, and publishing feedback in one system.",
       "author": {
-        "name": "Graduation Thesis Demo",
+        "name": "Graduation Thesis Product",
         "title": "End-to-end AI content workflow"
       },
       "results": {
@@ -341,7 +341,7 @@
     "ctaSection": {
       "title": "Ready to explore CreatorHub?",
       "subtitle": "Discover the multi-platform content creation support system built as part of an IT graduation thesis.",
-      "cta": "Open demo"
+      "cta": "Open workspace"
     },
     "techStack": {
       "title": "Architecture & Technology",
@@ -477,7 +477,7 @@
   },
   "PricingPage": {
     "headerTitle": "Resource Configuration Reference",
-    "headerSubtitle": "This page summarizes the resource and capacity model used in CreatorHub for AI-intensive workflows and demo scenarios.",
+    "headerSubtitle": "This page summarizes the resource and capacity model used in CreatorHub for AI-intensive user workflows.",
     "perMonth": "/ month",
     "featureOrder": [
       "credits",
@@ -704,7 +704,7 @@
       "instruction": "Use any banking app to scan",
       "mockLabel": "Mock QR Code",
       "mockWarningTitle": "Mock Environment",
-      "mockWarningText": "This is a demo system. Please DO NOT transfer real money.",
+      "mockWarningText": "This is a test environment. Please DO NOT transfer real money.",
       "orderId": "Order ID",
       "content": "Content",
       "confirm": "Confirm Payment Success",
@@ -809,7 +809,7 @@
       },
       "operations": {
         "title": "Workflow Overview",
-        "description": "Review workflow status, platform connectivity, and pipeline health"
+        "description": "Review workflow status, platform connectivity, and publishing stability"
       },
       "connections": {
         "title": "Platform Integrations",
@@ -860,39 +860,40 @@
       "noData": "No data available",
       "totalDrafts": "Drafts in progress",
       "draftsHint": "Content waiting to be completed before scheduling or publishing.",
-      "publishedHint": "Posts that successfully passed through the publishing pipeline.",
+      "publishedHint": "Posts that were published successfully by the system.",
       "failedHint": "Items that need follow-up for content or scheduling issues.",
       "connectedPlatformsCount": "{count} platforms currently represented",
-      "operationalSnapshot": "Operational snapshot",
-      "operationalSnapshotDesc": "Key signals that show how ready the system is for a polished demo.",
+      "operationalSnapshot": "Operational overview",
+      "operationalSnapshotDesc": "Key signals that show how ready the system is to process content.",
       "readinessScore": "Readiness score",
       "weeklyVolume": "7-day volume",
       "weeklyVolumeHint": "Total content items created, processed, or published in the last 7 days.",
       "successRateHint": "Calculated from items that already reached a final outcome.",
       "dominantPlatform": "Dominant platform",
       "dominantPlatformHint": "The platform with the highest current content concentration.",
-      "pipelineHealth": "Pipeline health",
-      "pipelineStable": "Pipeline is stable",
-      "pipelineNeedsAttention": "Pipeline needs attention",
-      "pipelineHealthHint": "A quick read on bottlenecks and operational reliability.",
-      "systemFocus": "Current priorities",
-      "systemFocusDesc": "The next priorities that make the graduation-project workflow clearer and stronger.",
+      "pipelineHealth": "Workflow status",
+      "pipelineStable": "Workflow is stable",
+      "pipelineNeedsAttention": "Workflow needs attention",
+      "pipelineHealthHint": "A quick read on publishing status and bottlenecks.",
+      "systemFocus": "Next priorities",
+      "systemFocusDesc": "The next priorities that make the content workflow clearer and more stable.",
       "focusDrafts": "Content queue",
       "focusDraftsDesc": "There are currently {count} drafts ready to be refined or scheduled.",
       "focusConnections": "Connection coverage",
-      "focusConnectionsDesc": "{count} accounts are connected. More real connections strengthen the multi-platform demo.",
+      "focusConnectionsDesc": "{count} accounts are connected. Better connection coverage makes the multi-platform workflow more complete.",
       "focusFailures": "Recovery handling",
-      "focusFailuresDesc": "{count} failed items are useful to demonstrate monitoring and recovery flows.",
+      "focusFailuresDesc": "{count} failed items need follow-up to keep monitoring and recovery flows reliable.",
       "dailyOperations": "Daily operations rhythm",
       "dailyOperationsDesc": "How much content moved through the system over the last 7 days.",
       "platformDist": "Platform distribution",
-      "platformDistDesc": "Where content is currently concentrated across the pipeline.",
+      "platformDistDesc": "Where content is currently concentrated across the active workflow.",
       "statusDistribution": "Content status distribution",
       "statusDistributionDesc": "A quick comparison of drafts, published items, and failures.",
       "activityPublished": "Post published",
       "activityFailed": "Publishing failure detected",
       "activityConnected": "Account connected",
       "activityNoContent": "No content summary available",
+      "unknownPlatform": "Unknown platform",
       "activityFeed": "Recent activity feed",
       "activityFeedDesc": "Latest events across content processing, failures, and account connections.",
       "noRecentActivity": "No recent activity found.",
@@ -901,11 +902,11 @@
       "totalPosts": "Total managed items",
       "connectedPlatformsLabel": "Active platforms",
       "nextFocus": "Next focus",
-      "nextFocusFailed": "Prioritize failed items to demonstrate recovery and resilience.",
-      "nextFocusDrafts": "Turn drafts into scheduled content to improve demo coverage.",
-      "nextFocusHealthy": "The system is stable. You can expand the demo to more platforms.",
+      "nextFocusFailed": "Prioritize failed items to keep the publishing workflow stable.",
+      "nextFocusDrafts": "Turn drafts into scheduled content to improve content coverage.",
+      "nextFocusHealthy": "The system is stable. You can expand to more platforms.",
       "latestWindow": "Observation scope",
-      "latestWindowDesc": "This view is built from the local data currently available: drafts, published items, failed items, and connected accounts."
+      "latestWindowDesc": "This view is built from your drafts, published items, failed items, and connected accounts."
     },
     "published": {
       "title": "Published Posts",
@@ -956,9 +957,9 @@
       "disconnect": "Disconnect",
       "disconnecting": "Disconnecting...",
       "previewConnectSuccess": "Mock-connected {platform}.",
-      "previewDisconnectSuccess": "Removed the demo connection from the list.",
+      "previewDisconnectSuccess": "Removed the sample connection from the list.",
       "socialConnections": "Available integrations",
-      "socialConnectionsDesc": "Connect additional platforms to broaden publishing coverage and strengthen the workflow demo.",
+      "socialConnectionsDesc": "Connect additional platforms to broaden publishing coverage and complete the multi-platform workflow.",
       "connected": "Connected",
       "notConnected": "Not connected",
       "loginError": "Please login again.",
@@ -1006,9 +1007,9 @@
     },
     "systemSettings": {
       "appearanceTitle": "Appearance",
-      "appearanceDesc": "Adjust the system theme so the workspace fits both demos and day-to-day usage.",
+      "appearanceDesc": "Adjust the system theme so the workspace fits your day-to-day usage.",
       "workspaceTitle": "Workspace behavior",
-      "workspaceDesc": "Controls related to onboarding state and how the workspace behaves during demos and normal use.",
+      "workspaceDesc": "Controls related to onboarding state and workspace behavior.",
       "accountTitle": "Profile and integrations",
       "accountDesc": "Sensitive account details such as email, avatar, and login methods are managed through Profile and Platform Integrations.",
       "light": "Light",
@@ -1310,7 +1311,7 @@
         "frameworks": {
           "expert-knowledge": {
             "title": "Expert Knowledge",
-            "description": "Articles demonstrating deep understanding to build expert authority"
+            "description": "Articles showing deep understanding to build expert authority"
           },
           "authentic-review": {
             "title": "Authentic Review",
@@ -1668,11 +1669,11 @@
       "recommendedActionWithoutAccounts": "Connect at least one social account to unlock scheduling.",
       "overviewScheduledWeek": "Scheduled this week",
       "overviewScheduledWeekHint": "Posts currently waiting to be published this week.",
-      "defenseStripEyebrow": "Defense snapshot",
-      "defenseStripTitle": "Presentation readiness of the content calendar",
-      "defenseStripHealthy": "The calendar is stable enough to demo: it shows schedule coverage, clear publishing states, and few operational bottlenecks.",
-      "defenseStripNeedsAttention": "There is visible friction in the publishing pipeline. Resolve the failed queue before adding more schedules.",
-      "defenseStripCoverage": "Publishing reliability looks fine, but weekly coverage is still thin. Add content on open days to make the demo story feel fuller.",
+      "defenseStripEyebrow": "Calendar overview",
+      "defenseStripTitle": "Content calendar readiness",
+      "defenseStripHealthy": "The calendar is stable: it shows schedule coverage, clear publishing states, and few operational bottlenecks.",
+      "defenseStripNeedsAttention": "There is visible friction in the publishing workflow. Resolve the failed queue before adding more schedules.",
+      "defenseStripCoverage": "Publishing reliability looks fine, but weekly coverage is still thin. Add content on open days to make the content plan more complete.",
       "healthReadiness": "Readiness",
       "healthCoverage": "Weekly coverage",
       "healthCoverageDays": "{count}/7 days",
@@ -1686,9 +1687,9 @@
       "overviewTopPlatformHint": "{count} active schedules are currently on this platform.",
       "overviewTopPlatformEmpty": "No platform usage yet.",
       "overviewNone": "None yet",
-      "plannerEyebrow": "Content operations",
+      "plannerEyebrow": "Content coordination",
       "plannerTitle": "Content scheduling command center",
-      "plannerDescription": "Track the schedule, filter by platform, and focus on the bottlenecks in your publishing pipeline.",
+      "plannerDescription": "Track the schedule, filter by platform, and focus on bottlenecks in your publishing workflow.",
       "createNewSchedule": "Pick a day to schedule",
       "filterLabel": "Display filters",
       "filterAllPlatforms": "All platforms",
@@ -1702,7 +1703,7 @@
       "insightFocusPlatform": "Currently focusing on {platform}.",
       "insightSuggestion": "AI suggestion",
       "insightSuggestionFailed": "Resolve failed posts first before adding more schedules so the campaign cadence stays stable.",
-      "insightSuggestionHealthy": "The pipeline looks healthy. Use the open days to increase your posting cadence.",
+      "insightSuggestionHealthy": "The workflow looks healthy. Use the open days to increase your posting cadence.",
       "agendaTitle": "Daily agenda",
       "agendaSubtitle": "{count} schedules are visible on the selected day.",
       "agendaSummaryPlatforms": "Platforms in view",
@@ -1785,7 +1786,7 @@
       "title": "Failed Posts",
       "reason": "Failure reason",
       "reschedule": "Reschedule",
-      "pipelineErrors": "Pipeline errors",
+      "pipelineErrors": "Workflow errors",
       "retryReady": "Retry ready",
       "affectedPlatforms": "Affected platforms",
       "retryModal": {

@@ -38,7 +38,7 @@ export function getCreatePreviewCopy(locale: string) {
   const isVi = locale.toLowerCase().startsWith("vi");
 
   return {
-    badge: isVi ? "Dữ liệu demo" : "Demo preview",
+    badge: isVi ? "Dữ liệu mẫu" : "Sample preview",
     emptyDescription: isVi
       ? "Đang hiển thị dữ liệu mô phỏng để bạn xem nhanh bố cục khi section chưa có dữ liệu thật."
       : "Showing mock data so you can review the layout before real content arrives.",
@@ -49,15 +49,15 @@ export function getCreatePreviewCopy(locale: string) {
 export function getPreviewDraftPosts(): DraftPost[] {
   return [
     {
-      id: "draft-demo-1",
+      id: "draft-sample-1",
       platform: "TikTok",
-      content: "Hook 3 giây đầu cho video review công cụ AI dành cho creator, mở bằng câu hỏi trực diện rồi chuyển sang demo workflow.",
+      content: "Hook 3 giây đầu cho video review công cụ AI dành cho creator, mở bằng câu hỏi trực diện rồi chuyển sang quy trình làm việc mẫu.",
       time: hoursAgo(3),
       status: "draft",
       source: "local",
     },
     {
-      id: "draft-demo-2",
+      id: "draft-sample-2",
       platform: "Instagram",
       content: "Carousel 5 slide: pain point, insight, before/after workflow, checklist hành động và CTA lưu bài viết.",
       time: hoursAgo(14),
@@ -65,9 +65,9 @@ export function getPreviewDraftPosts(): DraftPost[] {
       source: "local",
     },
     {
-      id: "draft-demo-3",
+      id: "draft-sample-3",
       platform: "LinkedIn",
-      content: "Bài post dạng thought leadership về cách chuẩn hóa pipeline nội dung cho team nhỏ, nhấn vào metric và tính lặp lại.",
+      content: "Bài post dạng thought leadership về cách chuẩn hóa quy trình nội dung cho team nhỏ, nhấn vào metric và tính lặp lại.",
       time: hoursAgo(27),
       status: "draft",
       source: "local",
@@ -83,7 +83,7 @@ export function getPreviewPublishedPosts(): PublishedPost[] {
       content: "Video short tổng hợp 3 workflow giúp giảm thời gian biến ý tưởng thành lịch đăng thực tế.",
       time: hoursAgo(6),
       status: "posted",
-      url: "https://example.com/demo/youtube-short",
+      url: "https://example.com/sample/youtube-short",
     },
     {
       id: 9102,
@@ -91,15 +91,15 @@ export function getPreviewPublishedPosts(): PublishedPost[] {
       content: "Case study ngắn về việc tái sử dụng một nguồn nội dung cho nhiều nền tảng nhưng vẫn giữ được ngữ cảnh bản địa.",
       time: hoursAgo(30),
       status: "posted",
-      url: "https://example.com/demo/facebook-post",
+      url: "https://example.com/sample/facebook-post",
     },
     {
       id: 9103,
       platform: "Threads",
-      content: "Thread tóm tắt khung vận hành content pipeline theo tuần, tập trung vào tốc độ phản hồi và độ ổn định.",
+      content: "Thread tóm tắt khung vận hành nội dung theo tuần, tập trung vào tốc độ phản hồi và độ ổn định.",
       time: hoursAgo(52),
       status: "posted",
-      url: "https://example.com/demo/threads-post",
+      url: "https://example.com/sample/threads-post",
     },
   ];
 }
@@ -110,25 +110,25 @@ export function getPreviewFailedPosts(): FailedPost[] {
 
   return [
     {
-      id: "failed-demo-1",
+      id: "failed-sample-1",
       platform: "Instagram",
       content: "Reel giới thiệu bộ template chiến lược nội dung nhưng media đang dùng sai tỉ lệ khung hình cho luồng publish.",
       date: datePart(firstFailedAt),
       time: timePart(firstFailedAt),
       scheduledAt: firstFailedAt,
       errorMessage: "Media ratio does not meet platform requirements.",
-      lateJobId: "late-job-demo-1",
+      lateJobId: "late-job-sample-1",
       media: [],
     },
     {
-      id: "failed-demo-2",
+      id: "failed-sample-2",
       platform: "TikTok",
-      content: "Video demo tính năng planner cần reschedule vì token kết nối đã hết hạn trong lúc dispatch.",
+      content: "Video giới thiệu tính năng planner cần reschedule vì token kết nối đã hết hạn trong lúc dispatch.",
       date: datePart(secondFailedAt),
       time: timePart(secondFailedAt),
       scheduledAt: secondFailedAt,
       errorMessage: "Authentication token expired during publish.",
-      lateJobId: "late-job-demo-2",
+      lateJobId: "late-job-sample-2",
       media: [],
     },
   ];
@@ -137,7 +137,7 @@ export function getPreviewFailedPosts(): FailedPost[] {
 export function getPreviewConnectedAccounts(): ConnectedAccount[] {
   return [
     {
-      id: "conn-demo-1",
+      id: "conn-sample-1",
       platform: "instagram",
       profile_name: "utc.creatorlab",
       profile_metadata: {
@@ -146,7 +146,7 @@ export function getPreviewConnectedAccounts(): ConnectedAccount[] {
       created_at: minutesAgo(90),
     },
     {
-      id: "conn-demo-2",
+      id: "conn-sample-2",
       platform: "youtube",
       profile_name: "UTC CreatorHub",
       profile_metadata: {
@@ -155,7 +155,7 @@ export function getPreviewConnectedAccounts(): ConnectedAccount[] {
       created_at: hoursAgo(8),
     },
     {
-      id: "conn-demo-3",
+      id: "conn-sample-3",
       platform: "linkedin",
       profile_name: "creatorhub-team",
       profile_metadata: {
@@ -180,12 +180,12 @@ export function createPreviewConnectedAccount(platformName: string): ConnectedAc
   };
 
   const fallback = profiles[normalized] || {
-    profile_name: `${platformName} demo`,
-    username: `${normalized}.demo`,
+    profile_name: `${platformName} sample`,
+    username: `${normalized}.sample`,
   };
 
   return {
-    id: `conn-demo-${normalized}-${Date.now()}`,
+    id: `conn-sample-${normalized}-${Date.now()}`,
     platform: normalized,
     profile_name: fallback.profile_name,
     profile_metadata: {
@@ -199,7 +199,7 @@ export function getPreviewUserProfile(): PreviewUserProfile {
   return {
     name: "UTC Creator",
     avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=240&q=80",
-    email: "creator@utcstudio.demo",
+    email: "creator@utcstudio.test",
     linkedProviders: ["email", "google"],
   };
 }

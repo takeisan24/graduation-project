@@ -230,7 +230,7 @@ export default function SignInPage() {
               )}
             </Button>
 
-            {/* OAuth tạm ẩn cho demo: Google bị lỗi double-locale (/vi/vi/signin) khi chưa cấu hình redirect URL Supabase đúng. Bật lại bằng env NEXT_PUBLIC_ENABLE_OAUTH=true. */}
+            {/* OAuth tạm ẩn trong bản hiện tại: Google bị lỗi double-locale (/vi/vi/signin) khi chưa cấu hình redirect URL Supabase đúng. Bật lại bằng env NEXT_PUBLIC_ENABLE_OAUTH=true. */}
             {process.env.NEXT_PUBLIC_ENABLE_OAUTH === "true" && (
             <>
             {/* Divider */}

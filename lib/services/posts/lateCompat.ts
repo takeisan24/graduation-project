@@ -177,8 +177,8 @@ export async function createInternalLatePost(params: CreateInternalLatePostParam
         mediaUrls: params.mediaUrls,
       });
     } catch (err) {
-      console.error("[lateCompat] Zernio publish failed, falling back to demo:", err);
-      // Fall through to demo mode
+      console.error("[lateCompat] Zernio publish failed, falling back to local preview:", err);
+      // Fall through to local preview mode
     }
 
     if (zernioPost) {

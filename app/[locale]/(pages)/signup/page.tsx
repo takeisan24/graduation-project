@@ -181,7 +181,7 @@ export default function SignUpPage() {
               )}
             </Button>
 
-            {/* OAuth tạm ẩn cho demo: Google lỗi double-locale, redirect URL Supabase chưa cấu hình. Bật lại bằng env NEXT_PUBLIC_ENABLE_OAUTH=true. */}
+            {/* OAuth tạm ẩn trong bản hiện tại: Google lỗi double-locale, redirect URL Supabase chưa cấu hình. Bật lại bằng env NEXT_PUBLIC_ENABLE_OAUTH=true. */}
             {process.env.NEXT_PUBLIC_ENABLE_OAUTH === "true" && (
             <>
             <div className="relative my-6">
