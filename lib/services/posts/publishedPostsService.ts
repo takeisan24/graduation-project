@@ -45,7 +45,7 @@ export interface PublishedPost {
   content: string;
   time: string;
   status: string;
-  url: string;
+  url: string | null; // null when post has no real URL (simulated publish)
   profileName: string;
   profilePic: string;
   engagement: {
@@ -104,8 +104,7 @@ function extractAvatarUrl(
 function extractPostUrl(
   payload: PostPayload,
   platformData: PlatformData | null,
-  lateDevPost: Record<string, unknown>,
-  platform: string
+  lateDevPost: Record<string, unknown>
 ): string {
   // For all platforms, use platformPostUrl first (most reliable - actual post URL from platform)
   // Priority: platformPostUrl > url > post_url
@@ -121,7 +120,8 @@ function extractPostUrl(
     || payload?.webhook_data?.data?.post_url
     || (lateDevPost?.url as string | undefined)
     || (lateDevPost?.post_url as string | undefined)
-    || `https://${(platform || '').toLowerCase()}.com/post/${payload?.id || 'unknown'}`;
+    // KHÔNG bịa URL: nếu không có URL thật từ nền tảng, trả chuỗi rỗng để UI disable nút "Mở bài viết".
+    || '';
 }
 
 /**
@@ -156,7 +156,7 @@ function transformPostToPublished(
   
   const username = extractUsername(profileMetadata, payload, platformData, connectedAccount);
   const avatarUrl = extractAvatarUrl(profileMetadata, payload, platformData);
-  const payloadUrl = extractPostUrl(payload, platformData, lateDevPost, post.platform);
+  const payloadUrl = extractPostUrl(payload, platformData, lateDevPost);
   const postUrl = post.post_url || payloadUrl;
   
   return {
@@ -165,7 +165,7 @@ function transformPostToPublished(
     content: payload.text_content || payload.text || '',
     time: post.scheduled_at || post.created_at,
     status: post.status,
-    url: postUrl || '', // Priority: column post_url > extracted from payload
+    url: postUrl || null, // null = no real URL (simulated publish); UI disables open-link button
     profileName: username.startsWith('@') ? username : `@${username}`,
     profilePic: avatarUrl,
     engagement: payload.engagement || payload.webhook_data?.engagement || {

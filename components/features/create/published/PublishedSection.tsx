@@ -15,6 +15,9 @@ import PreviewNotice from "../shared/PreviewNotice"
 import { getCreatePreviewCopy, getPreviewPublishedPosts, isCreatePreviewEnabled } from "@/lib/mocks/createSectionPreview"
 import { PublishedDetailModal } from "./PublishedDetailModal"
 import type { PublishedPost } from "@/store/shared/types"
+import { toast } from "sonner"
+import { supabaseClient } from "@/lib/supabaseClient"
+import ConfirmModal from "@/components/shared/ConfirmModal"
 
 export default function PublishedSection() {
   const t = useTranslations('CreatePage.published')
@@ -51,6 +54,37 @@ export default function PublishedSection() {
   const linkedPostCount = displayPosts.filter((post) => Boolean(post.url)).length
   const publishedPlatforms = new Set(displayPosts.map((post) => post.platform).filter(Boolean)).size
   const [selectedPost, setSelectedPost] = useState<PublishedPost | null>(null)
+  const [postToUnpublish, setPostToUnpublish] = useState<PublishedPost | null>(null)
+
+  const handleUnpublishConfirm = async () => {
+    const target = postToUnpublish
+    if (!target) return
+    const { data: { session } } = await supabaseClient.auth.getSession()
+    if (!session?.access_token) { toast.error(t('loginRequired')); return }
+    const toastId = toast.loading(t('unpublishing'))
+    try {
+      const res = await fetch(`/api/schedule/posts/${target.id}/unpublish`, {
+        method: 'POST',
+        headers: { 'authorization': `Bearer ${session.access_token}` },
+      })
+      const json = await res.json().catch(() => ({} as Record<string, unknown>))
+      if (!res.ok) {
+        const errObj = json as { error?: unknown; message?: string }
+        const msg = typeof errObj.error === 'string'
+          ? errObj.error
+          : (errObj.error as { message?: string })?.message || errObj.message || t('unpublishFailed')
+        throw new Error(msg)
+      }
+      usePublishedPostsStore.setState((s) => ({
+        publishedPosts: s.publishedPosts.filter((p) => String(p.id) !== String(target.id)),
+      }))
+      toast.success(t('unpublishSuccess'), { id: toastId })
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : t('unpublishFailed'), { id: toastId })
+    } finally {
+      setPostToUnpublish(null)
+    }
+  }
 
   useEffect(() => {
     loadPublishedPosts()
@@ -73,18 +107,18 @@ export default function PublishedSection() {
       <div className="px-4 lg:px-6 py-3">
         <div className="mb-3 grid gap-3 md:grid-cols-3">
           <div className="rounded-2xl border border-border/70 bg-card/60 px-4 py-3">
-            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Published output</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{t('statPublishedOutput')}</p>
             <p className="mt-2 text-2xl font-semibold text-foreground">{displayPosts.length}</p>
           </div>
           <div className="rounded-2xl border border-border/70 bg-card/60 px-4 py-3">
-            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Linked posts</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{t('statLinkedPosts')}</p>
             <p className="mt-2 inline-flex items-center gap-2 text-2xl font-semibold text-foreground">
               <ExternalLink className="h-5 w-5 text-primary" />
               {linkedPostCount}
             </p>
           </div>
           <div className="rounded-2xl border border-border/70 bg-card/60 px-4 py-3">
-            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Active platforms</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{t('statActivePlatforms')}</p>
             <p className="mt-2 inline-flex items-center gap-2 text-2xl font-semibold text-foreground">
               <Layers3 className="h-5 w-5 text-emerald-500" />
               {publishedPlatforms}
@@ -121,7 +155,7 @@ export default function PublishedSection() {
                   content: post.content,
                   created_at: post.time,
                   status: post.status,
-                  url: post.url
+                  url: post.url ?? undefined
                 }}
                 variant="published"
                 onClick={() => setSelectedPost(post)}
@@ -155,6 +189,17 @@ export default function PublishedSection() {
           }
         }}
         onOpenExternal={handleViewPost}
+        onUnpublish={(post) => { setSelectedPost(null); setPostToUnpublish(post) }}
+      />
+
+      <ConfirmModal
+        isOpen={!!postToUnpublish}
+        onClose={() => setPostToUnpublish(null)}
+        onConfirm={handleUnpublishConfirm}
+        title={t('unpublishTitle')}
+        description={postToUnpublish ? t('unpublishDescription', { platform: postToUnpublish.platform }) : ''}
+        confirmText={t('unpublishConfirm')}
+        variant="danger"
       />
     </div>
   )

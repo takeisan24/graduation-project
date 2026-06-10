@@ -74,7 +74,7 @@ export interface PublishedPost {
   content: string;
   time: string;
   status: string;
-  url: string;
+  url: string | null; // null when post has no real URL (simulated publish)
   profileName?: string;
   profilePic?: string;
   engagement?: {

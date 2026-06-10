@@ -80,6 +80,13 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
       return;
     }
 
+    // Chặn sớm: Instagram/TikTok/YouTube/Pinterest bắt buộc kèm media mới đăng được.
+    const MEDIA_REQUIRED_PLATFORMS = ['instagram', 'tiktok', 'youtube', 'pinterest'];
+    if (MEDIA_REQUIRED_PLATFORMS.includes(platformProvider) && postMedia.length === 0) {
+      toast.error(`${post.type} cần đính kèm ảnh/video mới đăng được.`);
+      return;
+    }
+
     let publishingToastId: string | number | undefined;
     try {
       publishingToastId = toast.loading(POST_ERRORS.PUBLISHING_IN_PROGRESS);
@@ -235,7 +242,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
         content: content,
         time: now.toISOString(),
         status: 'posted',
-        url: data?.latePost?.url || `https://${post.type.toLowerCase()}.com/post/${postId}`,
+        url: data?.latePost?.url || null, // null = no real URL yet (simulated publish)
         engagement: { likes: 0, comments: 0, shares: 0 }
       };
 
@@ -255,7 +262,9 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
         status: 'posted',
         noteType: 'green',
         content: content,
-        url: publishedPost.url
+        url: publishedPost.url ?? undefined,
+        // Gắn id bản ghi DB để khi lịch hydrate từ server sẽ DEDUP (không sinh thẻ trùng).
+        scheduled_post_id: data?.scheduledPost?.id ? String(data.scheduledPost.id) : undefined,
       };
 
       const calendarStore = useCalendarStore.getState();
@@ -317,8 +326,6 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
     const ampm = (time || '').toUpperCase().includes('PM');
     if (ampm && hour < 12) hour += 12;
     if (!ampm && hour === 12) hour = 0;
-    const pad = (n: number) => (n < 10 ? `0${n}` : String(n));
-    const time24 = `${pad(hour)}:${pad(minute)}`;
 
     const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const scheduledDateTime = new Date(date);
@@ -356,6 +363,14 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
 
       if (platformProfiles.length === 0) {
         throw new Error(POST_ERRORS.NO_ACCOUNT_FOR_PLATFORM(platform));
+      }
+
+      // Chặn sớm: Instagram/TikTok/YouTube/Pinterest bắt buộc kèm media mới đăng được.
+      const MEDIA_REQUIRED_PLATFORMS = ['instagram', 'tiktok', 'youtube', 'pinterest'];
+      if (MEDIA_REQUIRED_PLATFORMS.includes(platform.toLowerCase()) && postMedia.length === 0) {
+        toast.error(`${post.type} cần đính kèm ảnh/video mới lên lịch được.`);
+        if (schedulingToastId) toast.dismiss(schedulingToastId);
+        return;
       }
 
       // Validate Facebook: Cannot mix videos and images
