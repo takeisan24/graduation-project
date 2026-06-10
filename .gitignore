@@ -70,7 +70,10 @@ CLAUDE.local.md
 .playwright-mcp/
 
 #Specs file
-specs/*
+# specs/* đã bị xóa vì nó ignore cả thư mục con (audit-2026-06/, create-section/, ...)
+# khiến !specs/**/*.md ở dòng trên không có tác dụng (git không un-ignore file
+# bên trong thư mục đã bị ignore). Thư mục specs/ và .md bên trong được track.
+# Nếu cần ignore file cụ thể ở root specs/ thì thêm từng file riêng.
 
 # Playwright test tracking and reports
 /playwright-report/
