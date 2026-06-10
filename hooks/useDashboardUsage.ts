@@ -20,7 +20,7 @@ export function useDashboardUsage() {
   const { data: usageData, isLoading: isLoadingCredits, mutate: refreshCredits } = useSWR(
     user ? "/api/usage" : null,
     authFetcher,
-    { revalidateOnFocus: false, dedupingInterval: 30000 }
+    { revalidateOnFocus: false, dedupingInterval: 5000 }
   )
 
   const { data: storageRaw } = useSWR(

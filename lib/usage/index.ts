@@ -409,7 +409,8 @@ export async function addPurchasedCredits(userId: string, amount: number): Promi
   const plan = user?.plan || 'free';
   const planCredits = getPlanCredits(plan);
 
-  // Update purchased credits
+  // Update purchased credits (non-atomic read-modify-write kept for usage table;
+  // the critical balance field below uses an atomic increment instead)
   const { error } = await supabase
     .from("usage")
     .update({ credits_purchased: currentPurchased + amount })
@@ -422,20 +423,40 @@ export async function addPurchasedCredits(userId: string, amount: number): Promi
     return { success: false, reason: "db_error" };
   }
 
-  // Calculate and update credits_balance in users table
-  const newTotalCredits = planCredits + (currentPurchased + amount);
-  const newCreditsBalance = newTotalCredits - creditsUsed;
+  // Atomic increment of credits_balance in users table to avoid race conditions.
+  // Uses raw SQL expression `credits_balance + amount` so concurrent top-ups
+  // never overwrite each other's writes.
+  const { error: userUpdateError } = await supabase.rpc('increment_credits_balance', {
+    p_user_id: userId,
+    p_amount: amount,
+  });
 
-  const { error: userUpdateError } = await supabase
-    .from("users")
-    .update({
-      credits_balance: newCreditsBalance,
-      updated_at: new Date().toISOString()
-    })
-    .eq("id", userId);
-  if (userUpdateError && !isMissingSchemaResource(userUpdateError)) {
-    console.error('Error updating user credits balance:', userUpdateError);
+  if (userUpdateError) {
+    // RPC may not exist yet — fall back to read-modify-write as a best-effort update
+    if (!isMissingSchemaResource(userUpdateError)) {
+      console.warn('[addPurchasedCredits] increment_credits_balance RPC unavailable, falling back:', userUpdateError.message);
+    }
+    const newTotalCredits = planCredits + (currentPurchased + amount);
+    const newCreditsBalance = newTotalCredits - creditsUsed;
+    const { error: fallbackError } = await supabase
+      .from("users")
+      .update({
+        credits_balance: newCreditsBalance,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", userId);
+    if (fallbackError && !isMissingSchemaResource(fallbackError)) {
+      console.error('Error updating user credits balance (fallback):', fallbackError);
+    }
   }
+
+  // newCreditsBalance for activity log: read fresh value after atomic update
+  const { data: freshUser } = await supabase
+    .from("users")
+    .select("credits_balance")
+    .eq("id", userId)
+    .single();
+  const newCreditsBalance = freshUser?.credits_balance ?? (planCredits + (currentPurchased + amount) - creditsUsed);
 
   // Log to activity_log
   try {

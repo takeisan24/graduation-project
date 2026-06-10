@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { useState } from "react"
+import { useSWRConfig } from "swr"
 import { CREDIT_PACKAGES } from "@/lib/constants/credit-packages"
 import { supabaseClient } from "@/lib/supabaseClient"
 import { toast } from "sonner"
@@ -39,6 +40,7 @@ interface OrderData {
 
 export default function CreditTopUp() {
   const t = useTranslations("CreatePage.payment")
+  const { mutate } = useSWRConfig()
   const [loading, setLoading] = useState<string | null>(null)
   const [orderData, setOrderData] = useState<OrderData | null>(null)
   const [confirming, setConfirming] = useState(false)
@@ -111,6 +113,9 @@ export default function CreditTopUp() {
       const { data } = await res.json()
       if (data?.status === "PAID") {
         toast.success(t("successCredits", { credits: data.credits }))
+        // Làm mới số dư credit hiển thị ở thanh công cụ (useDashboardUsage dùng key /api/usage)
+        // revalidate: true để force-bypass dedupingInterval, tránh SWR bỏ qua fetch sau payment
+        void mutate("/api/usage", undefined, { revalidate: true })
         setOrderData(null)
       }
     } catch (err) {
