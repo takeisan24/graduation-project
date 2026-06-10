@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { requireAuth } from "@/lib/auth";
+import { requireAuthMedia } from "@/lib/auth";
 import { fail } from "@/lib/response";
 
 const SERVER_B_URL = process.env.SERVER_B_URL;
@@ -31,10 +31,9 @@ export async function GET(
   { params }: { params: { assetId: string } }
 ) {
   try {
-    // ✅ CRITICAL FIX: Support token from query param for browser image/video tags
-    // Browser tags (<img>, <video>) cannot set Authorization header, so we use ?token=... in URL
-    // requireAuth already supports token from query param, but we need to handle gracefully
-    const user = await requireAuth(req);
+    // requireAuthMedia accepts ?token= query param for browser <img>/<video> tags
+    // that cannot set Authorization headers. Write routes use requireAuth instead.
+    const user = await requireAuthMedia(req);
 
     // ✅ FIX: If no user but token exists in query param, try to validate token directly
     // This handles cases where token is in URL but requireAuth failed (e.g., expired token)

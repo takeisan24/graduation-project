@@ -2,30 +2,29 @@ import { NextRequest } from "next/server";
 import { supabase } from "./supabase";
 
 /**
- * Helper function to get Supabase session from query param or cookies
- * Used when Authorization header is not available (e.g., browser image/video tags)
- * 
+ * Helper function to get Supabase session from cookies ONLY (no query param).
+ * Used by requireAuth for write/transaction routes where token-in-URL is not
+ * acceptable (AUDIT-002 / B18 — token in URL can leak via logs, Referer headers,
+ * browser history, and proxy caches).
+ *
+ * For read-only media GET routes (image/video tags) use requireAuthMedia() instead,
+ * which additionally accepts the ?token= query param as a fallback.
+ *
  * Note: Supabase client-side stores session in localStorage, not cookies.
- * For browser image/video tags, we use query param as workaround.
  */
 async function getSessionFromCookies(req: NextRequest): Promise<string | null> {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    
+
     if (!supabaseUrl || !anonKey) {
       return null;
     }
 
-    // Priority 1: Try to get token from query param (for browser image/video tags)
-    // This is a workaround since browser doesn't send Authorization header
-    const url = new URL(req.url);
-    const tokenFromQuery = url.searchParams.get('token');
-    if (tokenFromQuery) {
-      return tokenFromQuery;
-    }
+    // NOTE: ?token= query param is intentionally NOT checked here.
+    // Token-in-URL is restricted to read-only media routes via requireAuthMedia().
 
-    // Priority 2: Try to get from cookies (if using @supabase/ssr)
+    // Try to get from cookies (if using @supabase/ssr)
     // Note: Supabase client-side uses localStorage, so this won't work by default
     // But if using @supabase/ssr package, session might be in cookies
     const cookies = req.cookies;
@@ -142,5 +141,60 @@ export async function requireAuth(req: NextRequest) {
   
   // All retries exhausted
   console.error(`[requireAuth] All retries exhausted, returning null`);
+  return null;
+}
+
+/**
+ * requireAuthMedia — like requireAuth but also accepts ?token= query param.
+ *
+ * SECURITY NOTE (AUDIT-002 / B18): token-in-URL risks leaking via HTTP logs,
+ * Referer headers, browser history, and proxy caches. This function is ONLY
+ * for read-only GET routes serving media assets (image/video browser tags)
+ * where the browser cannot set an Authorization header.
+ *
+ * NEVER use this for routes that write data, create orders, or grant credits.
+ */
+export async function requireAuthMedia(req: NextRequest) {
+  // First try the standard header + cookie path (preferred)
+  const fromHeader = await requireAuth(req);
+  if (fromHeader) return fromHeader;
+
+  // Fallback: accept token from ?token= query param for browser <img>/<video> tags
+  const url = new URL(req.url);
+  const tokenFromQuery = url.searchParams.get('token');
+  if (!tokenFromQuery) return null;
+
+  const maxRetries = 3;
+  const baseDelay = 1000;
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const res = await supabase.auth.getUser(tokenFromQuery);
+
+      if (res.error) {
+        const isTimeoutError = res.error.message?.includes('timeout') ||
+                               res.error.message?.includes('fetch failed') ||
+                               res.error.message?.includes('UND_ERR_CONNECT_TIMEOUT');
+        if (isTimeoutError && attempt < maxRetries - 1) {
+          await new Promise(resolve => setTimeout(resolve, baseDelay * Math.pow(2, attempt)));
+          continue;
+        }
+        return null;
+      }
+
+      return res.data?.user ?? null;
+    } catch (error: any) {
+      const isNetworkError = error?.message?.includes('fetch failed') ||
+                             error?.message?.includes('timeout') ||
+                             error?.code === 'UND_ERR_CONNECT_TIMEOUT' ||
+                             error?.cause?.code === 'UND_ERR_CONNECT_TIMEOUT';
+      if (isNetworkError && attempt < maxRetries - 1) {
+        await new Promise(resolve => setTimeout(resolve, baseDelay * Math.pow(2, attempt)));
+        continue;
+      }
+      return null;
+    }
+  }
+
   return null;
 }
