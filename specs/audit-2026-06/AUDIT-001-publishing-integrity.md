@@ -1,6 +1,6 @@
 # AUDIT-001: Toàn vẹn luồng đăng bài & tích hợp Zernio
 
-> **Status**: Partially Implemented — B1/B2/B3/B4/B7 fixed; B5/B6/B20/B31 remain
+> **Status**: Partially Implemented — B1/B2/B3/B4/B5/B6/B7/B31 fixed; B20 remain (accepted as known limitation)
 > **Priority**: 🔴 P0 (chặn demo chính)
 > **Stack**: Next.js 14, TypeScript, Supabase, Zernio API
 > **Bugs**: B1, B2, B3, B4, B5, B6, B7, B20, B31
@@ -27,11 +27,11 @@ Nguyên nhân kép:
 | B2 | `lib/zernio.ts:159` ~~(cũ: 88-90)~~ | Media gửi `media:[{url}]` — Zernio yêu cầu `mediaItems:[{type, url}]` | ✅ **ĐÃ SỬA** — `inferMediaType` + `mediaItems` đúng |
 | B3 | `lib/services/posts/lateCompat.ts:185-196` ~~(cũ: 179-182)~~ | `catch` chỉ `console.error` rồi fall-through sang bịa URL | ✅ **ĐÃ SỬA** — lỗi được ném ra (fail loud) |
 | B4 | `lib/services/posts/lateCompat.ts:257-283, 366` ~~(cũ: 51-55, 231, 283, 336)~~ | `buildSyntheticPostUrl` → `https://<platform>.com/<user>/post/<id>` | ✅ **ĐÃ SỬA** — `buildSyntheticPostUrl` đã bị xóa; `post_url: null` cho mô phỏng |
-| B5 | `store/create/publish.ts:245` ~~(cũ: 238)~~ | Client bịa URL khi thiếu URL | ⚠️ **CÒN TỒN TẠI** — `url: data?.latePost?.url \|\| ''` (empty string thay vì null; nút không bị disable) |
-| B6 | `lib/services/posts/publishedPostsService.ts:168` ~~(cũ: 124)~~ | Đọc lại bài đã đăng cũng bịa URL | ⚠️ **CÒN TỒN TẠI** — `url: postUrl \|\| ''` (empty string, không phải null) |
+| B5 | `store/create/publish.ts:245` ~~(cũ: 238)~~ | Client bịa URL khi thiếu URL | ✅ **ĐÃ SỬA** — `url: data?.latePost?.url \|\| null` (null → nút "Mở bài viết" bị disable) |
+| B6 | `lib/services/posts/publishedPostsService.ts:168` ~~(cũ: 124)~~ | Đọc lại bài đã đăng cũng bịa URL | ✅ **ĐÃ SỬA** — `url: postUrl \|\| null` (null, không phải empty string) |
 | B7 | `app/api/late/posts/[id]/check-status/route.ts` | `resolveInternalLatePost` không gọi Zernio; không poll `GET /posts/{id}` | ✅ **ĐÃ SỬA** — `getZernioPost` + `pollZernioUntilTerminal` có trong `lib/zernio.ts:211-270` |
 | B20 | toàn cục | Không có route webhook nhận callback publishing | ⚠️ **CÒN TỒN TẠI** — chưa có webhook Zernio; phụ thuộc Hướng A/B |
-| B31 | `components/features/create/calendar/CalendarSection.tsx:307` ~~(cũ: 306-308)~~ | `handleOpenInEditor` mở `event.url` (synthetic) cho bài "posted" | ⚠️ **CÒN TỒN TẠI** — guard `event.url` tồn tại nhưng với empty string sẽ không block |
+| B31 | `components/features/create/calendar/CalendarSection.tsx:307` ~~(cũ: 306-308)~~ | `handleOpenInEditor` mở `event.url` (synthetic) cho bài "posted" | ✅ **ĐÃ SỬA** — guard `event.url` hoạt động đúng vì B5 đã đổi sang `null` (falsy); `null` không bị `window.open` |
 
 ### Tham chiếu contract Zernio (đã đối chiếu docs.zernio.com + llms-full.txt)
 ```jsonc
