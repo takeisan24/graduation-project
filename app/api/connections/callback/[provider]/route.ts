@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { listZernioAccounts } from "@/lib/zernio";
+import { listZernioAccounts, getZernioAccountUsername, getZernioAccountAvatar } from "@/lib/zernio";
 import { resolvePendingConnection } from "@/lib/zernioState";
 import { createConnectionLegacy, findConnectionByUserPlatformAndProfileId } from "@/lib/services/db/connections";
 import { buildPopupResponse } from "@/lib/utils/connectionPopup";
@@ -34,18 +34,19 @@ export async function GET(
       const chPlatform = acc.platform === "twitter" ? "x" : acc.platform;
       const existing = await findConnectionByUserPlatformAndProfileId(pending.userId, chPlatform, acc._id);
       if (existing) continue;
+      const username = getZernioAccountUsername(acc);
       const created = await createConnectionLegacy({
         user_id: pending.userId,
         platform: chPlatform,
         access_token: "zernio-managed",
         refresh_token: null,
-        profile_name: acc.displayName || acc.username,
+        profile_name: acc.displayName || acc.metadata?.profileData?.displayName || username,
         profile_id: acc._id,
         expires_at: null,
         getlate_account_id: acc._id,
         profile_metadata: {
-          username: acc.username,
-          avatar_url: acc.profilePicture || acc.metadata?.profileData?.profilePicture || acc.avatarUrl || null,
+          username,
+          avatar_url: getZernioAccountAvatar(acc),
         },
       });
       if (created) saved++;

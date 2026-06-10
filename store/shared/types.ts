@@ -77,6 +77,7 @@ export interface PublishedPost {
   url: string | null; // null when post has no real URL (simulated publish)
   profileName?: string;
   profilePic?: string;
+  media?: string[]; // URL ảnh/video đã đính kèm khi đăng
   engagement?: {
     likes: number;
     comments: number;

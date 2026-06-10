@@ -825,6 +825,7 @@
       }
     },
     "topBar": {
+      "payAsYouGo": "Trả theo dùng",
       "toggleTheme": "Chuyển giao diện",
       "signOut": "Đăng xuất",
       "signOutSuccess": "Đăng xuất thành công!",
@@ -1032,7 +1033,10 @@
       "confirmingPayment": "Đang xác nhận...",
       "creditsUnit": "credits",
       "perCredit": "đ/credit",
-      "demoNotice": "Chế độ demo — thanh toán được mô phỏng cho mục đích trình bày đồ án. Credits được cộng thủ công, không có xác thực giao dịch ngân hàng thật."
+      "demoNotice": "Chế độ demo — thanh toán được mô phỏng cho mục đích trình bày đồ án. Credits được cộng thủ công, không có xác thực giao dịch ngân hàng thật.",
+      "creditAmountLabel": "Số credit muốn mua",
+      "creditRangeHint": "Nhập từ {min} đến {max} credit.",
+      "buyCredits": "Mua {credits} credit"
     },
     "systemSettings": {
       "appearanceTitle": "Giao diện hiển thị",
@@ -1660,6 +1664,8 @@
           "confirmDelete": "Xác nhận xóa?",
           "deleteConfirmDescription": "Xóa dự án \"{name}\"? Toàn bộ bản nháp thuộc dự án sẽ bị xóa và không thể hoàn tác.",
           "newProject": "Dự án mới",
+          "backToGate": "Chọn dự án khác",
+          "switchTo": "Chuyển sang \"{name}\"",
           "allProjects": "Tất cả dự án",
           "empty": "Chưa có dự án nào",
           "loadFailed": "Không tải được danh sách dự án",
@@ -1811,8 +1817,11 @@
       "deleteModal": {
         "title": "Xác nhận xóa?",
         "message": "Bạn có chắc chắn muốn xóa sự kiện này khỏi lịch không?",
+        "messageScheduled": "Bạn muốn xử lý bài đã lên lịch này thế nào? \"Chỉ gỡ khỏi lịch\" sẽ gỡ khỏi lịch của bạn nhưng vẫn giữ lịch trên Zernio. \"Xóa hoàn toàn\" sẽ hủy cả trên Zernio và không thể hoàn tác.",
         "no": "Không",
-        "yes": "Xóa"
+        "yes": "Xóa",
+        "fullDelete": "Xóa hoàn toàn",
+        "calendarOnly": "Chỉ gỡ khỏi lịch"
       }
     },
     "failedSection": {

@@ -12,7 +12,7 @@
 import { useState, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
 import { useShallow } from 'zustand/react/shallow'
-import { FolderKanban, Pencil, Trash2, Plus, Check, X, Loader2 } from 'lucide-react'
+import { FolderKanban, Pencil, Trash2, Plus, Check, X, Loader2, LayoutGrid } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -26,6 +26,7 @@ import {
 import { useCreateWorkspaceStore, useCreateSourcesStore, useCreatePostsStore } from '@/store'
 import { deriveWorkspaceSeed } from '@/store/create/workspace'
 import { supabaseClient } from '@/lib/supabaseClient'
+import ConfirmModal from '@/components/shared/ConfirmModal'
 
 interface ProjectRow {
   id: string
@@ -60,7 +61,7 @@ export default function ProjectMenu() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
-  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [projectToDelete, setProjectToDelete] = useState<ProjectRow | null>(null)
   const [isRenaming, setIsRenaming] = useState(false)
   const [renameValue, setRenameValue] = useState('')
 
@@ -91,7 +92,7 @@ export default function ProjectMenu() {
   const handleOpenChange = (next: boolean) => {
     setOpen(next)
     if (next) {
-      setConfirmDeleteId(null)
+      setProjectToDelete(null)
       setIsRenaming(false)
       void loadProjects()
     }
@@ -106,6 +107,20 @@ export default function ProjectMenu() {
   // Tạo (C)
   const handleNewProject = () => {
     resetWorkspace()
+    setOpen(false)
+  }
+
+  // Chuyển sang dự án khác đang có (giống ProjectGate.handleOpen): chỉ đổi ngữ cảnh dự án.
+  const handleSwitchProject = (p: ProjectRow) => {
+    if (p.id !== projectId) {
+      setWorkspaceProject({ projectId: p.id, projectName: p.name, sourceType: null, sourceContent: null })
+    }
+    setOpen(false)
+  }
+
+  // Quay lại Cửa dự án (ProjectGate): bỏ ngữ cảnh dự án hiện hành, GIỮ nguyên nội dung đang soạn.
+  const handleBackToGate = () => {
+    clearWorkspaceProject()
     setOpen(false)
   }
 
@@ -156,7 +171,7 @@ export default function ProjectMenu() {
       })
       if (!res.ok) throw new Error('delete failed')
       setProjects((prev) => prev.filter((p) => p.id !== id))
-      setConfirmDeleteId(null)
+      setProjectToDelete(null)
       // Nếu xóa đúng dự án đang mở → dọn workspace về trạng thái trống
       if (id === projectId) resetWorkspace()
     } catch {
@@ -167,6 +182,7 @@ export default function ProjectMenu() {
   }
 
   return (
+    <>
     <DropdownMenu open={open} onOpenChange={handleOpenChange}>
       <DropdownMenuTrigger asChild>
         <button
@@ -210,23 +226,6 @@ export default function ProjectMenu() {
                   <Pencil className="mr-2 h-4 w-4" />
                   {t('rename')}
                 </DropdownMenuItem>
-                {confirmDeleteId === projectId ? (
-                  <DropdownMenuItem
-                    onSelect={(e) => { e.preventDefault(); void handleDelete(projectId) }}
-                    className="text-destructive focus:text-destructive"
-                  >
-                    {busyId === projectId ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
-                    {t('confirmDelete')}
-                  </DropdownMenuItem>
-                ) : (
-                  <DropdownMenuItem
-                    onSelect={(e) => { e.preventDefault(); setConfirmDeleteId(projectId) }}
-                    className="text-destructive focus:text-destructive"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    {t('delete')}
-                  </DropdownMenuItem>
-                )}
               </>
             )}
             <DropdownMenuSeparator />
@@ -237,6 +236,12 @@ export default function ProjectMenu() {
         <DropdownMenuItem onSelect={(e) => { e.preventDefault(); handleNewProject() }}>
           <Plus className="mr-2 h-4 w-4" />
           {t('newProject')}
+        </DropdownMenuItem>
+
+        {/* Quay lại Cửa dự án (chọn/ tạo dự án khác) */}
+        <DropdownMenuItem onSelect={(e) => { e.preventDefault(); handleBackToGate() }}>
+          <LayoutGrid className="mr-2 h-4 w-4" />
+          {t('backToGate')}
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
@@ -259,36 +264,43 @@ export default function ProjectMenu() {
             {projects.map((p) => (
               <div
                 key={p.id}
-                className={`flex items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-sm ${p.id === projectId ? 'bg-accent/60' : ''}`}
+                className={`flex items-center justify-between gap-2 rounded-sm px-1 py-0.5 text-sm ${p.id === projectId ? 'bg-accent/60' : 'hover:bg-accent/40'}`}
               >
-                <span className="min-w-0 flex-1 truncate" title={p.name}>
+                <button
+                  type="button"
+                  onClick={() => handleSwitchProject(p)}
+                  disabled={p.id === projectId}
+                  title={p.id === projectId ? p.name : t('switchTo', { name: p.name })}
+                  className="min-w-0 flex-1 truncate rounded-sm px-1 py-1 text-left disabled:cursor-default enabled:cursor-pointer"
+                >
                   {p.id === projectId && <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-primary align-middle" />}
                   {p.name}
-                </span>
-                {confirmDeleteId === p.id ? (
-                  <button
-                    type="button"
-                    onClick={() => void handleDelete(p.id)}
-                    disabled={busyId === p.id}
-                    className="shrink-0 rounded px-1.5 py-0.5 text-[11px] font-medium text-destructive hover:bg-destructive/10"
-                  >
-                    {busyId === p.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : t('confirmDelete')}
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setConfirmDeleteId(p.id)}
-                    aria-label={t('delete')}
-                    className="shrink-0 rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
-                )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setProjectToDelete(p)}
+                  aria-label={t('delete')}
+                  className="shrink-0 rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
               </div>
             ))}
           </div>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
+
+    <ConfirmModal
+      isOpen={!!projectToDelete}
+      onClose={() => setProjectToDelete(null)}
+      onConfirm={() => { if (projectToDelete) void handleDelete(projectToDelete.id) }}
+      title={t('delete')}
+      description={projectToDelete ? t('deleteConfirmDescription', { name: projectToDelete.name }) : ''}
+      confirmText={t('confirmDelete')}
+      cancelText={t('cancel')}
+      variant="danger"
+    />
+    </>
   )
 }

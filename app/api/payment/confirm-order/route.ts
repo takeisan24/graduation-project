@@ -6,11 +6,13 @@ import { addPurchasedCredits } from "@/lib/usage";
 
 export async function POST(req: NextRequest) {
   try {
-    // SECURITY (AUDIT-002 / B17b): Manual confirmation is only allowed when the
-    // ENABLE_MANUAL_CONFIRM flag is explicitly set to "true".
-    // In production this flag MUST be unset; real credit grants should come from
-    // a verified payment webhook, not from a client-initiated call.
-    const manualConfirmEnabled = process.env.ENABLE_MANUAL_CONFIRM === "true";
+    // SECURITY (AUDIT-002 / B17b): client tự xác nhận "đã trả" KHÔNG có xác minh thật từ cổng
+    // thanh toán → ở PRODUCTION phải chặn (credit chỉ cấp qua webhook có chữ ký).
+    // Dev/demo (NODE_ENV !== "production") tự cho phép để demo chạy mà không cần set env;
+    // production vẫn phải bật cờ ENABLE_MANUAL_CONFIRM=true thủ công.
+    const manualConfirmEnabled =
+      process.env.ENABLE_MANUAL_CONFIRM === "true" ||
+      process.env.NODE_ENV !== "production";
     if (!manualConfirmEnabled) {
       return fail("MANUAL_CONFIRM_DISABLED", 403);
     }

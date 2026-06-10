@@ -94,9 +94,10 @@ export async function generateTextWithCredits(
       };
     } catch (error) {
       console.error(`Error generating text for ${platformItem}:`, error);
+      // KHÔNG chèn placeholder lừa mắt — trả text rỗng + cờ lỗi để UI báo lỗi và cho Retry.
       return {
         platform: platformItem,
-        text: `Auto-generated content for ${platformItem}`,
+        text: "",
         tone,
         error: "Generation failed",
         success: false

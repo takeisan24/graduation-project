@@ -12,7 +12,7 @@ import { supabaseClient } from '@/lib/supabaseClient';
 import type { LateLifecycleStatus, PendingScheduledPost } from './types';
 import { normalizeLateLifecycleStatus, isFinalLateStatus } from './utils';
 import { statusToNoteTypeMap, CALENDAR_STATUS } from './constants';
-import { AUTH_ERRORS, CALENDAR_ERRORS, GENERIC_ERRORS } from '@/lib/messages/errors';
+import { AUTH_ERRORS, CALENDAR_ERRORS, GENERIC_ERRORS, TOAST_MESSAGES } from '@/lib/messages/errors';
 
 interface ScheduledCalendarPostPayload {
   text?: string;
@@ -71,6 +71,11 @@ function mapScheduledPostToCalendarEvent(post: ScheduledCalendarPost): { dateKey
     post.payload?.mediaUrls ||
     undefined;
 
+  // noteType phải suy từ TRẠNG THÁI THẬT (posted→xanh, failed→đỏ, publishing→xanh dương,
+  // scheduled→vàng) — KHÔNG hardcode 'yellow', nếu không bài đã đăng sẽ hiện như "lên lịch".
+  const normalizedStatus = normalizeLateLifecycleStatus(post.status);
+  const noteType = statusToNoteTypeMap[normalizedStatus] || 'yellow';
+
   return {
     dateKey: buildDateKey(scheduledDate),
     event: {
@@ -78,9 +83,9 @@ function mapScheduledPostToCalendarEvent(post: ScheduledCalendarPost): { dateKey
       platform: post.platform,
       time: formatEventTime(scheduledDate),
       status: post.status || CALENDAR_STATUS.EMPTY,
-      noteType: 'yellow',
+      noteType,
       content,
-      hasScheduledTime: true,
+      hasScheduledTime: normalizedStatus === 'scheduled',
       scheduled_post_id: post.id,
       url: post.post_url ?? undefined,
       mediaUrls: Array.isArray(mediaUrls) ? mediaUrls : undefined,
@@ -95,7 +100,7 @@ export interface CalendarState {
   // Actions
   handleEventAdd: (year: number, month: number, day: number, platform: string, time?: string) => void;
   handleEventUpdate: (oldYear: number, oldMonth: number, oldDay: number, oldEvent: CalendarEvent, newYear: number, newMonth: number, newDay: number, newTime?: string) => Promise<void>;
-  handleEventDelete: (year: number, month: number, day: number, event: CalendarEvent) => Promise<void>;
+  handleEventDelete: (year: number, month: number, day: number, event: CalendarEvent, skipZernio?: boolean) => Promise<void>;
   handleClearCalendarEvents: () => void;
   syncCalendarWithPostStatuses: (
     updates: Array<{ postId: string; status: LateLifecycleStatus; url?: string | null }>,
@@ -136,47 +141,9 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
     });
   },
 
-  handleEventDelete: async (year, month, day, event) => {
-    // Scheduled posts are deleted through the schedule API, then re-hydrated from server truth.
-    if (event.scheduled_post_id) {
-      try {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        if (!session?.access_token) {
-          toast.error(AUTH_ERRORS.LOGIN_REQUIRED_DELETE);
-          return;
-        }
-
-        const response = await fetch(`/api/schedule/posts/${event.scheduled_post_id}`, {
-          method: 'DELETE',
-          headers: {
-            'authorization': `Bearer ${session.access_token}`
-          }
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.error || 'Không thể xóa bài đăng.');
-        }
-
-        // Remove from pendingScheduledPosts in localStorage
-        const pendingPosts = loadFromLocalStorage<PendingScheduledPost[]>('pendingScheduledPosts', []);
-        const updatedPending = pendingPosts.filter(p => p.postId !== event.scheduled_post_id);
-        saveToLocalStorage('pendingScheduledPosts', updatedPending);
-
-        await get().hydrateScheduledPosts();
-        toast.success("Đã xóa bài đăng đã lên lịch.");
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('calendar:event-updated'));
-        }
-        return;
-      } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : GENERIC_ERRORS.UNKNOWN_ERROR;
-        toast.error(CALENDAR_ERRORS.DELETE_FAILED(message));
-        return; // Don't delete from local state if API call failed
-      }
-    }
-
-    set(state => {
+  handleEventDelete: async (year, month, day, event, skipZernio = false) => {
+    // Dọn sự kiện khỏi lịch cục bộ (state + localStorage).
+    const removeLocalEvent = () => set(state => {
       const key = `${year}-${month}-${day}`;
       if (!state.calendarEvents[key]) {
         return {};
@@ -194,6 +161,53 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
       saveToLocalStorage('calendarEvents', updatedEvents);
       return { calendarEvents: updatedEvents };
     });
+
+    // Sự kiện gắn bản ghi lịch trên hệ thống → xóa qua API rồi đồng bộ lại từ server.
+    if (event.scheduled_post_id) {
+      try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session?.access_token) {
+          toast.error(AUTH_ERRORS.LOGIN_REQUIRED_DELETE);
+          return;
+        }
+
+        const response = await fetch(
+          `/api/schedule/posts/${event.scheduled_post_id}${skipZernio ? '?skipZernio=true' : ''}`,
+          {
+            method: 'DELETE',
+            headers: {
+              'authorization': `Bearer ${session.access_token}`
+            }
+          }
+        );
+
+        // 404 = bản ghi đã không còn trên hệ thống (sự kiện mồ côi). Coi như đã xóa: dọn sự kiện
+        // cục bộ thay vì báo lỗi "không tìm thấy bài viết để xóa".
+        if (!response.ok && response.status !== 404) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || 'Không thể xóa bài đăng.');
+        }
+
+        // Remove from pendingScheduledPosts in localStorage
+        const pendingPosts = loadFromLocalStorage<PendingScheduledPost[]>('pendingScheduledPosts', []);
+        const updatedPending = pendingPosts.filter(p => p.postId !== event.scheduled_post_id);
+        saveToLocalStorage('pendingScheduledPosts', updatedPending);
+
+        removeLocalEvent();
+        await get().hydrateScheduledPosts();
+        toast.success(TOAST_MESSAGES.CALENDAR_DELETE_SUCCESS);
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('calendar:event-updated'));
+        }
+        return;
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : GENERIC_ERRORS.UNKNOWN_ERROR;
+        toast.error(CALENDAR_ERRORS.DELETE_FAILED(message));
+        return; // Lỗi thật (không phải 404) → giữ sự kiện, không xóa cục bộ.
+      }
+    }
+
+    removeLocalEvent();
   },
 
   handleEventUpdate: async (oldYear, oldMonth, oldDay, oldEvent, newYear, newMonth, newDay, newTime) => {
@@ -251,7 +265,7 @@ export const useCalendarStore = create<CalendarState>((set, get) => ({
         saveToLocalStorage('pendingScheduledPosts', updatedPending);
 
         await get().hydrateScheduledPosts();
-        toast.success("Đã cập nhật lịch đăng thành công.");
+        toast.success(TOAST_MESSAGES.CALENDAR_UPDATE_SUCCESS);
         if (typeof window !== 'undefined') {
           window.dispatchEvent(new CustomEvent('calendar:event-updated'));
         }

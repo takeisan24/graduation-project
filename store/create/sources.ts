@@ -20,6 +20,10 @@ interface CreateSourcesState {
   isCreateFromSourceModalOpen: boolean;
   sourceToGenerate: SourceToGenerate;
   extractedContent: string | null;
+  // Trạng thái form "Thêm/Sửa nguồn" — đặt ở store để cột danh sách (trái) và cột form (giữa)
+  // dùng CHUNG (tránh mỗi instance một state cục bộ gây lệch logic).
+  editingSource: SavedSource | null;
+  isSourceFormReadOnly: boolean;
 
   setIsSourceModalOpen: (isOpen: boolean) => void;
   addSavedSource: (source: Omit<SavedSource, 'id'>) => SavedSource;
@@ -27,6 +31,8 @@ interface CreateSourcesState {
   clearSavedSources: () => void;
   openCreateFromSourceModal: (source: SourceToGenerate) => void;
   closeCreateFromSourceModal: () => void;
+  openSourceForm: (source: SavedSource | null, readOnly?: boolean) => void;
+  closeSourceForm: () => void;
   setExtractedContent: (content: string | null) => void;
   generatePostsFromSource: (
     selectedPlatforms: { platform: string; count: number }[],
@@ -46,12 +52,35 @@ const parseSourceValue = (value: string) => {
   return { idea: parts[0].trim(), resourceUrl: parts[1]?.trim() || '' };
 };
 
+/** Lưu 1 bài vừa sinh thành bản nháp (draft) gắn vào dự án. Trả về draftId, hoặc null nếu lỗi. */
+async function saveSourceDraft(
+  projectId: string,
+  platform: string,
+  content: string,
+  token: string,
+): Promise<string | null> {
+  try {
+    const res = await fetch(`/api/projects/${projectId}/drafts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', authorization: `Bearer ${token}` },
+      body: JSON.stringify({ text_content: content, media_urls: [], platform, status: 'draft' }),
+    });
+    if (!res.ok) return null;
+    const json = await res.json().catch(() => ({}));
+    return json?.data?.id ? String(json.data.id) : null;
+  } catch {
+    return null;
+  }
+}
+
 export const useCreateSourcesStore = create<CreateSourcesState>((set) => ({
   savedSources: loadFromLocalStorage<SavedSource[]>('savedSources', []),
   isSourceModalOpen: false,
   isCreateFromSourceModalOpen: false,
   sourceToGenerate: null,
   extractedContent: null,
+  editingSource: null,
+  isSourceFormReadOnly: false,
 
   setIsSourceModalOpen: (isOpen) => set({ isSourceModalOpen: isOpen }),
   addSavedSource: (source) => {
@@ -79,6 +108,8 @@ export const useCreateSourcesStore = create<CreateSourcesState>((set) => ({
 
   openCreateFromSourceModal: (source) => set({ sourceToGenerate: source, isCreateFromSourceModalOpen: true }),
   closeCreateFromSourceModal: () => set({ isCreateFromSourceModalOpen: false, sourceToGenerate: null }),
+  openSourceForm: (source, readOnly = false) => set({ editingSource: source, isSourceFormReadOnly: readOnly }),
+  closeSourceForm: () => set({ editingSource: null, isSourceFormReadOnly: false }),
   setExtractedContent: (content) => set({ extractedContent: content }),
 
   generatePostsFromSource: async (selectedPlatforms, selectedModel, options) => {
@@ -168,12 +199,35 @@ export const useCreateSourcesStore = create<CreateSourcesState>((set) => ({
         return false;
       }
 
+      // Đảm bảo có DỰ ÁN (DB) trước — để lưu draft từng bài vào đúng dự án, và để
+      // ProjectMenu hết "Nháp" + đổi tên được. Lỗi tạo dự án không làm hỏng việc sinh bài.
+      let projectId: string | null = null;
+      try {
+        const { useCreateWorkspaceStore } = await import('./workspace');
+        const project = await useCreateWorkspaceStore.getState().ensureWorkspaceProject();
+        projectId = project?.projectId || null;
+      } catch (projErr) {
+        console.warn('[sources] ensureWorkspaceProject failed:', projErr);
+      }
+
+      const { useCreatePostsStore } = await import('./posts');
+      const setPostContext = useCreatePostsStore.getState().setPostContext;
+
       let summary = `Đã tạo thành công các bài viết từ nguồn:\n`;
       for (const postData of posts) {
         if (postData.action === 'create_post' && postData.platform && postData.content) {
           if (options.onPostCreate && options.onPostContentChange) {
             const newId = options.onPostCreate(postData.platform, postData.content);
-            if (newId) options.onPostContentChange(newId, postData.content);
+            if (newId) {
+              options.onPostContentChange(newId, postData.content);
+              // #2: TỰ LƯU bài thành bản nháp (draft) gắn vào dự án + gắn context để sửa/đăng đồng bộ.
+              if (projectId && accessToken) {
+                const draftId = await saveSourceDraft(projectId, postData.platform, postData.content, accessToken);
+                if (draftId) {
+                  setPostContext(newId, { source: 'drafts', draftId, projectId });
+                }
+              }
+            }
           }
           summary += `- ${postData.summary_for_chat || `Một bài cho ${postData.platform}`}\n`;
         }
@@ -181,6 +235,7 @@ export const useCreateSourcesStore = create<CreateSourcesState>((set) => ({
       if (options.onAddChatMessage) {
         options.onAddChatMessage({ role: 'assistant', content: summary.trim() });
       }
+
       if (options.onSetTyping) options.onSetTyping(false);
       set({ sourceToGenerate: null });
       return true;

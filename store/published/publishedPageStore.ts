@@ -99,6 +99,7 @@ export const usePublishedPostsStore = create<PublishedPostsState>((set, get) => 
             url: apiPost.url || '',
             profileName: apiPost.profileName || 'Unknown Account',
             profilePic: apiPost.profilePic || '/shego.jpg',
+            media: Array.isArray(apiPost.media) ? apiPost.media : [],
             engagement: apiPost.engagement || {
               likes: 0,
               comments: 0,
@@ -284,6 +285,7 @@ export const usePublishedPostsStore = create<PublishedPostsState>((set, get) => 
           url: apiPost.url || '',
           profileName: apiPost.profileName || 'Unknown Account',
           profilePic: apiPost.profilePic || '/shego.jpg',
+          media: Array.isArray(apiPost.media) ? apiPost.media : [],
           engagement: apiPost.engagement || {
             likes: 0,
             comments: 0,

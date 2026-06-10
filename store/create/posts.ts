@@ -9,7 +9,7 @@ import { saveToLocalStorage, loadFromLocalStorage } from '@/lib/utils/storage';
 import { useCalendarStore } from '../shared/calendar';
 import { useCreateMediaStore } from './media';
 import { useCreateWorkspaceStore } from './workspace';
-import { POST_ERRORS } from '@/lib/messages/errors';
+import { POST_ERRORS, TOAST_MESSAGES } from '@/lib/messages/errors';
 import { supabaseClient } from '@/lib/supabaseClient';
 import type { Post, MediaFile } from '../shared/types';
 import { useCreateSourcesStore } from './sources';
@@ -424,7 +424,7 @@ export const useCreatePostsStore = create<CreatePostsState>((set, get) => ({
     const content = postContents[postId];
 
     if (!content || !content.trim()) {
-      toast.warning("Chưa có nội dung để định dạng.");
+      toast.warning(TOAST_MESSAGES.FORMAT_NO_CONTENT);
       return;
     }
 
@@ -440,13 +440,13 @@ export const useCreatePostsStore = create<CreatePostsState>((set, get) => ({
       // Nếu nội dung thay đổi thì mới update
       if (formattedContent !== content) {
         addPostVersion(postId, formattedContent);
-        toast.success("Đã định dạng lại bố cục bài viết.");
+        toast.success(TOAST_MESSAGES.FORMAT_SUCCESS);
       } else {
         toast.info("Bài viết đã có bố cục tốt, không cần thay đổi.");
       }
     } catch (error) {
       console.error("Local format error:", error);
-      toast.error("Lỗi khi định dạng.");
+      toast.error(TOAST_MESSAGES.FORMAT_ERROR);
     } finally {
       set({ isFormatting: false });
     }
@@ -457,7 +457,7 @@ export const useCreatePostsStore = create<CreatePostsState>((set, get) => ({
     const post = openPosts.find(p => p.id === postId);
 
     if (!content || !content.trim()) {
-      toast.warning("Chưa có nội dung để dịch.");
+      toast.warning(TOAST_MESSAGES.TRANSLATE_NO_CONTENT);
       return;
     }
 
@@ -488,7 +488,7 @@ export const useCreatePostsStore = create<CreatePostsState>((set, get) => ({
       const translatedContent = data.data?.suggestions;
       if (translatedContent && translatedContent !== content) {
         addPostVersion(postId, translatedContent);
-        toast.success("Đã dịch văn bản thành công.");
+        toast.success(TOAST_MESSAGES.TRANSLATE_SUCCESS);
       } else {
         toast.info("Không có thay đổi sau khi dịch.");
       }

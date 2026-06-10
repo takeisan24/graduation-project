@@ -14,7 +14,7 @@ import { useCalendarStore } from './calendar';
 import { usePublishedPostsStore } from '../published/publishedPageStore';
 import { useFailedPostsStore } from '../failed/failedPageStore';
 import { formatDate, formatTime } from '@/lib/utils/date';
-import { POST_ERRORS } from '@/lib/messages/errors';
+import { POST_ERRORS, TOAST_MESSAGES } from '@/lib/messages/errors';
 import { handleUnauthorizedOnClient } from '@/lib/utils/authClient';
 
 // Module-level timers (persist across component unmounts)
@@ -205,7 +205,7 @@ export async function checkPostStatusAtScheduledTime(
           if (resolvedStatus === 'failed') {
             toast.error(POST_ERRORS.PUBLISH_FAILED_WITH_DETAILS(platformName, timeDetail));
           } else if (resolvedStatus === 'posted') {
-            toast.success(`Đăng bài thành công lên ${platformName} lúc ${timeDetail}`);
+            toast.success(TOAST_MESSAGES.POST_PUBLISH_SUCCESS(platformName, timeDetail));
           }
 
           // Mark as shown

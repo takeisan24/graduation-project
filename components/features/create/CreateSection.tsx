@@ -10,9 +10,10 @@ import SourcePanel from './sources/SourcePanel';
 import PostEditorWrapper from './editor/PostEditorWrapper';
 import OnboardingTour from './layout/OnboardingTour';
 import TopBarActions from './layout/TopBarActions';
+import ProjectGate from './layout/ProjectGate';
 import CreateSectionErrorBoundary from './shared/CreateSectionErrorBoundary';
 
-import { useNavigationStore, useCreateSourcesStore, useCreatePostsStore, useDraftsStore, useCreateMediaStore, usePublishModalStore } from '@/store';
+import { useNavigationStore, useCreateSourcesStore, useCreatePostsStore, useDraftsStore, useCreateMediaStore, usePublishModalStore, useCreateWorkspaceStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { toast } from 'sonner';
@@ -40,8 +41,9 @@ export default function CreateSection() {
   const CHAT_PANEL_DEFAULT_WIDTH = 380;
   const CHAT_STORAGE_KEY = 'create-ai-chat-open';
   const CHAT_WIDTH_STORAGE_KEY = 'create-ai-chat-width';
+  const SOURCES_LIST_WIDTH = 320;
   const t = useTranslations('CreatePage.createSection.mobileTabs');
-  const [isSourcesOpen, setIsSourcesOpen] = useState(false);
+  const [isSourcesOpen, setIsSourcesOpen] = useState(true);
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
   const [manualChatToggle, setManualChatToggle] = useState(false);
   const [chatPanelWidth, setChatPanelWidth] = useState(CHAT_PANEL_DEFAULT_WIDTH);
@@ -55,6 +57,7 @@ export default function CreateSection() {
   })));
   const previousWizardStep = useRef(wizardStep);
   const savedSources = useCreateSourcesStore(state => state.savedSources);
+  const projectId = useCreateWorkspaceStore(state => state.projectId);
   const openPosts = useCreatePostsStore(state => state.openPosts);
   const sourceToGenerate = useCreateSourcesStore(state => state.sourceToGenerate);
   const isSourceModalOpen = useCreateSourcesStore(state => state.isSourceModalOpen);
@@ -196,10 +199,7 @@ export default function CreateSection() {
   }, [wizardStep]);
 
   useEffect(() => {
-    if (previousWizardStep.current !== 'idle' && wizardStep === 'idle') {
-      setIsSourcesOpen(false);
-    }
-
+    // Cột Nguồn là panel cố định (không tự đóng khi về idle) — giữ luồng 3 cột ổn định.
     previousWizardStep.current = wizardStep;
   }, [wizardStep]);
 
@@ -221,6 +221,15 @@ export default function CreateSection() {
       return next;
     });
   }, []);
+
+  // Project-first: chưa có dự án active → hiện CỬA DỰ ÁN trước khi vào workspace.
+  if (!projectId) {
+    return (
+      <CreateSectionErrorBoundary>
+        <ProjectGate />
+      </CreateSectionErrorBoundary>
+    )
+  }
 
   return (
     <CreateSectionErrorBoundary>
@@ -287,23 +296,6 @@ export default function CreateSection() {
             onToggleChat={toggleChat}
           />
 
-          {/* Sources dropdown panel */}
-          {isSourcesOpen && (
-            <>
-              {!isAddingSource && !isConfigureMode && (
-                <div
-                  className="hidden md:block fixed inset-0 z-20"
-                  onClick={() => setIsSourcesOpen(false)}
-                />
-              )}
-              <div className={`hidden md:block absolute left-0 right-0 top-[41px] z-30 border-b border-border/50 bg-card shadow-lg overflow-y-auto ${
-                isAddingSource ? 'max-h-[calc(100vh-120px)]' : 'max-h-[220px]'
-              }`}>
-                <SourcePanel mode={isAddingSource ? 'form' : 'list'} />
-              </div>
-            </>
-          )}
-
           {/* Editor area */}
           <div className={`relative z-10 flex-1 min-h-0 bg-transparent ${
             activeMobilePanel === 'editor' ? 'block' : 'hidden lg:block'
@@ -311,11 +303,25 @@ export default function CreateSection() {
             <div
               className="hidden h-full min-h-0 lg:grid lg:items-stretch transition-[grid-template-columns] duration-300 ease-out"
               style={{
-                gridTemplateColumns: `minmax(0, 1fr) ${isAIChatOpen ? `${chatPanelWidth}px` : '0px'}`,
+                gridTemplateColumns: `${isSourcesOpen ? SOURCES_LIST_WIDTH : 0}px minmax(0, 1fr) ${isAIChatOpen ? chatPanelWidth : 0}px`,
               }}
             >
+              {/* ─── Cột NGUỒN (cố định bên trái, không đè) ─── */}
+              <div
+                className={`min-h-0 overflow-hidden transition-all duration-300 ease-out ${isSourcesOpen ? 'border-r border-border/60 opacity-100' : 'opacity-0 pointer-events-none'}`}
+                aria-hidden={!isSourcesOpen}
+              >
+                <div className="h-full min-h-0 overflow-hidden bg-card/95">
+                  <SourcePanel mode="list" />
+                </div>
+              </div>
+              {/* ─── Cột GIỮA: thêm nguồn (form) / cấu hình / editor ─── */}
               <div className="min-w-0">
-                <PostEditorWrapper mode={isConfigureMode ? 'configure' : 'normal'} onOpenSources={() => setIsSourcesOpen(true)} />
+                {isAddingSource ? (
+                  <SourcePanel mode="form" />
+                ) : (
+                  <PostEditorWrapper mode={isConfigureMode ? 'configure' : 'normal'} onOpenSources={() => setIsSourcesOpen(true)} />
+                )}
               </div>
               <div
                 className={`min-h-0 overflow-hidden transition-all duration-300 ease-out ${

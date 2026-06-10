@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import type { FailedPost, PendingScheduledPost } from '../shared/types';
 import { useCalendarStore } from '../shared/calendar';
 import { checkPostStatusAtScheduledTime, schedulePublishingStatusRecheck } from '../shared/statusCheck';
-import { POST_ERRORS, AUTH_ERRORS, GENERIC_ERRORS } from '@/lib/messages/errors';
+import { POST_ERRORS, AUTH_ERRORS, GENERIC_ERRORS, TOAST_MESSAGES } from '@/lib/messages/errors';
 import { handleUnauthorizedOnClient } from '@/lib/utils/authClient';
 
 interface FailedStatusSyncUpdate {
@@ -328,7 +328,7 @@ export const useFailedPostsStore = create<FailedPostsState>((set, get) => ({
         return false;
       }
 
-      const toastId = toast.loading("Đang gửi yêu cầu lên lịch lại...");
+      const toastId = toast.loading(TOAST_MESSAGES.RESCHEDULE_LOADING);
       try {
         const response = await fetch(`/api/schedule/posts/${postId}/reschedule`, {
           method: 'PATCH',
@@ -440,7 +440,7 @@ export const useFailedPostsStore = create<FailedPostsState>((set, get) => ({
           window.dispatchEvent(new CustomEvent('calendar:event-updated'));
         }
 
-        toast.success("Đã lên lịch lại bài đăng thành công", { id: toastId });
+        toast.success(TOAST_MESSAGES.RESCHEDULE_SUCCESS, { id: toastId });
         return true;
       } catch (error: unknown) {
         let errorMessage = error instanceof Error ? error.message : "Không thể lên lịch lại bài đăng.";
@@ -460,8 +460,54 @@ export const useFailedPostsStore = create<FailedPostsState>((set, get) => ({
       }
     }
 
-    // If no reschedule date/time, return true to indicate post should be opened in editor
-    // The calling component should handle opening the post
+    // Không có lịch mới → nếu là bài Zernio thật thì THỬ LẠI NGAY qua Zernio; nếu không thì mở editor.
+    const isBackendZernio = Boolean(post.lateJobId && post.getlateAccountId);
+    if (isBackendZernio) {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session?.access_token) {
+        toast.error(AUTH_ERRORS.LOGIN_REQUIRED_RESCHEDULE);
+        return false;
+      }
+      const toastId = toast.loading(TOAST_MESSAGES.RETRY_LOADING);
+      try {
+        const response = await fetch(`/api/schedule/posts/${postId}/retry`, {
+          method: 'POST',
+          headers: { 'authorization': `Bearer ${session.access_token}` },
+        });
+        const result = await response.json().catch(() => ({} as Record<string, unknown>));
+        if (!response.ok) {
+          const errObj = result as { error?: unknown; message?: string };
+          const msg = typeof errObj.error === 'string'
+            ? errObj.error
+            : (errObj.error as { message?: string })?.message || errObj.message || 'Thử lại thất bại.';
+          throw new Error(msg);
+        }
+        const data = (result as { data?: { status?: string; url?: string | null } }).data
+          ?? (result as { status?: string; url?: string | null });
+        const status = data?.status;
+        const url = data?.url ?? undefined;
+
+        if (status === 'posted') {
+          set(state => ({ failedPosts: state.failedPosts.filter(p => String(p.id) !== postId) }));
+          saveToLocalStorage('failedPosts', get().failedPosts);
+          saveToLocalStorage('needsRefreshPublishedPosts', true);
+          useCalendarStore.getState().syncCalendarWithPostStatuses([{ postId, status: 'posted', url }]);
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('calendar:post-published'));
+          }
+          toast.success(TOAST_MESSAGES.RETRY_SUCCESS, { id: toastId });
+        } else {
+          toast.error(TOAST_MESSAGES.RETRY_FAILED, { id: toastId });
+        }
+        return false; // đã xử lý — không mở editor
+      } catch (error: unknown) {
+        const msg = error instanceof Error ? error.message : "Thử lại thất bại.";
+        toast.error(msg, { id: toastId });
+        return false;
+      }
+    }
+
+    // Không phải bài Zernio → mở editor để đăng lại thủ công.
     return true;
   },
 
@@ -513,7 +559,7 @@ export const useFailedPostsStore = create<FailedPostsState>((set, get) => ({
         window.dispatchEvent(new CustomEvent('calendar:event-updated'));
       }
 
-      toast.success("Đã xóa bài đăng thất bại thành công.");
+      toast.success(TOAST_MESSAGES.FAILED_DELETE_SUCCESS);
       return true;
     } catch (error: unknown) {
       console.error('[handleDeleteFailedPost] Error deleting failed post:', error);

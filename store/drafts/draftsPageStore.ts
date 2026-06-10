@@ -7,7 +7,7 @@
 import { create } from 'zustand';
 import { saveToLocalStorage, loadFromLocalStorage } from '@/lib/utils/storage';
 import { toast } from 'sonner';
-import { DRAFT_ERRORS } from '@/lib/messages/errors';
+import { DRAFT_ERRORS, TOAST_MESSAGES } from '@/lib/messages/errors';
 import type { DraftPost, MediaFile } from '../shared/types';
 import { supabaseClient } from '@/lib/supabaseClient';
 import { useCreatePostsStore } from '../create/posts';
@@ -178,7 +178,7 @@ export const useDraftsStore = create<DraftsState>((set, get) => ({
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (!session?.access_token) {
         persistLocalDraft();
-        toast.warning("Không thể đồng bộ backend lúc này. Bản nháp đã được giữ cục bộ.");
+        toast.warning(TOAST_MESSAGES.DRAFT_SYNC_FAILED_LOCAL);
         return;
       }
 
@@ -186,7 +186,7 @@ export const useDraftsStore = create<DraftsState>((set, get) => ({
         const workspaceProject = await useCreateWorkspaceStore.getState().ensureWorkspaceProject();
         if (!workspaceProject?.projectId) {
           persistLocalDraft();
-          toast.warning("Không thể tạo dự án làm việc để lưu backend. Bản nháp đã được giữ cục bộ.");
+          toast.warning(TOAST_MESSAGES.DRAFT_PROJECT_FAILED_LOCAL);
           return;
         }
 
@@ -312,7 +312,7 @@ export const useDraftsStore = create<DraftsState>((set, get) => ({
       return { draftPosts: updated };
     });
 
-    toast.success("Đã xóa bản nháp thành công.");
+    toast.success(TOAST_MESSAGES.DRAFT_DELETE_SUCCESS);
   },
 
   handlePublishDraft: (id, onPublish) => {

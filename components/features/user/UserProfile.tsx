@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import type { UserIdentity } from "@supabase/supabase-js"
 import { useLocale, useTranslations } from "next-intl"
-import { Loader2, Mail, RotateCcw, Save, ShieldCheck, User, UserRoundPlus } from "lucide-react"
+import { Loader2, Mail, Save, ShieldCheck, User, UserRoundPlus } from "lucide-react"
 import { toast } from "sonner"
 import { supabaseClient } from "@/lib/supabaseClient"
 import { getAppUrl } from "@/lib/utils/urlConfig"
@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useRouter } from "@/i18n/navigation"
 import PreviewNotice from "@/components/features/create/shared/PreviewNotice"
 import { getCreatePreviewCopy, getPreviewUserProfile, isCreatePreviewEnabled } from "@/lib/mocks/createSectionPreview"
 
@@ -23,7 +22,6 @@ const AUTH_PROVIDERS = [
 ] as const
 
 export default function UserProfile() {
-  const router = useRouter()
   const locale = useLocale()
   const { user, loading, refreshSession } = useAuth()
   const t = useTranslations("CreatePage.userProfile")
@@ -141,18 +139,6 @@ export default function UserProfile() {
       toast.error(`${t("toast.updateError")}: ${message}`)
     } finally {
       setIsSavingEmail(false)
-    }
-  }
-
-  const handleResetTour = () => {
-    try {
-      localStorage.removeItem("hasSeenOnboarding")
-      toast.success(t("toast.resetTourSuccess"))
-      setTimeout(() => {
-        router.push("/create")
-      }, 1000)
-    } catch (error) {
-      console.error(error)
     }
   }
 
@@ -388,22 +374,6 @@ export default function UserProfile() {
                   </div>
                 )
               })}
-            </CardContent>
-          </Card>
-
-          <Card className="border-border bg-card text-foreground">
-            <CardHeader>
-              <CardTitle>{t("appSettings.title")}</CardTitle>
-              <CardDescription className="text-muted-foreground">{t("appSettings.description")}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="rounded-lg border border-border bg-secondary p-4">
-                <h4 className="mb-1 font-medium text-foreground">{t("appSettings.resetTour")}</h4>
-                <p className="mb-3 text-xs text-muted-foreground">{t("appSettings.resetTourDesc")}</p>
-                <Button variant="outline" size="sm" onClick={handleResetTour} className="w-full border-border text-foreground hover:bg-secondary">
-                  <RotateCcw className="mr-2 h-3 w-3" /> {t("appSettings.resetTourBtn")}
-                </Button>
-              </div>
             </CardContent>
           </Card>
 

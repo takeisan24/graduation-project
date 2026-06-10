@@ -567,6 +567,49 @@ export const VIDEO_ERRORS = {
 } as const;
 
 /**
+ * Success / loading toast messages (used in Zustand stores — no React hook access)
+ * Keep these as plain Vietnamese strings; bilingual i18n is handled at component level.
+ */
+export const TOAST_MESSAGES = {
+  // Scheduling
+  SCHEDULING_LOADING: "Đang lên lịch bài đăng, vui lòng chờ...",
+  SCHEDULE_SUCCESS: (scheduledCount: number, platform: string, time: string, formattedDate: string) =>
+    `Đã lên lịch ${scheduledCount} bài đăng cho ${platform} vào ${time} ngày ${formattedDate}.`,
+  RESCHEDULE_LOADING: "Đang gửi yêu cầu lên lịch lại...",
+  RESCHEDULE_SUCCESS: "Đã cập nhật lịch đăng thành công.",
+  // Calendar
+  CALENDAR_DELETE_SUCCESS: "Đã xóa bài đăng đã lên lịch.",
+  CALENDAR_UPDATE_SUCCESS: "Đã cập nhật lịch đăng thành công.",
+  // Posts
+  POST_PUBLISH_SUCCESS: (platformName: string, timeDetail: string) =>
+    `Đăng bài thành công lên ${platformName} lúc ${timeDetail}`,
+  MEDIA_REQUIRED_FOR_PUBLISH: (platformType: string) =>
+    `${platformType} cần đính kèm ảnh/video mới đăng được.`,
+  MEDIA_REQUIRED_FOR_SCHEDULE: (platformType: string) =>
+    `${platformType} cần đính kèm ảnh/video mới lên lịch được.`,
+  NO_CONNECTED_ACCOUNTS: "Không tìm thấy tài khoản đã kết nối. Vui lòng kết nối tài khoản trước khi lên lịch bài đăng.",
+  // Format / translate
+  FORMAT_NO_CONTENT: "Chưa có nội dung để định dạng.",
+  FORMAT_SUCCESS: "Đã định dạng lại bố cục bài viết.",
+  FORMAT_ERROR: "Lỗi khi định dạng.",
+  TRANSLATE_NO_CONTENT: "Chưa có nội dung để dịch.",
+  TRANSLATE_SUCCESS: "Đã dịch văn bản thành công.",
+  // Drafts
+  DRAFT_SYNC_FAILED_LOCAL: "Không thể đồng bộ backend lúc này. Bản nháp đã được giữ cục bộ.",
+  DRAFT_PROJECT_FAILED_LOCAL: "Không thể tạo dự án làm việc để lưu backend. Bản nháp đã được giữ cục bộ.",
+  DRAFT_DELETE_SUCCESS: "Đã xóa bản nháp thành công.",
+  // Failed posts
+  RETRY_LOADING: "Đang thử đăng lại...",
+  RETRY_SUCCESS: "Đã đăng lại thành công!",
+  RETRY_FAILED: "Thử lại vẫn thất bại. Vui lòng kiểm tra nội dung hoặc tài khoản.",
+  FAILED_DELETE_SUCCESS: "Đã xóa bài đăng thất bại thành công.",
+  // Media generation
+  IMAGE_GEN_QUEUED: "Yêu cầu tạo ảnh đã được nhận. Ảnh sẽ sẵn sàng sau ít phút.",
+  VIDEO_GEN_LOADING: "Đang gửi yêu cầu tạo video đến AI...",
+  VIDEO_GEN_IN_PROGRESS: "AI đang tạo video. Việc này có thể mất vài phút...",
+} as const;
+
+/**
  * Generic error messages
  */
 export const GENERIC_ERRORS = {

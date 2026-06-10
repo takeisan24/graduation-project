@@ -6,9 +6,7 @@ import { useShallow } from "zustand/react/shallow"
 import { SOCIAL_PLATFORMS } from '@/lib/constants/platforms'
 import { PlatformIcon } from '@/components/shared/PlatformIcon'
 import { supabaseClient } from "@/lib/supabaseClient"
-import { formatDate, formatTime } from "@/lib/utils/date"
-import { PlatformFilter } from "@/components/shared/filters/PlatformFilter"
-import { usePostFilters } from "@/hooks/usePostFilters"
+import { formatDate } from "@/lib/utils/date"
 import { clearConnectionsCache } from "@/lib/cache/connectionsCache";
 import { getAppUrl } from "@/lib/utils/urlConfig";
 import { useConnectionsStore } from "@/store"
@@ -21,7 +19,6 @@ import { handleErrorWithModal } from "@/lib/utils/errorHandler"
 import { handleUnauthorizedOnClient } from "@/lib/utils/authClient"
 import { getPlatformColors } from '@/lib/constants/platformColors'
 import { createPreviewConnectedAccount, getCreatePreviewCopy, getPreviewConnectedAccounts, isCreatePreviewEnabled } from "@/lib/mocks/createSectionPreview"
-import { getPlatformName } from "@/lib/utils/platform"
 
 type LateConnection = {
   id: string
@@ -168,19 +165,19 @@ export default function SettingsSection() {
 
       // Error case (failed connect / user cancel / provider error)
       if (oauthCallback === 'error' || errorParam) {
-        const errorMessage = errorParam || `Kết nối ${providerLabel} thất bại. Vui lòng thử lại.`
+        const errorMessage = errorParam || t('oauthFailedMessage', { provider: providerLabel })
 
         // Set inline error below social connections block
         setLocalError(errorMessage)
 
         // Show toast error for visibility
-        toast.error(`Kết nối ${providerLabel} thất bại`, {
+        toast.error(t('oauthFailedTitle', { provider: providerLabel }), {
           description: errorMessage,
           duration: 6000,
         })
       } else if (oauthCallback === 'success' || connectedParam === 'true') {
         // Optional: show success toast when connection succeeded via full-page redirect
-        toast.success(`Kết nối ${providerLabel} thành công`, {
+        toast.success(t('oauthSuccessTitle', { provider: providerLabel }), {
           duration: 4000,
         })
       }
@@ -206,7 +203,7 @@ export default function SettingsSection() {
     } catch (err) {
       console.warn('[Settings] Failed to process OAuth callback params:', err)
     }
-  }, [fetchConnections])
+  }, [fetchConnections, t])
 
   const connectionsByPlatform = useMemo(() => {
     const map: Record<string, LateConnection> = {}
@@ -221,19 +218,6 @@ export default function SettingsSection() {
     })
     return map
   }, [displayConnections])
-
-  // Filter state for connected accounts table
-  const { platformFilter, setPlatformFilter } = usePostFilters()
-
-  // Filter connections based on platform filter
-  const filteredConnections = useMemo(() => {
-    if (platformFilter === 'all') {
-      return displayConnections
-    }
-    return displayConnections.filter(conn =>
-      conn.platform?.toLowerCase() === platformFilter.toLowerCase()
-    )
-  }, [displayConnections, platformFilter])
 
   const [blockedPopup, setBlockedPopup] = useState<{ provider: string; url: string } | null>(null)
 
@@ -480,27 +464,11 @@ export default function SettingsSection() {
    * (được đánh dấu bởi shouldRefetchOnFocusRef), sẽ force refresh connections
    * đúng một lần khi user quay lại tab settings.
    */
-  const connectedPlatformCount = useMemo(() => {
-    return new Set(
-      displayConnections
-        .map(connection => connection.platform?.toLowerCase())
-        .filter(Boolean)
-    ).size
-  }, [displayConnections])
-
-  const latestConnectionDate = useMemo(() => {
-    if (displayConnections.length === 0) return null
-    const latest = [...displayConnections]
-      .filter(connection => connection.created_at)
-      .sort((a, b) => new Date(b.created_at || '').getTime() - new Date(a.created_at || '').getTime())[0]
-    return latest?.created_at ? formatDate(latest.created_at, locale) : null
-  }, [displayConnections, locale])
-
   return (
     <div className="relative w-full max-w-none py-2 lg:py-3 h-full overflow-y-auto">
       {/* Global overlay while connecting social account (any provider) */}
       {isConnectingInProgress && (
-        <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm text-center px-4">
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm text-center px-4">
           <div className="w-12 h-12 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
           <p className="mt-4 text-foreground text-sm sm:text-base">
             {t('connecting')}
@@ -590,140 +558,7 @@ export default function SettingsSection() {
 
         {/* Onboarding Tour Card Removed - Moved to User Profile */}
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="rounded-2xl border border-border/70 bg-card/95 p-5 shadow-sm">
-            <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t('connectionsTableTitle')}</p>
-            <p className="mt-3 text-3xl font-bold text-foreground">{displayConnections.length}</p>
-            <p className="mt-2 text-sm text-muted-foreground">{t('summaryConnectedDesc')}</p>
-          </div>
-          <div className="rounded-2xl border border-border/70 bg-card/95 p-5 shadow-sm">
-            <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t('summaryPlatforms')}</p>
-            <p className="mt-3 text-3xl font-bold text-foreground">{connectedPlatformCount}</p>
-            <p className="mt-2 text-sm text-muted-foreground">{t('summaryPlatformsDesc')}</p>
-          </div>
-          <div className="rounded-2xl border border-border/70 bg-card/95 p-5 shadow-sm">
-            <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{t('summaryLatest')}</p>
-            <p className="mt-3 text-lg font-semibold text-foreground">{latestConnectionDate || t('summaryLatestEmpty')}</p>
-            <p className="mt-2 text-sm text-muted-foreground">{t('summaryLatestDesc')}</p>
-          </div>
-        </div>
-
-
-        <div className="mt-8 mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1">
-                {t('connectionsTableTitle')}
-              </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground">{t('connectionsTableDesc')}</p>
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card px-3 py-2 text-sm text-muted-foreground">
-              <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-              {t('summaryCountBadge', { count: displayConnections.length })}
-            </div>
-            <div className="w-full sm:w-auto">
-              <PlatformFilter value={platformFilter} onChange={setPlatformFilter} />
-            </div>
-          </div>
-
-          <div className="rounded-2xl bg-card border border-border shadow-lg shadow-black/20">
-            {loading ? (
-              <div className="text-center py-12 text-muted-foreground">{t('loading')}</div>
-            ) : filteredConnections.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                {displayConnections.length === 0 ? t('noConnections') : t('noConnectionsFiltered')}
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-border">
-                      <th className="text-left py-4 px-5 text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide">
-                        {t('table.platform')}
-                      </th>
-                      <th className="text-left py-4 px-5 text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide">
-                        {t('table.account')}
-                      </th>
-                      <th className="text-left py-4 px-5 text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide hidden lg:table-cell">
-                        {t('table.connectedAt')}
-                      </th>
-                      <th className="text-center py-4 px-5 text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide hidden lg:table-cell">
-                        {t('table.avatar')}
-                      </th>
-                      <th className="text-right py-4 px-5 text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wide">
-                        {t('table.actions')}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredConnections.map((connection) => {
-                      const username = connection?.profile_metadata?.username || connection?.profile_name || 'N/A'
-                      const avatarUrl = connection?.profile_metadata?.avatar_url || null
-                      const connectionDate = connection?.created_at ? formatDate(connection.created_at, locale) : 'N/A'
-                      const connectionTime = connection?.created_at ? formatTime(connection.created_at, locale, { hour: "2-digit", minute: "2-digit" }) : ''
-                      const platformName = connection.platform || 'unknown'
-                      const platformLabel = getPlatformName(platformName)
-                      const rowPlatColors = getPlatformColors(platformName);
-                      return (
-                        <tr key={connection.id} className={`border-b border-border last:border-0 group hover:bg-secondary/30 transition-colors ${rowPlatColors.border}`}>
-                          <td className="py-4 px-5">
-                            <div className="flex items-center gap-3">
-                              <PlatformIcon platform={platformName} size={32} variant="inline" />
-                              <span className="text-sm text-foreground font-medium capitalize">
-                                {platformLabel}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="py-4 px-5">
-                            <span className="text-sm text-foreground/90">
-                              {username.startsWith('@') ? username : `@${username}`}
-                            </span>
-                          </td>
-                          <td className="py-4 px-5 hidden lg:table-cell">
-                            <span className="text-sm text-foreground/80">
-                              {connectionDate}
-                              {connectionTime && (
-                                <span className="text-muted-foreground">{` · ${connectionTime}`}</span>
-                              )}
-                            </span>
-                          </td>
-                          <td className="py-4 px-5 hidden lg:table-cell">
-                            {avatarUrl ? (
-                              <div className="flex justify-center">
-                                <Image
-                                  unoptimized
-                                  src={avatarUrl}
-                                  alt={username}
-                                  width={40}
-                                  height={40}
-                                  className="w-10 h-10 rounded-full object-cover border border-border"
-                                />
-                              </div>
-                            ) : (
-                              <div className="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center mx-auto">
-                                <PlatformIcon platform={platformName} size={20} />
-                              </div>
-                            )}
-                          </td>
-                          <td className="py-4 px-5 text-right">
-                            <button
-                              onClick={() => handleDisconnect(connection.id)}
-                              disabled={actionId === connection.id}
-                              className="px-3 py-1.5 text-xs sm:text-sm bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/40 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                              {actionId === connection.id ? t('disconnecting') : t('disconnect')}
-                            </button>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="mt-6 sm:mt-8">
+        <div className="mt-2 sm:mt-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3">
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1">{t('socialConnections')}</h2>
@@ -751,37 +586,93 @@ export default function SettingsSection() {
             {SOCIAL_PLATFORMS.map((platform, idx) => {
               const provider = PROVIDER_SLUGS[platform.name]
               const connection = provider ? connectionsByPlatform[provider] : undefined
-              // Check if connecting: either by provider (for new connections) or by connection.id (for existing connections being reconnected)
               const isConnecting = actionId === provider || actionId === connection?.id
               const isDisabled = !provider || loading || isConnecting
+              const platColors = getPlatformColors(platform.name)
 
-              const platColors = getPlatformColors(platform.name);
+              const rawUsername = connection?.profile_metadata?.username || connection?.profile_name || ''
+              const displayUsername = rawUsername ? (rawUsername.startsWith('@') ? rawUsername : `@${rawUsername}`) : ''
+              const avatarUrl = connection?.profile_metadata?.avatar_url || null
+              const connectedAt = connection?.created_at ? formatDate(connection.created_at, locale) : ''
+
+              const handleCardClick = () => {
+                // Đã kết nối → mở popup để THÊM/ĐỔI tài khoản cùng nền tảng; chưa kết nối → kết nối mới.
+                if (!provider || isDisabled) return
+                handleConnect(platform.name)
+              }
 
               return (
-                <button
+                <div
                   key={idx}
-                  type="button"
-                  onClick={() => {
-                    if (!provider || isDisabled || connection) return
-                    handleConnect(platform.name)
-                  }}
-                  disabled={isDisabled}
+                  role="button"
+                  tabIndex={isDisabled ? -1 : 0}
                   aria-disabled={isDisabled}
-                  className={`group flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 rounded-xl border transition-all duration-200 ${isDisabled ? "opacity-50 cursor-not-allowed" : connection ? "cursor-default" : "cursor-pointer"} ${
+                  onClick={handleCardClick}
+                  onKeyDown={(e) => {
+                    if ((e.key === 'Enter' || e.key === ' ') && !isDisabled) { e.preventDefault(); handleCardClick() }
+                  }}
+                  title={connection ? t('connect') : undefined}
+                  className={`group flex flex-col gap-3 rounded-2xl border p-4 sm:p-5 transition-all duration-200 ${isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:border-primary/50 hover:shadow-md'} ${
                     connection
-                      ? `${platColors.tint} ${platColors.darkTint} ${platColors.border} hover:border-primary/50`
-                      : 'bg-muted border-border hover:border-primary/50 hover:bg-muted/80'
+                      ? `${platColors.tint} ${platColors.darkTint} ${platColors.border}`
+                      : 'bg-muted border-border hover:bg-muted/80'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                    <PlatformIcon platform={platform.name} size={36} variant="wrapper" />
-                    <span className="text-sm sm:text-base text-foreground font-medium group-hover:text-foreground transition-colors truncate leading-none">
-                      {platform.name}
-                    </span>
+                  {/* Hàng tiêu đề: icon + tên + chấm trạng thái */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                      <PlatformIcon platform={platform.name} size={36} variant="wrapper" />
+                      <span className="text-sm sm:text-base text-foreground font-medium truncate leading-none">
+                        {platform.name}
+                      </span>
+                    </div>
+                    <span className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0 ${connection ? 'bg-green-500 shadow-lg shadow-green-500/50' : provider ? 'bg-red-500/60' : 'bg-gray-500/60'}`}></span>
                   </div>
-                  <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0 ${connection ? 'bg-green-500 shadow-lg shadow-green-500/50' : provider ? 'bg-red-500/60' : 'bg-gray-500/60'
-                    }`}></div>
-                </button>
+
+                  {connection ? (
+                    <>
+                      {/* Thông tin tài khoản đã kết nối */}
+                      <div className="flex items-center gap-3 min-w-0">
+                        {avatarUrl ? (
+                          <Image
+                            unoptimized
+                            src={avatarUrl}
+                            alt={displayUsername || platform.name}
+                            width={36}
+                            height={36}
+                            className="w-9 h-9 rounded-full object-cover border border-border flex-shrink-0"
+                          />
+                        ) : (
+                          <div className="w-9 h-9 rounded-full bg-secondary border border-border flex items-center justify-center flex-shrink-0">
+                            <PlatformIcon platform={platform.name} size={18} />
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-foreground truncate">{displayUsername || t('connected')}</p>
+                          {connectedAt && <p className="text-xs text-muted-foreground truncate">{connectedAt}</p>}
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); handleDisconnect(connection.id) }}
+                        disabled={actionId === connection.id}
+                        className="self-start px-3 py-1.5 text-xs sm:text-sm bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/40 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {actionId === connection.id ? t('disconnecting') : t('disconnect')}
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); if (!isDisabled) handleConnect(platform.name) }}
+                      disabled={isDisabled}
+                      className="self-start px-3 py-1.5 text-xs sm:text-sm bg-primary/10 hover:bg-primary/20 text-primary border border-primary/40 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isConnecting ? t('connecting') : t('connect')}
+                    </button>
+                  )}
+                </div>
               )
             })}
           </div>

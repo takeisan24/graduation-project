@@ -53,7 +53,10 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
 
   const userInitial = user?.email?.charAt(0).toUpperCase() || "U"
   const breadcrumbLabel = t(`breadcrumb.${activeSection}` as any) || activeSection
-  const planLabel = currentPlan ? currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1) : "Free"
+  // Mô hình trả-theo-dùng (credit): không có gói thuê bao → nhãn "Trả theo dùng" thay vì "Free".
+  const planLabel = (!currentPlan || currentPlan.toLowerCase() === "free")
+    ? t("payAsYouGo")
+    : currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1)
   const creditsLabel = isLoadingCredits ? "..." : creditsRemaining.toLocaleString(locale === "vi" ? "vi-VN" : "en-US")
 
   return (

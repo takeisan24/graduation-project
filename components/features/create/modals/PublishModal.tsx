@@ -173,18 +173,7 @@ export default function PublishModal() {
         setIsPublishing(true);
         try {
             // --- LOGIC MỚI Ở ĐÂY ---
-            if (publishTime === 'next free slot') {
-                // "Khe trống tiếp theo" = 9 giờ sáng ngày mai
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                tomorrow.setHours(9, 0, 0, 0); // Đặt giờ thành 9:00:00
-
-                const timeString = "09:00 AM"; // Chuỗi thời gian để hiển thị
-
-                // Gọi action schedulePost với thông tin đã tính toán
-                await schedulePostById(selectedPostId, tomorrow, timeString, { isShorts });
-
-            } else if (publishTime === 'pick a time') {
+            if (publishTime === 'pick a time') {
                 const combinedDateTime = new Date(selectedDate);
                 const hour24 = timeAmPm === 'PM' && timeHour !== '12' 
                     ? parseInt(timeHour, 10) + 12 
@@ -360,7 +349,6 @@ export default function PublishModal() {
                             className="w-full bg-background text-foreground rounded-lg p-3 appearance-none pr-10 focus:outline-none cursor-pointer [&>option]:bg-background [&>option]:text-foreground"
                         >
                             <option value="now|Bây giờ">{t('publishNow')}</option>
-                            <option value="next free slot">{t('nextFreeSlot')}</option>
                             <option value="pick a time">{t('pickTime')}</option>
                         </select>
                         <ChevronDownIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />

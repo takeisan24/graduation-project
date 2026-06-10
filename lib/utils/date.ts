@@ -4,7 +4,7 @@ export const DEFAULT_TIMEZONE = "UTC";
 
 export function formatDate(
   date: string | Date,
-  locale: string = "en-US",
+  locale: string = "vi-VN",
   options?: Intl.DateTimeFormatOptions
 ): string {
   try {
@@ -24,7 +24,7 @@ export function formatDate(
 
 export function formatTime(
   time: string | Date,
-  locale: string = "en-US",
+  locale: string = "vi-VN",
   options?: Intl.DateTimeFormatOptions
 ): string {
   try {

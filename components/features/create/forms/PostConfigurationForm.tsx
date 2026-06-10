@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
 import { SparklesIcon } from 'lucide-react';
 import { SOCIAL_PLATFORMS } from '@/lib/constants/platforms';
+import { needsInversion } from '@/lib/utils/platform';
 
 interface PostConfigurationFormProps {
   source?: { type: string; value: string; label: string };
@@ -23,21 +24,8 @@ export default function PostConfigurationForm({
   const [selectedPlatforms, setSelectedPlatforms] = useState<{ platform: string; count: number }[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  // Hệ thống chỉ dùng Google Gemini (theo báo cáo) — không có lựa chọn model khác.
   const selectedModel = "Gemini";
-  const [showModelMenu, setShowModelMenu] = useState<boolean>(false);
-  const modelMenuRef = useRef<HTMLDivElement | null>(null);
-
-  // Đóng dropdown khi click ra ngoài
-  useEffect(() => {
-    if (!showModelMenu) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modelMenuRef.current && !modelMenuRef.current.contains(e.target as Node)) {
-        setShowModelMenu(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [showModelMenu]);
 
   const isAllSelected = selectedPlatforms.length === SOCIAL_PLATFORMS.length;
   const isPartiallySelected = selectedPlatforms.length > 0 && !isAllSelected;
@@ -169,7 +157,7 @@ export default function PostConfigurationForm({
                     alt={option.name}
                     width={24}
                     height={24}
-                    className={`w-6 h-6 dark:filter dark:brightness-0 dark:invert`}
+                    className={`w-6 h-6 ${needsInversion(option.name) ? 'dark:filter dark:brightness-0 dark:invert' : ''}`}
                   />
                   <span className="text-foreground">{option.name}</span>
                 </label>

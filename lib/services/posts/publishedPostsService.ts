@@ -48,6 +48,7 @@ export interface PublishedPost {
   url: string | null; // null when post has no real URL (simulated publish)
   profileName: string;
   profilePic: string;
+  media: string[]; // URL ảnh/video đã đính kèm khi đăng
   engagement: {
     likes: number;
     comments: number;
@@ -168,6 +169,9 @@ function transformPostToPublished(
     url: postUrl || null, // null = no real URL (simulated publish); UI disables open-link button
     profileName: username.startsWith('@') ? username : `@${username}`,
     profilePic: avatarUrl,
+    media: Array.isArray(payload.mediaUrls) ? payload.mediaUrls
+      : Array.isArray(payload.media_urls) ? payload.media_urls
+      : [],
     engagement: payload.engagement || payload.webhook_data?.engagement || {
       likes: 0,
       comments: 0,

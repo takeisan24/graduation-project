@@ -10,3 +10,14 @@ export type CreditPackageId = (typeof CREDIT_PACKAGES)[number]["id"];
 export function findPackageById(id: string) {
   return CREDIT_PACKAGES.find((p) => p.id === id) ?? null;
 }
+
+// ── Mô hình "trả theo dùng": mua số credit tự do theo đơn giá cố định ──
+export const CREDIT_UNIT_PRICE_VND = 490; // đơn giá mỗi credit
+export const CREDIT_PRESETS = [50, 100, 250, 500] as const;
+export const MIN_CREDITS = 10;
+export const MAX_CREDITS = 10000;
+
+/** Tổng tiền (VND) cho số credit muốn mua. */
+export function computeCreditAmount(credits: number): number {
+  return Math.round(credits) * CREDIT_UNIT_PRICE_VND;
+}

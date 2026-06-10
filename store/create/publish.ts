@@ -16,7 +16,7 @@ import { useDraftsStore } from '../drafts/draftsPageStore';
 import { useCreatePostsStore } from './posts';
 import { checkPostStatusAtScheduledTime } from '../shared/statusCheck';
 import { handleErrorWithModal } from '@/lib/utils/errorHandler';
-import { LIMIT_ERRORS, AUTH_ERRORS, CONNECTION_ERRORS, POST_ERRORS, MEDIA_ERRORS, GENERIC_ERRORS } from '@/lib/messages/errors';
+import { LIMIT_ERRORS, AUTH_ERRORS, CONNECTION_ERRORS, POST_ERRORS, MEDIA_ERRORS, GENERIC_ERRORS, TOAST_MESSAGES } from '@/lib/messages/errors';
 import type { MediaFile, PendingScheduledPost, PublishedPost } from '../shared/types';
 import { CalendarEvent } from '@/lib/types/calendar';
 import { formatDate, formatTime } from '@/lib/utils/date';
@@ -83,7 +83,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
     // Chặn sớm: Instagram/TikTok/YouTube/Pinterest bắt buộc kèm media mới đăng được.
     const MEDIA_REQUIRED_PLATFORMS = ['instagram', 'tiktok', 'youtube', 'pinterest'];
     if (MEDIA_REQUIRED_PLATFORMS.includes(platformProvider) && postMedia.length === 0) {
-      toast.error(`${post.type} cần đính kèm ảnh/video mới đăng được.`);
+      toast.error(TOAST_MESSAGES.MEDIA_REQUIRED_FOR_PUBLISH(post.type));
       return;
     }
 
@@ -198,7 +198,8 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
 
         // Format time detail for error message
         const now = new Date();
-        const timeDetail = `${formatTime(now, 'vi-VN', { hour: '2-digit', minute: '2-digit' })} ngày ${formatDate(now, 'vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
+        const errLocaleTag = typeof window !== 'undefined' && document.documentElement.lang === 'en' ? 'en-US' : 'vi-VN';
+        const timeDetail = `${formatTime(now, errLocaleTag, { hour: '2-digit', minute: '2-digit' })} ngày ${formatDate(now, errLocaleTag, { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
         const platformName = post.type || 'mạng xã hội';
 
         // Handle error with modal (will show both toast and modal if it's a limit/credits error)
@@ -306,7 +307,8 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
 
       // Show error toast for unexpected errors (network, etc.)
       const now = new Date();
-      const timeDetail = `${formatTime(now, 'vi-VN', { hour: '2-digit', minute: '2-digit' })} ngày ${formatDate(now, 'vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
+      const catchLocaleTag = typeof window !== 'undefined' && document.documentElement.lang === 'en' ? 'en-US' : 'vi-VN';
+      const timeDetail = `${formatTime(now, catchLocaleTag, { hour: '2-digit', minute: '2-digit' })} ngày ${formatDate(now, catchLocaleTag, { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
       const platformName = post.type || 'mạng xã hội';
       const detailedErrorMessage = POST_ERRORS.PUBLISH_FAILED_WITH_DETAILS(platformName, timeDetail);
       await handleErrorWithModal(error, detailedErrorMessage);
@@ -335,7 +337,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
 
     let schedulingToastId: string | number | undefined;
     try {
-      schedulingToastId = toast.loading("Đang lên lịch bài đăng, vui lòng chờ...");
+      schedulingToastId = toast.loading(TOAST_MESSAGES.SCHEDULING_LOADING);
       const { data: { session } } = await supabaseClient.auth.getSession();
       const postContext = useCreatePostsStore.getState().postContextMap[postId];
       const backendDraftId = postContext?.draftId && postContext?.projectId ? postContext.draftId : null;
@@ -353,7 +355,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
       }
 
       if (!connectedAccounts || connectedAccounts.length === 0) {
-        throw new Error('Không tìm thấy tài khoản đã kết nối. Vui lòng kết nối tài khoản trước khi lên lịch bài đăng.');
+        throw new Error(TOAST_MESSAGES.NO_CONNECTED_ACCOUNTS);
       }
 
       const platform = post.type || 'general';
@@ -368,7 +370,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
       // Chặn sớm: Instagram/TikTok/YouTube/Pinterest bắt buộc kèm media mới đăng được.
       const MEDIA_REQUIRED_PLATFORMS = ['instagram', 'tiktok', 'youtube', 'pinterest'];
       if (MEDIA_REQUIRED_PLATFORMS.includes(platform.toLowerCase()) && postMedia.length === 0) {
-        toast.error(`${post.type} cần đính kèm ảnh/video mới lên lịch được.`);
+        toast.error(TOAST_MESSAGES.MEDIA_REQUIRED_FOR_SCHEDULE(post.type));
         if (schedulingToastId) toast.dismiss(schedulingToastId);
         return;
       }
@@ -458,7 +460,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
         try {
           errorData = await response.json();
         } catch {
-          errorData = { error: response.statusText || 'Không thể lên lịch bài đăng.' };
+          errorData = { error: response.statusText || POST_ERRORS.NO_CONNECTED_ACCOUNTS };
         }
 
         // If post was saved to DB with failed status, reload failed posts
@@ -477,7 +479,8 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
 
         // Format time detail for error message
         const scheduledDateTime = new Date(scheduledAt);
-        const timeDetail = `${formatTime(scheduledDateTime, 'vi-VN', { hour: '2-digit', minute: '2-digit' })} ngày ${formatDate(scheduledDateTime, 'vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
+        const schedErrLocale = typeof window !== 'undefined' && document.documentElement.lang === 'en' ? 'en-US' : 'vi-VN';
+        const timeDetail = `${formatTime(scheduledDateTime, schedErrLocale, { hour: '2-digit', minute: '2-digit' })} ngày ${formatDate(scheduledDateTime, schedErrLocale, { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
         const platformName = platform || 'mạng xã hội';
 
         // Handle error with modal (will show both toast and modal if it's a limit/credits error)
@@ -585,9 +588,13 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
       }
 
       // Show success message
-      const formattedDate = date.toLocaleDateString('vi-VN');
+      const locale = typeof window !== 'undefined'
+        ? (document.documentElement.lang || 'vi')
+        : 'vi';
+      const localeTag = locale === 'en' ? 'en-US' : 'vi-VN';
+      const formattedDate = date.toLocaleDateString(localeTag);
       const scheduledCount = scheduledPosts.length;
-      const successMessage = `Đã lên lịch ${scheduledCount} bài đăng cho ${platform} vào ${time} ngày ${formattedDate}.`;
+      const successMessage = TOAST_MESSAGES.SCHEDULE_SUCCESS(scheduledCount, platform, time, formattedDate);
       if (schedulingToastId) {
         toast.success(successMessage, { id: schedulingToastId });
       } else {
@@ -611,7 +618,8 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
 
       // Show error toast for unexpected errors (network, etc.)
       const scheduledDateTime = new Date(scheduledAt);
-      const timeDetail = `${formatTime(scheduledDateTime, 'vi-VN', { hour: '2-digit', minute: '2-digit' })} ngày ${formatDate(scheduledDateTime, 'vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
+      const schedCatchLocale = typeof window !== 'undefined' && document.documentElement.lang === 'en' ? 'en-US' : 'vi-VN';
+      const timeDetail = `${formatTime(scheduledDateTime, schedCatchLocale, { hour: '2-digit', minute: '2-digit' })} ngày ${formatDate(scheduledDateTime, schedCatchLocale, { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
       const platformName = post.type || 'mạng xã hội';
       const detailedErrorMessage = POST_ERRORS.PUBLISH_FAILED_WITH_DETAILS(platformName, timeDetail);
       await handleErrorWithModal(error, detailedErrorMessage);

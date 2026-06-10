@@ -3,11 +3,11 @@
 import Image from "next/image"
 import { useState } from "react"
 import { useSWRConfig } from "swr"
-import { CREDIT_PACKAGES } from "@/lib/constants/credit-packages"
+import { CREDIT_PRESETS, CREDIT_UNIT_PRICE_VND, MIN_CREDITS, MAX_CREDITS, computeCreditAmount } from "@/lib/constants/credit-packages"
 import { supabaseClient } from "@/lib/supabaseClient"
 import { toast } from "sonner"
 import { useTranslations } from "next-intl"
-import { Sparkles, Zap, Crown, Rocket, Copy, Check, Loader2, FlaskConical } from "lucide-react"
+import { Copy, Check, Loader2, FlaskConical, Coins } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -15,8 +15,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-
-const PACKAGE_ICONS = [Sparkles, Zap, Crown, Rocket] as const
 
 const BANK_NAMES: Record<string, string> = {
   "970436": "Vietcombank",
@@ -41,18 +39,23 @@ interface OrderData {
 export default function CreditTopUp() {
   const t = useTranslations("CreatePage.payment")
   const { mutate } = useSWRConfig()
-  const [loading, setLoading] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [creditAmount, setCreditAmount] = useState<number>(100)
   const [orderData, setOrderData] = useState<OrderData | null>(null)
   const [confirming, setConfirming] = useState(false)
   const [copiedField, setCopiedField] = useState<string | null>(null)
+
+  const isValidAmount = Number.isFinite(creditAmount) && creditAmount >= MIN_CREDITS && creditAmount <= MAX_CREDITS
+  const totalPrice = computeCreditAmount(isValidAmount ? creditAmount : 0)
 
   const getSession = async () => {
     const { data: { session } } = await supabaseClient.auth.getSession()
     return session
   }
 
-  const handlePurchase = async (packageId: string) => {
-    setLoading(packageId)
+  const handlePurchase = async () => {
+    if (!isValidAmount) return
+    setLoading(true)
     try {
       const session = await getSession()
       if (!session?.access_token) {
@@ -60,15 +63,13 @@ export default function CreditTopUp() {
         return
       }
 
-      const pkg = CREDIT_PACKAGES.find(p => p.id === packageId)
-
       const res = await fetch("/api/payment/create-order", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({ packageId }),
+        body: JSON.stringify({ credits: creditAmount }),
       })
 
       if (!res.ok) {
@@ -77,12 +78,12 @@ export default function CreditTopUp() {
       }
 
       const { data } = await res.json()
-      setOrderData({ ...data, packageCredits: pkg?.credits ?? 0 })
+      setOrderData({ ...data, packageCredits: data?.credits ?? creditAmount })
     } catch (err) {
       const message = err instanceof Error ? err.message : t("unknownError")
       toast.error(message)
     } finally {
-      setLoading(null)
+      setLoading(false)
     }
   }
 
@@ -159,55 +160,65 @@ export default function CreditTopUp() {
         <p>{t("demoNotice")}</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {CREDIT_PACKAGES.map((pkg, index) => {
-          const Icon = PACKAGE_ICONS[index] || Sparkles
-          const isPopular = pkg.id === "popular"
+      {/* Mua credit theo số tự do (mô hình trả theo dùng) */}
+      <div className="rounded-2xl border border-border p-5 space-y-4">
+        <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+          <Coins className="h-4 w-4 text-primary" />
+          {t("creditAmountLabel")}
+        </div>
 
-          return (
-            <div
-              key={pkg.id}
-              className={`relative rounded-xl border p-5 text-center space-y-3 transition-all hover:shadow-md ${
-                isPopular
-                  ? "border-primary ring-2 ring-primary/20"
-                  : "border-border hover:border-primary/50"
+        {/* Preset nhanh */}
+        <div className="flex flex-wrap gap-2">
+          {CREDIT_PRESETS.map((preset) => (
+            <button
+              key={preset}
+              type="button"
+              onClick={() => setCreditAmount(preset)}
+              className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+                creditAmount === preset
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border text-muted-foreground hover:border-primary/50 hover:text-foreground"
               }`}
             >
-              {isPopular && (
-                <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-medium px-3 py-0.5 rounded-full">
-                  {t("popular")}
-                </span>
-              )}
+              {preset}
+            </button>
+          ))}
+        </div>
 
-              <Icon className="h-8 w-8 mx-auto text-primary" />
+        {/* Nhập số tự do */}
+        <div className="flex items-center gap-3">
+          <input
+            type="number"
+            min={MIN_CREDITS}
+            max={MAX_CREDITS}
+            value={Number.isFinite(creditAmount) ? creditAmount : ""}
+            onChange={(e) => setCreditAmount(Math.floor(Number(e.target.value)))}
+            className="w-32 rounded-lg border border-border bg-background px-3 py-2 text-lg font-semibold text-foreground outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/20"
+          />
+          <span className="text-sm text-muted-foreground">{t("creditsUnit")}</span>
+        </div>
 
-              <div>
-                <p className="text-2xl font-bold">{pkg.credits}</p>
-                <p className="text-xs text-muted-foreground">{t("creditsUnit")}</p>
-              </div>
+        {/* Giá realtime */}
+        <div className="flex items-baseline justify-between border-t border-border/60 pt-3">
+          <span className="text-sm text-muted-foreground">
+            {CREDIT_UNIT_PRICE_VND.toLocaleString("vi-VN")}{t("perCredit")}
+          </span>
+          <span className="text-2xl font-bold text-primary">
+            {totalPrice.toLocaleString("vi-VN")}&#8363;
+          </span>
+        </div>
 
-              <p className="text-xl font-semibold text-primary">
-                {pkg.priceVND.toLocaleString("vi-VN")}&#8363;
-              </p>
+        {!isValidAmount && (
+          <p className="text-xs text-destructive">{t("creditRangeHint", { min: MIN_CREDITS, max: MAX_CREDITS })}</p>
+        )}
 
-              <p className="text-xs text-muted-foreground">
-                {Math.round(pkg.priceVND / pkg.credits).toLocaleString("vi-VN")}{t("perCredit")}
-              </p>
-
-              <button
-                onClick={() => handlePurchase(pkg.id)}
-                disabled={loading !== null}
-                className={`w-full rounded-lg py-2.5 px-4 text-sm font-medium transition-colors ${
-                  isPopular
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                    : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                } disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                {loading === pkg.id ? t("processing") : t("buyNow")}
-              </button>
-            </div>
-          )
-        })}
+        <button
+          onClick={handlePurchase}
+          disabled={loading || !isValidAmount}
+          className="w-full rounded-lg bg-primary py-3 px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          {loading ? t("processing") : t("buyCredits", { credits: isValidAmount ? creditAmount : 0 })}
+        </button>
       </div>
 
       <p className="text-xs text-muted-foreground text-center">

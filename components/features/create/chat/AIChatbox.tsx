@@ -17,10 +17,9 @@ export default function AIChatbox() {
   const t = useTranslations('CreatePage.createSection.chatPanel');
   // State cục bộ cho UI của chatbox
   const [chatInput, setChatInput] = useState("");
-  const [showModelMenu, setShowModelMenu] = useState<boolean>(false);
-  const [selectedChatModel, setSelectedChatModel] = useState<string>("Gemini");
+  // Hệ thống chỉ dùng Google Gemini (theo báo cáo) — không có lựa chọn model khác.
+  const selectedChatModel = "Gemini";
   const [showClearConfirm, setShowClearConfirm] = useState(false);
-  const modelMenuRef = useRef<HTMLDivElement>(null);
   const chatScrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -79,13 +78,7 @@ export default function AIChatbox() {
       clearChat: state.clearChat,
     })));
 
-  // Reset model về Gemini khi user đóng hết tab post (bắt đầu flow tạo post mới)
   const openPosts = useCreatePostsStore(state => state.openPosts);
-  useEffect(() => {
-    if (openPosts.length === 0) {
-      setSelectedChatModel("Gemini");
-    }
-  }, [openPosts.length]);
 
   // Auto-scroll chat to bottom
   useEffect(() => {
@@ -149,8 +142,6 @@ export default function AIChatbox() {
 
   const confirmClearChat = () => {
     clearChat();
-    // Khi user tạo cuộc chat mới, luôn reset về Gemini để đồng bộ với default
-    setSelectedChatModel("Gemini");
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -162,18 +153,6 @@ export default function AIChatbox() {
       }
     }
   };
-
-  //Đóng dropdown khi click ra ngoài
-  useEffect(() => {
-    if (!showModelMenu) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modelMenuRef.current && !modelMenuRef.current.contains(e.target as Node)) {
-        setShowModelMenu(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [showModelMenu]);
 
   return (
     <div className="relative z-0 flex h-full min-h-0 w-full flex-col overflow-hidden bg-gradient-to-b from-background via-background to-secondary/20 scroll-smooth" style={{ scrollPaddingBottom: 'env(keyboard-inset-height, 16px)' }} data-tour="ai-chat">
@@ -187,7 +166,7 @@ export default function AIChatbox() {
           <button
             onClick={handleClearChat}
             className="p-1 rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground transition-all group"
-            title="Tạo cuộc trò chuyện mới"
+            title={t('newChatTitle')}
           >
             <Plus className="w-3.5 h-3.5 group-hover:rotate-90 transition-transform duration-300" />
           </button>
@@ -378,7 +357,7 @@ export default function AIChatbox() {
             {openPosts.length > 0 ? (
               <div className="text-[10px] text-muted-foreground flex items-center gap-1.5 flex-1 min-w-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shrink-0"></span>
-                <span className="truncate">Bài viết: <span className="text-muted-foreground font-medium">{openPosts.find(p => p.id === useCreatePostsStore.getState().selectedPostId)?.type || "Tất cả"}</span></span>
+                <span className="truncate">{t('postContextLabel')} <span className="text-muted-foreground font-medium">{openPosts.find(p => p.id === useCreatePostsStore.getState().selectedPostId)?.type || t('allPostsContext')}</span></span>
               </div>
             ) : <div className="flex-1" />}
             {/* S-014: Shortcut hint */}

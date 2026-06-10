@@ -103,21 +103,14 @@ export default function SourceForm({ onComplete, onCancel, initialData, isReadOn
     nicheId: string,
     customRequest: string
   ): string => {
-    const storedJson = localStorage.getItem("selectedData");
-    if (storedJson) {
-      try {
-        const framework = JSON.parse(storedJson) as Framework;
-        const goalModifier = framework.goal_overrides?.[goalId] || "";
-
-        const overridePrompt = framework.niche_overrides?.[nicheId] || "";
-
-        const promptContent = framework.base_prompt_text || "";
-
-        return `${goalModifier}\n${overridePrompt}\n${promptContent}\n${customRequest || ""}`;
-
-      } catch (error) {
-        console.error("Dữ liệu trong localStorage không hợp lệ", error);
-      }
+    // Dùng TRỰC TIẾP framework user đang chọn (selectedFramework), KHÔNG đọc localStorage
+    // (localStorage['selectedData'] luôn là framework[0] do fetchFrameworks ghi đè → sai template).
+    const framework = selectedFramework;
+    if (framework) {
+      const goalModifier = framework.goal_overrides?.[goalId] || "";
+      const overridePrompt = framework.niche_overrides?.[nicheId] || "";
+      const promptContent = framework.base_prompt_text || "";
+      return `${goalModifier}\n${overridePrompt}\n${promptContent}\n${customRequest || ""}`;
     }
     return "";
   };
@@ -489,7 +482,7 @@ export default function SourceForm({ onComplete, onCancel, initialData, isReadOn
                   <span className="text-xl">🎵</span> <span className="text-[10px] uppercase font-bold text-muted-foreground">TikTok</span>
                 </button>
                 <button data-testid="source-type-article" onClick={() => handleSelectSourceType('article')} className="p-3 rounded-lg border border-border bg-secondary hover:border-primary/50 hover:bg-primary/5 flex flex-col items-center gap-1 transition-all">
-                  <span className="text-xl">📰</span> <span className="text-[10px] uppercase font-bold text-muted-foreground">Artile</span>
+                  <span className="text-xl">📰</span> <span className="text-[10px] uppercase font-bold text-muted-foreground">Article</span>
                 </button>
                 <button data-testid="source-type-file" onClick={() => handleSelectSourceType('file')} className="p-3 rounded-lg border border-border bg-secondary hover:border-primary/50 hover:bg-primary/5 flex flex-col items-center gap-1 transition-all">
                   <span className="text-xl">📁</span> <span className="text-[10px] uppercase font-bold text-muted-foreground">File</span>

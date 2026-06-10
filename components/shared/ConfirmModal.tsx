@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 
 interface ConfirmModalProps {
@@ -12,6 +13,9 @@ interface ConfirmModalProps {
   description: string;
   confirmText?: string;
   cancelText?: string;
+  // Nút hành động phụ (tùy chọn) — ví dụ: "Chỉ gỡ khỏi lịch" bên cạnh "Xóa hoàn toàn".
+  secondaryText?: string;
+  onSecondary?: () => void;
   variant?: 'danger' | 'warning' | 'info';
 }
 
@@ -21,13 +25,23 @@ export default function ConfirmModal({
   onConfirm,
   title,
   description,
-  confirmText = 'Xác nhận',
-  cancelText = 'Hủy',
+  confirmText,
+  cancelText,
+  secondaryText,
+  onSecondary,
   variant = 'warning'
 }: ConfirmModalProps) {
-  
+  const tCommon = useTranslations('Common');
+  const resolvedConfirmText = confirmText ?? tCommon('confirm');
+  const resolvedCancelText = cancelText ?? tCommon('cancel');
+
   const handleConfirm = () => {
     onConfirm();
+    onClose();
+  };
+
+  const handleSecondary = () => {
+    onSecondary?.();
     onClose();
   };
 
@@ -101,21 +115,46 @@ export default function ConfirmModal({
                 </p>
 
                 {/* Actions */}
-                <div className="flex gap-3">
-                  <Button
-                    onClick={onClose}
-                    variant="outline"
-                    className="flex-1 border-border text-foreground hover:bg-secondary"
-                  >
-                    {cancelText}
-                  </Button>
-                  <Button
-                    onClick={handleConfirm}
-                    className={`flex-1 text-primary-foreground ${styles.button}`}
-                  >
-                    {confirmText}
-                  </Button>
-                </div>
+                {secondaryText && onSecondary ? (
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      onClick={handleSecondary}
+                      variant="outline"
+                      className="w-full border-border text-foreground hover:bg-secondary"
+                    >
+                      {secondaryText}
+                    </Button>
+                    <Button
+                      onClick={handleConfirm}
+                      className={`w-full text-primary-foreground ${styles.button}`}
+                    >
+                      {resolvedConfirmText}
+                    </Button>
+                    <Button
+                      onClick={onClose}
+                      variant="ghost"
+                      className="w-full text-muted-foreground hover:bg-secondary"
+                    >
+                      {resolvedCancelText}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex gap-3">
+                    <Button
+                      onClick={onClose}
+                      variant="outline"
+                      className="flex-1 border-border text-foreground hover:bg-secondary"
+                    >
+                      {resolvedCancelText}
+                    </Button>
+                    <Button
+                      onClick={handleConfirm}
+                      className={`flex-1 text-primary-foreground ${styles.button}`}
+                    >
+                      {resolvedConfirmText}
+                    </Button>
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>

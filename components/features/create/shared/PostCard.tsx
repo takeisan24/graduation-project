@@ -7,7 +7,7 @@ import { PlatformIcon } from "@/components/shared/PlatformIcon"
 import { formatDate } from "@/lib/utils/date"
 import { getPlatformColors } from "@/lib/constants/platformColors"
 import { AlertTriangle, Eye, ExternalLink, Pencil, Trash2 } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useTranslations, useLocale } from "next-intl"
 
 interface PostCardProps {
   post: {
@@ -43,10 +43,11 @@ export default function PostCard({
   previewNote
 }: PostCardProps) {
   const t = useTranslations("CreatePage.postCard")
+  const locale = useLocale()
 
   const content = post.content || t("noContent")
   const platform = post.platform || "unknown"
-  const date = post.created_at ? formatDate(post.created_at) : ""
+  const date = post.created_at ? formatDate(post.created_at, locale) : ""
   const colors = getPlatformColors(platform)
   const isClickable = Boolean(onClick) && !actionsDisabled
   const statusLabel =

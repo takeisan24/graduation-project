@@ -825,6 +825,7 @@
       }
     },
     "topBar": {
+      "payAsYouGo": "Pay-as-you-go",
       "toggleTheme": "Toggle theme",
       "signOut": "Sign Out",
       "signOutSuccess": "Signed out successfully!",
@@ -1032,7 +1033,10 @@
       "confirmingPayment": "Confirming...",
       "creditsUnit": "credits",
       "perCredit": "₫/credit",
-      "demoNotice": "Demo mode — payment is simulated for thesis presentation purposes. Credits are added manually without real bank verification."
+      "demoNotice": "Demo mode — payment is simulated for thesis presentation purposes. Credits are added manually without real bank verification.",
+      "creditAmountLabel": "Amount of credits to buy",
+      "creditRangeHint": "Enter between {min} and {max} credits.",
+      "buyCredits": "Buy {credits} credits"
     },
     "systemSettings": {
       "appearanceTitle": "Appearance",
@@ -1660,6 +1664,8 @@
           "confirmDelete": "Confirm delete?",
           "deleteConfirmDescription": "Delete project \"{name}\"? All drafts in this project will be removed and cannot be undone.",
           "newProject": "New project",
+          "backToGate": "Choose another project",
+          "switchTo": "Switch to \"{name}\"",
           "allProjects": "All projects",
           "empty": "No projects yet",
           "loadFailed": "Could not load projects",
@@ -1811,8 +1817,11 @@
       "deleteModal": {
         "title": "Confirm Delete?",
         "message": "Are you sure you want to delete this event from the calendar?",
+        "messageScheduled": "How do you want to handle this scheduled post? \"Remove from calendar only\" removes it from your calendar but keeps the schedule on Zernio. \"Delete everywhere\" also cancels it on Zernio and cannot be undone.",
         "no": "No",
-        "yes": "Delete"
+        "yes": "Delete",
+        "fullDelete": "Delete everywhere",
+        "calendarOnly": "Remove from calendar only"
       }
     },
     "failedSection": {

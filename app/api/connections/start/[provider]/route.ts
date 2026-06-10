@@ -58,8 +58,12 @@ export async function GET(
         return NextResponse.json({ url: authUrl, isExternal: true });
       } catch (err) {
         const msg = err instanceof Error ? err.message : "Zernio error";
-        console.error("[connections/start] Zernio error, falling back to local preview:", msg);
-        // Fall through to local preview mode below
+        console.error("[connections/start] Zernio connect failed:", msg);
+        // KHÔNG fallback tạo tài khoản preview giả nữa — báo lỗi rõ ràng (fail loud).
+        const friendly = /free_tier|PAYMENT_REQUIRED|402/i.test(msg)
+          ? "Tài khoản Zernio (gói miễn phí) chỉ cho phép kết nối tối đa 2 tài khoản. Vui lòng ngắt bớt 1 tài khoản đang kết nối rồi thử lại, hoặc thêm phương thức thanh toán trên Zernio."
+          : `Không lấy được liên kết kết nối ${provider} từ Zernio. Chi tiết: ${msg}`;
+        return NextResponse.json({ error: friendly }, { status: 502 });
       }
     }
 
@@ -76,7 +80,17 @@ export async function GET(
       );
     }
 
-    // --- Local preview: create a simulated connection in DB ---
+    // Đã cấu hình Zernio → KHÔNG bao giờ tạo kết nối mô phỏng (tránh tài khoản giả lẫn thật).
+    if (isZernioConfigured()) {
+      return buildPopupResponse({
+        success: false,
+        provider,
+        returnTo,
+        message: `Kết nối ${provider} qua Zernio thất bại. Vui lòng thử lại hoặc ngắt bớt tài khoản đang kết nối.`,
+      });
+    }
+
+    // --- Local preview: create a simulated connection in DB (chỉ khi CHƯA cấu hình Zernio) ---
     const profileId = `preview-${platform}-${user.id.slice(0, 8)}`;
     const existing = await findConnectionByUserPlatformAndProfileId(user.id, platform, profileId);
 

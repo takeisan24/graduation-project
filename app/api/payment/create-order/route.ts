@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { success, fail } from "@/lib/response";
-import { findPackageById } from "@/lib/constants/credit-packages";
+import { findPackageById, computeCreditAmount, MIN_CREDITS, MAX_CREDITS } from "@/lib/constants/credit-packages";
 import { supabase } from "@/lib/supabase";
 import { buildVietQRUrl, getVietQRConfig } from "@/lib/vietqr";
 
@@ -11,11 +11,26 @@ export async function POST(req: NextRequest) {
     if (!user) return fail("Unauthorized", 401);
 
     const body = await req.json();
-    const { packageId } = body;
 
-    const pkg = findPackageById(packageId);
-    if (!pkg) {
-      return fail("INVALID_PACKAGE", 400);
+    // Ưu tiên mô hình "trả theo dùng": { credits } số tự do. Giữ tương thích cũ: { packageId }.
+    let credits: number;
+    let amount: number;
+    let packageId: string;
+    if (typeof body.credits === "number" && Number.isFinite(body.credits)) {
+      credits = Math.floor(body.credits);
+      if (credits < MIN_CREDITS || credits > MAX_CREDITS) {
+        return fail("INVALID_CREDITS", 400);
+      }
+      amount = computeCreditAmount(credits);
+      packageId = "custom";
+    } else {
+      const pkg = findPackageById(body.packageId);
+      if (!pkg) {
+        return fail("INVALID_PACKAGE", 400);
+      }
+      credits = pkg.credits;
+      amount = pkg.priceVND;
+      packageId = pkg.id;
     }
 
     const orderCode = Number(
@@ -27,9 +42,9 @@ export async function POST(req: NextRequest) {
       .insert({
         order_code: orderCode,
         user_id: user.id,
-        package_id: pkg.id,
-        credits: pkg.credits,
-        amount: pkg.priceVND,
+        package_id: packageId,
+        credits,
+        amount,
         status: "PENDING",
       });
 
@@ -38,17 +53,18 @@ export async function POST(req: NextRequest) {
       return fail("ORDER_CREATE_FAILED", 500);
     }
 
-    const qrUrl = buildVietQRUrl({ amount: pkg.priceVND, orderCode });
+    const qrUrl = buildVietQRUrl({ amount, orderCode });
     const { accountNo, accountName, bankBin } = getVietQRConfig();
 
     return success({
       qrUrl,
       orderCode,
+      credits,
       bankInfo: {
         bankBin,
         accountNo,
         accountName,
-        amount: pkg.priceVND,
+        amount,
         content: `CREATORHUB ${orderCode}`,
       },
     });

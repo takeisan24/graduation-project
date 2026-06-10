@@ -42,21 +42,27 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
 
     const [hasSeenTour, setHasSeenTour] = useState(true);
     const [newSourceId, setNewSourceId] = useState<string | null>(null);
-    const [isReadOnly, setIsReadOnly] = useState(false);
-    const [editingSource, setEditingSource] = useState<SavedSource | null>(null);
     const [isConfirmClearOpen, setIsConfirmClearOpen] = useState(false);
 
     const {
         savedSources,
         deleteSavedSource,
         openCreateFromSourceModal,
-        addSavedSource
+        addSavedSource,
+        editingSource,
+        isSourceFormReadOnly,
+        openSourceForm,
+        closeSourceForm,
     } = useCreateSourcesStore(
         useShallow(state => ({
             savedSources: state.savedSources,
             deleteSavedSource: state.deleteSavedSource,
             openCreateFromSourceModal: state.openCreateFromSourceModal,
             addSavedSource: state.addSavedSource,
+            editingSource: state.editingSource,
+            isSourceFormReadOnly: state.isSourceFormReadOnly,
+            openSourceForm: state.openSourceForm,
+            closeSourceForm: state.closeSourceForm,
         })));
 
     const {
@@ -81,22 +87,14 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
 
     const handleSourceClick = (source: SavedSource) => {
         useCreateChatStore.getState().clearChat();
-        setIsReadOnly(false);
         setWizardStep('configuringPosts');
         openCreateFromSourceModal({ type: source.type, value: source.value, label: source.label || source.value });
     };
 
+    // Gộp "Xem" + "Chỉnh sửa" thành MỘT hành động: mở form sửa nguồn (xem được luôn).
     const handleEditSource = (e: React.MouseEvent, source: SavedSource) => {
         e.stopPropagation();
-        setEditingSource(source);
-        setIsReadOnly(false);
-        setWizardStep('addingSource');
-    };
-
-    const handleViewSource = (e: React.MouseEvent, source: SavedSource) => {
-        e.stopPropagation();
-        setEditingSource(source);
-        setIsReadOnly(true);
+        openSourceForm(source, false);
         setWizardStep('addingSource');
     };
 
@@ -108,19 +106,19 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
         toast.success(t('sourceAddSuccess', { type: source.type }));
         useCreateChatStore.getState().clearChat();
         openCreateFromSourceModal({ type: source.type, value: source.value, label: source.label });
-        setEditingSource(null);
+        closeSourceForm();
         setWizardStep('configuringPosts');
     };
 
     const handleFormCancel = () => {
-        setEditingSource(null);
+        closeSourceForm();
         setWizardStep('idle');
     };
 
     if (mode === 'form') {
         return (
             <div className="w-full h-full border-r border-border bg-card">
-                <SourceForm onComplete={handleFormComplete} onCancel={handleFormCancel} isReadOnly={isReadOnly} initialData={editingSource || undefined} />
+                <SourceForm onComplete={handleFormComplete} onCancel={handleFormCancel} isReadOnly={isSourceFormReadOnly} initialData={editingSource || undefined} />
             </div>
         );
     }
@@ -134,8 +132,7 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
                     data-testid="create-add-source-button"
                     className="text-base md:text-sm bg-linear-to-r from-primary to-primary/80 hover:from-primary/80 hover:to-primary/70 text-primary-foreground px-4 py-3 md:py-2 transition-all duration-300 border-0 relative group shadow-lg shadow-primary/30 hover:shadow-primary/50 w-full md:w-auto"
                     onClick={() => {
-                        setEditingSource(null);
-                        setIsReadOnly(false);
+                        openSourceForm(null, false);
                         setWizardStep('addingSource');
                     }}
                 >
@@ -193,13 +190,6 @@ export default function SourcePanel({ mode = 'list' }: SourcePanelProps) {
                                         </div>
 
                                         <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-200 px-1 py-1 rounded-md bg-secondary shadow-lg border border-border/50">
-                                            <button
-                                                className="p-1.5 hover:bg-blue-500/10 text-gray-400 hover:text-blue-400 rounded-md transition-all"
-                                                onClick={(e) => handleViewSource(e, source)}
-                                                title={t('viewDetails')}
-                                            >
-                                                <Eye className="w-4 h-4" />
-                                            </button>
                                             <button
                                                 className="p-1.5 hover:bg-yellow-500/10 text-gray-400 hover:text-yellow-400 rounded-md transition-all"
                                                 onClick={(e) => handleEditSource(e, source)}

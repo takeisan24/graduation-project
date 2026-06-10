@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { useCreatePostsStore, useCalendarStore } from "@/store";
 import { useShallow } from "zustand/react/shallow";
 import { useTranslations } from "next-intl";
@@ -19,7 +19,7 @@ import { MonthlyViewGrid } from "./MonthlyViewGrid";
 import { WeeklyViewGrid } from "./WeeklyViewGrid";
 import { CalendarPopups } from "./CalendarPopups";
 import ConfirmModal from "@/components/shared/ConfirmModal";
-import { CalendarEmptyState, getCalendarEmptyStateFlags } from "./CalendarEmptyState";
+import { CalendarEmptyState } from "./CalendarEmptyState";
 import { Button } from "@/components/ui/button";
 import { PlatformIcon } from "@/components/shared/PlatformIcon";
 import { useSectionNavigation } from "@/hooks/useSectionNavigation";
@@ -79,6 +79,13 @@ export default function CalendarSection() {
         });
     }, [calendarEvents, syncCalendarWithPostStatuses]);
 
+    // Refs giữ giá trị mới nhất → effect polling chạy MỘT lần, không tái tạo theo calendarEvents
+    // (trước đây calendarEvents đổi → autoUpdatePublishingStatus đổi ref → effect re-run → doSync ngay → vòng lặp spam API).
+    const autoUpdateRef = useRef(autoUpdatePublishingStatus);
+    const calendarEventsRef = useRef(calendarEvents);
+    useEffect(() => { autoUpdateRef.current = autoUpdatePublishingStatus; }, [autoUpdatePublishingStatus]);
+    useEffect(() => { calendarEventsRef.current = calendarEvents; }, [calendarEvents]);
+
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [calendarView, setCalendarView] = useState<"monthly" | "weekly">("monthly");
@@ -127,11 +134,19 @@ export default function CalendarSection() {
             if (document.hidden || !isMounted) return;
             setIsSyncing(true);
             await hydrateScheduledPosts();
-            await autoUpdatePublishingStatus();
+            await autoUpdateRef.current();
             if (!isMounted) return;
             setLastSyncedAt(new Date());
             setIsSyncing(false);
         };
+
+        // Còn bài 'scheduled'/'publishing'/'pending' cần theo dõi để cập nhật trạng thái không?
+        const hasActiveScheduledEvents = () =>
+            Object.values(calendarEventsRef.current || {}).some(
+                (dayEvents) => Array.isArray(dayEvents) && dayEvents.some(
+                    (ev) => ev.scheduled_post_id && (ev.status === 'scheduled' || ev.status === 'publishing' || ev.status === 'pending')
+                )
+            );
 
         const scheduleSync = () => {
             if (debounceTimer) clearTimeout(debounceTimer);
@@ -157,8 +172,9 @@ export default function CalendarSection() {
         window.addEventListener("online", handleOnline);
         window.addEventListener("offline", handleOffline);
 
+        // Chỉ poll định kỳ khi CÒN bài đang chờ đăng (scheduled→posted) — tránh spam API route khi nhàn rỗi.
         const intervalId = setInterval(() => {
-            if (!document.hidden) doSync();
+            if (!document.hidden && hasActiveScheduledEvents()) doSync();
         }, 15_000);
 
         return () => {
@@ -173,7 +189,7 @@ export default function CalendarSection() {
             window.removeEventListener("offline", handleOffline);
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [autoUpdatePublishingStatus, hydrateScheduledPosts]);
+    }, [hydrateScheduledPosts]);
 
     const goPrev = () => {
         if (calendarView === "monthly") {
@@ -335,10 +351,10 @@ export default function CalendarSection() {
         );
     };
 
-    const handleDeleteConfirm = async () => {
+    const handleDeleteConfirm = async (skipZernio = false) => {
         if (!eventToDelete) return;
         const { event, date } = eventToDelete;
-        await deleteEvent(date.getFullYear(), date.getMonth(), date.getDate(), event);
+        await deleteEvent(date.getFullYear(), date.getMonth(), date.getDate(), event, skipZernio);
         setEventToDelete(null);
     };
 
@@ -471,8 +487,6 @@ export default function CalendarSection() {
     }, [allEvents]);
 
     const hasActiveFilters = platformFilter !== "all" || statusFilter !== "all";
-    const emptyStateFlags = useMemo(() => getCalendarEmptyStateFlags(calendarEvents), [calendarEvents]);
-    const showAgendaScheduleCta = !emptyStateFlags.shouldRender;
 
     return (
         <div className="flex h-full min-h-0 w-full max-w-none flex-col overflow-y-auto overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(76,184,232,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.5),transparent_22%)]">
@@ -552,16 +566,6 @@ export default function CalendarSection() {
                                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary/80">{t("agendaTitle")}</p>
                                     <h3 className="mt-1 text-lg font-semibold tracking-tight text-foreground">{selectedDateLabel}</h3>
                                 </div>
-                                {showAgendaScheduleCta ? (
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => focusDateForScheduling(nextEmptyDate)}
-                                        className="h-9 shrink-0 rounded-xl border-border/70"
-                                    >
-                                        {t("createNewSchedule")}
-                                    </Button>
-                                ) : null}
                             </div>
                             <p className="mt-2 text-xs text-muted-foreground">
                                 {t("agendaSubtitle", { count: selectedDateEvents.length })} • {t("filterResultCount", { count: filteredEventCount })}
@@ -809,11 +813,13 @@ export default function CalendarSection() {
                 <ConfirmModal
                     isOpen={true}
                     onClose={() => setEventToDelete(null)}
-                    onConfirm={handleDeleteConfirm}
+                    onConfirm={() => handleDeleteConfirm(false)}
                     title={t("deleteModal.title")}
-                    description={t("deleteModal.message")}
-                    confirmText={t("deleteModal.yes")}
+                    description={eventToDelete.event.scheduled_post_id ? t("deleteModal.messageScheduled") : t("deleteModal.message")}
+                    confirmText={eventToDelete.event.scheduled_post_id ? t("deleteModal.fullDelete") : t("deleteModal.yes")}
                     cancelText={t("deleteModal.no")}
+                    secondaryText={eventToDelete.event.scheduled_post_id ? t("deleteModal.calendarOnly") : undefined}
+                    onSecondary={eventToDelete.event.scheduled_post_id ? () => handleDeleteConfirm(true) : undefined}
                     variant="danger"
                 />
             )}
