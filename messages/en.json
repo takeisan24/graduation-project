@@ -916,7 +916,32 @@
       "open": "Open",
       "deleteFromList": "Delete from list",
       "confirmDelete": "Are you sure you want to delete this post?",
-      "noPublishedPosts": "No published posts found"
+      "noPublishedPosts": "No published posts found",
+      "statPublishedOutput": "Published output",
+      "statLinkedPosts": "Linked posts",
+      "statActivePlatforms": "Active platforms",
+      "unpublishTitle": "Unpublish post",
+      "unpublishDescription": "Remove this post from {platform}? It will be deleted from the real platform and cannot be undone.",
+      "unpublishConfirm": "Unpublish",
+      "loginRequired": "Please sign in again.",
+      "unpublishing": "Removing the post from the platform...",
+      "unpublishSuccess": "The post has been removed from the platform.",
+      "unpublishFailed": "Failed to unpublish."
+    },
+    "projectGate": {
+      "title": "Start a content project",
+      "subtitle": "Create a project to keep your sources, posts, and schedule in one place.",
+      "nameLabel": "Project name",
+      "optional": "(optional)",
+      "namePlaceholder": "e.g. Product launch campaign",
+      "creating": "Creating...",
+      "create": "Create project",
+      "nameHint": "Leave blank to auto-name by date — you can rename anytime.",
+      "recentTitle": "Recent projects",
+      "empty": "No projects yet.",
+      "open": "Open",
+      "createError": "Couldn't create the project. Please try again.",
+      "defaultNamePrefix": "Project"
     },
     "failed": {
       "title": "Failed Posts",
@@ -931,6 +956,9 @@
       "description": "Review social account connectivity and integration readiness across the system.",
       "loading": "Loading connections...",
       "connecting": "Connecting social account, please wait...",
+      "oauthSuccessTitle": "Connected {provider} successfully",
+      "oauthFailedTitle": "Failed to connect {provider}",
+      "oauthFailedMessage": "Failed to connect {provider}. Please try again.",
       "popupBlocked": "Popup Blocked",
       "popupBlockedMessage": "The browser is blocking the popup for {provider} connection.",
       "popupBlockedDesc": "You can allow popups for this site and try again, or continue logging in on this current tab.",
@@ -1003,7 +1031,8 @@
       "confirmPayment": "I have paid",
       "confirmingPayment": "Confirming...",
       "creditsUnit": "credits",
-      "perCredit": "₫/credit"
+      "perCredit": "₫/credit",
+      "demoNotice": "Demo mode — payment is simulated for thesis presentation purposes. Credits are added manually without real bank verification."
     },
     "systemSettings": {
       "appearanceTitle": "Appearance",
@@ -1460,7 +1489,10 @@
         "clearChatDescription": "All chat history with AI will be deleted. This action cannot be undone.",
         "clearChatConfirm": "Delete",
         "clearChatCancel": "Cancel",
-        "toSend": "to send"
+        "toSend": "to send",
+        "newChatTitle": "Start a new conversation",
+        "postContextLabel": "Post:",
+        "allPostsContext": "All"
       },
       "actionBar": {
         "emptyContentWarning": "Content is empty. Please add content before publishing.",
@@ -1626,6 +1658,7 @@
           "cancel": "Cancel",
           "delete": "Delete project",
           "confirmDelete": "Confirm delete?",
+          "deleteConfirmDescription": "Delete project \"{name}\"? All drafts in this project will be removed and cannot be undone.",
           "newProject": "New project",
           "allProjects": "All projects",
           "empty": "No projects yet",
@@ -1816,7 +1849,8 @@
       "linkLabel": "Post link",
       "noLink": "No published link available yet.",
       "openPost": "Open post",
-      "close": "Close"
+      "close": "Close",
+      "unpublishButton": "Unpublish post"
     },
     "videosSection": {
       "title": "Video Projects",

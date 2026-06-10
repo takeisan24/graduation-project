@@ -916,7 +916,32 @@
       "open": "Mở",
       "deleteFromList": "Xóa khỏi danh sách",
       "confirmDelete": "Bạn có chắc chắn muốn xóa bài viết này không?",
-      "noPublishedPosts": "Không tìm thấy bài đăng đã xuất bản"
+      "noPublishedPosts": "Không tìm thấy bài đăng đã xuất bản",
+      "statPublishedOutput": "Đã xuất bản",
+      "statLinkedPosts": "Bài có liên kết",
+      "statActivePlatforms": "Nền tảng hoạt động",
+      "unpublishTitle": "Gỡ bài đăng",
+      "unpublishDescription": "Gỡ bài đăng này khỏi {platform}? Bài sẽ bị xóa khỏi nền tảng thật và không thể hoàn tác.",
+      "unpublishConfirm": "Gỡ bài",
+      "loginRequired": "Vui lòng đăng nhập lại.",
+      "unpublishing": "Đang gỡ bài đăng khỏi nền tảng...",
+      "unpublishSuccess": "Đã gỡ bài đăng khỏi nền tảng.",
+      "unpublishFailed": "Gỡ bài thất bại."
+    },
+    "projectGate": {
+      "title": "Bắt đầu dự án nội dung",
+      "subtitle": "Tạo một dự án để gom nguồn, bài viết và lịch đăng vào cùng một nơi.",
+      "nameLabel": "Tên dự án",
+      "optional": "(tùy chọn)",
+      "namePlaceholder": "Ví dụ: Chiến dịch ra mắt sản phẩm",
+      "creating": "Đang tạo...",
+      "create": "Tạo dự án",
+      "nameHint": "Để trống sẽ tự đặt tên theo ngày — bạn có thể đổi tên bất cứ lúc nào.",
+      "recentTitle": "Dự án gần đây",
+      "empty": "Chưa có dự án nào.",
+      "open": "Mở",
+      "createError": "Không thể tạo dự án. Vui lòng thử lại.",
+      "defaultNamePrefix": "Dự án"
     },
     "failed": {
       "title": "Thất bại",
@@ -931,6 +956,9 @@
       "description": "Theo dõi các kết nối tài khoản và mức sẵn sàng tích hợp của hệ thống.",
       "loading": "Đang tải danh sách kết nối...",
       "connecting": "Đang kết nối tài khoản mạng xã hội, vui lòng đợi...",
+      "oauthSuccessTitle": "Kết nối {provider} thành công",
+      "oauthFailedTitle": "Kết nối {provider} thất bại",
+      "oauthFailedMessage": "Kết nối {provider} thất bại. Vui lòng thử lại.",
       "popupBlocked": "Popup bị chặn",
       "popupBlockedMessage": "Trình duyệt đang chặn cửa sổ popup cho kết nối {provider}.",
       "popupBlockedDesc": "Bạn có thể cho phép popup cho trang web này rồi thử mở lại popup, hoặc tiếp tục đăng nhập trên chính tab hiện tại (full-page redirect).",
@@ -1003,7 +1031,8 @@
       "confirmPayment": "Tôi đã thanh toán",
       "confirmingPayment": "Đang xác nhận...",
       "creditsUnit": "credits",
-      "perCredit": "đ/credit"
+      "perCredit": "đ/credit",
+      "demoNotice": "Chế độ demo — thanh toán được mô phỏng cho mục đích trình bày đồ án. Credits được cộng thủ công, không có xác thực giao dịch ngân hàng thật."
     },
     "systemSettings": {
       "appearanceTitle": "Giao diện hiển thị",
@@ -1460,7 +1489,10 @@
         "clearChatDescription": "Toàn bộ lịch sử chat với AI sẽ bị xóa. Hành động này không thể hoàn tác.",
         "clearChatConfirm": "Xóa",
         "clearChatCancel": "Hủy",
-        "toSend": "để gửi"
+        "toSend": "để gửi",
+        "newChatTitle": "Tạo cuộc trò chuyện mới",
+        "postContextLabel": "Bài viết:",
+        "allPostsContext": "Tất cả"
       },
       "actionBar": {
         "emptyContentWarning": "Nội dung đang trống, vui lòng nhập nội dung trước khi đăng.",
@@ -1626,6 +1658,7 @@
           "cancel": "Hủy",
           "delete": "Xóa dự án",
           "confirmDelete": "Xác nhận xóa?",
+          "deleteConfirmDescription": "Xóa dự án \"{name}\"? Toàn bộ bản nháp thuộc dự án sẽ bị xóa và không thể hoàn tác.",
           "newProject": "Dự án mới",
           "allProjects": "Tất cả dự án",
           "empty": "Chưa có dự án nào",
@@ -1816,7 +1849,8 @@
       "linkLabel": "Liên kết bài đăng",
       "noLink": "Chưa có liên kết bài đăng.",
       "openPost": "Mở bài đăng",
-      "close": "Đóng"
+      "close": "Đóng",
+      "unpublishButton": "Gỡ bài đăng"
     },
     "videosSection": {
       "title": "Dự án Video",

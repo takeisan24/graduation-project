@@ -7,7 +7,7 @@ import { CREDIT_PACKAGES } from "@/lib/constants/credit-packages"
 import { supabaseClient } from "@/lib/supabaseClient"
 import { toast } from "sonner"
 import { useTranslations } from "next-intl"
-import { Sparkles, Zap, Crown, Rocket, Copy, Check, Loader2 } from "lucide-react"
+import { Sparkles, Zap, Crown, Rocket, Copy, Check, Loader2, FlaskConical } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -151,6 +151,12 @@ export default function CreditTopUp() {
         <p className="text-sm text-muted-foreground mt-1">
           {t("description")}
         </p>
+      </div>
+
+      {/* Demo notice — AUDIT-002 Hướng A: hiển thị rõ đây là thanh toán mô phỏng */}
+      <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-800/40 dark:bg-amber-950/30 dark:text-amber-300">
+        <FlaskConical className="mt-0.5 h-4 w-4 shrink-0" />
+        <p>{t("demoNotice")}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

@@ -6,6 +6,15 @@ import { addPurchasedCredits } from "@/lib/usage";
 
 export async function POST(req: NextRequest) {
   try {
+    // SECURITY (AUDIT-002 / B17b): Manual confirmation is only allowed when the
+    // ENABLE_MANUAL_CONFIRM flag is explicitly set to "true".
+    // In production this flag MUST be unset; real credit grants should come from
+    // a verified payment webhook, not from a client-initiated call.
+    const manualConfirmEnabled = process.env.ENABLE_MANUAL_CONFIRM === "true";
+    if (!manualConfirmEnabled) {
+      return fail("MANUAL_CONFIRM_DISABLED", 403);
+    }
+
     const user = await requireAuth(req);
     if (!user) return fail("Unauthorized", 401);
 
