@@ -563,19 +563,25 @@ $$;
 grant execute on function rollback_user_credits(uuid, integer, text, jsonb) to service_role;
 
 -- F. Cộng credits an toàn khi user mua top-up (atomic increment, tránh race condition)
+-- Validate p_amount > 0 để tránh balance bị trừ nhầm do bug ở tầng application.
 drop function if exists increment_credits_balance(uuid, integer);
 create or replace function increment_credits_balance(
   p_user_id uuid,
   p_amount   integer
 )
 returns void
-language sql
+language plpgsql
 security definer
 as $$
+begin
+  if p_amount <= 0 then
+    raise exception 'increment_credits_balance: p_amount must be positive, got %', p_amount;
+  end if;
   update users
   set credits_balance = credits_balance + p_amount,
       updated_at      = now()
   where id = p_user_id;
+end;
 $$;
 
 grant execute on function increment_credits_balance(uuid, integer) to service_role;

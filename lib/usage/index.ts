@@ -409,8 +409,15 @@ export async function addPurchasedCredits(userId: string, amount: number): Promi
   const plan = user?.plan || 'free';
   const planCredits = getPlanCredits(plan);
 
-  // Update purchased credits (non-atomic read-modify-write kept for usage table;
-  // the critical balance field below uses an atomic increment instead)
+  // Update purchased credits.
+  // KNOWN RACE CONDITION: credits_purchased still uses read-modify-write because
+  // the usage table has no dedicated atomic-increment RPC. Concurrent top-ups
+  // within the same billing period could undercount credits_purchased by the
+  // amount of the losing write. This field is used only for reporting/display
+  // (resourceBudget.purchased), NOT for credit-gate checks — those read
+  // users.credits_balance which IS updated atomically below. Fix if high
+  // concurrency becomes a concern: add an increment_credits_purchased RPC
+  // similar to increment_credits_balance.
   const { error } = await supabase
     .from("usage")
     .update({ credits_purchased: currentPurchased + amount })
