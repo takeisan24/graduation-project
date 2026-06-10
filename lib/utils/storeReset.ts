@@ -21,7 +21,6 @@ import {
   useImageGenModalStore,
   useVideoGenModalStore,
   usePublishModalStore,
-  useApiDashboardPageStore,
   useSettingsPageStore,
 } from '@/store';
 
@@ -141,16 +140,6 @@ export function resetAllStores() {
     // Reset Publish Modal Store
     usePublishModalStore.setState({
       isPublishModalOpen: false,
-    });
-    
-    // Reset API Dashboard Store
-    useApiDashboardPageStore.setState({
-      apiStats: {
-        apiCalls: 0,
-        successRate: 0,
-        rateLimit: { used: 0, total: 0, resetTime: "0h 0m" }
-      },
-      apiKeys: [],
     });
     
     // Reset Settings Page Store

@@ -12,7 +12,6 @@ import { usePublishedPostsStore } from './published/publishedPageStore';
 import { useFailedPostsStore } from './failed/failedPageStore';
 import { useDraftsStore } from './drafts/draftsPageStore';
 import { useSettingsPageStore } from './settings/settingsPageStore';
-import { useApiDashboardPageStore } from './api-dashboard/apiDashboardPageStore';
 import { useCalendarPageStore } from './calendar/calendarPageStore';
 import { useNavigationStore } from './shared/navigation';
 import { useCreatePostsStore } from './create/posts';
@@ -58,7 +57,6 @@ export {
   useFailedPostsStore,
   useDraftsStore,
   useSettingsPageStore,
-  useApiDashboardPageStore,
   useCalendarPageStore,
   useNavigationStore,
   useCreatePostsStore,
