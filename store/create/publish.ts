@@ -237,6 +237,9 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
 
       // Update published posts
       const now = new Date();
+      // Điền sẵn tên tài khoản + ảnh + link vào bản OPTIMISTIC để modal "Bài đã đăng"
+      // hiển thị đủ ngay lập tức (trước đây thiếu profileName/profilePic/media → modal trống).
+      const accMeta = (account as any)?.profile_metadata || {};
       const publishedPost: PublishedPost = {
         id: data?.scheduledPost?.id || data?.latePost?.id || String(postId),
         platform: post.type,
@@ -244,12 +247,20 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
         time: now.toISOString(),
         status: 'posted',
         url: data?.latePost?.url || null, // null = no real URL yet (simulated publish)
+        profileName: (account as any)?.profile_name || accMeta.username || post.type,
+        profilePic: accMeta.profilePicture || accMeta.avatar_url || '/shego.jpg',
+        media: mediaUrls,
         engagement: { likes: 0, comments: 0, shares: 0 }
       };
 
       const publishedStore = usePublishedPostsStore.getState();
       const updatedPublished = [...publishedStore.publishedPosts, publishedPost];
       usePublishedPostsStore.setState({ publishedPosts: updatedPublished.slice(-1000) });
+
+      // Làm mới từ API để thay bản optimistic bằng dữ liệu đầy đủ từ server
+      // (tên tài khoản, ảnh, link thật) — loadPublishedPosts map sẵn profileName/profilePic/media.
+      saveToLocalStorage('needsRefreshPublishedPosts', true);
+      void usePublishedPostsStore.getState().loadPublishedPosts();
 
       // Update calendar events
       const pad = (n: number) => String(n).padStart(2, '0');

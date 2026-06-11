@@ -61,8 +61,8 @@ export async function GET(
         console.error("[connections/start] Zernio connect failed:", msg);
         // KHÔNG fallback tạo tài khoản preview giả nữa — báo lỗi rõ ràng (fail loud).
         const friendly = /free_tier|PAYMENT_REQUIRED|402/i.test(msg)
-          ? "Tài khoản Zernio (gói miễn phí) chỉ cho phép kết nối tối đa 2 tài khoản. Vui lòng ngắt bớt 1 tài khoản đang kết nối rồi thử lại, hoặc thêm phương thức thanh toán trên Zernio."
-          : `Không lấy được liên kết kết nối ${provider} từ Zernio. Chi tiết: ${msg}`;
+          ? "Bạn đã đạt giới hạn số tài khoản mạng xã hội có thể kết nối (tối đa 2). Vui lòng ngắt bớt một tài khoản đang kết nối rồi thử lại."
+          : `Không thể bắt đầu kết nối ${provider} lúc này. Vui lòng thử lại sau ít phút.`;
         return NextResponse.json({ error: friendly }, { status: 502 });
       }
     }
@@ -86,7 +86,7 @@ export async function GET(
         success: false,
         provider,
         returnTo,
-        message: `Kết nối ${provider} qua Zernio thất bại. Vui lòng thử lại hoặc ngắt bớt tài khoản đang kết nối.`,
+        message: `Kết nối ${provider} thất bại. Vui lòng thử lại hoặc ngắt bớt một tài khoản đang kết nối.`,
       });
     }
 

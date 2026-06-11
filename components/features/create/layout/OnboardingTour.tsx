@@ -41,8 +41,9 @@ export default function OnboardingTour() {
 
   const steps: OnboardingStep[] = useMemo(() => [
     {
-      // Nút "Thêm nguồn" hiển thị (empty-state hoặc trong panel nguồn)
-      targets: ['[data-testid="empty-state-add-source-button"]', '[data-testid="create-add-source-button"]', '[data-tour="add-source"]'],
+      // Nút "Thêm nguồn" hiển thị — ưu tiên panel nguồn (góc trái) để khung trỏ đúng,
+      // tránh trỏ vào nút empty-state ở GIỮA màn (khung bị lệch giữa-dưới, rời rạc).
+      targets: ['[data-tour="add-source"]', '[data-testid="create-add-source-button"]', '[data-testid="empty-state-add-source-button"]'],
       title: t('steps.addSource.title'),
       description: t('steps.addSource.description'),
       position: 'bottom',

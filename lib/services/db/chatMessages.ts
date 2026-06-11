@@ -85,14 +85,17 @@ export async function getChatMessagesBySessionId(
 }
 
 /**
- * Get chat messages by session_id or draft_id
- * Note: project_id is not stored in chat_messages. Use session_id to query messages for a project.
- * If projectId is provided, it will be ignored. Use sessionId from chat_sessions instead.
+ * Get chat messages by session_id, draft_id, or project_id.
+ *
+ * chat_messages KHÔNG có cột project_id. Để lấy đúng lịch sử của MỘT dự án,
+ * ta phải phân giải projectId -> các session_id thuộc dự án đó (bảng chat_sessions),
+ * rồi mới lọc messages theo những session_id ấy. Nếu bỏ qua bước này (như trước),
+ * truy vấn sẽ trả về TẤT CẢ tin nhắn của user → rò rỉ chat giữa các dự án.
  */
 export async function getChatMessagesByContext(
   options: {
     sessionId?: string;
-    projectId?: string; // Deprecated: project_id is not in chat_messages table. Use sessionId instead.
+    projectId?: string;
     draftId?: string;
     userId: string;
     limit?: number;
@@ -108,9 +111,26 @@ export async function getChatMessagesByContext(
     query = query.eq("session_id", options.sessionId);
   } else if (options.draftId) {
     query = query.eq("draft_id", options.draftId);
+  } else if (options.projectId) {
+    // Phân giải dự án -> session_id(s) của dự án, rồi lọc messages theo các session đó.
+    const { data: sessions, error: sessionsError } = await supabase
+      .from("chat_sessions")
+      .select("id")
+      .eq("user_id", options.userId)
+      .eq("project_id", options.projectId);
+
+    if (sessionsError) {
+      console.error("[db/chatMessages] Error resolving project sessions:", sessionsError);
+      return [];
+    }
+
+    const sessionIds = (sessions || []).map((s) => s.id);
+    // Dự án chưa có phiên chat nào → không có lịch sử (tránh trả nhầm chat dự án khác).
+    if (sessionIds.length === 0) {
+      return [];
+    }
+    query = query.in("session_id", sessionIds);
   }
-  // Note: projectId is ignored - chat_messages table doesn't have project_id column
-  // To get messages for a project, query by sessionId from chat_sessions table
 
   const limit = options.limit || 100;
   query = query.limit(limit);

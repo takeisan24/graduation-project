@@ -64,7 +64,11 @@ export default function ProjectGate() {
     if (creating) return
     setCreating(true)
     setError(null)
-    const finalName = name.replace(/\s+/g, ' ').trim() || `${t('defaultNamePrefix')} ${new Date().toLocaleDateString(locale === 'en' ? 'en-US' : 'vi-VN')}`
+    const localeTag = locale === 'en' ? 'en-US' : 'vi-VN'
+    const now = new Date()
+    // Tên tự động kèm GIỜ:PHÚT để các dự án tạo cùng ngày không bị trùng tên.
+    const autoName = `${t('defaultNamePrefix')} ${now.toLocaleDateString(localeTag)} ${now.toLocaleTimeString(localeTag, { hour: '2-digit', minute: '2-digit' })}`
+    const finalName = name.replace(/\s+/g, ' ').trim() || autoName
     try {
       const res = await fetch('/api/projects', {
         method: 'POST',

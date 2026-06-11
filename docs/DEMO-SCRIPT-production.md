@@ -35,12 +35,18 @@
 | 2.1 | Menu trái → **Tạo bài viết**. Nếu đang mở dự án cũ → mở dropdown tên dự án → **Chọn dự án khác** | Hiện màn **ProjectGate** (icon thư mục + "Bắt đầu dự án nội dung"), có ô tên + danh sách dự án | |
 | 2.2 | Ô **Tên dự án**: gõ `Demo UTC Open Day 2026` → bấm **Tạo dự án** | Vào ngay **workspace 3 cột** (Nguồn \| Editor \| AI Chat); chip trên hiện tên dự án | |
 
-## 🎬 MÀN 3 — Thêm nguồn & Sinh nội dung bằng AI (Gemini)
+## 🎬 MÀN 3 — Thêm nguồn (chiến lược) & Sinh nội dung bằng AI (Gemini)
+> Luồng ĐÚNG: "Thêm nguồn" = **Bước 1 (Chiến lược): Mục tiêu → Ngách → Framework** → **Bước 2 (Nội dung): nhập Ý tưởng → Lưu**. Sau đó mới bấm thẻ nguồn → **chọn nền tảng → Sinh nội dung** (FR04: mục tiêu + ngách + framework).
+
 | # | Thao tác (ví dụ) | Kỳ vọng | KQ |
 |---|---|---|---|
-| 3.1 | Cột Nguồn → **+ Thêm nguồn** → loại **Văn bản/Ý tưởng** → dán prompt ví dụ → **Lưu** | Thẻ nguồn mới hiện ở cột trái | |
-| 3.2 | Bấm thẻ nguồn → form cấu hình: tick **Facebook** + **Instagram**, chọn 1 **framework** cụ thể → **Sinh nội dung** | Hiện loading; sau vài giây ra **2 tab bài** (Facebook, Instagram) với nội dung bám đúng framework; chỉ dùng **Gemini** (không có menu model khác) | |
-| 3.3 | Xem tab Instagram | Đầu ra là **caption hoàn chỉnh** (không phải JSON/script thô) | |
+| 3.1 | Cột Nguồn → **+ Thêm nguồn**. Bước 1: chọn **Mục tiêu** (1) | Chọn được Mục tiêu | |
+| 3.2 | Chọn **Ngách** (2) | Sau khi đủ **Mục tiêu + Ngách** → **danh sách Framework (Mẫu) hiện ra** (3) | |
+| 3.3 | Chọn **1 Framework** cụ thể → bấm **Tiếp theo** | Nút "Tiếp theo" chỉ bật khi đã chọn framework; chuyển sang Bước 2 | |
+| 3.4 | Bước 2: nhập **💭 Ý tưởng** = `Giới thiệu ngày hội Open Day của trường ĐH GTVT cho học sinh cấp 3` → (tùy chọn đính kèm **nguồn tham khảo** URL/file) → **Lưu** | Thẻ nguồn mới hiện ở cột trái | |
+| 3.5 | Bấm thẻ nguồn → form cấu hình: tick **Facebook** + **Instagram** (+ số lượng) → **Sinh nội dung** | Loading; ra **2 tab bài** (FB, IG) bám đúng **framework đã chọn**; chỉ **"Gemini"** (không menu model khác) | |
+| 3.6 🔧 | Lặp lại sinh **2-3 lần** với nguồn khác nhau | **KHÔNG** lần nào báo "AI_RESPONSE_NO_JSON"/không ra bài (regex đã linh hoạt hơn) | |
+| 3.7 | Xem tab Instagram | Đầu ra là **caption hoàn chỉnh** (không phải JSON/script thô) | |
 
 ## 🎬 MÀN 4 — Tinh chỉnh bằng AI Chat
 | # | Thao tác (ví dụ) | Kỳ vọng | KQ |

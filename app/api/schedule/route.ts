@@ -4,7 +4,7 @@ import { success, fail } from "@/lib/response";
 import { getScheduledPosts } from "@/lib/services/db/posts";
 import { getDraftById, updateDraft } from "@/lib/services/db/projects";
 import { DEFAULT_TIMEZONE } from "@/lib/utils/date";
-import { createInternalLatePost, getOwnedConnectionsByIds, serializeLatePost } from "@/lib/services/posts/lateCompat";
+import { createInternalLatePost, getOwnedConnectionsByIds, getResolvedInternalLatePost, serializeLatePost } from "@/lib/services/posts/lateCompat";
 import { checkPostLimit, trackUsage } from "@/lib/usage";
 
 /**
@@ -21,7 +21,37 @@ export async function GET(req: NextRequest) {
     // Get scheduled posts via service layer
     const posts = await getScheduledPosts(user.id);
 
-    return success(posts);
+    // SELF-HEAL: không có cron phía server, nên các bài đã QUÁ GIỜ mà vẫn 'scheduled'
+    // sẽ bị kẹt trạng thái nếu trình duyệt không mở liên tục. Khi tải lịch, ta chủ động
+    // "resolve" những bài quá giờ: bài Zernio thật → poll trạng thái/URL thật; bài mô phỏng
+    // → chuyển 'posted'. getResolvedInternalLatePost tự lấy đủ trường (getlate_account_id,
+    // late_job_id) để phân loại đúng, rồi cập nhật DB. Giữ nguyên content_drafts đã join sẵn.
+    const nowMs = Date.now();
+    const healed = await Promise.all(
+      (posts as Array<Record<string, any>>).map(async (p) => {
+        const isPastDueScheduled =
+          p?.status === "scheduled" &&
+          p?.scheduled_at &&
+          new Date(p.scheduled_at).getTime() <= nowMs;
+        if (!isPastDueScheduled) return p;
+        try {
+          const resolved = await getResolvedInternalLatePost(p.id, user.id);
+          if (resolved?.statusChanged) {
+            return {
+              ...p,
+              status: resolved.post.status,
+              post_url: resolved.post.post_url,
+              payload: resolved.post.payload,
+            };
+          }
+        } catch (e) {
+          console.warn("[GET /api/schedule] resolve past-due failed:", p?.id, e);
+        }
+        return p;
+      })
+    );
+
+    return success(healed);
 
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Server error";

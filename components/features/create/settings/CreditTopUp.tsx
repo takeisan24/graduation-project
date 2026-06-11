@@ -114,9 +114,24 @@ export default function CreditTopUp() {
       const { data } = await res.json()
       if (data?.status === "PAID") {
         toast.success(t("successCredits", { credits: data.credits }))
-        // Làm mới số dư credit hiển thị ở thanh công cụ (useDashboardUsage dùng key /api/usage)
+        // Cập nhật NGAY số dư hiển thị (optimistic) rồi mới revalidate từ server.
+        // Trước đây chỉ revalidate → người dùng không thấy credit cộng tức thì.
+        const added = typeof data.credits === "number" ? data.credits : creditAmount
+        const bump = (b: any) =>
+          b
+            ? {
+                ...b,
+                balance: (b.balance ?? 0) + added,
+                remaining: (b.remaining ?? 0) + added,
+                purchased: (b.purchased ?? 0) + added,
+              }
+            : b
         // revalidate: true để force-bypass dedupingInterval, tránh SWR bỏ qua fetch sau payment
-        void mutate("/api/usage", undefined, { revalidate: true })
+        void mutate(
+          "/api/usage",
+          (cur: any) => (cur ? { ...cur, resourceBudget: bump(cur.resourceBudget), credits: bump(cur.credits) } : cur),
+          { revalidate: true }
+        )
         setOrderData(null)
       }
     } catch (err) {
