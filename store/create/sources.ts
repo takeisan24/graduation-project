@@ -14,6 +14,9 @@ import {
   buildPromptParts,
 } from '@/lib/ai/prompts/generate-from-source';
 
+// Khóa localStorage cho danh sách nguồn — đổi theo dự án đang mở (1 dự án = 1 danh sách nguồn).
+let activeSourcesKey = 'savedSources';
+
 interface CreateSourcesState {
   savedSources: SavedSource[];
   isSourceModalOpen: boolean;
@@ -26,6 +29,7 @@ interface CreateSourcesState {
   isSourceFormReadOnly: boolean;
 
   setIsSourceModalOpen: (isOpen: boolean) => void;
+  setSourcesScope: (projectId: string | null) => void;
   addSavedSource: (source: Omit<SavedSource, 'id'>) => SavedSource;
   deleteSavedSource: (sourceId: string) => void;
   clearSavedSources: () => void;
@@ -83,11 +87,19 @@ export const useCreateSourcesStore = create<CreateSourcesState>((set) => ({
   isSourceFormReadOnly: false,
 
   setIsSourceModalOpen: (isOpen) => set({ isSourceModalOpen: isOpen }),
+
+  // Đổi phạm vi nguồn sang dự án (mỗi dự án 1 danh sách nguồn riêng trong localStorage).
+  setSourcesScope: (projectId) => {
+    activeSourcesKey = projectId ? `savedSources:${projectId}` : 'savedSources';
+    const loaded = loadFromLocalStorage<SavedSource[]>(activeSourcesKey, []);
+    set({ savedSources: loaded, sourceToGenerate: null, extractedContent: null });
+  },
+
   addSavedSource: (source) => {
     const newSource = { ...source, id: Date.now().toString() };
     set((state) => {
       const updated = [...state.savedSources, newSource];
-      saveToLocalStorage('savedSources', updated);
+      saveToLocalStorage(activeSourcesKey, updated);
       return { savedSources: updated };
     });
     return newSource;
@@ -96,13 +108,13 @@ export const useCreateSourcesStore = create<CreateSourcesState>((set) => ({
   deleteSavedSource: (sourceId) => {
     set((state) => {
       const updated = state.savedSources.filter((s) => s.id !== sourceId);
-      saveToLocalStorage('savedSources', updated);
+      saveToLocalStorage(activeSourcesKey,updated);
       return { savedSources: updated };
     });
   },
 
   clearSavedSources: () => {
-    saveToLocalStorage('savedSources', []);
+    saveToLocalStorage(activeSourcesKey,[]);
     set({ savedSources: [], sourceToGenerate: null, extractedContent: null });
   },
 

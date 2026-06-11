@@ -35,6 +35,8 @@ interface CreateChatState {
     }
   ) => Promise<void>;
   clearChat: () => void;
+  // Nạp lại lịch sử chat của dự án (Đợt 2): hiển thị hội thoại đã lưu khi mở lại dự án.
+  hydrateMessages: (messages: ChatMessage[], sessionId: string | null) => void;
 }
 
 export const useCreateChatStore = create<CreateChatState>((set, get) => ({
@@ -295,7 +297,7 @@ ${VIDEO_SCRIPT_TEMPLATES}
       // Xây dựng context message nếu có extractedContent hoặc posts
       let contextMessage = text;
       if (truncatedContext.extractedContent || truncatedContext.currentPosts.length > 0) {
-        let contextParts: string[] = [];
+        const contextParts: string[] = [];
 
         // Thêm extractedContent nếu có (đã được truncate)
         if (truncatedContext.extractedContent) {
@@ -368,7 +370,7 @@ ${VIDEO_SCRIPT_TEMPLATES}
 
         try {
           raw = JSON.parse(responseText);
-        } catch (e) {
+        } catch {
           console.error("Failed to parse API response:", responseText.substring(0, 500));
           // If response is not JSON, it's likely a server error (Vercel timeout, 500, etc)
           throw new Error(`Server returned invalid response: ${response.status} ${response.statusText}`);
@@ -430,10 +432,8 @@ ${VIDEO_SCRIPT_TEMPLATES}
         // Regex linh hoạt hơn: cho phép có hoặc không có chữ 'json', cho phép khoảng trắng linh tinh
         const codeBlockRegex = /```(?:json)?\s*([\s\S]*?)\s*```/g;
         let match;
-        let foundCodeBlock = false;
 
         while ((match = codeBlockRegex.exec(text)) !== null) {
-          foundCodeBlock = true;
           try {
             const cleanJson = match[1].trim().replace(/,(\s*[}\]])/g, '$1'); // Xóa dấu phẩy thừa
             const parsed = JSON.parse(cleanJson);
@@ -591,6 +591,17 @@ ${VIDEO_SCRIPT_TEMPLATES}
     set({ chatMessages: [], sessionId: null, sessionContextKey: null, userInstructions: [] });
     // Clear extractedContent khi clear chat để tránh dùng content cũ
     useCreateSourcesStore.getState().setExtractedContent(null);
+  },
+
+  hydrateMessages: (messages, sessionId) => {
+    // Đặt sessionContextKey = null: tin nhắn mới sẽ tạo phiên mới (vẫn gắn dự án) — đủ cho việc
+    // HIỂN THỊ lại lịch sử khi mở dự án; nối tiếp đúng phiên cũ là tinh chỉnh sau.
+    set({
+      chatMessages: messages,
+      sessionId,
+      sessionContextKey: null,
+      userInstructions: messages.filter((m) => m.role === 'user').map((m) => m.content),
+    });
   },
 }));
 

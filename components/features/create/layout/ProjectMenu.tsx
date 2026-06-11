@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useCreateWorkspaceStore, useCreateSourcesStore, useCreatePostsStore } from '@/store'
 import { deriveWorkspaceSeed } from '@/store/create/workspace'
+import { loadProjectWorkspace, autoSaveCurrentWorkspace } from '@/store/create/loadProjectWorkspace'
 import { supabaseClient } from '@/lib/supabaseClient'
 import ConfirmModal from '@/components/shared/ConfirmModal'
 
@@ -106,6 +107,7 @@ export default function ProjectMenu() {
 
   // Tạo (C)
   const handleNewProject = () => {
+    void autoSaveCurrentWorkspace() // lưu phần gõ dở của dự án hiện tại trước khi reset
     resetWorkspace()
     setOpen(false)
   }
@@ -113,13 +115,17 @@ export default function ProjectMenu() {
   // Chuyển sang dự án khác đang có (giống ProjectGate.handleOpen): chỉ đổi ngữ cảnh dự án.
   const handleSwitchProject = (p: ProjectRow) => {
     if (p.id !== projectId) {
+      void autoSaveCurrentWorkspace() // lưu phần gõ dở của dự án hiện tại trước khi chuyển
       setWorkspaceProject({ projectId: p.id, projectName: p.name, sourceType: null, sourceContent: null })
+      // Nạp nguồn + bản nháp của dự án mới vào workspace (thay nội dung dự án cũ).
+      void loadProjectWorkspace(p.id)
     }
     setOpen(false)
   }
 
   // Quay lại Cửa dự án (ProjectGate): bỏ ngữ cảnh dự án hiện hành, GIỮ nguyên nội dung đang soạn.
   const handleBackToGate = () => {
+    void autoSaveCurrentWorkspace() // lưu phần gõ dở trước khi quay lại gate
     clearWorkspaceProject()
     setOpen(false)
   }

@@ -14,6 +14,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useCreateWorkspaceStore } from '@/store'
+import { loadProjectWorkspace } from '@/store/create/loadProjectWorkspace'
 import { supabaseClient } from '@/lib/supabaseClient'
 import { formatDate } from '@/lib/utils/date'
 
@@ -79,6 +80,8 @@ export default function ProjectGate() {
         sourceType: project?.source_type || 'prompt',
         sourceContent: project?.source_content || null,
       })
+      // Dự án mới: đặt phạm vi nguồn + dọn editor/chat cho đúng workspace của dự án này.
+      if (project?.id) void loadProjectWorkspace(project.id)
     } catch {
       setError(t('createError'))
       setCreating(false)
@@ -93,6 +96,8 @@ export default function ProjectGate() {
       sourceType: null,
       sourceContent: null,
     })
+    // Nạp nguồn + bản nháp của dự án vào workspace.
+    void loadProjectWorkspace(p.id)
   }, [setWorkspaceProject])
 
   return (

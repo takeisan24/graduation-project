@@ -14,6 +14,7 @@ import ProjectGate from './layout/ProjectGate';
 import CreateSectionErrorBoundary from './shared/CreateSectionErrorBoundary';
 
 import { useNavigationStore, useCreateSourcesStore, useCreatePostsStore, useDraftsStore, useCreateMediaStore, usePublishModalStore, useCreateWorkspaceStore } from '@/store';
+import { loadProjectWorkspace } from '@/store/create/loadProjectWorkspace';
 import { useShallow } from 'zustand/react/shallow';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { toast } from 'sonner';
@@ -50,6 +51,7 @@ export default function CreateSection() {
   const [isResizingChat, setIsResizingChat] = useState(false);
   const hasResetOnMount = useRef(false);
   const hasLoadedChatPreference = useRef(false);
+  const hasHydratedWorkspaceRef = useRef(false);
 
   const { wizardStep, setWizardStep } = useNavigationStore(useShallow(state => ({
     wizardStep: state.wizardStep,
@@ -101,6 +103,17 @@ export default function CreateSection() {
       setWizardStep('idle');
     }
   }, {});
+
+  // Reload trang vào thẳng 1 dự án: nạp nguồn + bản nháp của dự án vào editor (openPosts rỗng sau reload).
+  useEffect(() => {
+    if (hasHydratedWorkspaceRef.current) return;
+    hasHydratedWorkspaceRef.current = true;
+    const pid = useCreateWorkspaceStore.getState().projectId;
+    if (pid && useCreatePostsStore.getState().openPosts.length === 0) {
+      void loadProjectWorkspace(pid);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Reset wizardStep on mount if stuck
   useEffect(() => {

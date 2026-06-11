@@ -345,7 +345,9 @@ export const useCreatePostsStore = create<CreatePostsState>((set, get) => ({
     let targetId = existing?.id;
 
     if (!targetId) {
-      targetId = Date.now();
+      // +random để tránh trùng id khi nạp nhiều bài liên tiếp trong cùng một mili-giây
+      // (ví dụ nạp danh sách bản nháp của dự án vào editor).
+      targetId = Date.now() + Math.floor(Math.random() * 1000000);
       const newPost = { id: targetId, type: platformType };
       set(state => ({
         openPosts: [...state.openPosts, newPost]
