@@ -9,7 +9,6 @@ import { useNavigationStore } from "@/store"
 import CreatorHubIcon from "@/components/shared/CreatorHubIcon"
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import {
   DropdownMenu,
@@ -36,7 +35,6 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
   const { theme, setTheme } = useTheme()
   const {
     creditsRemaining,
-    currentPlan,
     isCreditsLow,
     isLoadingCredits,
   } = useDashboardUsage()
@@ -53,10 +51,6 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
 
   const userInitial = user?.email?.charAt(0).toUpperCase() || "U"
   const breadcrumbLabel = t(`breadcrumb.${activeSection}` as any) || activeSection
-  // Mô hình trả-theo-dùng (credit): không có gói thuê bao → nhãn "Trả theo dùng" thay vì "Free".
-  const planLabel = (!currentPlan || currentPlan.toLowerCase() === "free")
-    ? t("payAsYouGo")
-    : currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1)
   const creditsLabel = isLoadingCredits ? "..." : creditsRemaining.toLocaleString(locale === "vi" ? "vi-VN" : "en-US")
 
   return (
@@ -98,23 +92,17 @@ export default function TopBar({ onMobileMenuToggle }: TopBarProps) {
                   type="button"
                   className="hidden sm:inline-flex h-9 items-center gap-2 rounded-md border border-border/70 bg-background px-2.5 text-xs text-foreground transition-colors hover:bg-accent"
                   onClick={() => router.push("/settings")}
-                  aria-label={t("creditsAria", { credits: creditsLabel, plan: planLabel })}
+                  aria-label={t("creditsAria", { credits: creditsLabel })}
                 >
                   <Coins className={`h-3.5 w-3.5 ${isCreditsLow ? "text-amber-500" : "text-utc-royal"}`} />
                   <span className="font-semibold tabular-nums">{creditsLabel}</span>
                   <span className="hidden lg:inline text-muted-foreground">{t("creditsUnit")}</span>
-                  <Badge
-                    variant={isCreditsLow ? "destructive" : "secondary"}
-                    className="hidden xl:inline-flex max-w-20 truncate px-1.5 py-0 text-[10px]"
-                  >
-                    {planLabel}
-                  </Badge>
                 </button>
               </TooltipTrigger>
               <TooltipContent>
                 {isCreditsLow
-                  ? t("creditsLowTooltip", { credits: creditsLabel, plan: planLabel })
-                  : t("creditsTooltip", { credits: creditsLabel, plan: planLabel })}
+                  ? t("creditsLowTooltip", { credits: creditsLabel })
+                  : t("creditsTooltip", { credits: creditsLabel })}
               </TooltipContent>
             </Tooltip>
           )}

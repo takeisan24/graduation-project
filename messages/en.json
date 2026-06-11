@@ -831,9 +831,9 @@
       "signOutSuccess": "Signed out successfully!",
       "signOutRedirect": "Redirecting to sign in...",
       "creditsUnit": "credits",
-      "creditsTooltip": "{credits} credits left on the {plan} plan. Click to view or top up.",
-      "creditsLowTooltip": "Credits are low: {credits} left on the {plan} plan. Click to top up.",
-      "creditsAria": "{credits} credits left on the {plan} plan",
+      "creditsTooltip": "{credits} credits left. Click to view or top up.",
+      "creditsLowTooltip": "Credits are low: {credits} left. Click to top up.",
+      "creditsAria": "{credits} credits left",
       "breadcrumb": {
         "create": "Create Post",
         "calendar": "Calendar",

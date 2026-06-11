@@ -30,6 +30,24 @@ export default function SystemSettingsSection() {
       />
 
       <div className="space-y-6 px-4 py-4 lg:px-6 lg:py-5">
+        <Card className="rounded-3xl border-border/70 bg-card/70 p-6">
+          <h3 className="text-base font-semibold text-foreground">{t("statusTitle")}</h3>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-border/70 bg-background/60 p-4">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{t("currentTheme")}</p>
+              <p className="mt-2 text-sm font-semibold text-foreground">{theme === "dark" ? t("dark") : t("light")}</p>
+            </div>
+            <div className="rounded-2xl border border-border/70 bg-background/60 p-4">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{t("currentLocale")}</p>
+              <p className="mt-2 text-sm font-semibold text-foreground">{locale.toUpperCase()}</p>
+            </div>
+            <div className="rounded-2xl border border-border/70 bg-background/60 p-4">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{t("modeLabel")}</p>
+              <p className="mt-2 text-sm font-semibold text-foreground">{t("modeValue")}</p>
+            </div>
+          </div>
+        </Card>
+
         <div className="grid gap-4 xl:grid-cols-3">
           <Card className="rounded-3xl border-border/70 bg-card/70 p-5">
             <div className="flex items-center gap-3 text-foreground">
@@ -80,24 +98,6 @@ export default function SystemSettingsSection() {
 
         <Card className="rounded-3xl border-border/70 bg-card/70 p-6">
           <CreditTopUp />
-        </Card>
-
-        <Card className="rounded-3xl border-border/70 bg-card/70 p-6">
-          <h3 className="text-base font-semibold text-foreground">{t("statusTitle")}</h3>
-          <div className="mt-4 grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border border-border/70 bg-background/60 p-4">
-              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{t("currentTheme")}</p>
-              <p className="mt-2 text-sm font-semibold text-foreground">{theme === "dark" ? t("dark") : t("light")}</p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-background/60 p-4">
-              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{t("currentLocale")}</p>
-              <p className="mt-2 text-sm font-semibold text-foreground">{locale.toUpperCase()}</p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-background/60 p-4">
-              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{t("modeLabel")}</p>
-              <p className="mt-2 text-sm font-semibold text-foreground">{t("modeValue")}</p>
-            </div>
-          </div>
         </Card>
       </div>
     </div>

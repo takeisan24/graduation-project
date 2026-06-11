@@ -76,66 +76,69 @@ export function PublishedDetailModal({
           </DialogHeader>
         </div>
 
-        {/* Body — 2 cột NẰM NGANG: trái = meta + link, phải = nội dung (cuộn) */}
-        <div className="grid min-h-0 flex-1 gap-4 overflow-hidden p-4 sm:p-5 md:grid-cols-[230px_1fr]">
-          {/* Cột trái */}
-          <div className="flex min-h-0 flex-col gap-3 overflow-y-auto pr-1">
-            <div className="rounded-2xl border border-border/70 bg-background/70 p-4">
+        {/* Meta — hàng NGANG gọn ở trên (giải phóng chiều rộng cho nội dung) */}
+        <div className="shrink-0 border-b border-border/70 px-4 py-3 sm:px-6">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4">
+            <div className="min-w-0">
               <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{t("platformLabel")}</p>
-              <p className="mt-1 text-base font-semibold capitalize text-foreground">{post?.platform || "-"}</p>
+              <p className="mt-0.5 truncate text-sm font-semibold capitalize text-foreground">{post?.platform || "-"}</p>
             </div>
-            <div className="rounded-2xl border border-border/70 bg-background/70 p-4">
+            <div className="min-w-0">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{t("accountLabel")}</p>
+              <p className="mt-0.5 truncate text-sm font-semibold text-foreground">{post?.profileName || "-"}</p>
+            </div>
+            <div className="min-w-0">
               <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{t("publishedAtLabel")}</p>
-              <p className="mt-1 text-base font-semibold leading-6 text-foreground">
+              <p className="mt-0.5 truncate text-sm font-semibold text-foreground">
                 {post?.time ? `${formatTime(post.time, locale)} ${formatDate(post.time, locale)}` : "-"}
               </p>
             </div>
-            <div className="rounded-2xl border border-border/70 bg-background/70 p-4">
-              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{t("accountLabel")}</p>
-              <p className="mt-1 truncate text-base font-semibold text-foreground">{post?.profileName || "-"}</p>
-            </div>
-            <div className="rounded-2xl border border-border/70 bg-background/60 p-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                <Link2 className="h-4 w-4 text-primary" />
-                {t("linkLabel")}
-              </div>
-              <p className="mt-2 break-all text-xs leading-6 text-muted-foreground">{post?.url || t("noLink")}</p>
+            <div className="min-w-0">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{t("linkLabel")}</p>
+              <p className="mt-0.5 flex items-center gap-1 text-sm font-medium">
+                <Link2 className="h-3.5 w-3.5 shrink-0 text-primary" />
+                {post?.url
+                  ? <span className="truncate text-foreground">{post.url}</span>
+                  : <span className="truncate text-muted-foreground">{t("noLink")}</span>}
+              </p>
             </div>
           </div>
+        </div>
 
-          {/* Cột phải: ảnh/video + nội dung (cùng vùng cuộn) */}
-          <div className="flex min-h-0 flex-col rounded-2xl border border-border/70 bg-background/60 p-4 sm:p-5">
+        {/* Nội dung — TOÀN chiều rộng: ảnh bên trái, caption bên phải (đọc ngang, dòng dài) */}
+        <div className={`grid min-h-0 flex-1 gap-5 overflow-hidden p-4 sm:p-6 ${post?.media && post.media.length > 0 ? "md:grid-cols-[minmax(0,340px)_1fr]" : "grid-cols-1"}`}>
+          {post?.media && post.media.length > 0 && (
+            <div className="min-h-0 overflow-y-auto pr-1">
+              <div className={`grid gap-2 ${post.media.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
+                {post.media.map((m, i) =>
+                  isVideoUrl(m) ? (
+                    <video
+                      key={i}
+                      src={m}
+                      controls
+                      className="w-full rounded-xl border border-border/60 bg-black/5 object-contain"
+                    />
+                  ) : (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      key={i}
+                      src={m}
+                      alt=""
+                      loading="lazy"
+                      className="w-full rounded-xl border border-border/60 object-contain"
+                    />
+                  )
+                )}
+              </div>
+            </div>
+          )}
+          <div className="flex min-h-0 flex-col">
             <div className="mb-3 flex shrink-0 items-center gap-2 text-sm font-medium text-foreground">
               <SquareArrowOutUpRight className="h-4 w-4 text-primary" />
               {t("contentLabel")}
             </div>
-            <div className="min-h-0 flex-1 space-y-4 overflow-y-auto pr-1">
-              {post?.media && post.media.length > 0 && (
-                <div className={`grid gap-2 ${post.media.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
-                  {post.media.map((m, i) =>
-                    isVideoUrl(m) ? (
-                      <video
-                        key={i}
-                        src={m}
-                        controls
-                        className="aspect-square w-full rounded-lg border border-border/60 bg-black/5 object-cover"
-                      />
-                    ) : (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        key={i}
-                        src={m}
-                        alt=""
-                        loading="lazy"
-                        className="aspect-square w-full rounded-lg border border-border/60 object-cover"
-                      />
-                    )
-                  )}
-                </div>
-              )}
-              <div className="whitespace-pre-wrap break-words text-[0.95rem] leading-7 text-foreground">
-                {post?.content?.trim() || tCard("noContent")}
-              </div>
+            <div className="min-h-0 flex-1 overflow-y-auto whitespace-pre-wrap break-words pr-1 text-base leading-7 text-foreground">
+              {post?.content?.trim() || tCard("noContent")}
             </div>
           </div>
         </div>
