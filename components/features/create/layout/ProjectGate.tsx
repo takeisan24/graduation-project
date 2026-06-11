@@ -9,7 +9,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import { FolderKanban, Plus, ArrowRight, Loader2 } from 'lucide-react'
+import { FolderKanban, Plus, ArrowRight, Loader2, Search } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -42,6 +42,7 @@ export default function ProjectGate() {
   const [projects, setProjects] = useState<ProjectRow[]>([])
   const [loadingList, setLoadingList] = useState(true)
   const [openingId, setOpeningId] = useState<string | null>(null)
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     let mounted = true
@@ -142,7 +143,7 @@ export default function ProjectGate() {
 
         {/* Dự án gần đây */}
         <div className="mt-6">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('recentTitle')}</p>
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('allTitle')}</p>
           {loadingList ? (
             <div className="flex justify-center py-6 text-muted-foreground">
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -150,28 +151,50 @@ export default function ProjectGate() {
           ) : projects.length === 0 ? (
             <p className="py-4 text-center text-sm text-muted-foreground">{t('empty')}</p>
           ) : (
-            <div className="max-h-64 space-y-1.5 overflow-y-auto">
-              {projects.map((p) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => handleOpen(p)}
-                  disabled={openingId === p.id}
-                  className="group flex w-full items-center justify-between gap-3 rounded-xl border border-border bg-background px-4 py-3 text-left transition-colors hover:border-primary/50 hover:bg-secondary/40 disabled:opacity-50"
-                >
-                  <div className="flex min-w-0 items-center gap-3">
-                    <FolderKanban className="h-4 w-4 shrink-0 text-primary" />
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-foreground">{p.name}</p>
-                      {p.created_at && <p className="text-xs text-muted-foreground">{formatDate(p.created_at, locale)}</p>}
-                    </div>
+            <>
+              {projects.length > 4 && (
+                <div className="relative mb-2">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder={t('searchPlaceholder')}
+                    className="h-9 pl-9"
+                  />
+                </div>
+              )}
+              {(() => {
+                const q = search.trim().toLowerCase()
+                const filtered = q ? projects.filter((p) => p.name.toLowerCase().includes(q)) : projects
+                if (filtered.length === 0) {
+                  return <p className="py-4 text-center text-sm text-muted-foreground">{t('noMatch')}</p>
+                }
+                return (
+                  <div className="max-h-64 space-y-1.5 overflow-y-auto">
+                    {filtered.map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => handleOpen(p)}
+                        disabled={openingId === p.id}
+                        className="group flex w-full items-center justify-between gap-3 rounded-xl border border-border bg-background px-4 py-3 text-left transition-colors hover:border-primary/50 hover:bg-secondary/40 disabled:opacity-50"
+                      >
+                        <div className="flex min-w-0 items-center gap-3">
+                          <FolderKanban className="h-4 w-4 shrink-0 text-primary" />
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-medium text-foreground">{p.name}</p>
+                            {p.created_at && <p className="text-xs text-muted-foreground">{formatDate(p.created_at, locale)}</p>}
+                          </div>
+                        </div>
+                        <span className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground group-hover:text-primary">
+                          {openingId === p.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <>{t('open')} <ArrowRight className="h-3.5 w-3.5" /></>}
+                        </span>
+                      </button>
+                    ))}
                   </div>
-                  <span className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground group-hover:text-primary">
-                    {openingId === p.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <>{t('open')} <ArrowRight className="h-3.5 w-3.5" /></>}
-                  </span>
-                </button>
-              ))}
-            </div>
+                )
+              })()}
+            </>
           )}
         </div>
       </div>

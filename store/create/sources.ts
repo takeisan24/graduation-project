@@ -179,8 +179,18 @@ export const useCreateSourcesStore = create<CreateSourcesState>((set) => ({
         set({ extractedContent: null });
       }
 
-      const jsonMatch = responseText.match(/```json\n([\s\S]*?)\n```/);
-      if (!jsonMatch?.[1]) {
+      // Trích JSON linh hoạt: chấp nhận ```json / ``` (có/không nhãn, khoảng trắng hoặc \r\n)
+      // hoặc mảng [...] thô — tránh vỡ luồng sinh bài khi Gemini trả format hơi lệch.
+      const blockMatch = responseText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+      let jsonText: string | null = blockMatch?.[1] ?? null;
+      if (!jsonText) {
+        const firstBracket = responseText.indexOf('[');
+        const lastBracket = responseText.lastIndexOf(']');
+        if (firstBracket !== -1 && lastBracket > firstBracket) {
+          jsonText = responseText.substring(firstBracket, lastBracket + 1);
+        }
+      }
+      if (!jsonText) {
         if (options.onAddChatMessage) {
           options.onAddChatMessage({ role: 'assistant', content: SOURCE_ERRORS.AI_RESPONSE_NO_JSON });
         }
@@ -189,7 +199,7 @@ export const useCreateSourcesStore = create<CreateSourcesState>((set) => ({
         return false;
       }
 
-      const cleanJson = jsonMatch[1].trim().replace(/,(\s*[}\]])/g, '$1');
+      const cleanJson = jsonText.trim().replace(/,(\s*[}\]])/g, '$1');
       let posts;
       try {
         posts = JSON.parse(cleanJson);

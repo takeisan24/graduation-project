@@ -226,6 +226,11 @@ export default function CreditTopUp() {
             <DialogDescription>{t("qrNote")}</DialogDescription>
           </DialogHeader>
 
+          {/* Disclaimer học thuật: QR + STK là thật nhưng thanh toán được MÔ PHỎNG cho đồ án */}
+          <p className="rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-950/30 dark:text-amber-300">
+            {t("demoNotice")}
+          </p>
+
           {orderData && (
             <div className="space-y-4">
               <div className="flex justify-center">

@@ -210,7 +210,7 @@ export const POST_ERRORS = {
   /**
    * Error message when Facebook post mixes videos and images
    */
-  FACEBOOK_MIXED_MEDIA: "Facebook posts cannot mix videos and images. Please use either all images or all videos.",
+  FACEBOOK_MIXED_MEDIA: "Bài Facebook không thể trộn lẫn ảnh và video. Vui lòng chỉ dùng toàn ảnh hoặc toàn video.",
 
   /**
    * Error message when failed post doesn't have Late.dev job

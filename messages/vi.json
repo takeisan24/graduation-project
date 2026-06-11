@@ -939,6 +939,9 @@
       "create": "Tạo dự án",
       "nameHint": "Để trống sẽ tự đặt tên theo ngày — bạn có thể đổi tên bất cứ lúc nào.",
       "recentTitle": "Dự án gần đây",
+      "allTitle": "Tất cả dự án",
+      "searchPlaceholder": "Tìm dự án theo tên...",
+      "noMatch": "Không tìm thấy dự án phù hợp.",
       "empty": "Chưa có dự án nào.",
       "open": "Mở",
       "createError": "Không thể tạo dự án. Vui lòng thử lại.",
@@ -1093,9 +1096,9 @@
       "appSettings": {
         "title": "Cài đặt ứng dụng",
         "description": "Các thiết lập khác",
-        "resetTour": "Reset Onboarding Tour",
+        "resetTour": "Đặt lại hướng dẫn sử dụng",
         "resetTourDesc": "Xem lại hướng dẫn sử dụng tính năng từ đầu",
-        "resetTourBtn": "Reset Tour"
+        "resetTourBtn": "Đặt lại hướng dẫn"
       },
       "systemProfile": {
         "title": "Hồ sơ hệ thống",
@@ -1749,7 +1752,7 @@
       "agendaSummaryStatus": "Trạng thái ưu tiên",
       "legendTitle": "Chú giải trạng thái",
       "legendDescription": "Màu trạng thái đã được thống nhất giữa calendar, agenda và popup chi tiết.",
-      "quickActionsTitle": "Quick actions",
+      "quickActionsTitle": "Thao tác nhanh",
       "quickActionCreate": "Mở màn tạo nội dung",
       "quickActionFailed": "Đi tới hàng chờ lỗi",
       "quickActionEmpty": "Nhảy tới ngày trống gần nhất",
@@ -1779,7 +1782,7 @@
       "offline": "Đang offline",
       "platformIconTooltip": "Kéo biểu tượng vào ngày hoặc nhấn + trên ngày để thêm",
       "addToDay": "Thêm vào ngày này",
-      "selectPlatform": "Chọn nền tượng để thêm vào lịch",
+      "selectPlatform": "Chọn nền tảng để thêm vào lịch",
       "pastDate": "Ngày đã qua. Không thể thêm sự kiện.",
       "noEventsOnDay": "Không có bài đăng. Nhấn Enter để thêm.",
       "eventCountOnDay": "{count} bài đăng. {platforms}.",
