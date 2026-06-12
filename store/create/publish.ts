@@ -11,12 +11,11 @@ import { toast } from 'sonner';
 import { useConnectionsStore } from '../shared/connections';
 import { useCalendarStore } from '../shared/calendar';
 import { usePublishedPostsStore } from '../published/publishedPageStore';
-import { useFailedPostsStore } from '../failed/failedPageStore';
 import { useDraftsStore } from '../drafts/draftsPageStore';
 import { useCreatePostsStore } from './posts';
 import { checkPostStatusAtScheduledTime } from '../shared/statusCheck';
 import { handleErrorWithModal } from '@/lib/utils/errorHandler';
-import { LIMIT_ERRORS, AUTH_ERRORS, CONNECTION_ERRORS, POST_ERRORS, MEDIA_ERRORS, GENERIC_ERRORS, TOAST_MESSAGES } from '@/lib/messages/errors';
+import { AUTH_ERRORS, CONNECTION_ERRORS, POST_ERRORS, MEDIA_ERRORS, GENERIC_ERRORS, TOAST_MESSAGES } from '@/lib/messages/errors';
 import type { MediaFile, PendingScheduledPost, PublishedPost } from '../shared/types';
 import { CalendarEvent } from '@/lib/types/calendar';
 import { formatDate, formatTime } from '@/lib/utils/date';
@@ -285,8 +284,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
       useCalendarStore.setState({ calendarEvents: updatedEvents });
       saveToLocalStorage('calendarEvents', updatedEvents);
 
-      // Mark toast as shown to avoid duplicate from statusCheck
-      const toastKey = `${postId}-posted`;
+      // Đánh dấu đã hiển thị toast để tránh statusCheck báo trùng (dùng cờ sessionStorage bên dưới).
       if (typeof window !== 'undefined') {
         // Use a simple flag in sessionStorage to track immediate publish toasts
         // This prevents duplicate toast if statusCheck also triggers
@@ -335,7 +333,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
     // Convert time from AM/PM to 24h format
     const [hStr, rest] = String(time || '').split(':');
     let hour = parseInt(hStr || '0', 10);
-    let minute = parseInt((rest || '0').slice(0, 2) || '0', 10);
+    const minute = parseInt((rest || '0').slice(0, 2) || '0', 10);
     const ampm = (time || '').toUpperCase().includes('PM');
     if (ampm && hour < 12) hour += 12;
     if (!ampm && hour === 12) hour = 0;
@@ -585,7 +583,7 @@ export const useCreatePublishStore = create<CreatePublishState>(() => ({
                 }
               }
             },
-            onPublishingStatus: (postId, platform) => {
+            onPublishingStatus: (_postId, _platform) => {
               // Schedule recheck will be handled by statusCheck module
             }
           });
