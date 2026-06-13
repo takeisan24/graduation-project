@@ -20,7 +20,6 @@ export async function GET(
   if (!pending) {
     return buildPopupResponse({ success: false, provider, returnTo, message: "Invalid or expired OAuth state" });
   }
-  console.log(`[connections/callback/${provider}] pending OK: user=${pending.userId} platform=${pending.platform} existing=${pending.existingAccountIds.length}`);
 
   try {
     // Đồng bộ TẤT CẢ tài khoản từ Zernio vào connected_accounts của người dùng.
@@ -28,14 +27,12 @@ export async function GET(
     // trường hợp tài khoản đã được kết nối sẵn trên Zernio từ lần thử trước.
     // Idempotent: bỏ qua tài khoản đã tồn tại trong cơ sở dữ liệu.
     const allAccounts = await listZernioAccounts();
-    console.log(`[connections/callback/${provider}] zernio accounts=${allAccounts.length}`);
-    let saved = 0;
     for (const acc of allAccounts) {
       const chPlatform = acc.platform === "twitter" ? "x" : acc.platform;
       const existing = await findConnectionByUserPlatformAndProfileId(pending.userId, chPlatform, acc._id);
       if (existing) continue;
       const username = getZernioAccountUsername(acc);
-      const created = await createConnectionLegacy({
+      await createConnectionLegacy({
         user_id: pending.userId,
         platform: chPlatform,
         access_token: "zernio-managed",
@@ -49,9 +46,7 @@ export async function GET(
           avatar_url: getZernioAccountAvatar(acc),
         },
       });
-      if (created) saved++;
     }
-    console.log(`[connections/callback/${provider}] đã lưu ${saved} kết nối mới vào CSDL`);
 
     return buildPopupResponse({ success: true, provider, returnTo: pending.returnTo });
   } catch (err) {
