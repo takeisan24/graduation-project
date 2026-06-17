@@ -28,6 +28,7 @@ import { deriveWorkspaceSeed } from '@/store/create/workspace'
 import { loadProjectWorkspace, autoSaveCurrentWorkspace } from '@/store/create/loadProjectWorkspace'
 import { supabaseClient } from '@/lib/supabaseClient'
 import ConfirmModal from '@/components/shared/ConfirmModal'
+import { toast } from 'sonner'
 
 interface ProjectRow {
   id: string
@@ -159,6 +160,7 @@ export default function ProjectMenu() {
       })
       setProjects((prev) => prev.map((p) => (p.id === projectId ? { ...p, name } : p)))
       setIsRenaming(false)
+      toast.success(t('renameSuccess', { name }))
     } catch {
       setError(t('renameFailed'))
     } finally {
@@ -168,6 +170,7 @@ export default function ProjectMenu() {
 
   // Xóa (D)
   const handleDelete = async (id: string) => {
+    const name = projects.find((p) => p.id === id)?.name || ''
     setBusyId(id)
     setError(null)
     try {
@@ -180,8 +183,10 @@ export default function ProjectMenu() {
       setProjectToDelete(null)
       // Nếu xóa đúng dự án đang mở → dọn workspace về trạng thái trống
       if (id === projectId) resetWorkspace()
+      // Dropdown đã đóng khi mở modal → báo kết quả bằng toast (không dùng inline error nữa).
+      toast.success(t('deleteSuccess', { name }))
     } catch {
-      setError(t('deleteFailed'))
+      toast.error(t('deleteFailed'))
     } finally {
       setBusyId(null)
     }
@@ -284,7 +289,7 @@ export default function ProjectMenu() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setProjectToDelete(p)}
+                  onClick={() => { setOpen(false); setProjectToDelete(p) }}
                   aria-label={t('delete')}
                   className="shrink-0 rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                 >

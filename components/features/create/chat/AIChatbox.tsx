@@ -142,6 +142,7 @@ export default function AIChatbox() {
 
   const confirmClearChat = () => {
     clearChat();
+    toast.success(t('clearChatSuccess'));
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

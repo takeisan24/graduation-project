@@ -1496,6 +1496,7 @@
         "clearChatDescription": "Toàn bộ lịch sử chat với AI sẽ bị xóa. Hành động này không thể hoàn tác.",
         "clearChatConfirm": "Xóa",
         "clearChatCancel": "Hủy",
+        "clearChatSuccess": "Đã làm mới cuộc trò chuyện",
         "toSend": "để gửi",
         "newChatTitle": "Tạo cuộc trò chuyện mới",
         "postContextLabel": "Bài viết:",
@@ -1673,7 +1674,9 @@
           "empty": "Chưa có dự án nào",
           "loadFailed": "Không tải được danh sách dự án",
           "renameFailed": "Không đổi được tên dự án",
-          "deleteFailed": "Không xóa được dự án"
+          "renameSuccess": "Đã đổi tên dự án thành \"{name}\"",
+          "deleteFailed": "Không xóa được dự án",
+          "deleteSuccess": "Đã xóa dự án \"{name}\""
         },
         "wizard": {
           "step1": "Thêm nguồn",

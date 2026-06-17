@@ -1496,6 +1496,7 @@
         "clearChatDescription": "All chat history with AI will be deleted. This action cannot be undone.",
         "clearChatConfirm": "Delete",
         "clearChatCancel": "Cancel",
+        "clearChatSuccess": "Conversation cleared",
         "toSend": "to send",
         "newChatTitle": "Start a new conversation",
         "postContextLabel": "Post:",
@@ -1673,7 +1674,9 @@
           "empty": "No projects yet",
           "loadFailed": "Could not load projects",
           "renameFailed": "Could not rename project",
-          "deleteFailed": "Could not delete project"
+          "renameSuccess": "Renamed project to \"{name}\"",
+          "deleteFailed": "Could not delete project",
+          "deleteSuccess": "Deleted project \"{name}\""
         },
         "wizard": {
           "step1": "Add Source",
