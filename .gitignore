@@ -111,3 +111,14 @@ scripts/slim_docx.py
 # PDF xuất & ảnh preview soát layout (local)
 docs/*.pdf
 docs/_pdfpreview/
+docs/slide_preview/
+docs/tpl_preview/
+
+# Office/temp lock files (vd ~$Slide-BaoVe.pptx khi mở PowerPoint)
+~$*
+
+# Slide bảo vệ + generator (cá nhân, regenerate được — giữ local, không đẩy repo sản phẩm)
+docs/*.pptx
+scripts/build_slides.py
+docs/KICH-BAN-THUYET-TRINH.md
+docs/SLIDE-BAO-VE-DATN.md
