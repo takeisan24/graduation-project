@@ -82,8 +82,8 @@ CLAUDE.local.md
 /blob-report/
 /playwright/.cache/
 
-# E2E test specs (internal)
-e2e/
+# E2E test specs — track để đối chiếu với playwright.config.ts và script test:e2e
+# (đã rà: không chứa credential thật, chỉ selector + dữ liệu giả)
 
 # Personal placeholder images
 public/images/shego.jpg
