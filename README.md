@@ -7,6 +7,21 @@ Trường Đại học Giao thông Vận tải — GVHD: ThS. Đào Vũ Hoàng N
 
 ---
 
+## Ghi chú về nguồn gốc kiến trúc
+
+CreatorHub được dựng trên bộ khung kiến trúc mà tôi đã quen tay trong thời gian thực tập
+tại **Công ty Cổ phần Finful** (dự án ContentScheduleAI) — cùng mô hình Next.js App Router,
+cùng cách tổ chức `store/` theo slice và `lib/services/`.
+
+Hai dự án vì vậy trùng nhau ở **đường dẫn thư mục** và ở các component giao diện do
+`shadcn/ui` sinh tự động. Phần logic nghiệp vụ — 61 route handler, luồng đăng bài, hệ thống
+credit, thanh toán VietQR — được viết lại cho đồ án này.
+
+Tôi ghi rõ điều này để người đọc mã nguồn không hiểu nhầm khi thấy hai repo có cấu trúc
+giống nhau.
+
+---
+
 ## Giới thiệu
 
 CreatorHub là ứng dụng Web giúp các nhà sáng tạo nội dung trong việc lên ý tưởng và lập kế hoạch đăng bài. Hệ thống tích hợp Trí tuệ nhân tạo tạo sinh (Generative AI) để giải quyết vấn đề "bí ý tưởng" và quản lý nội dung rời rạc trên nhiều nền tảng mạng xã hội.
