@@ -5,6 +5,14 @@
 **Đồ án tốt nghiệp** — Vũ Tuấn Anh — CNTT4 — K63
 Trường Đại học Giao thông Vận tải — GVHD: ThS. Đào Vũ Hoàng Nam
 
+<p align="center">
+  <a href="https://graduation-project-alpha-dun.vercel.app">
+    <img src="docs/screenshot.png" alt="Trang chủ CreatorHub" width="100%">
+  </a>
+  <br>
+  <sub>Xem thử tại <a href="https://graduation-project-alpha-dun.vercel.app">graduation-project-alpha-dun.vercel.app</a></sub>
+</p>
+
 ---
 
 ## Ghi chú về nguồn gốc kiến trúc
